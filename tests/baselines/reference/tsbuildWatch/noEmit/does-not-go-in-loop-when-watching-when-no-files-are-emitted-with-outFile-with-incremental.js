@@ -86,6 +86,7 @@ Program options: {
   "outFile": "/user/username/projects/out.js",
   "watch": true,
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/tsconfig.json"
 }
 Program structureReused: Not
@@ -137,6 +138,7 @@ Program options: {
   "outFile": "/user/username/projects/out.js",
   "watch": true,
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/tsconfig.json"
 }
 Program structureReused: Not
@@ -190,6 +192,7 @@ Program options: {
   "outFile": "/user/username/projects/out.js",
   "watch": true,
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/tsconfig.json"
 }
 Program structureReused: Not

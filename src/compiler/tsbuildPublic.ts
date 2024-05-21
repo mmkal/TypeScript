@@ -326,6 +326,7 @@ function getCompilerOptionsOfBuildOptions(buildOptions: BuildOptions): CompilerO
     commonOptionsWithBuild.forEach(option => {
         if (hasProperty(buildOptions, option.name)) result[option.name] = buildOptions[option.name];
     });
+    result.tscBuild = true;
     return result;
 }
 
@@ -1460,7 +1461,7 @@ function buildErrors<T extends BuilderProgram>(
     errorType: string,
 ) {
     // Since buildinfo has changeset and diagnostics when doing multi file emit, only --out cannot emit buildinfo if it has errors
-    const canEmitBuildInfo = program && !program.getCompilerOptions().outFile;
+    const canEmitBuildInfo = program && !program.getCompilerOptions().outFile && isIncrementalCompilation(program.getCompilerOptions());
 
     reportAndStoreErrors(state, resolvedPath, diagnostics);
     state.projectStatus.set(resolvedPath, { type: UpToDateStatusType.Unbuildable, reason: `${errorType} errors` });
@@ -1652,6 +1653,7 @@ function getUpToDateStatusWorker<T extends BuilderProgram>(state: SolutionBuilde
     let buildInfoTime: Date | undefined;
     let buildInfoProgram: ProgramBuildInfo | undefined;
     let buildInfoVersionMap: ReturnType<typeof getBuildInfoFileVersionMap> | undefined;
+    const isIncremental = isIncrementalCompilation(project.options);
     if (buildInfoPath) {
         const buildInfoCacheEntry = getBuildInfoCacheEntry(state, buildInfoPath, resolvedPath);
         buildInfoTime = buildInfoCacheEntry?.modifiedTime || ts_getModifiedTime(host, buildInfoPath);
@@ -1677,7 +1679,7 @@ function getUpToDateStatusWorker<T extends BuilderProgram>(state: SolutionBuilde
                 fileName: buildInfoPath,
             };
         }
-        if (buildInfo.program && buildInfo.version !== version) {
+        if ((buildInfo.program || !isIncremental) && buildInfo.version !== version) {
             return {
                 type: UpToDateStatusType.TsVersionOutputOfDate,
                 version: buildInfo.version,
@@ -1735,7 +1737,7 @@ function getUpToDateStatusWorker<T extends BuilderProgram>(state: SolutionBuilde
 
         const inputPath = buildInfoProgram ? toPath(state, inputFile) : undefined;
         // If an buildInfo is older than the newest input, we can stop checking
-        if (buildInfoTime && buildInfoTime < inputTime) {
+        if (isIncremental && buildInfoTime && buildInfoTime < inputTime) {
             let version: string | undefined;
             let currentVersion: string | undefined;
             if (buildInfoProgram) {
@@ -1783,11 +1785,12 @@ function getUpToDateStatusWorker<T extends BuilderProgram>(state: SolutionBuilde
 
     // Now see if all outputs are newer than the newest input
     // Dont check output timestamps if we have buildinfo telling us output is uptodate
-    if (!buildInfoPath) {
+    if (!isIncremental) {
         // Collect the expected outputs of this project
         const outputs = getAllProjectOutputs(project, !host.useCaseSensitiveFileNames());
         const outputTimeStampMap = getOutputTimeStampMap(state, resolvedPath);
         for (const output of outputs) {
+            if (output === buildInfoPath) continue;
             const path = toPath(state, output);
             // Output is missing; can stop checking
             let outputTime = outputTimeStampMap?.get(path);
@@ -1921,7 +1924,8 @@ function updateOutputTimestampsWorker<T extends BuilderProgram>(
     if (proj.options.noEmit) return;
     let now: Date | undefined;
     const buildInfoPath = getTsBuildInfoEmitOutputFilePath(proj.options);
-    if (buildInfoPath) {
+    const isIncremental = isIncrementalCompilation(proj.options);
+    if (buildInfoPath && isIncremental) {
         // For incremental projects, only buildinfo needs to be upto date with timestamp check
         // as we dont check output files for up-to-date ness
         if (!skipOutputs?.has(toPath(state, buildInfoPath))) {
@@ -1947,8 +1951,9 @@ function updateOutputTimestampsWorker<T extends BuilderProgram>(
                 reportStatus(state, verboseMessage, proj.options.configFilePath!);
             }
             host.setModifiedTime(file, now ||= getCurrentTime(state.host));
+            if (file === buildInfoPath) getBuildInfoCacheEntry(state, buildInfoPath, projectPath)!.modifiedTime = now;
             // Store output timestamps in a map because non incremental build will need to check them to determine up-to-dateness
-            if (outputTimeStampMap) {
+            else if (outputTimeStampMap) {
                 outputTimeStampMap.set(path, now);
                 modifiedOutputs!.add(path);
             }

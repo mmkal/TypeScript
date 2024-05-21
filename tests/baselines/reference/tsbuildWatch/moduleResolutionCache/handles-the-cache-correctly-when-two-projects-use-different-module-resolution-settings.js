@@ -334,6 +334,7 @@ Program options: {
     "bar"
   ],
   "watch": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/project1/tsconfig.json"
 }
 Program structureReused: Not
@@ -368,6 +369,7 @@ Program options: {
   ],
   "moduleResolution": 1,
   "watch": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/project2/tsconfig.json"
 }
 Program structureReused: Not
@@ -524,6 +526,7 @@ Program options: {
     "bar"
   ],
   "watch": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/project1/tsconfig.json"
 }
 Program structureReused: Not

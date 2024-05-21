@@ -52,6 +52,7 @@ Program root files: [
 Program options: {
   "outFile": "/outFile.js",
   "noEmit": true,
+  "tscBuild": true,
   "configFilePath": "/src/tsconfig.json"
 }
 Program structureReused: Not
@@ -94,6 +95,7 @@ Program root files: [
 Program options: {
   "outFile": "/outFile.js",
   "noEmit": true,
+  "tscBuild": true,
   "configFilePath": "/src/tsconfig.json"
 }
 Program structureReused: Not
@@ -131,6 +133,7 @@ Program root files: [
 Program options: {
   "outFile": "/outFile.js",
   "noEmit": true,
+  "tscBuild": true,
   "configFilePath": "/src/tsconfig.json"
 }
 Program structureReused: Not
@@ -165,6 +168,7 @@ Program root files: [
 Program options: {
   "outFile": "/outFile.js",
   "noEmit": true,
+  "tscBuild": true,
   "configFilePath": "/src/tsconfig.json"
 }
 Program structureReused: Not

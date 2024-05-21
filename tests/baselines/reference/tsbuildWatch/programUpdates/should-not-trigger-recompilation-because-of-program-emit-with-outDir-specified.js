@@ -256,6 +256,7 @@ Program options: {
   "composite": true,
   "outDir": "/user/username/projects/sample1/core/outDir",
   "watch": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/sample1/core/tsconfig.json"
 }
 Program structureReused: Not
@@ -461,6 +462,7 @@ Program options: {
   "composite": true,
   "outDir": "/user/username/projects/sample1/core/outDir",
   "watch": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/sample1/core/tsconfig.json"
 }
 Program structureReused: Not

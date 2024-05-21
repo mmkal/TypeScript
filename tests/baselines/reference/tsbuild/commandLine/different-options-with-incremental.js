@@ -54,6 +54,7 @@ Program root files: [
 ]
 Program options: {
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -233,6 +234,7 @@ Program root files: [
 Program options: {
   "incremental": true,
   "sourceMap": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -416,6 +418,7 @@ Program root files: [
 ]
 Program options: {
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -585,6 +588,7 @@ Program root files: [
 Program options: {
   "incremental": true,
   "declaration": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -746,6 +750,7 @@ Program options: {
   "incremental": true,
   "declaration": true,
   "declarationMap": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -937,6 +942,7 @@ Program root files: [
 ]
 Program options: {
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -1089,6 +1095,7 @@ Program options: {
   "incremental": true,
   "declaration": true,
   "declarationMap": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -1258,6 +1265,7 @@ Program root files: [
 Program options: {
   "incremental": true,
   "inlineSourceMap": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -1434,6 +1442,7 @@ Program root files: [
 Program options: {
   "incremental": true,
   "sourceMap": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -1615,6 +1624,7 @@ Program root files: [
 ]
 Program options: {
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -1789,6 +1799,7 @@ Program options: {
   "incremental": true,
   "declaration": true,
   "declarationMap": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not

@@ -87,7 +87,7 @@ File '/user/username/projects/myproject/packages/pkg2/const.cts' exists - use it
 File '/a/lib/package.json' does not exist.
 File '/a/package.json' does not exist.
 File '/package.json' does not exist.
-[[90mHH:MM:SS AM[0m] Project 'packages/pkg1/tsconfig.json' is out of date because output file 'packages/pkg1/build/index.js' does not exist
+[[90mHH:MM:SS AM[0m] Project 'packages/pkg1/tsconfig.json' is out of date because output file 'packages/pkg1/build/tsconfig.tsbuildinfo' does not exist
 
 [[90mHH:MM:SS AM[0m] Building project '/user/username/projects/myproject/packages/pkg1/tsconfig.json'...
 
@@ -226,6 +226,15 @@ export type { TheNum } from './const.cjs';
 export const theNum = 42;
 
 
+//// [/user/username/projects/myproject/packages/pkg1/build/tsconfig.tsbuildinfo]
+{"version":"FakeTSVersion"}
+
+//// [/user/username/projects/myproject/packages/pkg1/build/tsconfig.tsbuildinfo.readable.baseline.txt]
+{
+  "version": "FakeTSVersion",
+  "size": 27
+}
+
 
 PolledWatches::
 /a/lib/package.json: *new*
@@ -269,6 +278,7 @@ Program options: {
   "module": 100,
   "watch": true,
   "traceResolution": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/packages/pkg2/tsconfig.json"
 }
 Program structureReused: Not
@@ -295,6 +305,7 @@ Program options: {
   "module": 100,
   "watch": true,
   "traceResolution": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/packages/pkg1/tsconfig.json"
 }
 Program structureReused: Not
@@ -404,6 +415,7 @@ Program options: {
   "module": 100,
   "watch": true,
   "traceResolution": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/packages/pkg1/tsconfig.json"
 }
 Program structureReused: Not
@@ -489,6 +501,8 @@ File '/package.json' does not exist.
 
 
 //// [/user/username/projects/myproject/packages/pkg1/build/index.js] file written with same contents
+//// [/user/username/projects/myproject/packages/pkg1/build/tsconfig.tsbuildinfo] file written with same contents
+//// [/user/username/projects/myproject/packages/pkg1/build/tsconfig.tsbuildinfo.readable.baseline.txt] file written with same contents
 
 
 Program root files: [
@@ -499,6 +513,7 @@ Program options: {
   "module": 100,
   "watch": true,
   "traceResolution": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/packages/pkg1/tsconfig.json"
 }
 Program structureReused: Not
@@ -602,6 +617,7 @@ Program options: {
   "module": 100,
   "watch": true,
   "traceResolution": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/packages/pkg1/tsconfig.json"
 }
 Program structureReused: Not
@@ -843,6 +859,8 @@ exports.theNum = void 0;
 exports.theNum = 42;
 
 
+//// [/user/username/projects/myproject/packages/pkg1/build/tsconfig.tsbuildinfo] file written with same contents
+//// [/user/username/projects/myproject/packages/pkg1/build/tsconfig.tsbuildinfo.readable.baseline.txt] file written with same contents
 
 
 Program root files: [
@@ -855,6 +873,7 @@ Program options: {
   "module": 100,
   "watch": true,
   "traceResolution": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/packages/pkg2/tsconfig.json"
 }
 Program structureReused: Not
@@ -877,6 +896,7 @@ Program options: {
   "module": 100,
   "watch": true,
   "traceResolution": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/packages/pkg1/tsconfig.json"
 }
 Program structureReused: Not

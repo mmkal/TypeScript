@@ -83,6 +83,7 @@ Program root files: [
 Program options: {
   "composite": true,
   "emitDeclarationOnly": true,
+  "tscBuild": true,
   "configFilePath": "/src/project1/src/tsconfig.json"
 }
 Program structureReused: Not
@@ -115,6 +116,7 @@ Program root files: [
 Program options: {
   "composite": true,
   "emitDeclarationOnly": true,
+  "tscBuild": true,
   "configFilePath": "/src/project2/src/tsconfig.json"
 }
 Program structureReused: Not
@@ -444,6 +446,7 @@ Program root files: [
 Program options: {
   "composite": true,
   "emitDeclarationOnly": true,
+  "tscBuild": true,
   "configFilePath": "/src/project1/src/tsconfig.json"
 }
 Program structureReused: Not
@@ -598,6 +601,7 @@ Program root files: [
 Program options: {
   "composite": true,
   "emitDeclarationOnly": false,
+  "tscBuild": true,
   "configFilePath": "/src/project1/src/tsconfig.json"
 }
 Program structureReused: Not
@@ -620,6 +624,7 @@ Program root files: [
 Program options: {
   "composite": true,
   "emitDeclarationOnly": false,
+  "tscBuild": true,
   "configFilePath": "/src/project2/src/tsconfig.json"
 }
 Program structureReused: Not
@@ -984,6 +989,7 @@ Program root files: [
 Program options: {
   "composite": true,
   "emitDeclarationOnly": false,
+  "tscBuild": true,
   "configFilePath": "/src/project1/src/tsconfig.json"
 }
 Program structureReused: Not

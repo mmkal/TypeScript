@@ -497,6 +497,7 @@ Program options: {
   "skipDefaultLibCheck": true,
   "watch": true,
   "preserveWatchOutput": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/sample1/core/tsconfig.json"
 }
 Program structureReused: Not
@@ -529,6 +530,7 @@ Program options: {
   "skipDefaultLibCheck": true,
   "watch": true,
   "preserveWatchOutput": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/sample1/logic/tsconfig.json"
 }
 Program structureReused: Not
@@ -560,6 +562,7 @@ Program options: {
   "skipDefaultLibCheck": true,
   "watch": true,
   "preserveWatchOutput": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/sample1/tests/tsconfig.json"
 }
 Program structureReused: Not
@@ -736,6 +739,7 @@ Program options: {
   "skipDefaultLibCheck": true,
   "watch": true,
   "preserveWatchOutput": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/sample1/logic/tsconfig.json"
 }
 Program structureReused: Not
@@ -904,6 +908,7 @@ Program options: {
   "skipDefaultLibCheck": true,
   "watch": true,
   "preserveWatchOutput": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/sample1/core/tsconfig.json"
 }
 Program structureReused: Not

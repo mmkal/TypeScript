@@ -53,6 +53,7 @@ Program options: {
   "outFile": "/outFile.js",
   "noEmit": true,
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/src/tsconfig.json"
 }
 Program structureReused: Not
@@ -96,6 +97,7 @@ Program options: {
   "outFile": "/outFile.js",
   "noEmit": true,
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/src/tsconfig.json"
 }
 Program structureReused: Not
@@ -134,6 +136,7 @@ Program options: {
   "outFile": "/outFile.js",
   "noEmit": true,
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/src/tsconfig.json"
 }
 Program structureReused: Not
@@ -169,6 +172,7 @@ Program options: {
   "outFile": "/outFile.js",
   "noEmit": true,
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/src/tsconfig.json"
 }
 Program structureReused: Not

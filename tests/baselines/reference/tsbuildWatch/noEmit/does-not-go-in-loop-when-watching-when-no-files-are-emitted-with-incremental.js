@@ -154,6 +154,7 @@ Program options: {
   "noEmit": true,
   "watch": true,
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/tsconfig.json"
 }
 Program structureReused: Not
@@ -312,6 +313,7 @@ Program options: {
   "noEmit": true,
   "watch": true,
   "incremental": true,
+  "tscBuild": true,
   "configFilePath": "/user/username/projects/myproject/tsconfig.json"
 }
 Program structureReused: Not

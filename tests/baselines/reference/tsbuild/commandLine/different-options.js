@@ -54,6 +54,7 @@ Program root files: [
 ]
 Program options: {
   "composite": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -257,6 +258,7 @@ Program root files: [
 Program options: {
   "composite": true,
   "sourceMap": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -446,6 +448,7 @@ Program root files: [
 ]
 Program options: {
   "composite": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -656,6 +659,7 @@ Program options: {
   "composite": true,
   "declaration": true,
   "declarationMap": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -830,6 +834,7 @@ Program root files: [
 ]
 Program options: {
   "composite": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -1025,6 +1030,7 @@ Program root files: [
 ]
 Program options: {
   "composite": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -1196,6 +1202,7 @@ Program root files: [
 Program options: {
   "composite": true,
   "inlineSourceMap": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
@@ -1374,6 +1381,7 @@ Program root files: [
 Program options: {
   "composite": true,
   "sourceMap": true,
+  "tscBuild": true,
   "configFilePath": "/src/project/tsconfig.json"
 }
 Program structureReused: Not
