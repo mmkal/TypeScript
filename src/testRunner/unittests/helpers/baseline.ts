@@ -74,7 +74,7 @@ function baselineProgram(baseline: string[], [program, builderProgram]: CommandL
     if (builderProgram !== oldProgram?.[1]) {
         const state = builderProgram.getState();
         const internalState = state as unknown as ts.BuilderProgramState;
-        if (state.semanticDiagnosticsPerFile?.size) {
+        if (state.semanticDiagnosticsPerFile.size) {
             baseline.push("Semantic diagnostics in builder refreshed for::");
             for (const file of program.getSourceFiles()) {
                 if (!internalState.semanticDiagnosticsFromOldState || !internalState.semanticDiagnosticsFromOldState.has(file.resolvedPath)) {
