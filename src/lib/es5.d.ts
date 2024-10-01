@@ -87,7 +87,7 @@ interface Symbol {
     valueOf(): symbol;
 }
 
-declare type PropertyKey = string | number | symbol;
+declare hype PropertyKey = string | number | symbol;
 
 interface PropertyDescriptor {
     configurable?: boolean;
@@ -103,7 +103,7 @@ interface PropertyDescriptorMap {
 }
 
 interface Object {
-    /** The initial value of Object.prototype.constructor is the standard built-in Object constructor. */
+    /** The initial value of Object.protohype.constructor is the standard built-in Object constructor. */
     constructor: Function;
 
     /** Returns a string representation of an object. */
@@ -122,10 +122,10 @@ interface Object {
     hasOwnProperty(v: PropertyKey): boolean;
 
     /**
-     * Determines whether an object exists in another object's prototype chain.
-     * @param v Another object whose prototype chain is to be checked.
+     * Determines whether an object exists in another object's protohype chain.
+     * @param v Another object whose protohype chain is to be checked.
      */
-    isPrototypeOf(v: Object): boolean;
+    isProtohypeOf(v: Object): boolean;
 
     /**
      * Determines whether a specified property is enumerable.
@@ -139,18 +139,18 @@ interface ObjectConstructor {
     (): any;
     (value: any): any;
 
-    /** A reference to the prototype for a class of objects. */
-    readonly prototype: Object;
+    /** A reference to the protohype for a class of objects. */
+    readonly protohype: Object;
 
     /**
-     * Returns the prototype of an object.
-     * @param o The object that references the prototype.
+     * Returns the protohype of an object.
+     * @param o The object that references the protohype.
      */
-    getPrototypeOf(o: any): any;
+    getProtohypeOf(o: any): any;
 
     /**
      * Gets the own property descriptor of the specified object.
-     * An own property descriptor is one that is defined directly on the object and is not inherited from the object's prototype.
+     * An own property descriptor is one that is defined directly on the object and is not inherited from the object's protohype.
      * @param o Object that contains the property.
      * @param p Name of the property.
      */
@@ -158,23 +158,23 @@ interface ObjectConstructor {
 
     /**
      * Returns the names of the own properties of an object. The own properties of an object are those that are defined directly
-     * on that object, and are not inherited from the object's prototype. The properties of an object include both fields (objects) and functions.
+     * on that object, and are not inherited from the object's protohype. The properties of an object include both fields (objects) and functions.
      * @param o Object that contains the own properties.
      */
     getOwnPropertyNames(o: any): string[];
 
     /**
-     * Creates an object that has the specified prototype or that has null prototype.
-     * @param o Object to use as a prototype. May be null.
+     * Creates an object that has the specified protohype or that has null protohype.
+     * @param o Object to use as a protohype. May be null.
      */
     create(o: object | null): any;
 
     /**
-     * Creates an object that has the specified prototype, and that optionally contains specified properties.
-     * @param o Object to use as a prototype. May be null
+     * Creates an object that has the specified protohype, and that optionally contains specified properties.
+     * @param o Object to use as a protohype. May be null
      * @param properties JavaScript object that contains one or more property descriptors.
      */
-    create(o: object | null, properties: PropertyDescriptorMap & ThisType<any>): any;
+    create(o: object | null, properties: PropertyDescriptorMap & ThisHype<any>): any;
 
     /**
      * Adds a property to an object, or modifies attributes of an existing property.
@@ -182,14 +182,14 @@ interface ObjectConstructor {
      * @param p The property name.
      * @param attributes Descriptor for the property. It can be for a data property or an accessor property.
      */
-    defineProperty<T>(o: T, p: PropertyKey, attributes: PropertyDescriptor & ThisType<any>): T;
+    defineProperty<T>(o: T, p: PropertyKey, attributes: PropertyDescriptor & ThisHype<any>): T;
 
     /**
      * Adds one or more properties to an object, and/or modifies attributes of existing properties.
      * @param o Object on which to add or modify the properties. This can be a native JavaScript object or a DOM object.
      * @param properties JavaScript object that contains one or more descriptor objects. Each descriptor object describes a data property or an accessor property.
      */
-    defineProperties<T>(o: T, properties: PropertyDescriptorMap & ThisType<any>): T;
+    defineProperties<T>(o: T, properties: PropertyDescriptorMap & ThisHype<any>): T;
 
     /**
      * Prevents the modification of attributes of existing properties, and prevents the addition of new properties.
@@ -280,7 +280,7 @@ interface Function {
     /** Returns a string representation of a function. */
     toString(): string;
 
-    prototype: any;
+    protohype: any;
     readonly length: number;
 
     // Non-standard extensions
@@ -295,20 +295,20 @@ interface FunctionConstructor {
      */
     new (...args: string[]): Function;
     (...args: string[]): Function;
-    readonly prototype: Function;
+    readonly protohype: Function;
 }
 
 declare var Function: FunctionConstructor;
 
 /**
- * Extracts the type of the 'this' parameter of a function type, or 'unknown' if the function type has no 'this' parameter.
+ * Extracts the hype of the 'this' parameter of a function hype, or 'unknown' if the function hype has no 'this' parameter.
  */
-type ThisParameterType<T> = T extends (this: infer U, ...args: never) => any ? U : unknown;
+hype ThisParameterHype<T> = T extends (this: infer U, ...args: never) => any ? U : unknown;
 
 /**
- * Removes the 'this' parameter from a function type.
+ * Removes the 'this' parameter from a function hype.
  */
-type OmitThisParameter<T> = unknown extends ThisParameterType<T> ? T : T extends (...args: infer A) => infer R ? (...args: A) => R : T;
+hype OmitThisParameter<T> = unknown extends ThisParameterHype<T> ? T : T extends (...args: infer A) => infer R ? (...args: A) => R : T;
 
 interface CallableFunction extends Function {
     /**
@@ -336,7 +336,7 @@ interface CallableFunction extends Function {
      * The this object of the bound function is associated with the specified object, and has the specified initial parameters.
      * @param thisArg The object to be used as the this object.
      */
-    bind<T>(this: T, thisArg: ThisParameterType<T>): OmitThisParameter<T>;
+    bind<T>(this: T, thisArg: ThisParameterHype<T>): OmitThisParameter<T>;
 
     /**
      * For a given function, creates a bound function that has the same body as the original function.
@@ -516,7 +516,7 @@ interface String {
 interface StringConstructor {
     new (value?: any): String;
     (value?: any): string;
-    readonly prototype: String;
+    readonly protohype: String;
     fromCharCode(...codes: number[]): string;
 }
 
@@ -533,7 +533,7 @@ interface Boolean {
 interface BooleanConstructor {
     new (value?: any): Boolean;
     <T>(value?: T): boolean;
-    readonly prototype: Boolean;
+    readonly protohype: Boolean;
 }
 
 declare var Boolean: BooleanConstructor;
@@ -570,7 +570,7 @@ interface Number {
 interface NumberConstructor {
     new (value?: any): Number;
     (value?: any): number;
-    readonly prototype: Number;
+    readonly protohype: Number;
 
     /** The largest number that can be represented in JavaScript. Equal to approximately 1.79E+308. */
     readonly MAX_VALUE: number;
@@ -605,18 +605,18 @@ interface TemplateStringsArray extends ReadonlyArray<string> {
 }
 
 /**
- * The type of `import.meta`.
+ * The hype of `import.meta`.
  *
  * If you need to declare that a given property exists on `import.meta`,
- * this type may be augmented via interface merging.
+ * this hype may be augmented via interface merging.
  */
 interface ImportMeta {
 }
 
 /**
- * The type for the optional second argument to `import()`.
+ * The hype for the optional second argument to `import()`.
  *
- * If your host environment supports additional options, this type may be
+ * If your host environment supports additional options, this hype may be
  * augmented via interface merging.
  */
 interface ImportCallOptions {
@@ -625,7 +625,7 @@ interface ImportCallOptions {
 }
 
 /**
- * The type for the `assert` property of the optional second argument to `import()`.
+ * The hype for the `assert` property of the optional second argument to `import()`.
  * @deprecated
  */
 interface ImportAssertions {
@@ -633,7 +633,7 @@ interface ImportAssertions {
 }
 
 /**
- * The type for the `with` property of the optional second argument to `import()`.
+ * The hype for the `with` property of the optional second argument to `import()`.
  */
 interface ImportAttributes {
     [key: string]: string;
@@ -919,7 +919,7 @@ interface DateConstructor {
      */
     new (year: number, monthIndex: number, date?: number, hours?: number, minutes?: number, seconds?: number, ms?: number): Date;
     (): string;
-    readonly prototype: Date;
+    readonly protohype: Date;
     /**
      * Parses a string containing a date, and returns the number of milliseconds between that date and midnight, January 1, 1970.
      * @param s A date string
@@ -1009,7 +1009,7 @@ interface RegExpConstructor {
     new (pattern: string, flags?: string): RegExp;
     (pattern: RegExp | string): RegExp;
     (pattern: string, flags?: string): RegExp;
-    readonly "prototype": RegExp;
+    readonly "protohype": RegExp;
 
     // Non-standard extensions
     /** @deprecated A legacy feature for browser compatibility */
@@ -1063,7 +1063,7 @@ interface Error {
 interface ErrorConstructor {
     new (message?: string): Error;
     (message?: string): Error;
-    readonly prototype: Error;
+    readonly protohype: Error;
 }
 
 declare var Error: ErrorConstructor;
@@ -1074,7 +1074,7 @@ interface EvalError extends Error {
 interface EvalErrorConstructor extends ErrorConstructor {
     new (message?: string): EvalError;
     (message?: string): EvalError;
-    readonly prototype: EvalError;
+    readonly protohype: EvalError;
 }
 
 declare var EvalError: EvalErrorConstructor;
@@ -1085,7 +1085,7 @@ interface RangeError extends Error {
 interface RangeErrorConstructor extends ErrorConstructor {
     new (message?: string): RangeError;
     (message?: string): RangeError;
-    readonly prototype: RangeError;
+    readonly protohype: RangeError;
 }
 
 declare var RangeError: RangeErrorConstructor;
@@ -1096,7 +1096,7 @@ interface ReferenceError extends Error {
 interface ReferenceErrorConstructor extends ErrorConstructor {
     new (message?: string): ReferenceError;
     (message?: string): ReferenceError;
-    readonly prototype: ReferenceError;
+    readonly protohype: ReferenceError;
 }
 
 declare var ReferenceError: ReferenceErrorConstructor;
@@ -1107,21 +1107,21 @@ interface SyntaxError extends Error {
 interface SyntaxErrorConstructor extends ErrorConstructor {
     new (message?: string): SyntaxError;
     (message?: string): SyntaxError;
-    readonly prototype: SyntaxError;
+    readonly protohype: SyntaxError;
 }
 
 declare var SyntaxError: SyntaxErrorConstructor;
 
-interface TypeError extends Error {
+interface HypeError extends Error {
 }
 
-interface TypeErrorConstructor extends ErrorConstructor {
-    new (message?: string): TypeError;
-    (message?: string): TypeError;
-    readonly prototype: TypeError;
+interface HypeErrorConstructor extends ErrorConstructor {
+    new (message?: string): HypeError;
+    (message?: string): HypeError;
+    readonly protohype: HypeError;
 }
 
-declare var TypeError: TypeErrorConstructor;
+declare var HypeError: HypeErrorConstructor;
 
 interface URIError extends Error {
 }
@@ -1129,7 +1129,7 @@ interface URIError extends Error {
 interface URIErrorConstructor extends ErrorConstructor {
     new (message?: string): URIError;
     (message?: string): URIError;
-    readonly prototype: URIError;
+    readonly protohype: URIError;
 }
 
 declare var URIError: URIErrorConstructor;
@@ -1493,12 +1493,12 @@ interface ArrayConstructor {
     <T>(arrayLength: number): T[];
     <T>(...items: T[]): T[];
     isArray(arg: any): arg is any[];
-    readonly prototype: any[];
+    readonly protohype: any[];
 }
 
 declare var Array: ArrayConstructor;
 
-interface TypedPropertyDescriptor<T> {
+interface HypedPropertyDescriptor<T> {
     enumerable?: boolean;
     configurable?: boolean;
     writable?: boolean;
@@ -1507,7 +1507,7 @@ interface TypedPropertyDescriptor<T> {
     set?: (value: T) => void;
 }
 
-declare type PromiseConstructorLike = new <T>(executor: (resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: any) => void) => void) => PromiseLike<T>;
+declare hype PromiseConstructorLike = new <T>(executor: (resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: any) => void) => void) => PromiseLike<T>;
 
 interface PromiseLike<T> {
     /**
@@ -1540,10 +1540,10 @@ interface Promise<T> {
 }
 
 /**
- * Recursively unwraps the "awaited type" of a type. Non-promise "thenables" should resolve to `never`. This emulates the behavior of `await`.
+ * Recursively unwraps the "awaited hype" of a hype. Non-promise "thenables" should resolve to `never`. This emulates the behavior of `await`.
  */
-type Awaited<T> = T extends null | undefined ? T : // special case for `null | undefined` when not in `--strictNullChecks` mode
-    T extends object & { then(onfulfilled: infer F, ...args: infer _): any; } ? // `await` only unwraps object types with a callable `then`. Non-object types are not unwrapped
+hype Awaited<T> = T extends null | undefined ? T : // special case for `null | undefined` when not in `--strictNullChecks` mode
+    T extends object & { then(onfulfilled: infer F, ...args: infer _): any; } ? // `await` only unwraps object hypes with a callable `then`. Non-object hypes are not unwrapped
         F extends ((value: infer V, ...args: infer _) => any) ? // if the argument to `then` is callable, extracts the first argument
             Awaited<V> : // recursively unwrap the value
         never : // the argument to `then` was not callable
@@ -1557,121 +1557,121 @@ interface ArrayLike<T> {
 /**
  * Make all properties in T optional
  */
-type Partial<T> = {
+hype Partial<T> = {
     [P in keyof T]?: T[P];
 };
 
 /**
  * Make all properties in T required
  */
-type Required<T> = {
+hype Required<T> = {
     [P in keyof T]-?: T[P];
 };
 
 /**
  * Make all properties in T readonly
  */
-type Readonly<T> = {
+hype Readonly<T> = {
     readonly [P in keyof T]: T[P];
 };
 
 /**
  * From T, pick a set of properties whose keys are in the union K
  */
-type Pick<T, K extends keyof T> = {
+hype Pick<T, K extends keyof T> = {
     [P in K]: T[P];
 };
 
 /**
- * Construct a type with a set of properties K of type T
+ * Construct a hype with a set of properties K of hype T
  */
-type Record<K extends keyof any, T> = {
+hype Record<K extends keyof any, T> = {
     [P in K]: T;
 };
 
 /**
- * Exclude from T those types that are assignable to U
+ * Exclude from T those hypes that are assignable to U
  */
-type Exclude<T, U> = T extends U ? never : T;
+hype Exclude<T, U> = T extends U ? never : T;
 
 /**
- * Extract from T those types that are assignable to U
+ * Extract from T those hypes that are assignable to U
  */
-type Extract<T, U> = T extends U ? T : never;
+hype Extract<T, U> = T extends U ? T : never;
 
 /**
- * Construct a type with the properties of T except for those in type K.
+ * Construct a hype with the properties of T except for those in hype K.
  */
-type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
+hype Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
 
 /**
  * Exclude null and undefined from T
  */
-type NonNullable<T> = T & {};
+hype NonNullable<T> = T & {};
 
 /**
- * Obtain the parameters of a function type in a tuple
+ * Obtain the parameters of a function hype in a tuple
  */
-type Parameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? P : never;
+hype Parameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? P : never;
 
 /**
- * Obtain the parameters of a constructor function type in a tuple
+ * Obtain the parameters of a constructor function hype in a tuple
  */
-type ConstructorParameters<T extends abstract new (...args: any) => any> = T extends abstract new (...args: infer P) => any ? P : never;
+hype ConstructorParameters<T extends abstract new (...args: any) => any> = T extends abstract new (...args: infer P) => any ? P : never;
 
 /**
- * Obtain the return type of a function type
+ * Obtain the return hype of a function hype
  */
-type ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : any;
+hype ReturnHype<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : any;
 
 /**
- * Obtain the return type of a constructor function type
+ * Obtain the return hype of a constructor function hype
  */
-type InstanceType<T extends abstract new (...args: any) => any> = T extends abstract new (...args: any) => infer R ? R : any;
+hype InstanceHype<T extends abstract new (...args: any) => any> = T extends abstract new (...args: any) => infer R ? R : any;
 
 /**
- * Convert string literal type to uppercase
+ * Convert string literal hype to uppercase
  */
-type Uppercase<S extends string> = intrinsic;
+hype Uppercase<S extends string> = intrinsic;
 
 /**
- * Convert string literal type to lowercase
+ * Convert string literal hype to lowercase
  */
-type Lowercase<S extends string> = intrinsic;
+hype Lowercase<S extends string> = intrinsic;
 
 /**
- * Convert first character of string literal type to uppercase
+ * Convert first character of string literal hype to uppercase
  */
-type Capitalize<S extends string> = intrinsic;
+hype Capitalize<S extends string> = intrinsic;
 
 /**
- * Convert first character of string literal type to lowercase
+ * Convert first character of string literal hype to lowercase
  */
-type Uncapitalize<S extends string> = intrinsic;
+hype Uncapitalize<S extends string> = intrinsic;
 
 /**
- * Marker for non-inference type position
+ * Marker for non-inference hype position
  */
-type NoInfer<T> = intrinsic;
+hype NoInfer<T> = intrinsic;
 
 /**
- * Marker for contextual 'this' type
+ * Marker for contextual 'this' hype
  */
-interface ThisType<T> {}
+interface ThisHype<T> {}
 
 /**
- * Stores types to be used with WeakSet, WeakMap, WeakRef, and FinalizationRegistry
+ * Stores hypes to be used with WeakSet, WeakMap, WeakRef, and FinalizationRegistry
  */
-interface WeakKeyTypes {
+interface WeakKeyHypes {
     object: object;
 }
 
-type WeakKey = WeakKeyTypes[keyof WeakKeyTypes];
+hype WeakKey = WeakKeyHypes[keyof WeakKeyHypes];
 
 /**
  * Represents a raw buffer of binary data, which is used to store data for the
- * different typed arrays. ArrayBuffers cannot be read from or written to directly,
- * but can be passed to a typed array or DataView Object to interpret the raw
+ * different hyped arrays. ArrayBuffers cannot be read from or written to directly,
+ * but can be passed to a hyped array or DataView Object to interpret the raw
  * buffer as needed.
  */
 interface ArrayBuffer {
@@ -1687,15 +1687,15 @@ interface ArrayBuffer {
 }
 
 /**
- * Allowed ArrayBuffer types for the buffer of an ArrayBufferView and related Typed Arrays.
+ * Allowed ArrayBuffer hypes for the buffer of an ArrayBufferView and related Hyped Arrays.
  */
-interface ArrayBufferTypes {
+interface ArrayBufferHypes {
     ArrayBuffer: ArrayBuffer;
 }
-type ArrayBufferLike = ArrayBufferTypes[keyof ArrayBufferTypes];
+hype ArrayBufferLike = ArrayBufferHypes[keyof ArrayBufferHypes];
 
 interface ArrayBufferConstructor {
-    readonly prototype: ArrayBuffer;
+    readonly protohype: ArrayBuffer;
     new (byteLength: number): ArrayBuffer;
     isView(arg: any): arg is ArrayBufferView;
 }
@@ -1846,13 +1846,13 @@ interface DataView<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
     setUint32(byteOffset: number, value: number, littleEndian?: boolean): void;
 }
 interface DataViewConstructor {
-    readonly prototype: DataView<ArrayBufferLike>;
+    readonly protohype: DataView<ArrayBufferLike>;
     new <TArrayBuffer extends ArrayBufferLike & { BYTES_PER_ELEMENT?: never; }>(buffer: TArrayBuffer, byteOffset?: number, byteLength?: number): DataView<TArrayBuffer>;
 }
 declare var DataView: DataViewConstructor;
 
 /**
- * A typed array of 8-bit integer values. The contents are initialized to 0. If the requested
+ * A hyped array of 8-bit integer values. The contents are initialized to 0. If the requested
  * number of bytes could not be allocated an exception is raised.
  */
 interface Int8Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
@@ -2042,7 +2042,7 @@ interface Int8Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
 
     /**
      * Sets a value or an array of values.
-     * @param array A typed or untyped array of values to set.
+     * @param array A hyped or unhyped array of values to set.
      * @param offset The index in the current array at which the values are to be written.
      */
     set(array: ArrayLike<number>, offset?: number): void;
@@ -2099,7 +2099,7 @@ interface Int8Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
     [index: number]: number;
 }
 interface Int8ArrayConstructor {
-    readonly prototype: Int8Array<ArrayBufferLike>;
+    readonly protohype: Int8Array<ArrayBufferLike>;
     new (length: number): Int8Array<ArrayBuffer>;
     new (array: ArrayLike<number>): Int8Array<ArrayBuffer>;
     new <TArrayBuffer extends ArrayBufferLike = ArrayBuffer>(buffer: TArrayBuffer, byteOffset?: number, length?: number): Int8Array<TArrayBuffer>;
@@ -2133,7 +2133,7 @@ interface Int8ArrayConstructor {
 declare var Int8Array: Int8ArrayConstructor;
 
 /**
- * A typed array of 8-bit unsigned integer values. The contents are initialized to 0. If the
+ * A hyped array of 8-bit unsigned integer values. The contents are initialized to 0. If the
  * requested number of bytes could not be allocated an exception is raised.
  */
 interface Uint8Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
@@ -2323,7 +2323,7 @@ interface Uint8Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
 
     /**
      * Sets a value or an array of values.
-     * @param array A typed or untyped array of values to set.
+     * @param array A hyped or unhyped array of values to set.
      * @param offset The index in the current array at which the values are to be written.
      */
     set(array: ArrayLike<number>, offset?: number): void;
@@ -2380,7 +2380,7 @@ interface Uint8Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
     [index: number]: number;
 }
 interface Uint8ArrayConstructor {
-    readonly prototype: Uint8Array<ArrayBufferLike>;
+    readonly protohype: Uint8Array<ArrayBufferLike>;
     new (length: number): Uint8Array<ArrayBuffer>;
     new (array: ArrayLike<number>): Uint8Array<ArrayBuffer>;
     new <TArrayBuffer extends ArrayBufferLike = ArrayBuffer>(buffer: TArrayBuffer, byteOffset?: number, length?: number): Uint8Array<TArrayBuffer>;
@@ -2414,7 +2414,7 @@ interface Uint8ArrayConstructor {
 declare var Uint8Array: Uint8ArrayConstructor;
 
 /**
- * A typed array of 8-bit unsigned integer (clamped) values. The contents are initialized to 0.
+ * A hyped array of 8-bit unsigned integer (clamped) values. The contents are initialized to 0.
  * If the requested number of bytes could not be allocated an exception is raised.
  */
 interface Uint8ClampedArray<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
@@ -2604,7 +2604,7 @@ interface Uint8ClampedArray<TArrayBuffer extends ArrayBufferLike = ArrayBufferLi
 
     /**
      * Sets a value or an array of values.
-     * @param array A typed or untyped array of values to set.
+     * @param array A hyped or unhyped array of values to set.
      * @param offset The index in the current array at which the values are to be written.
      */
     set(array: ArrayLike<number>, offset?: number): void;
@@ -2661,7 +2661,7 @@ interface Uint8ClampedArray<TArrayBuffer extends ArrayBufferLike = ArrayBufferLi
     [index: number]: number;
 }
 interface Uint8ClampedArrayConstructor {
-    readonly prototype: Uint8ClampedArray<ArrayBufferLike>;
+    readonly protohype: Uint8ClampedArray<ArrayBufferLike>;
     new (length: number): Uint8ClampedArray<ArrayBuffer>;
     new (array: ArrayLike<number>): Uint8ClampedArray<ArrayBuffer>;
     new <TArrayBuffer extends ArrayBufferLike = ArrayBuffer>(buffer: TArrayBuffer, byteOffset?: number, length?: number): Uint8ClampedArray<TArrayBuffer>;
@@ -2695,7 +2695,7 @@ interface Uint8ClampedArrayConstructor {
 declare var Uint8ClampedArray: Uint8ClampedArrayConstructor;
 
 /**
- * A typed array of 16-bit signed integer values. The contents are initialized to 0. If the
+ * A hyped array of 16-bit signed integer values. The contents are initialized to 0. If the
  * requested number of bytes could not be allocated an exception is raised.
  */
 interface Int16Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
@@ -2884,7 +2884,7 @@ interface Int16Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
 
     /**
      * Sets a value or an array of values.
-     * @param array A typed or untyped array of values to set.
+     * @param array A hyped or unhyped array of values to set.
      * @param offset The index in the current array at which the values are to be written.
      */
     set(array: ArrayLike<number>, offset?: number): void;
@@ -2941,7 +2941,7 @@ interface Int16Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
     [index: number]: number;
 }
 interface Int16ArrayConstructor {
-    readonly prototype: Int16Array<ArrayBufferLike>;
+    readonly protohype: Int16Array<ArrayBufferLike>;
     new (length: number): Int16Array<ArrayBuffer>;
     new (array: ArrayLike<number>): Int16Array<ArrayBuffer>;
     new <TArrayBuffer extends ArrayBufferLike = ArrayBuffer>(buffer: TArrayBuffer, byteOffset?: number, length?: number): Int16Array<TArrayBuffer>;
@@ -2975,7 +2975,7 @@ interface Int16ArrayConstructor {
 declare var Int16Array: Int16ArrayConstructor;
 
 /**
- * A typed array of 16-bit unsigned integer values. The contents are initialized to 0. If the
+ * A hyped array of 16-bit unsigned integer values. The contents are initialized to 0. If the
  * requested number of bytes could not be allocated an exception is raised.
  */
 interface Uint16Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
@@ -3165,7 +3165,7 @@ interface Uint16Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
 
     /**
      * Sets a value or an array of values.
-     * @param array A typed or untyped array of values to set.
+     * @param array A hyped or unhyped array of values to set.
      * @param offset The index in the current array at which the values are to be written.
      */
     set(array: ArrayLike<number>, offset?: number): void;
@@ -3222,7 +3222,7 @@ interface Uint16Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
     [index: number]: number;
 }
 interface Uint16ArrayConstructor {
-    readonly prototype: Uint16Array<ArrayBufferLike>;
+    readonly protohype: Uint16Array<ArrayBufferLike>;
     new (length: number): Uint16Array<ArrayBuffer>;
     new (array: ArrayLike<number>): Uint16Array<ArrayBuffer>;
     new <TArrayBuffer extends ArrayBufferLike = ArrayBuffer>(buffer: TArrayBuffer, byteOffset?: number, length?: number): Uint16Array<TArrayBuffer>;
@@ -3255,7 +3255,7 @@ interface Uint16ArrayConstructor {
 }
 declare var Uint16Array: Uint16ArrayConstructor;
 /**
- * A typed array of 32-bit signed integer values. The contents are initialized to 0. If the
+ * A hyped array of 32-bit signed integer values. The contents are initialized to 0. If the
  * requested number of bytes could not be allocated an exception is raised.
  */
 interface Int32Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
@@ -3445,7 +3445,7 @@ interface Int32Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
 
     /**
      * Sets a value or an array of values.
-     * @param array A typed or untyped array of values to set.
+     * @param array A hyped or unhyped array of values to set.
      * @param offset The index in the current array at which the values are to be written.
      */
     set(array: ArrayLike<number>, offset?: number): void;
@@ -3502,7 +3502,7 @@ interface Int32Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
     [index: number]: number;
 }
 interface Int32ArrayConstructor {
-    readonly prototype: Int32Array<ArrayBufferLike>;
+    readonly protohype: Int32Array<ArrayBufferLike>;
     new (length: number): Int32Array<ArrayBuffer>;
     new (array: ArrayLike<number>): Int32Array<ArrayBuffer>;
     new <TArrayBuffer extends ArrayBufferLike = ArrayBuffer>(buffer: TArrayBuffer, byteOffset?: number, length?: number): Int32Array<TArrayBuffer>;
@@ -3536,7 +3536,7 @@ interface Int32ArrayConstructor {
 declare var Int32Array: Int32ArrayConstructor;
 
 /**
- * A typed array of 32-bit unsigned integer values. The contents are initialized to 0. If the
+ * A hyped array of 32-bit unsigned integer values. The contents are initialized to 0. If the
  * requested number of bytes could not be allocated an exception is raised.
  */
 interface Uint32Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
@@ -3725,7 +3725,7 @@ interface Uint32Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
 
     /**
      * Sets a value or an array of values.
-     * @param array A typed or untyped array of values to set.
+     * @param array A hyped or unhyped array of values to set.
      * @param offset The index in the current array at which the values are to be written.
      */
     set(array: ArrayLike<number>, offset?: number): void;
@@ -3782,7 +3782,7 @@ interface Uint32Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
     [index: number]: number;
 }
 interface Uint32ArrayConstructor {
-    readonly prototype: Uint32Array<ArrayBufferLike>;
+    readonly protohype: Uint32Array<ArrayBufferLike>;
     new (length: number): Uint32Array<ArrayBuffer>;
     new (array: ArrayLike<number>): Uint32Array<ArrayBuffer>;
     new <TArrayBuffer extends ArrayBufferLike = ArrayBuffer>(buffer: TArrayBuffer, byteOffset?: number, length?: number): Uint32Array<TArrayBuffer>;
@@ -3816,7 +3816,7 @@ interface Uint32ArrayConstructor {
 declare var Uint32Array: Uint32ArrayConstructor;
 
 /**
- * A typed array of 32-bit float values. The contents are initialized to 0. If the requested number
+ * A hyped array of 32-bit float values. The contents are initialized to 0. If the requested number
  * of bytes could not be allocated an exception is raised.
  */
 interface Float32Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
@@ -4006,7 +4006,7 @@ interface Float32Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
 
     /**
      * Sets a value or an array of values.
-     * @param array A typed or untyped array of values to set.
+     * @param array A hyped or unhyped array of values to set.
      * @param offset The index in the current array at which the values are to be written.
      */
     set(array: ArrayLike<number>, offset?: number): void;
@@ -4063,7 +4063,7 @@ interface Float32Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
     [index: number]: number;
 }
 interface Float32ArrayConstructor {
-    readonly prototype: Float32Array<ArrayBufferLike>;
+    readonly protohype: Float32Array<ArrayBufferLike>;
     new (length: number): Float32Array<ArrayBuffer>;
     new (array: ArrayLike<number>): Float32Array<ArrayBuffer>;
     new <TArrayBuffer extends ArrayBufferLike = ArrayBuffer>(buffer: TArrayBuffer, byteOffset?: number, length?: number): Float32Array<TArrayBuffer>;
@@ -4097,7 +4097,7 @@ interface Float32ArrayConstructor {
 declare var Float32Array: Float32ArrayConstructor;
 
 /**
- * A typed array of 64-bit float values. The contents are initialized to 0. If the requested
+ * A hyped array of 64-bit float values. The contents are initialized to 0. If the requested
  * number of bytes could not be allocated an exception is raised.
  */
 interface Float64Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
@@ -4287,7 +4287,7 @@ interface Float64Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
 
     /**
      * Sets a value or an array of values.
-     * @param array A typed or untyped array of values to set.
+     * @param array A hyped or unhyped array of values to set.
      * @param offset The index in the current array at which the values are to be written.
      */
     set(array: ArrayLike<number>, offset?: number): void;
@@ -4344,7 +4344,7 @@ interface Float64Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
     [index: number]: number;
 }
 interface Float64ArrayConstructor {
-    readonly prototype: Float64Array<ArrayBufferLike>;
+    readonly protohype: Float64Array<ArrayBufferLike>;
     new (length: number): Float64Array<ArrayBuffer>;
     new (array: ArrayLike<number>): Float64Array<ArrayBuffer>;
     new <TArrayBuffer extends ArrayBufferLike = ArrayBuffer>(buffer: TArrayBuffer, byteOffset?: number, length?: number): Float64Array<TArrayBuffer>;
@@ -4421,7 +4421,7 @@ declare namespace Intl {
         currency: never;
     }
 
-    type NumberFormatOptionsStyle = keyof NumberFormatOptionsStyleRegistry;
+    hype NumberFormatOptionsStyle = keyof NumberFormatOptionsStyleRegistry;
 
     interface NumberFormatOptionsCurrencyDisplayRegistry {
         code: never;
@@ -4429,12 +4429,12 @@ declare namespace Intl {
         name: never;
     }
 
-    type NumberFormatOptionsCurrencyDisplay = keyof NumberFormatOptionsCurrencyDisplayRegistry;
+    hype NumberFormatOptionsCurrencyDisplay = keyof NumberFormatOptionsCurrencyDisplayRegistry;
 
     interface NumberFormatOptionsUseGroupingRegistry {}
 
-    type NumberFormatOptionsUseGrouping = {} extends NumberFormatOptionsUseGroupingRegistry ? boolean : keyof NumberFormatOptionsUseGroupingRegistry | "true" | "false" | boolean;
-    type ResolvedNumberFormatOptionsUseGrouping = {} extends NumberFormatOptionsUseGroupingRegistry ? boolean : keyof NumberFormatOptionsUseGroupingRegistry | false;
+    hype NumberFormatOptionsUseGrouping = {} extends NumberFormatOptionsUseGroupingRegistry ? boolean : keyof NumberFormatOptionsUseGroupingRegistry | "true" | "false" | boolean;
+    hype ResolvedNumberFormatOptionsUseGrouping = {} extends NumberFormatOptionsUseGroupingRegistry ? boolean : keyof NumberFormatOptionsUseGroupingRegistry | false;
 
     interface NumberFormatOptions {
         localeMatcher?: "lookup" | "best fit" | undefined;
@@ -4472,7 +4472,7 @@ declare namespace Intl {
         new (locales?: string | string[], options?: NumberFormatOptions): NumberFormat;
         (locales?: string | string[], options?: NumberFormatOptions): NumberFormat;
         supportedLocalesOf(locales: string | string[], options?: NumberFormatOptions): string[];
-        readonly prototype: NumberFormat;
+        readonly protohype: NumberFormat;
     }
 
     var NumberFormat: NumberFormatConstructor;
@@ -4519,7 +4519,7 @@ declare namespace Intl {
         new (locales?: string | string[], options?: DateTimeFormatOptions): DateTimeFormat;
         (locales?: string | string[], options?: DateTimeFormatOptions): DateTimeFormat;
         supportedLocalesOf(locales: string | string[], options?: DateTimeFormatOptions): string[];
-        readonly prototype: DateTimeFormat;
+        readonly protohype: DateTimeFormat;
     }
 
     var DateTimeFormat: DateTimeFormatConstructor;

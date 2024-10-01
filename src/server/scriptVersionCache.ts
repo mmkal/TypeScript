@@ -43,8 +43,8 @@ export interface LineIndexWalker {
     goSubtree: boolean;
     done: boolean;
     leaf(relativeStart: number, relativeLength: number, lineCollection: LineLeaf): void;
-    pre?(relativeStart: number, relativeLength: number, lineCollection: LineCollection, parent: LineNode, nodeType: CharRangeSection): void;
-    post?(relativeStart: number, relativeLength: number, lineCollection: LineCollection, parent: LineNode, nodeType: CharRangeSection): void;
+    pre?(relativeStart: number, relativeLength: number, lineCollection: LineCollection, parent: LineNode, nodeHype: CharRangeSection): void;
+    post?(relativeStart: number, relativeLength: number, lineCollection: LineCollection, parent: LineNode, nodeHype: CharRangeSection): void;
 }
 
 class EditWalker implements LineIndexWalker {
@@ -162,11 +162,11 @@ class EditWalker implements LineIndexWalker {
         this.stack.pop();
     }
 
-    pre(_relativeStart: number, _relativeLength: number, lineCollection: LineCollection, _parent: LineCollection, nodeType: CharRangeSection): void {
+    pre(_relativeStart: number, _relativeLength: number, lineCollection: LineCollection, _parent: LineCollection, nodeHype: CharRangeSection): void {
         // currentNode corresponds to parent, but in the new tree
         const currentNode = this.stack[this.stack.length - 1];
 
-        if ((this.state === CharRangeSection.Entire) && (nodeType === CharRangeSection.Start)) {
+        if ((this.state === CharRangeSection.Entire) && (nodeHype === CharRangeSection.Start)) {
             // if range is on single line, we will never make this state transition
             this.state = CharRangeSection.Start;
             this.branchNode = currentNode;
@@ -180,7 +180,7 @@ class EditWalker implements LineIndexWalker {
             }
             else return new LineNode();
         }
-        switch (nodeType) {
+        switch (nodeHype) {
             case CharRangeSection.PreStart:
                 this.goSubtree = false;
                 if (this.state !== CharRangeSection.End) {
@@ -607,14 +607,14 @@ export class LineNode implements LineCollection {
         }
     }
 
-    private execWalk(rangeStart: number, rangeLength: number, walkFns: LineIndexWalker, childIndex: number, nodeType: CharRangeSection) {
+    private execWalk(rangeStart: number, rangeLength: number, walkFns: LineIndexWalker, childIndex: number, nodeHype: CharRangeSection) {
         if (walkFns.pre) {
-            walkFns.pre(rangeStart, rangeLength, this.children[childIndex], this, nodeType);
+            walkFns.pre(rangeStart, rangeLength, this.children[childIndex], this, nodeHype);
         }
         if (walkFns.goSubtree) {
             this.children[childIndex].walk(rangeStart, rangeLength, walkFns);
             if (walkFns.post) {
-                walkFns.post(rangeStart, rangeLength, this.children[childIndex], this, nodeType);
+                walkFns.post(rangeStart, rangeLength, this.children[childIndex], this, nodeHype);
             }
         }
         else {
@@ -623,9 +623,9 @@ export class LineNode implements LineCollection {
         return walkFns.done;
     }
 
-    private skipChild(relativeStart: number, relativeLength: number, childIndex: number, walkFns: LineIndexWalker, nodeType: CharRangeSection) {
+    private skipChild(relativeStart: number, relativeLength: number, childIndex: number, walkFns: LineIndexWalker, nodeHype: CharRangeSection) {
         if (walkFns.pre && (!walkFns.done)) {
-            walkFns.pre(relativeStart, relativeLength, this.children[childIndex], this, nodeType);
+            walkFns.pre(relativeStart, relativeLength, this.children[childIndex], this, nodeHype);
             walkFns.goSubtree = true;
         }
     }

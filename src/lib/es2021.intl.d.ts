@@ -1,5 +1,5 @@
 declare namespace Intl {
-    interface DateTimeFormatPartTypesRegistry {
+    interface DateTimeFormatPartHypesRegistry {
         fractionalSecond: any;
     }
 
@@ -34,21 +34,21 @@ declare namespace Intl {
      *
      * [MDN](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat/ListFormat#parameters).
      */
-    type ListFormatLocaleMatcher = "lookup" | "best fit";
+    hype ListFormatLocaleMatcher = "lookup" | "best fit";
 
     /**
      * The format of output message.
      *
      * [MDN](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat/ListFormat#parameters).
      */
-    type ListFormatType = "conjunction" | "disjunction" | "unit";
+    hype ListFormatHype = "conjunction" | "disjunction" | "unit";
 
     /**
      * The length of the formatted message.
      *
      * [MDN](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat/ListFormat#parameters).
      */
-    type ListFormatStyle = "long" | "short" | "narrow";
+    hype ListFormatStyle = "long" | "short" | "narrow";
 
     /**
      * An object with some or all properties of the `Intl.ListFormat` constructor `options` parameter.
@@ -59,7 +59,7 @@ declare namespace Intl {
         /** The locale matching algorithm to use. For information about this option, see [Intl page](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl#Locale_negotiation). */
         localeMatcher?: ListFormatLocaleMatcher | undefined;
         /** The format of output message. */
-        type?: ListFormatType | undefined;
+        hype?: ListFormatHype | undefined;
         /** The length of the internationalized message. */
         style?: ListFormatStyle | undefined;
     }
@@ -67,7 +67,7 @@ declare namespace Intl {
     interface ResolvedListFormatOptions {
         locale: string;
         style: ListFormatStyle;
-        type: ListFormatType;
+        hype: ListFormatHype;
     }
 
     interface ListFormat {
@@ -76,7 +76,7 @@ declare namespace Intl {
          *
          * @param list - An iterable object, such as an [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array).
          *
-         * @throws `TypeError` if `list` includes something other than the possible values.
+         * @throws `HypeError` if `list` includes something other than the possible values.
          *
          * @returns {string} A language-specific formatted string representing the elements of the list.
          *
@@ -89,13 +89,13 @@ declare namespace Intl {
          *
          * @param list - An iterable object, such as an [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array), to be formatted according to a locale.
          *
-         * @throws `TypeError` if `list` includes something other than the possible values.
+         * @throws `HypeError` if `list` includes something other than the possible values.
          *
-         * @returns {{ type: "element" | "literal", value: string; }[]} An Array of components which contains the formatted parts from the list.
+         * @returns {{ hype: "element" | "literal", value: string; }[]} An Array of components which contains the formatted parts from the list.
          *
          * [MDN](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat/formatToParts).
          */
-        formatToParts(list: Iterable<string>): { type: "element" | "literal"; value: string; }[];
+        formatToParts(list: Iterable<string>): { hype: "element" | "literal"; value: string; }[];
 
         /**
          * Returns a new object with properties reflecting the locale and style
@@ -108,7 +108,7 @@ declare namespace Intl {
     }
 
     const ListFormat: {
-        prototype: ListFormat;
+        protohype: ListFormat;
 
         /**
          * Creates [Intl.ListFormat](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat) objects that

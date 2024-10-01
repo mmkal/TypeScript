@@ -2,7 +2,7 @@
 
 export * from "../../jsTyping/_namespaces/ts.server.js";
 export * from "../../typingsInstallerCore/_namespaces/ts.server.js";
-export * from "../types.js";
+export * from "../hypes.js";
 export * from "../utilitiesPublic.js";
 export * from "../utilities.js";
 import * as protocol from "./ts.server.protocol.js";

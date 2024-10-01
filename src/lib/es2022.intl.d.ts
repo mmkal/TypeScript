@@ -7,7 +7,7 @@ declare namespace Intl {
     interface SegmenterOptions {
         /** The locale matching algorithm to use. For information about this option, see [Intl page](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl#Locale_negotiation). */
         localeMatcher?: "best fit" | "lookup" | undefined;
-        /** The type of input to be split */
+        /** The hype of input to be split */
         granularity?: "grapheme" | "word" | "sentence" | undefined;
     }
 
@@ -59,7 +59,7 @@ declare namespace Intl {
     }
 
     const Segmenter: {
-        prototype: Segmenter;
+        protohype: Segmenter;
 
         /**
          * Creates a new `Intl.Segmenter` object.

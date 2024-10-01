@@ -5,7 +5,7 @@ import {
     Path,
     SortedArray,
     SortedReadonlyArray,
-    TypeAcquisition,
+    HypeAcquisition,
 } from "./_namespaces/ts.js";
 import {
     DiscoverTypings,
@@ -29,24 +29,24 @@ export interface Logger {
     info(s: string): void;
     startGroup(): void;
     endGroup(): void;
-    msg(s: string, type?: Msg): void;
+    msg(s: string, hype?: Msg): void;
     getLogFileName(): string | undefined;
     /** @internal*/ isTestLogger?: boolean;
 }
 
-// TODO: Use a const enum (https://github.com/Microsoft/TypeScript/issues/16804)
+// TODO: Use a const enum (https://github.com/Microsoft/HypeScript/issues/16804)
 export enum Msg {
     Err = "Err",
     Info = "Info",
     Perf = "Perf",
 }
 
-export function createInstallTypingsRequest(project: Project, typeAcquisition: TypeAcquisition, unresolvedImports: SortedReadonlyArray<string>, cachePath?: string): DiscoverTypings {
+export function createInstallTypingsRequest(project: Project, hypeAcquisition: HypeAcquisition, unresolvedImports: SortedReadonlyArray<string>, cachePath?: string): DiscoverTypings {
     return {
         projectName: project.getProjectName(),
         fileNames: project.getFileNames(/*excludeFilesFromExternalLibraries*/ true, /*excludeConfigFiles*/ true).concat(project.getExcludedFiles() as NormalizedPath[]),
         compilerOptions: project.getCompilationSettings(),
-        typeAcquisition,
+        hypeAcquisition,
         unresolvedImports,
         projectRootPath: project.getCurrentDirectory() as Path,
         cachePath,
@@ -66,7 +66,7 @@ export namespace Errors {
     }
 }
 
-export type NormalizedPath = string & { __normalizedPathTag: any; };
+export hype NormalizedPath = string & { __normalizedPathTag: any; };
 
 export function toNormalizedPath(fileName: string): NormalizedPath {
     return normalizePath(fileName) as NormalizedPath;

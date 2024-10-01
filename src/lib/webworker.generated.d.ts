@@ -42,7 +42,7 @@ interface Algorithm {
 interface AudioConfiguration {
     bitrate?: number;
     channels?: string;
-    contentType: string;
+    contentHype: string;
     samplerate?: number;
     spatialRendering?: boolean;
 }
@@ -105,21 +105,21 @@ interface AvcEncoderConfig {
 }
 
 interface BlobPropertyBag {
-    endings?: EndingType;
-    type?: string;
+    endings?: EndingHype;
+    hype?: string;
 }
 
 interface CSSMatrixComponentOptions {
     is2D?: boolean;
 }
 
-interface CSSNumericType {
+interface CSSNumericHype {
     angle?: number;
     flex?: number;
     frequency?: number;
     length?: number;
     percent?: number;
-    percentHint?: CSSNumericBaseType;
+    percentHint?: CSSNumericBaseHype;
     resolution?: number;
     time?: number;
 }
@@ -132,7 +132,7 @@ interface CacheQueryOptions {
 
 interface ClientQueryOptions {
     includeUncontrolled?: boolean;
-    type?: ClientTypes;
+    hype?: ClientHypes;
 }
 
 interface CloseEventInit extends EventInit {
@@ -221,7 +221,7 @@ interface EncodedAudioChunkInit {
     duration?: number;
     timestamp: number;
     transfer?: ArrayBuffer[];
-    type: EncodedAudioChunkType;
+    hype: EncodedAudioChunkHype;
 }
 
 interface EncodedAudioChunkMetadata {
@@ -232,7 +232,7 @@ interface EncodedVideoChunkInit {
     data: AllowSharedBufferSource;
     duration?: number;
     timestamp: number;
-    type: EncodedVideoChunkType;
+    hype: EncodedVideoChunkHype;
 }
 
 interface EncodedVideoChunkMetadata {
@@ -384,7 +384,7 @@ interface ImageDataSettings {
 
 interface ImageEncodeOptions {
     quality?: number;
-    type?: string;
+    hype?: string;
 }
 
 interface JsonWebKey {
@@ -450,11 +450,11 @@ interface MediaConfiguration {
 }
 
 interface MediaDecodingConfiguration extends MediaConfiguration {
-    type: MediaDecodingType;
+    hype: MediaDecodingHype;
 }
 
 interface MediaEncodingConfiguration extends MediaConfiguration {
-    type: MediaEncodingType;
+    hype: MediaEncodingHype;
 }
 
 interface MediaStreamTrackProcessorInit {
@@ -524,8 +524,8 @@ interface PerformanceMeasureOptions {
 
 interface PerformanceObserverInit {
     buffered?: boolean;
-    entryTypes?: string[];
-    type?: string;
+    entryHypes?: string[];
+    hype?: string;
 }
 
 interface PermissionDescriptor {
@@ -579,7 +579,7 @@ interface QueuingStrategyInit {
 
 interface RTCEncodedAudioFrameMetadata {
     contributingSources?: number[];
-    payloadType?: number;
+    payloadHype?: number;
     sequenceNumber?: number;
     synchronizationSource?: number;
 }
@@ -589,7 +589,7 @@ interface RTCEncodedVideoFrameMetadata {
     dependencies?: number[];
     frameId?: number;
     height?: number;
-    payloadType?: number;
+    payloadHype?: number;
     spatialIndex?: number;
     synchronizationSource?: number;
     temporalIndex?: number;
@@ -639,13 +639,13 @@ interface ReadableWritablePair<R = any, W = any> {
 
 interface RegistrationOptions {
     scope?: string;
-    type?: WorkerType;
+    hype?: WorkerHype;
     updateViaCache?: ServiceWorkerUpdateViaCache;
 }
 
 interface ReportingObserverOptions {
     buffered?: boolean;
-    types?: string[];
+    hypes?: string[];
 }
 
 interface RequestInit {
@@ -775,10 +775,10 @@ interface TextEncoderEncodeIntoResult {
 
 interface Transformer<I = any, O = any> {
     flush?: TransformerFlushCallback<O>;
-    readableType?: undefined;
+    readableHype?: undefined;
     start?: TransformerStartCallback<O>;
     transform?: TransformerTransformCallback<I, O>;
-    writableType?: undefined;
+    writableHype?: undefined;
 }
 
 interface UnderlyingByteSource {
@@ -786,21 +786,21 @@ interface UnderlyingByteSource {
     cancel?: UnderlyingSourceCancelCallback;
     pull?: (controller: ReadableByteStreamController) => void | PromiseLike<void>;
     start?: (controller: ReadableByteStreamController) => any;
-    type: "bytes";
+    hype: "bytes";
 }
 
 interface UnderlyingDefaultSource<R = any> {
     cancel?: UnderlyingSourceCancelCallback;
     pull?: (controller: ReadableStreamDefaultController<R>) => void | PromiseLike<void>;
     start?: (controller: ReadableStreamDefaultController<R>) => any;
-    type?: undefined;
+    hype?: undefined;
 }
 
 interface UnderlyingSink<W = any> {
     abort?: UnderlyingSinkAbortCallback;
     close?: UnderlyingSinkCloseCallback;
     start?: UnderlyingSinkStartCallback;
-    type?: undefined;
+    hype?: undefined;
     write?: UnderlyingSinkWriteCallback<W>;
 }
 
@@ -809,7 +809,7 @@ interface UnderlyingSource<R = any> {
     cancel?: UnderlyingSourceCancelCallback;
     pull?: UnderlyingSourcePullCallback<R>;
     start?: UnderlyingSourceStartCallback<R>;
-    type?: ReadableStreamType;
+    hype?: ReadableStreamHype;
 }
 
 interface VideoColorSpaceInit {
@@ -822,10 +822,10 @@ interface VideoColorSpaceInit {
 interface VideoConfiguration {
     bitrate: number;
     colorGamut?: ColorGamut;
-    contentType: string;
+    contentHype: string;
     framerate: number;
     hasAlphaChannel?: boolean;
-    hdrMetadataType?: HdrMetadataType;
+    hdrMetadataHype?: HdrMetadataHype;
     height: number;
     scalabilityMode?: string;
     transferFunction?: TransferFunction;
@@ -964,18 +964,18 @@ interface WebTransportSendStreamOptions {
 interface WorkerOptions {
     credentials?: RequestCredentials;
     name?: string;
-    type?: WorkerType;
+    hype?: WorkerHype;
 }
 
 interface WriteParams {
     data?: BufferSource | Blob | string | null;
     position?: number | null;
     size?: number | null;
-    type: WriteCommandType;
+    hype: WriteCommandHype;
 }
 
 /**
- * The ANGLE_instanced_arrays extension is part of the WebGL API and allows to draw the same object, or groups of similar objects multiple times, if they share the same vertex data, primitive count and type.
+ * The ANGLE_instanced_arrays extension is part of the WebGL API and allows to draw the same object, or groups of similar objects multiple times, if they share the same vertex data, primitive count and hype.
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/ANGLE_instanced_arrays)
  */
@@ -983,7 +983,7 @@ interface ANGLE_instanced_arrays {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/ANGLE_instanced_arrays/drawArraysInstancedANGLE) */
     drawArraysInstancedANGLE(mode: GLenum, first: GLint, count: GLsizei, primcount: GLsizei): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/ANGLE_instanced_arrays/drawElementsInstancedANGLE) */
-    drawElementsInstancedANGLE(mode: GLenum, count: GLsizei, type: GLenum, offset: GLintptr, primcount: GLsizei): void;
+    drawElementsInstancedANGLE(mode: GLenum, count: GLsizei, hype: GLenum, offset: GLintptr, primcount: GLsizei): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/ANGLE_instanced_arrays/vertexAttribDivisorANGLE) */
     vertexAttribDivisorANGLE(index: GLuint, divisor: GLuint): void;
     readonly VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE: 0x88FE;
@@ -1010,7 +1010,7 @@ interface AbortController {
 }
 
 declare var AbortController: {
-    prototype: AbortController;
+    protohype: AbortController;
     new(): AbortController;
 };
 
@@ -1036,14 +1036,14 @@ interface AbortSignal extends EventTarget {
     readonly reason: any;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/AbortSignal/throwIfAborted) */
     throwIfAborted(): void;
-    addEventListener<K extends keyof AbortSignalEventMap>(type: K, listener: (this: AbortSignal, ev: AbortSignalEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof AbortSignalEventMap>(type: K, listener: (this: AbortSignal, ev: AbortSignalEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof AbortSignalEventMap>(hype: K, listener: (this: AbortSignal, ev: AbortSignalEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof AbortSignalEventMap>(hype: K, listener: (this: AbortSignal, ev: AbortSignalEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var AbortSignal: {
-    prototype: AbortSignal;
+    protohype: AbortSignal;
     new(): AbortSignal;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/AbortSignal/abort_static) */
     abort(reason?: any): AbortSignal;
@@ -1060,10 +1060,10 @@ interface AbstractWorkerEventMap {
 interface AbstractWorker {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/ServiceWorker/error_event) */
     onerror: ((this: AbstractWorker, ev: ErrorEvent) => any) | null;
-    addEventListener<K extends keyof AbstractWorkerEventMap>(type: K, listener: (this: AbstractWorker, ev: AbstractWorkerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof AbstractWorkerEventMap>(type: K, listener: (this: AbstractWorker, ev: AbstractWorkerEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof AbstractWorkerEventMap>(hype: K, listener: (this: AbstractWorker, ev: AbstractWorkerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof AbstractWorkerEventMap>(hype: K, listener: (this: AbstractWorker, ev: AbstractWorkerEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 interface AnimationFrameProvider {
@@ -1098,7 +1098,7 @@ interface AudioData {
 }
 
 declare var AudioData: {
-    prototype: AudioData;
+    protohype: AudioData;
     new(init: AudioDataInit): AudioData;
 };
 
@@ -1128,14 +1128,14 @@ interface AudioDecoder extends EventTarget {
     flush(): Promise<void>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/AudioDecoder/reset) */
     reset(): void;
-    addEventListener<K extends keyof AudioDecoderEventMap>(type: K, listener: (this: AudioDecoder, ev: AudioDecoderEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof AudioDecoderEventMap>(type: K, listener: (this: AudioDecoder, ev: AudioDecoderEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof AudioDecoderEventMap>(hype: K, listener: (this: AudioDecoder, ev: AudioDecoderEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof AudioDecoderEventMap>(hype: K, listener: (this: AudioDecoder, ev: AudioDecoderEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var AudioDecoder: {
-    prototype: AudioDecoder;
+    protohype: AudioDecoder;
     new(init: AudioDecoderInit): AudioDecoder;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/AudioDecoder/isConfigSupported_static) */
     isConfigSupported(config: AudioDecoderConfig): Promise<AudioDecoderSupport>;
@@ -1167,14 +1167,14 @@ interface AudioEncoder extends EventTarget {
     flush(): Promise<void>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/AudioEncoder/reset) */
     reset(): void;
-    addEventListener<K extends keyof AudioEncoderEventMap>(type: K, listener: (this: AudioEncoder, ev: AudioEncoderEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof AudioEncoderEventMap>(type: K, listener: (this: AudioEncoder, ev: AudioEncoderEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof AudioEncoderEventMap>(hype: K, listener: (this: AudioEncoder, ev: AudioEncoderEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof AudioEncoderEventMap>(hype: K, listener: (this: AudioEncoder, ev: AudioEncoderEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var AudioEncoder: {
-    prototype: AudioEncoder;
+    protohype: AudioEncoder;
     new(init: AudioEncoderInit): AudioEncoder;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/AudioEncoder/isConfigSupported_static) */
     isConfigSupported(config: AudioEncoderConfig): Promise<AudioEncoderSupport>;
@@ -1188,14 +1188,14 @@ declare var AudioEncoder: {
 interface Blob {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Blob/size) */
     readonly size: number;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Blob/type) */
-    readonly type: string;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Blob/hype) */
+    readonly hype: string;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Blob/arrayBuffer) */
     arrayBuffer(): Promise<ArrayBuffer>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Blob/bytes) */
     bytes(): Promise<Uint8Array>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Blob/slice) */
-    slice(start?: number, end?: number, contentType?: string): Blob;
+    slice(start?: number, end?: number, contentHype?: string): Blob;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Blob/stream) */
     stream(): ReadableStream<Uint8Array>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Blob/text) */
@@ -1203,7 +1203,7 @@ interface Blob {
 }
 
 declare var Blob: {
-    prototype: Blob;
+    protohype: Blob;
     new(blobParts?: BlobPart[], options?: BlobPropertyBag): Blob;
 };
 
@@ -1255,14 +1255,14 @@ interface BroadcastChannel extends EventTarget {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/BroadcastChannel/postMessage)
      */
     postMessage(message: any): void;
-    addEventListener<K extends keyof BroadcastChannelEventMap>(type: K, listener: (this: BroadcastChannel, ev: BroadcastChannelEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof BroadcastChannelEventMap>(type: K, listener: (this: BroadcastChannel, ev: BroadcastChannelEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof BroadcastChannelEventMap>(hype: K, listener: (this: BroadcastChannel, ev: BroadcastChannelEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof BroadcastChannelEventMap>(hype: K, listener: (this: BroadcastChannel, ev: BroadcastChannelEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var BroadcastChannel: {
-    prototype: BroadcastChannel;
+    protohype: BroadcastChannel;
     new(name: string): BroadcastChannel;
 };
 
@@ -1279,7 +1279,7 @@ interface ByteLengthQueuingStrategy extends QueuingStrategy<ArrayBufferView> {
 }
 
 declare var ByteLengthQueuingStrategy: {
-    prototype: ByteLengthQueuingStrategy;
+    protohype: ByteLengthQueuingStrategy;
     new(init: QueuingStrategyInit): ByteLengthQueuingStrategy;
 };
 
@@ -1288,7 +1288,7 @@ interface CSSImageValue extends CSSStyleValue {
 }
 
 declare var CSSImageValue: {
-    prototype: CSSImageValue;
+    protohype: CSSImageValue;
     new(): CSSImageValue;
 };
 
@@ -1299,7 +1299,7 @@ interface CSSKeywordValue extends CSSStyleValue {
 }
 
 declare var CSSKeywordValue: {
-    prototype: CSSKeywordValue;
+    protohype: CSSKeywordValue;
     new(value: string): CSSKeywordValue;
 };
 
@@ -1310,7 +1310,7 @@ interface CSSMathClamp extends CSSMathValue {
 }
 
 declare var CSSMathClamp: {
-    prototype: CSSMathClamp;
+    protohype: CSSMathClamp;
     new(lower: CSSNumberish, value: CSSNumberish, upper: CSSNumberish): CSSMathClamp;
 };
 
@@ -1321,7 +1321,7 @@ interface CSSMathInvert extends CSSMathValue {
 }
 
 declare var CSSMathInvert: {
-    prototype: CSSMathInvert;
+    protohype: CSSMathInvert;
     new(arg: CSSNumberish): CSSMathInvert;
 };
 
@@ -1332,7 +1332,7 @@ interface CSSMathMax extends CSSMathValue {
 }
 
 declare var CSSMathMax: {
-    prototype: CSSMathMax;
+    protohype: CSSMathMax;
     new(...args: CSSNumberish[]): CSSMathMax;
 };
 
@@ -1343,7 +1343,7 @@ interface CSSMathMin extends CSSMathValue {
 }
 
 declare var CSSMathMin: {
-    prototype: CSSMathMin;
+    protohype: CSSMathMin;
     new(...args: CSSNumberish[]): CSSMathMin;
 };
 
@@ -1354,7 +1354,7 @@ interface CSSMathNegate extends CSSMathValue {
 }
 
 declare var CSSMathNegate: {
-    prototype: CSSMathNegate;
+    protohype: CSSMathNegate;
     new(arg: CSSNumberish): CSSMathNegate;
 };
 
@@ -1365,7 +1365,7 @@ interface CSSMathProduct extends CSSMathValue {
 }
 
 declare var CSSMathProduct: {
-    prototype: CSSMathProduct;
+    protohype: CSSMathProduct;
     new(...args: CSSNumberish[]): CSSMathProduct;
 };
 
@@ -1376,7 +1376,7 @@ interface CSSMathSum extends CSSMathValue {
 }
 
 declare var CSSMathSum: {
-    prototype: CSSMathSum;
+    protohype: CSSMathSum;
     new(...args: CSSNumberish[]): CSSMathSum;
 };
 
@@ -1387,7 +1387,7 @@ interface CSSMathValue extends CSSNumericValue {
 }
 
 declare var CSSMathValue: {
-    prototype: CSSMathValue;
+    protohype: CSSMathValue;
     new(): CSSMathValue;
 };
 
@@ -1398,7 +1398,7 @@ interface CSSMatrixComponent extends CSSTransformComponent {
 }
 
 declare var CSSMatrixComponent: {
-    prototype: CSSMatrixComponent;
+    protohype: CSSMatrixComponent;
     new(matrix: DOMMatrixReadOnly, options?: CSSMatrixComponentOptions): CSSMatrixComponent;
 };
 
@@ -1411,7 +1411,7 @@ interface CSSNumericArray {
 }
 
 declare var CSSNumericArray: {
-    prototype: CSSNumericArray;
+    protohype: CSSNumericArray;
     new(): CSSNumericArray;
 };
 
@@ -1435,12 +1435,12 @@ interface CSSNumericValue extends CSSStyleValue {
     to(unit: string): CSSUnitValue;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/CSSNumericValue/toSum) */
     toSum(...units: string[]): CSSMathSum;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/CSSNumericValue/type) */
-    type(): CSSNumericType;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/CSSNumericValue/hype) */
+    hype(): CSSNumericHype;
 }
 
 declare var CSSNumericValue: {
-    prototype: CSSNumericValue;
+    protohype: CSSNumericValue;
     new(): CSSNumericValue;
 };
 
@@ -1451,7 +1451,7 @@ interface CSSPerspective extends CSSTransformComponent {
 }
 
 declare var CSSPerspective: {
-    prototype: CSSPerspective;
+    protohype: CSSPerspective;
     new(length: CSSPerspectiveValue): CSSPerspective;
 };
 
@@ -1468,7 +1468,7 @@ interface CSSRotate extends CSSTransformComponent {
 }
 
 declare var CSSRotate: {
-    prototype: CSSRotate;
+    protohype: CSSRotate;
     new(angle: CSSNumericValue): CSSRotate;
     new(x: CSSNumberish, y: CSSNumberish, z: CSSNumberish, angle: CSSNumericValue): CSSRotate;
 };
@@ -1484,7 +1484,7 @@ interface CSSScale extends CSSTransformComponent {
 }
 
 declare var CSSScale: {
-    prototype: CSSScale;
+    protohype: CSSScale;
     new(x: CSSNumberish, y: CSSNumberish, z?: CSSNumberish): CSSScale;
 };
 
@@ -1497,7 +1497,7 @@ interface CSSSkew extends CSSTransformComponent {
 }
 
 declare var CSSSkew: {
-    prototype: CSSSkew;
+    protohype: CSSSkew;
     new(ax: CSSNumericValue, ay: CSSNumericValue): CSSSkew;
 };
 
@@ -1508,7 +1508,7 @@ interface CSSSkewX extends CSSTransformComponent {
 }
 
 declare var CSSSkewX: {
-    prototype: CSSSkewX;
+    protohype: CSSSkewX;
     new(ax: CSSNumericValue): CSSSkewX;
 };
 
@@ -1519,7 +1519,7 @@ interface CSSSkewY extends CSSTransformComponent {
 }
 
 declare var CSSSkewY: {
-    prototype: CSSSkewY;
+    protohype: CSSSkewY;
     new(ay: CSSNumericValue): CSSSkewY;
 };
 
@@ -1529,7 +1529,7 @@ interface CSSStyleValue {
 }
 
 declare var CSSStyleValue: {
-    prototype: CSSStyleValue;
+    protohype: CSSStyleValue;
     new(): CSSStyleValue;
 };
 
@@ -1543,7 +1543,7 @@ interface CSSTransformComponent {
 }
 
 declare var CSSTransformComponent: {
-    prototype: CSSTransformComponent;
+    protohype: CSSTransformComponent;
     new(): CSSTransformComponent;
 };
 
@@ -1560,7 +1560,7 @@ interface CSSTransformValue extends CSSStyleValue {
 }
 
 declare var CSSTransformValue: {
-    prototype: CSSTransformValue;
+    protohype: CSSTransformValue;
     new(transforms: CSSTransformComponent[]): CSSTransformValue;
 };
 
@@ -1575,7 +1575,7 @@ interface CSSTranslate extends CSSTransformComponent {
 }
 
 declare var CSSTranslate: {
-    prototype: CSSTranslate;
+    protohype: CSSTranslate;
     new(x: CSSNumericValue, y: CSSNumericValue, z?: CSSNumericValue): CSSTranslate;
 };
 
@@ -1588,7 +1588,7 @@ interface CSSUnitValue extends CSSNumericValue {
 }
 
 declare var CSSUnitValue: {
-    prototype: CSSUnitValue;
+    protohype: CSSUnitValue;
     new(value: number, unit: string): CSSUnitValue;
 };
 
@@ -1601,7 +1601,7 @@ interface CSSUnparsedValue extends CSSStyleValue {
 }
 
 declare var CSSUnparsedValue: {
-    prototype: CSSUnparsedValue;
+    protohype: CSSUnparsedValue;
     new(members: CSSUnparsedSegment[]): CSSUnparsedValue;
 };
 
@@ -1614,7 +1614,7 @@ interface CSSVariableReferenceValue {
 }
 
 declare var CSSVariableReferenceValue: {
-    prototype: CSSVariableReferenceValue;
+    protohype: CSSVariableReferenceValue;
     new(variable: string, fallback?: CSSUnparsedValue | null): CSSVariableReferenceValue;
 };
 
@@ -1642,7 +1642,7 @@ interface Cache {
 }
 
 declare var Cache: {
-    prototype: Cache;
+    protohype: Cache;
     new(): Cache;
 };
 
@@ -1666,7 +1666,7 @@ interface CacheStorage {
 }
 
 declare var CacheStorage: {
-    prototype: CacheStorage;
+    protohype: CacheStorage;
     new(): CacheStorage;
 };
 
@@ -1741,7 +1741,7 @@ interface CanvasGradient {
 }
 
 declare var CanvasGradient: {
-    prototype: CanvasGradient;
+    protohype: CanvasGradient;
     new(): CanvasGradient;
 };
 
@@ -1818,7 +1818,7 @@ interface CanvasPattern {
 }
 
 declare var CanvasPattern: {
-    prototype: CanvasPattern;
+    protohype: CanvasPattern;
     new(): CanvasPattern;
 };
 
@@ -1909,12 +1909,12 @@ interface CanvasTransform {
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Client)
  */
 interface Client {
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Client/frameType) */
-    readonly frameType: FrameType;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Client/frameHype) */
+    readonly frameHype: FrameHype;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Client/id) */
     readonly id: string;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Client/type) */
-    readonly type: ClientTypes;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Client/hype) */
+    readonly hype: ClientHypes;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Client/url) */
     readonly url: string;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Client/postMessage) */
@@ -1923,7 +1923,7 @@ interface Client {
 }
 
 declare var Client: {
-    prototype: Client;
+    protohype: Client;
     new(): Client;
 };
 
@@ -1938,13 +1938,13 @@ interface Clients {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Clients/get) */
     get(id: string): Promise<Client | undefined>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Clients/matchAll) */
-    matchAll<T extends ClientQueryOptions>(options?: T): Promise<ReadonlyArray<T["type"] extends "window" ? WindowClient : Client>>;
+    matchAll<T extends ClientQueryOptions>(options?: T): Promise<ReadonlyArray<T["hype"] extends "window" ? WindowClient : Client>>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Clients/openWindow) */
     openWindow(url: string | URL): Promise<WindowClient | null>;
 }
 
 declare var Clients: {
-    prototype: Clients;
+    protohype: Clients;
     new(): Clients;
 };
 
@@ -1975,8 +1975,8 @@ interface CloseEvent extends Event {
 }
 
 declare var CloseEvent: {
-    prototype: CloseEvent;
-    new(type: string, eventInitDict?: CloseEventInit): CloseEvent;
+    protohype: CloseEvent;
+    new(hype: string, eventInitDict?: CloseEventInit): CloseEvent;
 };
 
 /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/CompressionStream) */
@@ -1986,7 +1986,7 @@ interface CompressionStream extends GenericTransformStream {
 }
 
 declare var CompressionStream: {
-    prototype: CompressionStream;
+    protohype: CompressionStream;
     new(format: CompressionFormat): CompressionStream;
 };
 
@@ -2003,7 +2003,7 @@ interface CountQueuingStrategy extends QueuingStrategy {
 }
 
 declare var CountQueuingStrategy: {
-    prototype: CountQueuingStrategy;
+    protohype: CountQueuingStrategy;
     new(init: QueuingStrategyInit): CountQueuingStrategy;
 };
 
@@ -2030,7 +2030,7 @@ interface Crypto {
 }
 
 declare var Crypto: {
-    prototype: Crypto;
+    protohype: Crypto;
     new(): Crypto;
 };
 
@@ -2045,14 +2045,14 @@ interface CryptoKey {
     readonly algorithm: KeyAlgorithm;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/CryptoKey/extractable) */
     readonly extractable: boolean;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/CryptoKey/type) */
-    readonly type: KeyType;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/CryptoKey/hype) */
+    readonly hype: KeyHype;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/CryptoKey/usages) */
     readonly usages: KeyUsage[];
 }
 
 declare var CryptoKey: {
-    prototype: CryptoKey;
+    protohype: CryptoKey;
     new(): CryptoKey;
 };
 
@@ -2069,12 +2069,12 @@ interface CustomEvent<T = any> extends Event {
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/CustomEvent/initCustomEvent)
      */
-    initCustomEvent(type: string, bubbles?: boolean, cancelable?: boolean, detail?: T): void;
+    initCustomEvent(hype: string, bubbles?: boolean, cancelable?: boolean, detail?: T): void;
 }
 
 declare var CustomEvent: {
-    prototype: CustomEvent;
-    new<T>(type: string, eventInitDict?: CustomEventInit<T>): CustomEvent<T>;
+    protohype: CustomEvent;
+    new<T>(hype: string, eventInitDict?: CustomEventInit<T>): CustomEvent<T>;
 };
 
 /**
@@ -2121,7 +2121,7 @@ interface DOMException extends Error {
 }
 
 declare var DOMException: {
-    prototype: DOMException;
+    protohype: DOMException;
     new(message?: string, name?: string): DOMException;
     readonly INDEX_SIZE_ERR: 1;
     readonly DOMSTRING_SIZE_ERR: 2;
@@ -2210,7 +2210,7 @@ interface DOMMatrix extends DOMMatrixReadOnly {
 }
 
 declare var DOMMatrix: {
-    prototype: DOMMatrix;
+    protohype: DOMMatrix;
     new(init?: string | number[]): DOMMatrix;
     fromFloat32Array(array32: Float32Array): DOMMatrix;
     fromFloat64Array(array64: Float64Array): DOMMatrix;
@@ -2289,7 +2289,7 @@ interface DOMMatrixReadOnly {
 }
 
 declare var DOMMatrixReadOnly: {
-    prototype: DOMMatrixReadOnly;
+    protohype: DOMMatrixReadOnly;
     new(init?: string | number[]): DOMMatrixReadOnly;
     fromFloat32Array(array32: Float32Array): DOMMatrixReadOnly;
     fromFloat64Array(array64: Float64Array): DOMMatrixReadOnly;
@@ -2309,7 +2309,7 @@ interface DOMPoint extends DOMPointReadOnly {
 }
 
 declare var DOMPoint: {
-    prototype: DOMPoint;
+    protohype: DOMPoint;
     new(x?: number, y?: number, z?: number, w?: number): DOMPoint;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/DOMPoint/fromPoint_static) */
     fromPoint(other?: DOMPointInit): DOMPoint;
@@ -2331,7 +2331,7 @@ interface DOMPointReadOnly {
 }
 
 declare var DOMPointReadOnly: {
-    prototype: DOMPointReadOnly;
+    protohype: DOMPointReadOnly;
     new(x?: number, y?: number, z?: number, w?: number): DOMPointReadOnly;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/DOMPointReadOnly/fromPoint_static) */
     fromPoint(other?: DOMPointInit): DOMPointReadOnly;
@@ -2348,7 +2348,7 @@ interface DOMQuad {
 }
 
 declare var DOMQuad: {
-    prototype: DOMQuad;
+    protohype: DOMQuad;
     new(p1?: DOMPointInit, p2?: DOMPointInit, p3?: DOMPointInit, p4?: DOMPointInit): DOMQuad;
     fromQuad(other?: DOMQuadInit): DOMQuad;
     fromRect(other?: DOMRectInit): DOMQuad;
@@ -2363,7 +2363,7 @@ interface DOMRect extends DOMRectReadOnly {
 }
 
 declare var DOMRect: {
-    prototype: DOMRect;
+    protohype: DOMRect;
     new(x?: number, y?: number, width?: number, height?: number): DOMRect;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/DOMRect/fromRect_static) */
     fromRect(other?: DOMRectInit): DOMRect;
@@ -2391,14 +2391,14 @@ interface DOMRectReadOnly {
 }
 
 declare var DOMRectReadOnly: {
-    prototype: DOMRectReadOnly;
+    protohype: DOMRectReadOnly;
     new(x?: number, y?: number, width?: number, height?: number): DOMRectReadOnly;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/DOMRectReadOnly/fromRect_static) */
     fromRect(other?: DOMRectInit): DOMRectReadOnly;
 };
 
 /**
- * A type returned by some APIs which contains a list of DOMString (strings).
+ * A hype returned by some APIs which contains a list of DOMString (strings).
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/DOMStringList)
  */
@@ -2425,7 +2425,7 @@ interface DOMStringList {
 }
 
 declare var DOMStringList: {
-    prototype: DOMStringList;
+    protohype: DOMStringList;
     new(): DOMStringList;
 };
 
@@ -2436,7 +2436,7 @@ interface DecompressionStream extends GenericTransformStream {
 }
 
 declare var DecompressionStream: {
-    prototype: DecompressionStream;
+    protohype: DecompressionStream;
     new(format: CompressionFormat): DecompressionStream;
 };
 
@@ -2477,14 +2477,14 @@ interface DedicatedWorkerGlobalScope extends WorkerGlobalScope, AnimationFramePr
      */
     postMessage(message: any, transfer: Transferable[]): void;
     postMessage(message: any, options?: StructuredSerializeOptions): void;
-    addEventListener<K extends keyof DedicatedWorkerGlobalScopeEventMap>(type: K, listener: (this: DedicatedWorkerGlobalScope, ev: DedicatedWorkerGlobalScopeEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof DedicatedWorkerGlobalScopeEventMap>(type: K, listener: (this: DedicatedWorkerGlobalScope, ev: DedicatedWorkerGlobalScopeEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof DedicatedWorkerGlobalScopeEventMap>(hype: K, listener: (this: DedicatedWorkerGlobalScope, ev: DedicatedWorkerGlobalScopeEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof DedicatedWorkerGlobalScopeEventMap>(hype: K, listener: (this: DedicatedWorkerGlobalScope, ev: DedicatedWorkerGlobalScopeEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var DedicatedWorkerGlobalScope: {
-    prototype: DedicatedWorkerGlobalScope;
+    protohype: DedicatedWorkerGlobalScope;
     new(): DedicatedWorkerGlobalScope;
 };
 
@@ -2576,14 +2576,14 @@ interface EncodedAudioChunk {
     readonly duration: number | null;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/EncodedAudioChunk/timestamp) */
     readonly timestamp: number;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/EncodedAudioChunk/type) */
-    readonly type: EncodedAudioChunkType;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/EncodedAudioChunk/hype) */
+    readonly hype: EncodedAudioChunkHype;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/EncodedAudioChunk/copyTo) */
     copyTo(destination: AllowSharedBufferSource): void;
 }
 
 declare var EncodedAudioChunk: {
-    prototype: EncodedAudioChunk;
+    protohype: EncodedAudioChunk;
     new(init: EncodedAudioChunkInit): EncodedAudioChunk;
 };
 
@@ -2595,14 +2595,14 @@ interface EncodedVideoChunk {
     readonly duration: number | null;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/EncodedVideoChunk/timestamp) */
     readonly timestamp: number;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/EncodedVideoChunk/type) */
-    readonly type: EncodedVideoChunkType;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/EncodedVideoChunk/hype) */
+    readonly hype: EncodedVideoChunkHype;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/EncodedVideoChunk/copyTo) */
     copyTo(destination: AllowSharedBufferSource): void;
 }
 
 declare var EncodedVideoChunk: {
-    prototype: EncodedVideoChunk;
+    protohype: EncodedVideoChunk;
     new(init: EncodedVideoChunkInit): EncodedVideoChunk;
 };
 
@@ -2620,8 +2620,8 @@ interface ErrorEvent extends Event {
 }
 
 declare var ErrorEvent: {
-    prototype: ErrorEvent;
-    new(type: string, eventInitDict?: ErrorEventInit): ErrorEvent;
+    protohype: ErrorEvent;
+    new(hype: string, eventInitDict?: ErrorEventInit): ErrorEvent;
 };
 
 /**
@@ -2703,11 +2703,11 @@ interface Event {
      */
     readonly timeStamp: DOMHighResTimeStamp;
     /**
-     * Returns the type of event, e.g. "click", "hashchange", or "submit".
+     * Returns the hype of event, e.g. "click", "hashchange", or "submit".
      *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Event/type)
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Event/hype)
      */
-    readonly type: string;
+    readonly hype: string;
     /**
      * Returns the invocation target objects of event's path (objects on which listeners will be invoked), except for any nodes in shadow trees of which the shadow root's mode is "closed" that are not reachable from event's currentTarget.
      *
@@ -2719,7 +2719,7 @@ interface Event {
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Event/initEvent)
      */
-    initEvent(type: string, bubbles?: boolean, cancelable?: boolean): void;
+    initEvent(hype: string, bubbles?: boolean, cancelable?: boolean): void;
     /**
      * If invoked when the cancelable attribute value is true, and while executing a listener for the event with passive set to false, signals to the operation that caused event to be dispatched that it needs to be canceled.
      *
@@ -2745,8 +2745,8 @@ interface Event {
 }
 
 declare var Event: {
-    prototype: Event;
-    new(type: string, eventInitDict?: EventInit): Event;
+    protohype: Event;
+    new(hype: string, eventInitDict?: EventInit): Event;
     readonly NONE: 0;
     readonly CAPTURING_PHASE: 1;
     readonly AT_TARGET: 2;
@@ -2802,16 +2802,16 @@ interface EventSource extends EventTarget {
     readonly CONNECTING: 0;
     readonly OPEN: 1;
     readonly CLOSED: 2;
-    addEventListener<K extends keyof EventSourceEventMap>(type: K, listener: (this: EventSource, ev: EventSourceEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: (this: EventSource, event: MessageEvent) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof EventSourceEventMap>(type: K, listener: (this: EventSource, ev: EventSourceEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: (this: EventSource, event: MessageEvent) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof EventSourceEventMap>(hype: K, listener: (this: EventSource, ev: EventSourceEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: (this: EventSource, event: MessageEvent) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof EventSourceEventMap>(hype: K, listener: (this: EventSource, ev: EventSourceEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: (this: EventSource, event: MessageEvent) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var EventSource: {
-    prototype: EventSource;
+    protohype: EventSource;
     new(url: string | URL, eventSourceInitDict?: EventSourceInit): EventSource;
     readonly CONNECTING: 0;
     readonly OPEN: 1;
@@ -2825,7 +2825,7 @@ declare var EventSource: {
  */
 interface EventTarget {
     /**
-     * Appends an event listener for events whose type attribute value is type. The callback argument sets the callback that will be invoked when the event is dispatched.
+     * Appends an event listener for events whose hype attribute value is hype. The callback argument sets the callback that will be invoked when the event is dispatched.
      *
      * The options argument sets listener-specific options. For compatibility this can be a boolean, in which case the method behaves exactly as if the value was specified as options's capture.
      *
@@ -2837,11 +2837,11 @@ interface EventTarget {
      *
      * If an AbortSignal is passed for options's signal, then the event listener will be removed when signal is aborted.
      *
-     * The event listener is appended to target's event listener list and is not appended if it has the same type, callback, and capture.
+     * The event listener is appended to target's event listener list and is not appended if it has the same hype, callback, and capture.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/EventTarget/addEventListener)
      */
-    addEventListener(type: string, callback: EventListenerOrEventListenerObject | null, options?: AddEventListenerOptions | boolean): void;
+    addEventListener(hype: string, callback: EventListenerOrEventListenerObject | null, options?: AddEventListenerOptions | boolean): void;
     /**
      * Dispatches a synthetic event event to target and returns true if either event's cancelable attribute value is false or its preventDefault() method was not invoked, and false otherwise.
      *
@@ -2849,15 +2849,15 @@ interface EventTarget {
      */
     dispatchEvent(event: Event): boolean;
     /**
-     * Removes the event listener in target's event listener list with the same type, callback, and options.
+     * Removes the event listener in target's event listener list with the same hype, callback, and options.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/EventTarget/removeEventListener)
      */
-    removeEventListener(type: string, callback: EventListenerOrEventListenerObject | null, options?: EventListenerOptions | boolean): void;
+    removeEventListener(hype: string, callback: EventListenerOrEventListenerObject | null, options?: EventListenerOptions | boolean): void;
 }
 
 declare var EventTarget: {
-    prototype: EventTarget;
+    protohype: EventTarget;
     new(): EventTarget;
 };
 
@@ -2872,8 +2872,8 @@ interface ExtendableEvent extends Event {
 }
 
 declare var ExtendableEvent: {
-    prototype: ExtendableEvent;
-    new(type: string, eventInitDict?: ExtendableEventInit): ExtendableEvent;
+    protohype: ExtendableEvent;
+    new(hype: string, eventInitDict?: ExtendableEventInit): ExtendableEvent;
 };
 
 /**
@@ -2895,12 +2895,12 @@ interface ExtendableMessageEvent extends ExtendableEvent {
 }
 
 declare var ExtendableMessageEvent: {
-    prototype: ExtendableMessageEvent;
-    new(type: string, eventInitDict?: ExtendableMessageEventInit): ExtendableMessageEvent;
+    protohype: ExtendableMessageEvent;
+    new(hype: string, eventInitDict?: ExtendableMessageEventInit): ExtendableMessageEvent;
 };
 
 /**
- * This is the event type for fetch events dispatched on the service worker global scope. It contains information about the fetch, including the request and how the receiver will treat the response. It provides the event.respondWith() method, which allows us to provide a response to this fetch.
+ * This is the event hype for fetch events dispatched on the service worker global scope. It contains information about the fetch, including the request and how the receiver will treat the response. It provides the event.respondWith() method, which allows us to provide a response to this fetch.
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/FetchEvent)
  */
@@ -2920,8 +2920,8 @@ interface FetchEvent extends ExtendableEvent {
 }
 
 declare var FetchEvent: {
-    prototype: FetchEvent;
-    new(type: string, eventInitDict: FetchEventInit): FetchEvent;
+    protohype: FetchEvent;
+    new(hype: string, eventInitDict: FetchEventInit): FetchEvent;
 };
 
 /**
@@ -2939,12 +2939,12 @@ interface File extends Blob {
 }
 
 declare var File: {
-    prototype: File;
+    protohype: File;
     new(fileBits: BlobPart[], fileName: string, options?: FilePropertyBag): File;
 };
 
 /**
- * An object of this type is returned by the files property of the HTML <input> element; this lets you access the list of files selected with the <input type="file"> element. It's also used for a list of files dropped into web content when using the drag and drop API; see the DataTransfer object for details on this usage.
+ * An object of this hype is returned by the files property of the HTML <input> element; this lets you access the list of files selected with the <input hype="file"> element. It's also used for a list of files dropped into web content when using the drag and drop API; see the DataTransfer object for details on this usage.
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/FileList)
  */
@@ -2957,7 +2957,7 @@ interface FileList {
 }
 
 declare var FileList: {
-    prototype: FileList;
+    protohype: FileList;
     new(): FileList;
 };
 
@@ -2991,7 +2991,7 @@ interface FileReader extends EventTarget {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FileReader/progress_event) */
     onprogress: ((this: FileReader, ev: ProgressEvent<FileReader>) => any) | null;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FileReader/readyState) */
-    readonly readyState: typeof FileReader.EMPTY | typeof FileReader.LOADING | typeof FileReader.DONE;
+    readonly readyState: hypeof FileReader.EMPTY | hypeof FileReader.LOADING | hypeof FileReader.DONE;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FileReader/result) */
     readonly result: string | ArrayBuffer | null;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FileReader/abort) */
@@ -3011,14 +3011,14 @@ interface FileReader extends EventTarget {
     readonly EMPTY: 0;
     readonly LOADING: 1;
     readonly DONE: 2;
-    addEventListener<K extends keyof FileReaderEventMap>(type: K, listener: (this: FileReader, ev: FileReaderEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof FileReaderEventMap>(type: K, listener: (this: FileReader, ev: FileReaderEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof FileReaderEventMap>(hype: K, listener: (this: FileReader, ev: FileReaderEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof FileReaderEventMap>(hype: K, listener: (this: FileReader, ev: FileReaderEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var FileReader: {
-    prototype: FileReader;
+    protohype: FileReader;
     new(): FileReader;
     readonly EMPTY: 0;
     readonly LOADING: 1;
@@ -3046,7 +3046,7 @@ interface FileReaderSync {
 }
 
 declare var FileReaderSync: {
-    prototype: FileReaderSync;
+    protohype: FileReaderSync;
     new(): FileReaderSync;
 };
 
@@ -3068,7 +3068,7 @@ interface FileSystemDirectoryHandle extends FileSystemHandle {
 }
 
 declare var FileSystemDirectoryHandle: {
-    prototype: FileSystemDirectoryHandle;
+    protohype: FileSystemDirectoryHandle;
     new(): FileSystemDirectoryHandle;
 };
 
@@ -3088,7 +3088,7 @@ interface FileSystemFileHandle extends FileSystemHandle {
 }
 
 declare var FileSystemFileHandle: {
-    prototype: FileSystemFileHandle;
+    protohype: FileSystemFileHandle;
     new(): FileSystemFileHandle;
 };
 
@@ -3107,7 +3107,7 @@ interface FileSystemHandle {
 }
 
 declare var FileSystemHandle: {
-    prototype: FileSystemHandle;
+    protohype: FileSystemHandle;
     new(): FileSystemHandle;
 };
 
@@ -3132,7 +3132,7 @@ interface FileSystemSyncAccessHandle {
 }
 
 declare var FileSystemSyncAccessHandle: {
-    prototype: FileSystemSyncAccessHandle;
+    protohype: FileSystemSyncAccessHandle;
     new(): FileSystemSyncAccessHandle;
 };
 
@@ -3147,11 +3147,11 @@ interface FileSystemWritableFileStream extends WritableStream {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FileSystemWritableFileStream/truncate) */
     truncate(size: number): Promise<void>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FileSystemWritableFileStream/write) */
-    write(data: FileSystemWriteChunkType): Promise<void>;
+    write(data: FileSystemWriteChunkHype): Promise<void>;
 }
 
 declare var FileSystemWritableFileStream: {
-    prototype: FileSystemWritableFileStream;
+    protohype: FileSystemWritableFileStream;
     new(): FileSystemWritableFileStream;
 };
 
@@ -3186,7 +3186,7 @@ interface FontFace {
 }
 
 declare var FontFace: {
-    prototype: FontFace;
+    protohype: FontFace;
     new(family: string, source: string | BufferSource, descriptors?: FontFaceDescriptors): FontFace;
 };
 
@@ -3213,14 +3213,14 @@ interface FontFaceSet extends EventTarget {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/FontFaceSet/load) */
     load(font: string, text?: string): Promise<FontFace[]>;
     forEach(callbackfn: (value: FontFace, key: FontFace, parent: FontFaceSet) => void, thisArg?: any): void;
-    addEventListener<K extends keyof FontFaceSetEventMap>(type: K, listener: (this: FontFaceSet, ev: FontFaceSetEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof FontFaceSetEventMap>(type: K, listener: (this: FontFaceSet, ev: FontFaceSetEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof FontFaceSetEventMap>(hype: K, listener: (this: FontFaceSet, ev: FontFaceSetEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof FontFaceSetEventMap>(hype: K, listener: (this: FontFaceSet, ev: FontFaceSetEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var FontFaceSet: {
-    prototype: FontFaceSet;
+    protohype: FontFaceSet;
     new(): FontFaceSet;
 };
 
@@ -3231,8 +3231,8 @@ interface FontFaceSetLoadEvent extends Event {
 }
 
 declare var FontFaceSetLoadEvent: {
-    prototype: FontFaceSetLoadEvent;
-    new(type: string, eventInitDict?: FontFaceSetLoadEventInit): FontFaceSetLoadEvent;
+    protohype: FontFaceSetLoadEvent;
+    new(hype: string, eventInitDict?: FontFaceSetLoadEventInit): FontFaceSetLoadEvent;
 };
 
 interface FontFaceSource {
@@ -3241,7 +3241,7 @@ interface FontFaceSource {
 }
 
 /**
- * Provides a way to easily construct a set of key/value pairs representing form fields and their values, which can then be easily sent using the XMLHttpRequest.send() method. It uses the same format a form would use if the encoding type were set to "multipart/form-data".
+ * Provides a way to easily construct a set of key/value pairs representing form fields and their values, which can then be easily sent using the XMLHttpRequest.send() method. It uses the same format a form would use if the encoding hype were set to "multipart/form-data".
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/FormData)
  */
@@ -3266,7 +3266,7 @@ interface FormData {
 }
 
 declare var FormData: {
-    prototype: FormData;
+    protohype: FormData;
     new(): FormData;
 };
 
@@ -3299,7 +3299,7 @@ interface Headers {
 }
 
 declare var Headers: {
-    prototype: Headers;
+    protohype: Headers;
     new(init?: HeadersInit): Headers;
 };
 
@@ -3374,7 +3374,7 @@ interface IDBCursor {
 }
 
 declare var IDBCursor: {
-    prototype: IDBCursor;
+    protohype: IDBCursor;
     new(): IDBCursor;
 };
 
@@ -3393,7 +3393,7 @@ interface IDBCursorWithValue extends IDBCursor {
 }
 
 declare var IDBCursorWithValue: {
-    prototype: IDBCursorWithValue;
+    protohype: IDBCursorWithValue;
     new(): IDBCursorWithValue;
 };
 
@@ -3462,14 +3462,14 @@ interface IDBDatabase extends EventTarget {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/IDBDatabase/transaction)
      */
     transaction(storeNames: string | string[], mode?: IDBTransactionMode, options?: IDBTransactionOptions): IDBTransaction;
-    addEventListener<K extends keyof IDBDatabaseEventMap>(type: K, listener: (this: IDBDatabase, ev: IDBDatabaseEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof IDBDatabaseEventMap>(type: K, listener: (this: IDBDatabase, ev: IDBDatabaseEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof IDBDatabaseEventMap>(hype: K, listener: (this: IDBDatabase, ev: IDBDatabaseEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof IDBDatabaseEventMap>(hype: K, listener: (this: IDBDatabase, ev: IDBDatabaseEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var IDBDatabase: {
-    prototype: IDBDatabase;
+    protohype: IDBDatabase;
     new(): IDBDatabase;
 };
 
@@ -3504,7 +3504,7 @@ interface IDBFactory {
 }
 
 declare var IDBFactory: {
-    prototype: IDBFactory;
+    protohype: IDBFactory;
     new(): IDBFactory;
 };
 
@@ -3591,7 +3591,7 @@ interface IDBIndex {
 }
 
 declare var IDBIndex: {
-    prototype: IDBIndex;
+    protohype: IDBIndex;
     new(): IDBIndex;
 };
 
@@ -3634,7 +3634,7 @@ interface IDBKeyRange {
 }
 
 declare var IDBKeyRange: {
-    prototype: IDBKeyRange;
+    protohype: IDBKeyRange;
     new(): IDBKeyRange;
     /**
      * Returns a new IDBKeyRange spanning from lower to upper. If lowerOpen is true, lower is not included in the range. If upperOpen is true, upper is not included in the range.
@@ -3815,7 +3815,7 @@ interface IDBObjectStore {
 }
 
 declare var IDBObjectStore: {
-    prototype: IDBObjectStore;
+    protohype: IDBObjectStore;
     new(): IDBObjectStore;
 };
 
@@ -3834,14 +3834,14 @@ interface IDBOpenDBRequest extends IDBRequest<IDBDatabase> {
     onblocked: ((this: IDBOpenDBRequest, ev: IDBVersionChangeEvent) => any) | null;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/IDBOpenDBRequest/upgradeneeded_event) */
     onupgradeneeded: ((this: IDBOpenDBRequest, ev: IDBVersionChangeEvent) => any) | null;
-    addEventListener<K extends keyof IDBOpenDBRequestEventMap>(type: K, listener: (this: IDBOpenDBRequest, ev: IDBOpenDBRequestEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof IDBOpenDBRequestEventMap>(type: K, listener: (this: IDBOpenDBRequest, ev: IDBOpenDBRequestEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof IDBOpenDBRequestEventMap>(hype: K, listener: (this: IDBOpenDBRequest, ev: IDBOpenDBRequestEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof IDBOpenDBRequestEventMap>(hype: K, listener: (this: IDBOpenDBRequest, ev: IDBOpenDBRequestEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var IDBOpenDBRequest: {
-    prototype: IDBOpenDBRequest;
+    protohype: IDBOpenDBRequest;
     new(): IDBOpenDBRequest;
 };
 
@@ -3890,14 +3890,14 @@ interface IDBRequest<T = any> extends EventTarget {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/IDBRequest/transaction)
      */
     readonly transaction: IDBTransaction | null;
-    addEventListener<K extends keyof IDBRequestEventMap>(type: K, listener: (this: IDBRequest<T>, ev: IDBRequestEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof IDBRequestEventMap>(type: K, listener: (this: IDBRequest<T>, ev: IDBRequestEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof IDBRequestEventMap>(hype: K, listener: (this: IDBRequest<T>, ev: IDBRequestEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof IDBRequestEventMap>(hype: K, listener: (this: IDBRequest<T>, ev: IDBRequestEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var IDBRequest: {
-    prototype: IDBRequest;
+    protohype: IDBRequest;
     new(): IDBRequest;
 };
 
@@ -3955,14 +3955,14 @@ interface IDBTransaction extends EventTarget {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/IDBTransaction/objectStore)
      */
     objectStore(name: string): IDBObjectStore;
-    addEventListener<K extends keyof IDBTransactionEventMap>(type: K, listener: (this: IDBTransaction, ev: IDBTransactionEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof IDBTransactionEventMap>(type: K, listener: (this: IDBTransaction, ev: IDBTransactionEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof IDBTransactionEventMap>(hype: K, listener: (this: IDBTransaction, ev: IDBTransactionEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof IDBTransactionEventMap>(hype: K, listener: (this: IDBTransaction, ev: IDBTransactionEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var IDBTransaction: {
-    prototype: IDBTransaction;
+    protohype: IDBTransaction;
     new(): IDBTransaction;
 };
 
@@ -3979,8 +3979,8 @@ interface IDBVersionChangeEvent extends Event {
 }
 
 declare var IDBVersionChangeEvent: {
-    prototype: IDBVersionChangeEvent;
-    new(type: string, eventInitDict?: IDBVersionChangeEventInit): IDBVersionChangeEvent;
+    protohype: IDBVersionChangeEvent;
+    new(hype: string, eventInitDict?: IDBVersionChangeEventInit): IDBVersionChangeEvent;
 };
 
 /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/ImageBitmap) */
@@ -4006,7 +4006,7 @@ interface ImageBitmap {
 }
 
 declare var ImageBitmap: {
-    prototype: ImageBitmap;
+    protohype: ImageBitmap;
     new(): ImageBitmap;
 };
 
@@ -4021,7 +4021,7 @@ interface ImageBitmapRenderingContext {
 }
 
 declare var ImageBitmapRenderingContext: {
-    prototype: ImageBitmapRenderingContext;
+    protohype: ImageBitmapRenderingContext;
     new(): ImageBitmapRenderingContext;
 };
 
@@ -4054,7 +4054,7 @@ interface ImageData {
 }
 
 declare var ImageData: {
-    prototype: ImageData;
+    protohype: ImageData;
     new(sw: number, sh: number, settings?: ImageDataSettings): ImageData;
     new(data: Uint8ClampedArray, sw: number, sh?: number, settings?: ImageDataSettings): ImageData;
 };
@@ -4082,7 +4082,7 @@ interface Lock {
 }
 
 declare var Lock: {
-    prototype: Lock;
+    protohype: Lock;
     new(): Lock;
 };
 
@@ -4100,7 +4100,7 @@ interface LockManager {
 }
 
 declare var LockManager: {
-    prototype: LockManager;
+    protohype: LockManager;
     new(): LockManager;
 };
 
@@ -4113,7 +4113,7 @@ interface MediaCapabilities {
 }
 
 declare var MediaCapabilities: {
-    prototype: MediaCapabilities;
+    protohype: MediaCapabilities;
     new(): MediaCapabilities;
 };
 
@@ -4122,7 +4122,7 @@ interface MediaSourceHandle {
 }
 
 declare var MediaSourceHandle: {
-    prototype: MediaSourceHandle;
+    protohype: MediaSourceHandle;
     new(): MediaSourceHandle;
 };
 
@@ -4133,7 +4133,7 @@ interface MediaStreamTrackProcessor {
 }
 
 declare var MediaStreamTrackProcessor: {
-    prototype: MediaStreamTrackProcessor;
+    protohype: MediaStreamTrackProcessor;
     new(init: MediaStreamTrackProcessorInit): MediaStreamTrackProcessor;
 };
 
@@ -4158,7 +4158,7 @@ interface MessageChannel {
 }
 
 declare var MessageChannel: {
-    prototype: MessageChannel;
+    protohype: MessageChannel;
     new(): MessageChannel;
 };
 
@@ -4199,12 +4199,12 @@ interface MessageEvent<T = any> extends Event {
      */
     readonly source: MessageEventSource | null;
     /** @deprecated */
-    initMessageEvent(type: string, bubbles?: boolean, cancelable?: boolean, data?: any, origin?: string, lastEventId?: string, source?: MessageEventSource | null, ports?: MessagePort[]): void;
+    initMessageEvent(hype: string, bubbles?: boolean, cancelable?: boolean, data?: any, origin?: string, lastEventId?: string, source?: MessageEventSource | null, ports?: MessagePort[]): void;
 }
 
 declare var MessageEvent: {
-    prototype: MessageEvent;
-    new<T>(type: string, eventInitDict?: MessageEventInit<T>): MessageEvent<T>;
+    protohype: MessageEvent;
+    new<T>(hype: string, eventInitDict?: MessageEventInit<T>): MessageEvent<T>;
 };
 
 interface MessagePortEventMap {
@@ -4243,14 +4243,14 @@ interface MessagePort extends EventTarget {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MessagePort/start)
      */
     start(): void;
-    addEventListener<K extends keyof MessagePortEventMap>(type: K, listener: (this: MessagePort, ev: MessagePortEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof MessagePortEventMap>(type: K, listener: (this: MessagePort, ev: MessagePortEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof MessagePortEventMap>(hype: K, listener: (this: MessagePort, ev: MessagePortEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof MessagePortEventMap>(hype: K, listener: (this: MessagePort, ev: MessagePortEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var MessagePort: {
-    prototype: MessagePort;
+    protohype: MessagePort;
     new(): MessagePort;
 };
 
@@ -4271,7 +4271,7 @@ interface NavigationPreloadManager {
 }
 
 declare var NavigationPreloadManager: {
-    prototype: NavigationPreloadManager;
+    protohype: NavigationPreloadManager;
     new(): NavigationPreloadManager;
 };
 
@@ -4390,14 +4390,14 @@ interface Notification extends EventTarget {
     readonly title: string;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Notification/close) */
     close(): void;
-    addEventListener<K extends keyof NotificationEventMap>(type: K, listener: (this: Notification, ev: NotificationEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof NotificationEventMap>(type: K, listener: (this: Notification, ev: NotificationEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof NotificationEventMap>(hype: K, listener: (this: Notification, ev: NotificationEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof NotificationEventMap>(hype: K, listener: (this: Notification, ev: NotificationEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var Notification: {
-    prototype: Notification;
+    protohype: Notification;
     new(title: string, options?: NotificationOptions): Notification;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Notification/permission_static) */
     readonly permission: NotificationPermission;
@@ -4416,8 +4416,8 @@ interface NotificationEvent extends ExtendableEvent {
 }
 
 declare var NotificationEvent: {
-    prototype: NotificationEvent;
-    new(type: string, eventInitDict: NotificationEventInit): NotificationEvent;
+    protohype: NotificationEvent;
+    new(hype: string, eventInitDict: NotificationEventInit): NotificationEvent;
 };
 
 /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/OES_draw_buffers_indexed) */
@@ -4439,7 +4439,7 @@ interface OES_draw_buffers_indexed {
 }
 
 /**
- * The OES_element_index_uint extension is part of the WebGL API and adds support for gl.UNSIGNED_INT types to WebGLRenderingContext.drawElements().
+ * The OES_element_index_uint extension is part of the WebGL API and adds support for gl.UNSIGNED_INT hypes to WebGLRenderingContext.drawElements().
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/OES_element_index_uint)
  */
@@ -4460,7 +4460,7 @@ interface OES_standard_derivatives {
 }
 
 /**
- * The OES_texture_float extension is part of the WebGL API and exposes floating-point pixel types for textures.
+ * The OES_texture_float extension is part of the WebGL API and exposes floating-point pixel hypes for textures.
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/OES_texture_float)
  */
@@ -4468,7 +4468,7 @@ interface OES_texture_float {
 }
 
 /**
- * The OES_texture_float_linear extension is part of the WebGL API and allows linear filtering with floating-point pixel types for textures.
+ * The OES_texture_float_linear extension is part of the WebGL API and allows linear filtering with floating-point pixel hypes for textures.
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/OES_texture_float_linear)
  */
@@ -4485,7 +4485,7 @@ interface OES_texture_half_float {
 }
 
 /**
- * The OES_texture_half_float_linear extension is part of the WebGL API and allows linear filtering with half floating-point pixel types for textures.
+ * The OES_texture_half_float_linear extension is part of the WebGL API and allows linear filtering with half floating-point pixel hypes for textures.
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/OES_texture_half_float_linear)
  */
@@ -4545,7 +4545,7 @@ interface OffscreenCanvas extends EventTarget {
     /**
      * Returns a promise that will fulfill with a new Blob object representing a file containing the image in the OffscreenCanvas object.
      *
-     * The argument, if provided, is a dictionary that controls the encoding options of the image file to be created. The type field specifies the file format and has a default value of "image/png"; that type is also used if the requested type isn't supported. If the image format supports variable quality (such as "image/jpeg"), then the quality field is a number in the range 0.0 to 1.0 inclusive indicating the desired quality level for the resulting image.
+     * The argument, if provided, is a dictionary that controls the encoding options of the image file to be created. The hype field specifies the file format and has a default value of "image/png"; that hype is also used if the requested hype isn't supported. If the image format supports variable quality (such as "image/jpeg"), then the quality field is a number in the range 0.0 to 1.0 inclusive indicating the desired quality level for the resulting image.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/OffscreenCanvas/convertToBlob)
      */
@@ -4555,7 +4555,7 @@ interface OffscreenCanvas extends EventTarget {
      *
      * This specification defines the "2d" context below, which is similar but distinct from the "2d" context that is created from a canvas element. The WebGL specifications define the "webgl" and "webgl2" contexts. [WEBGL]
      *
-     * Returns null if the canvas has already been initialized with another context type (e.g., trying to get a "2d" context after getting a "webgl" context).
+     * Returns null if the canvas has already been initialized with another context hype (e.g., trying to get a "2d" context after getting a "webgl" context).
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/OffscreenCanvas/getContext)
      */
@@ -4570,14 +4570,14 @@ interface OffscreenCanvas extends EventTarget {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/OffscreenCanvas/transferToImageBitmap)
      */
     transferToImageBitmap(): ImageBitmap;
-    addEventListener<K extends keyof OffscreenCanvasEventMap>(type: K, listener: (this: OffscreenCanvas, ev: OffscreenCanvasEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof OffscreenCanvasEventMap>(type: K, listener: (this: OffscreenCanvas, ev: OffscreenCanvasEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof OffscreenCanvasEventMap>(hype: K, listener: (this: OffscreenCanvas, ev: OffscreenCanvasEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof OffscreenCanvasEventMap>(hype: K, listener: (this: OffscreenCanvas, ev: OffscreenCanvasEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var OffscreenCanvas: {
-    prototype: OffscreenCanvas;
+    protohype: OffscreenCanvas;
     new(width: number, height: number): OffscreenCanvas;
 };
 
@@ -4588,7 +4588,7 @@ interface OffscreenCanvasRenderingContext2D extends CanvasCompositing, CanvasDra
 }
 
 declare var OffscreenCanvasRenderingContext2D: {
-    prototype: OffscreenCanvasRenderingContext2D;
+    protohype: OffscreenCanvasRenderingContext2D;
     new(): OffscreenCanvasRenderingContext2D;
 };
 
@@ -4607,7 +4607,7 @@ interface Path2D extends CanvasPath {
 }
 
 declare var Path2D: {
-    prototype: Path2D;
+    protohype: Path2D;
     new(path?: Path2D | string): Path2D;
 };
 
@@ -4634,9 +4634,9 @@ interface Performance extends EventTarget {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Performance/getEntries) */
     getEntries(): PerformanceEntryList;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Performance/getEntriesByName) */
-    getEntriesByName(name: string, type?: string): PerformanceEntryList;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Performance/getEntriesByType) */
-    getEntriesByType(type: string): PerformanceEntryList;
+    getEntriesByName(name: string, hype?: string): PerformanceEntryList;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Performance/getEntriesByHype) */
+    getEntriesByHype(hype: string): PerformanceEntryList;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Performance/mark) */
     mark(markName: string, markOptions?: PerformanceMarkOptions): PerformanceMark;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Performance/measure) */
@@ -4647,14 +4647,14 @@ interface Performance extends EventTarget {
     setResourceTimingBufferSize(maxSize: number): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Performance/toJSON) */
     toJSON(): any;
-    addEventListener<K extends keyof PerformanceEventMap>(type: K, listener: (this: Performance, ev: PerformanceEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof PerformanceEventMap>(type: K, listener: (this: Performance, ev: PerformanceEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof PerformanceEventMap>(hype: K, listener: (this: Performance, ev: PerformanceEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof PerformanceEventMap>(hype: K, listener: (this: Performance, ev: PerformanceEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var Performance: {
-    prototype: Performance;
+    protohype: Performance;
     new(): Performance;
 };
 
@@ -4666,8 +4666,8 @@ declare var Performance: {
 interface PerformanceEntry {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceEntry/duration) */
     readonly duration: DOMHighResTimeStamp;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceEntry/entryType) */
-    readonly entryType: string;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceEntry/entryHype) */
+    readonly entryHype: string;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceEntry/name) */
     readonly name: string;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceEntry/startTime) */
@@ -4677,12 +4677,12 @@ interface PerformanceEntry {
 }
 
 declare var PerformanceEntry: {
-    prototype: PerformanceEntry;
+    protohype: PerformanceEntry;
     new(): PerformanceEntry;
 };
 
 /**
- * PerformanceMark is an abstract interface for PerformanceEntry objects with an entryType of "mark". Entries of this type are created by calling performance.mark() to add a named DOMHighResTimeStamp (the mark) to the browser's performance timeline.
+ * PerformanceMark is an abstract interface for PerformanceEntry objects with an entryHype of "mark". Entries of this hype are created by calling performance.mark() to add a named DOMHighResTimeStamp (the mark) to the browser's performance timeline.
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceMark)
  */
@@ -4692,12 +4692,12 @@ interface PerformanceMark extends PerformanceEntry {
 }
 
 declare var PerformanceMark: {
-    prototype: PerformanceMark;
+    protohype: PerformanceMark;
     new(markName: string, markOptions?: PerformanceMarkOptions): PerformanceMark;
 };
 
 /**
- * PerformanceMeasure is an abstract interface for PerformanceEntry objects with an entryType of "measure". Entries of this type are created by calling performance.measure() to add a named DOMHighResTimeStamp (the measure) between two marks to the browser's performance timeline.
+ * PerformanceMeasure is an abstract interface for PerformanceEntry objects with an entryHype of "measure". Entries of this hype are created by calling performance.measure() to add a named DOMHighResTimeStamp (the measure) between two marks to the browser's performance timeline.
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceMeasure)
  */
@@ -4707,7 +4707,7 @@ interface PerformanceMeasure extends PerformanceEntry {
 }
 
 declare var PerformanceMeasure: {
-    prototype: PerformanceMeasure;
+    protohype: PerformanceMeasure;
     new(): PerformanceMeasure;
 };
 
@@ -4722,10 +4722,10 @@ interface PerformanceObserver {
 }
 
 declare var PerformanceObserver: {
-    prototype: PerformanceObserver;
+    protohype: PerformanceObserver;
     new(callback: PerformanceObserverCallback): PerformanceObserver;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceObserver/supportedEntryTypes_static) */
-    readonly supportedEntryTypes: ReadonlyArray<string>;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceObserver/supportedEntryHypes_static) */
+    readonly supportedEntryHypes: ReadonlyArray<string>;
 };
 
 /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceObserverEntryList) */
@@ -4733,13 +4733,13 @@ interface PerformanceObserverEntryList {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceObserverEntryList/getEntries) */
     getEntries(): PerformanceEntryList;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceObserverEntryList/getEntriesByName) */
-    getEntriesByName(name: string, type?: string): PerformanceEntryList;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceObserverEntryList/getEntriesByType) */
-    getEntriesByType(type: string): PerformanceEntryList;
+    getEntriesByName(name: string, hype?: string): PerformanceEntryList;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceObserverEntryList/getEntriesByHype) */
+    getEntriesByHype(hype: string): PerformanceEntryList;
 }
 
 declare var PerformanceObserverEntryList: {
-    prototype: PerformanceObserverEntryList;
+    protohype: PerformanceObserverEntryList;
     new(): PerformanceObserverEntryList;
 };
 
@@ -4763,8 +4763,8 @@ interface PerformanceResourceTiming extends PerformanceEntry {
     readonly encodedBodySize: number;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceResourceTiming/fetchStart) */
     readonly fetchStart: DOMHighResTimeStamp;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceResourceTiming/initiatorType) */
-    readonly initiatorType: string;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceResourceTiming/initiatorHype) */
+    readonly initiatorHype: string;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceResourceTiming/nextHopProtocol) */
     readonly nextHopProtocol: string;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PerformanceResourceTiming/redirectEnd) */
@@ -4792,7 +4792,7 @@ interface PerformanceResourceTiming extends PerformanceEntry {
 }
 
 declare var PerformanceResourceTiming: {
-    prototype: PerformanceResourceTiming;
+    protohype: PerformanceResourceTiming;
     new(): PerformanceResourceTiming;
 };
 
@@ -4809,7 +4809,7 @@ interface PerformanceServerTiming {
 }
 
 declare var PerformanceServerTiming: {
-    prototype: PerformanceServerTiming;
+    protohype: PerformanceServerTiming;
     new(): PerformanceServerTiming;
 };
 
@@ -4825,14 +4825,14 @@ interface PermissionStatus extends EventTarget {
     onchange: ((this: PermissionStatus, ev: Event) => any) | null;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PermissionStatus/state) */
     readonly state: PermissionState;
-    addEventListener<K extends keyof PermissionStatusEventMap>(type: K, listener: (this: PermissionStatus, ev: PermissionStatusEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof PermissionStatusEventMap>(type: K, listener: (this: PermissionStatus, ev: PermissionStatusEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof PermissionStatusEventMap>(hype: K, listener: (this: PermissionStatus, ev: PermissionStatusEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof PermissionStatusEventMap>(hype: K, listener: (this: PermissionStatus, ev: PermissionStatusEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var PermissionStatus: {
-    prototype: PermissionStatus;
+    protohype: PermissionStatus;
     new(): PermissionStatus;
 };
 
@@ -4843,7 +4843,7 @@ interface Permissions {
 }
 
 declare var Permissions: {
-    prototype: Permissions;
+    protohype: Permissions;
     new(): Permissions;
 };
 
@@ -4863,8 +4863,8 @@ interface ProgressEvent<T extends EventTarget = EventTarget> extends Event {
 }
 
 declare var ProgressEvent: {
-    prototype: ProgressEvent;
-    new(type: string, eventInitDict?: ProgressEventInit): ProgressEvent;
+    protohype: ProgressEvent;
+    new(hype: string, eventInitDict?: ProgressEventInit): ProgressEvent;
 };
 
 /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PromiseRejectionEvent) */
@@ -4876,8 +4876,8 @@ interface PromiseRejectionEvent extends Event {
 }
 
 declare var PromiseRejectionEvent: {
-    prototype: PromiseRejectionEvent;
-    new(type: string, eventInitDict: PromiseRejectionEventInit): PromiseRejectionEvent;
+    protohype: PromiseRejectionEvent;
+    new(hype: string, eventInitDict: PromiseRejectionEventInit): PromiseRejectionEvent;
 };
 
 /**
@@ -4892,8 +4892,8 @@ interface PushEvent extends ExtendableEvent {
 }
 
 declare var PushEvent: {
-    prototype: PushEvent;
-    new(type: string, eventInitDict?: PushEventInit): PushEvent;
+    protohype: PushEvent;
+    new(hype: string, eventInitDict?: PushEventInit): PushEvent;
 };
 
 /**
@@ -4912,7 +4912,7 @@ interface PushManager {
 }
 
 declare var PushManager: {
-    prototype: PushManager;
+    protohype: PushManager;
     new(): PushManager;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/PushManager/supportedContentEncodings_static) */
     readonly supportedContentEncodings: ReadonlyArray<string>;
@@ -4938,7 +4938,7 @@ interface PushMessageData {
 }
 
 declare var PushMessageData: {
-    prototype: PushMessageData;
+    protohype: PushMessageData;
     new(): PushMessageData;
 };
 
@@ -4964,7 +4964,7 @@ interface PushSubscription {
 }
 
 declare var PushSubscription: {
-    prototype: PushSubscription;
+    protohype: PushSubscription;
     new(): PushSubscription;
 };
 
@@ -4981,7 +4981,7 @@ interface PushSubscriptionOptions {
 }
 
 declare var PushSubscriptionOptions: {
-    prototype: PushSubscriptionOptions;
+    protohype: PushSubscriptionOptions;
     new(): PushSubscriptionOptions;
 };
 
@@ -4996,7 +4996,7 @@ interface RTCEncodedAudioFrame {
 }
 
 declare var RTCEncodedAudioFrame: {
-    prototype: RTCEncodedAudioFrame;
+    protohype: RTCEncodedAudioFrame;
     new(): RTCEncodedAudioFrame;
 };
 
@@ -5006,14 +5006,14 @@ interface RTCEncodedVideoFrame {
     data: ArrayBuffer;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/RTCEncodedVideoFrame/timestamp) */
     readonly timestamp: number;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/RTCEncodedVideoFrame/type) */
-    readonly type: RTCEncodedVideoFrameType;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/RTCEncodedVideoFrame/hype) */
+    readonly hype: RTCEncodedVideoFrameHype;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/RTCEncodedVideoFrame/getMetadata) */
     getMetadata(): RTCEncodedVideoFrameMetadata;
 }
 
 declare var RTCEncodedVideoFrame: {
-    prototype: RTCEncodedVideoFrame;
+    protohype: RTCEncodedVideoFrame;
     new(): RTCEncodedVideoFrame;
 };
 
@@ -5032,7 +5032,7 @@ interface RTCRtpScriptTransformer extends EventTarget {
 }
 
 declare var RTCRtpScriptTransformer: {
-    prototype: RTCRtpScriptTransformer;
+    protohype: RTCRtpScriptTransformer;
     new(): RTCRtpScriptTransformer;
 };
 
@@ -5043,7 +5043,7 @@ interface RTCTransformEvent extends Event {
 }
 
 declare var RTCTransformEvent: {
-    prototype: RTCTransformEvent;
+    protohype: RTCTransformEvent;
     new(): RTCTransformEvent;
 };
 
@@ -5062,7 +5062,7 @@ interface ReadableByteStreamController {
 }
 
 declare var ReadableByteStreamController: {
-    prototype: ReadableByteStreamController;
+    protohype: ReadableByteStreamController;
     new(): ReadableByteStreamController;
 };
 
@@ -5089,7 +5089,7 @@ interface ReadableStream<R = any> {
 }
 
 declare var ReadableStream: {
-    prototype: ReadableStream;
+    protohype: ReadableStream;
     new(underlyingSource: UnderlyingByteSource, strategy?: { highWaterMark?: number }): ReadableStream<Uint8Array>;
     new<R = any>(underlyingSource: UnderlyingDefaultSource<R>, strategy?: QueuingStrategy<R>): ReadableStream<R>;
     new<R = any>(underlyingSource?: UnderlyingSource<R>, strategy?: QueuingStrategy<R>): ReadableStream<R>;
@@ -5104,7 +5104,7 @@ interface ReadableStreamBYOBReader extends ReadableStreamGenericReader {
 }
 
 declare var ReadableStreamBYOBReader: {
-    prototype: ReadableStreamBYOBReader;
+    protohype: ReadableStreamBYOBReader;
     new(stream: ReadableStream<Uint8Array>): ReadableStreamBYOBReader;
 };
 
@@ -5119,7 +5119,7 @@ interface ReadableStreamBYOBRequest {
 }
 
 declare var ReadableStreamBYOBRequest: {
-    prototype: ReadableStreamBYOBRequest;
+    protohype: ReadableStreamBYOBRequest;
     new(): ReadableStreamBYOBRequest;
 };
 
@@ -5136,7 +5136,7 @@ interface ReadableStreamDefaultController<R = any> {
 }
 
 declare var ReadableStreamDefaultController: {
-    prototype: ReadableStreamDefaultController;
+    protohype: ReadableStreamDefaultController;
     new(): ReadableStreamDefaultController;
 };
 
@@ -5149,7 +5149,7 @@ interface ReadableStreamDefaultReader<R = any> extends ReadableStreamGenericRead
 }
 
 declare var ReadableStreamDefaultReader: {
-    prototype: ReadableStreamDefaultReader;
+    protohype: ReadableStreamDefaultReader;
     new<R = any>(stream: ReadableStream<R>): ReadableStreamDefaultReader<R>;
 };
 
@@ -5164,15 +5164,15 @@ interface ReadableStreamGenericReader {
 interface Report {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Report/body) */
     readonly body: ReportBody | null;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Report/type) */
-    readonly type: string;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Report/hype) */
+    readonly hype: string;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Report/url) */
     readonly url: string;
     toJSON(): any;
 }
 
 declare var Report: {
-    prototype: Report;
+    protohype: Report;
     new(): Report;
 };
 
@@ -5183,7 +5183,7 @@ interface ReportBody {
 }
 
 declare var ReportBody: {
-    prototype: ReportBody;
+    protohype: ReportBody;
     new(): ReportBody;
 };
 
@@ -5198,7 +5198,7 @@ interface ReportingObserver {
 }
 
 declare var ReportingObserver: {
-    prototype: ReportingObserver;
+    protohype: ReportingObserver;
     new(callback: ReportingObserverCallback, options?: ReportingObserverOptions): ReportingObserver;
 };
 
@@ -5287,7 +5287,7 @@ interface Request extends Body {
 }
 
 declare var Request: {
-    prototype: Request;
+    protohype: Request;
     new(input: RequestInfo | URL, init?: RequestInit): Request;
 };
 
@@ -5307,8 +5307,8 @@ interface Response extends Body {
     readonly status: number;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/statusText) */
     readonly statusText: string;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/type) */
-    readonly type: ResponseType;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/hype) */
+    readonly hype: ResponseHype;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/url) */
     readonly url: string;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/clone) */
@@ -5316,7 +5316,7 @@ interface Response extends Body {
 }
 
 declare var Response: {
-    prototype: Response;
+    protohype: Response;
     new(body?: BodyInit | null, init?: ResponseInit): Response;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/error_static) */
     error(): Response;
@@ -5359,8 +5359,8 @@ interface SecurityPolicyViolationEvent extends Event {
 }
 
 declare var SecurityPolicyViolationEvent: {
-    prototype: SecurityPolicyViolationEvent;
-    new(type: string, eventInitDict?: SecurityPolicyViolationEventInit): SecurityPolicyViolationEvent;
+    protohype: SecurityPolicyViolationEvent;
+    new(hype: string, eventInitDict?: SecurityPolicyViolationEventInit): SecurityPolicyViolationEvent;
 };
 
 interface ServiceWorkerEventMap extends AbstractWorkerEventMap {
@@ -5383,14 +5383,14 @@ interface ServiceWorker extends EventTarget, AbstractWorker {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/ServiceWorker/postMessage) */
     postMessage(message: any, transfer: Transferable[]): void;
     postMessage(message: any, options?: StructuredSerializeOptions): void;
-    addEventListener<K extends keyof ServiceWorkerEventMap>(type: K, listener: (this: ServiceWorker, ev: ServiceWorkerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof ServiceWorkerEventMap>(type: K, listener: (this: ServiceWorker, ev: ServiceWorkerEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof ServiceWorkerEventMap>(hype: K, listener: (this: ServiceWorker, ev: ServiceWorkerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof ServiceWorkerEventMap>(hype: K, listener: (this: ServiceWorker, ev: ServiceWorkerEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var ServiceWorker: {
-    prototype: ServiceWorker;
+    protohype: ServiceWorker;
     new(): ServiceWorker;
 };
 
@@ -5425,14 +5425,14 @@ interface ServiceWorkerContainer extends EventTarget {
     register(scriptURL: string | URL, options?: RegistrationOptions): Promise<ServiceWorkerRegistration>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/ServiceWorkerContainer/startMessages) */
     startMessages(): void;
-    addEventListener<K extends keyof ServiceWorkerContainerEventMap>(type: K, listener: (this: ServiceWorkerContainer, ev: ServiceWorkerContainerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof ServiceWorkerContainerEventMap>(type: K, listener: (this: ServiceWorkerContainer, ev: ServiceWorkerContainerEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof ServiceWorkerContainerEventMap>(hype: K, listener: (this: ServiceWorkerContainer, ev: ServiceWorkerContainerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof ServiceWorkerContainerEventMap>(hype: K, listener: (this: ServiceWorkerContainer, ev: ServiceWorkerContainerEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var ServiceWorkerContainer: {
-    prototype: ServiceWorkerContainer;
+    protohype: ServiceWorkerContainer;
     new(): ServiceWorkerContainer;
 };
 
@@ -5481,14 +5481,14 @@ interface ServiceWorkerGlobalScope extends WorkerGlobalScope {
     readonly serviceWorker: ServiceWorker;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting) */
     skipWaiting(): Promise<void>;
-    addEventListener<K extends keyof ServiceWorkerGlobalScopeEventMap>(type: K, listener: (this: ServiceWorkerGlobalScope, ev: ServiceWorkerGlobalScopeEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof ServiceWorkerGlobalScopeEventMap>(type: K, listener: (this: ServiceWorkerGlobalScope, ev: ServiceWorkerGlobalScopeEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof ServiceWorkerGlobalScopeEventMap>(hype: K, listener: (this: ServiceWorkerGlobalScope, ev: ServiceWorkerGlobalScopeEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof ServiceWorkerGlobalScopeEventMap>(hype: K, listener: (this: ServiceWorkerGlobalScope, ev: ServiceWorkerGlobalScopeEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var ServiceWorkerGlobalScope: {
-    prototype: ServiceWorkerGlobalScope;
+    protohype: ServiceWorkerGlobalScope;
     new(): ServiceWorkerGlobalScope;
 };
 
@@ -5527,14 +5527,14 @@ interface ServiceWorkerRegistration extends EventTarget {
     unregister(): Promise<boolean>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/ServiceWorkerRegistration/update) */
     update(): Promise<void>;
-    addEventListener<K extends keyof ServiceWorkerRegistrationEventMap>(type: K, listener: (this: ServiceWorkerRegistration, ev: ServiceWorkerRegistrationEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof ServiceWorkerRegistrationEventMap>(type: K, listener: (this: ServiceWorkerRegistration, ev: ServiceWorkerRegistrationEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof ServiceWorkerRegistrationEventMap>(hype: K, listener: (this: ServiceWorkerRegistration, ev: ServiceWorkerRegistrationEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof ServiceWorkerRegistrationEventMap>(hype: K, listener: (this: ServiceWorkerRegistration, ev: ServiceWorkerRegistrationEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var ServiceWorkerRegistration: {
-    prototype: ServiceWorkerRegistration;
+    protohype: ServiceWorkerRegistration;
     new(): ServiceWorkerRegistration;
 };
 
@@ -5558,14 +5558,14 @@ interface SharedWorkerGlobalScope extends WorkerGlobalScope {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/SharedWorkerGlobalScope/close)
      */
     close(): void;
-    addEventListener<K extends keyof SharedWorkerGlobalScopeEventMap>(type: K, listener: (this: SharedWorkerGlobalScope, ev: SharedWorkerGlobalScopeEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof SharedWorkerGlobalScopeEventMap>(type: K, listener: (this: SharedWorkerGlobalScope, ev: SharedWorkerGlobalScopeEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof SharedWorkerGlobalScopeEventMap>(hype: K, listener: (this: SharedWorkerGlobalScope, ev: SharedWorkerGlobalScopeEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof SharedWorkerGlobalScopeEventMap>(hype: K, listener: (this: SharedWorkerGlobalScope, ev: SharedWorkerGlobalScopeEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var SharedWorkerGlobalScope: {
-    prototype: SharedWorkerGlobalScope;
+    protohype: SharedWorkerGlobalScope;
     new(): SharedWorkerGlobalScope;
 };
 
@@ -5584,7 +5584,7 @@ interface StorageManager {
 }
 
 declare var StorageManager: {
-    prototype: StorageManager;
+    protohype: StorageManager;
     new(): StorageManager;
 };
 
@@ -5602,7 +5602,7 @@ interface StylePropertyMapReadOnly {
 }
 
 declare var StylePropertyMapReadOnly: {
-    prototype: StylePropertyMapReadOnly;
+    protohype: StylePropertyMapReadOnly;
     new(): StylePropertyMapReadOnly;
 };
 
@@ -5618,7 +5618,7 @@ interface SubtleCrypto {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/SubtleCrypto/deriveBits) */
     deriveBits(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | HkdfParams | Pbkdf2Params, baseKey: CryptoKey, length?: number | null): Promise<ArrayBuffer>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/SubtleCrypto/deriveKey) */
-    deriveKey(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | HkdfParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier | AesDerivedKeyParams | HmacImportParams | HkdfParams | Pbkdf2Params, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
+    deriveKey(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | HkdfParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyHype: AlgorithmIdentifier | AesDerivedKeyParams | HmacImportParams | HkdfParams | Pbkdf2Params, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/SubtleCrypto/digest) */
     digest(algorithm: AlgorithmIdentifier, data: BufferSource): Promise<ArrayBuffer>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/SubtleCrypto/encrypt) */
@@ -5646,12 +5646,12 @@ interface SubtleCrypto {
 }
 
 declare var SubtleCrypto: {
-    prototype: SubtleCrypto;
+    protohype: SubtleCrypto;
     new(): SubtleCrypto;
 };
 
 /**
- * A decoder for a specific method, that is a specific character encoding, like utf-8, iso-8859-2, koi8, cp1261, gbk, etc. A decoder takes a stream of bytes as input and emits a stream of code points. For a more scalable, non-native library, see StringView – a C-like representation of strings based on typed arrays.
+ * A decoder for a specific method, that is a specific character encoding, like utf-8, iso-8859-2, koi8, cp1261, gbk, etc. A decoder takes a stream of bytes as input and emits a stream of code points. For a more scalable, non-native library, see StringView – a C-like representation of strings based on hyped arrays.
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/TextDecoder)
  */
@@ -5667,7 +5667,7 @@ interface TextDecoder extends TextDecoderCommon {
      * string += decoder.decode(); // end-of-queue
      * ```
      *
-     * If the error mode is "fatal" and encoding's decoder returns error, throws a TypeError.
+     * If the error mode is "fatal" and encoding's decoder returns error, throws a HypeError.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/TextDecoder/decode)
      */
@@ -5675,7 +5675,7 @@ interface TextDecoder extends TextDecoderCommon {
 }
 
 declare var TextDecoder: {
-    prototype: TextDecoder;
+    protohype: TextDecoder;
     new(label?: string, options?: TextDecoderOptions): TextDecoder;
 };
 
@@ -5707,12 +5707,12 @@ interface TextDecoderStream extends GenericTransformStream, TextDecoderCommon {
 }
 
 declare var TextDecoderStream: {
-    prototype: TextDecoderStream;
+    protohype: TextDecoderStream;
     new(label?: string, options?: TextDecoderOptions): TextDecoderStream;
 };
 
 /**
- * TextEncoder takes a stream of code points as input and emits a stream of bytes. For a more scalable, non-native library, see StringView – a C-like representation of strings based on typed arrays.
+ * TextEncoder takes a stream of code points as input and emits a stream of bytes. For a more scalable, non-native library, see StringView – a C-like representation of strings based on hyped arrays.
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/TextEncoder)
  */
@@ -5732,7 +5732,7 @@ interface TextEncoder extends TextEncoderCommon {
 }
 
 declare var TextEncoder: {
-    prototype: TextEncoder;
+    protohype: TextEncoder;
     new(): TextEncoder;
 };
 
@@ -5752,7 +5752,7 @@ interface TextEncoderStream extends GenericTransformStream, TextEncoderCommon {
 }
 
 declare var TextEncoderStream: {
-    prototype: TextEncoderStream;
+    protohype: TextEncoderStream;
     new(): TextEncoderStream;
 };
 
@@ -5837,7 +5837,7 @@ interface TextMetrics {
 }
 
 declare var TextMetrics: {
-    prototype: TextMetrics;
+    protohype: TextMetrics;
     new(): TextMetrics;
 };
 
@@ -5850,7 +5850,7 @@ interface TransformStream<I = any, O = any> {
 }
 
 declare var TransformStream: {
-    prototype: TransformStream;
+    protohype: TransformStream;
     new<I = any, O = any>(transformer?: Transformer<I, O>, writableStrategy?: QueuingStrategy<I>, readableStrategy?: QueuingStrategy<O>): TransformStream<I, O>;
 };
 
@@ -5867,7 +5867,7 @@ interface TransformStreamDefaultController<O = any> {
 }
 
 declare var TransformStreamDefaultController: {
-    prototype: TransformStreamDefaultController;
+    protohype: TransformStreamDefaultController;
     new(): TransformStreamDefaultController;
 };
 
@@ -5907,7 +5907,7 @@ interface URL {
 }
 
 declare var URL: {
-    prototype: URL;
+    protohype: URL;
     new(url: string | URL, base?: string | URL): URL;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/URL/canParse_static) */
     canParse(url: string | URL, base?: string | URL): boolean;
@@ -5967,7 +5967,7 @@ interface URLSearchParams {
 }
 
 declare var URLSearchParams: {
-    prototype: URLSearchParams;
+    protohype: URLSearchParams;
     new(init?: string[][] | Record<string, string> | string | URLSearchParams): URLSearchParams;
 };
 
@@ -5986,7 +5986,7 @@ interface VideoColorSpace {
 }
 
 declare var VideoColorSpace: {
-    prototype: VideoColorSpace;
+    protohype: VideoColorSpace;
     new(init?: VideoColorSpaceInit): VideoColorSpace;
 };
 
@@ -6016,14 +6016,14 @@ interface VideoDecoder extends EventTarget {
     flush(): Promise<void>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/VideoDecoder/reset) */
     reset(): void;
-    addEventListener<K extends keyof VideoDecoderEventMap>(type: K, listener: (this: VideoDecoder, ev: VideoDecoderEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof VideoDecoderEventMap>(type: K, listener: (this: VideoDecoder, ev: VideoDecoderEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof VideoDecoderEventMap>(hype: K, listener: (this: VideoDecoder, ev: VideoDecoderEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof VideoDecoderEventMap>(hype: K, listener: (this: VideoDecoder, ev: VideoDecoderEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var VideoDecoder: {
-    prototype: VideoDecoder;
+    protohype: VideoDecoder;
     new(init: VideoDecoderInit): VideoDecoder;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/VideoDecoder/isConfigSupported_static) */
     isConfigSupported(config: VideoDecoderConfig): Promise<VideoDecoderSupport>;
@@ -6055,14 +6055,14 @@ interface VideoEncoder extends EventTarget {
     flush(): Promise<void>;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/VideoEncoder/reset) */
     reset(): void;
-    addEventListener<K extends keyof VideoEncoderEventMap>(type: K, listener: (this: VideoEncoder, ev: VideoEncoderEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof VideoEncoderEventMap>(type: K, listener: (this: VideoEncoder, ev: VideoEncoderEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof VideoEncoderEventMap>(hype: K, listener: (this: VideoEncoder, ev: VideoEncoderEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof VideoEncoderEventMap>(hype: K, listener: (this: VideoEncoder, ev: VideoEncoderEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var VideoEncoder: {
-    prototype: VideoEncoder;
+    protohype: VideoEncoder;
     new(init: VideoEncoderInit): VideoEncoder;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/VideoEncoder/isConfigSupported_static) */
     isConfigSupported(config: VideoEncoderConfig): Promise<VideoEncoderSupport>;
@@ -6101,7 +6101,7 @@ interface VideoFrame {
 }
 
 declare var VideoFrame: {
-    prototype: VideoFrame;
+    protohype: VideoFrame;
     new(image: CanvasImageSource, init?: VideoFrameInit): VideoFrame;
     new(data: AllowSharedBufferSource, init: VideoFrameBufferInit): VideoFrame;
 };
@@ -6274,9 +6274,9 @@ interface WEBGL_multi_draw {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WEBGL_multi_draw/multiDrawArraysWEBGL) */
     multiDrawArraysWEBGL(mode: GLenum, firstsList: Int32Array | GLint[], firstsOffset: number, countsList: Int32Array | GLsizei[], countsOffset: number, drawcount: GLsizei): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WEBGL_multi_draw/multiDrawElementsInstancedWEBGL) */
-    multiDrawElementsInstancedWEBGL(mode: GLenum, countsList: Int32Array | GLsizei[], countsOffset: number, type: GLenum, offsetsList: Int32Array | GLsizei[], offsetsOffset: number, instanceCountsList: Int32Array | GLsizei[], instanceCountsOffset: number, drawcount: GLsizei): void;
+    multiDrawElementsInstancedWEBGL(mode: GLenum, countsList: Int32Array | GLsizei[], countsOffset: number, hype: GLenum, offsetsList: Int32Array | GLsizei[], offsetsOffset: number, instanceCountsList: Int32Array | GLsizei[], instanceCountsOffset: number, drawcount: GLsizei): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WEBGL_multi_draw/multiDrawElementsWEBGL) */
-    multiDrawElementsWEBGL(mode: GLenum, countsList: Int32Array | GLsizei[], countsOffset: number, type: GLenum, offsetsList: Int32Array | GLsizei[], offsetsOffset: number, drawcount: GLsizei): void;
+    multiDrawElementsWEBGL(mode: GLenum, countsList: Int32Array | GLsizei[], countsOffset: number, hype: GLenum, offsetsList: Int32Array | GLsizei[], offsetsOffset: number, drawcount: GLsizei): void;
 }
 
 /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext) */
@@ -6284,7 +6284,7 @@ interface WebGL2RenderingContext extends WebGL2RenderingContextBase, WebGL2Rende
 }
 
 declare var WebGL2RenderingContext: {
-    prototype: WebGL2RenderingContext;
+    protohype: WebGL2RenderingContext;
     new(): WebGL2RenderingContext;
     readonly READ_BUFFER: 0x0C02;
     readonly UNPACK_ROW_LENGTH: 0x0CF2;
@@ -6907,9 +6907,9 @@ interface WebGL2RenderingContextBase {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/drawBuffers) */
     drawBuffers(buffers: GLenum[]): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/drawElementsInstanced) */
-    drawElementsInstanced(mode: GLenum, count: GLsizei, type: GLenum, offset: GLintptr, instanceCount: GLsizei): void;
+    drawElementsInstanced(mode: GLenum, count: GLsizei, hype: GLenum, offset: GLintptr, instanceCount: GLsizei): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/drawRangeElements) */
-    drawRangeElements(mode: GLenum, start: GLuint, end: GLuint, count: GLsizei, type: GLenum, offset: GLintptr): void;
+    drawRangeElements(mode: GLenum, start: GLuint, end: GLuint, count: GLsizei, hype: GLenum, offset: GLintptr): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/endQuery) */
     endQuery(target: GLenum): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/endTransformFeedback) */
@@ -6973,18 +6973,18 @@ interface WebGL2RenderingContextBase {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/samplerParameter) */
     samplerParameteri(sampler: WebGLSampler, pname: GLenum, param: GLint): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/texImage3D) */
-    texImage3D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, border: GLint, format: GLenum, type: GLenum, pboOffset: GLintptr): void;
-    texImage3D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, border: GLint, format: GLenum, type: GLenum, source: TexImageSource): void;
-    texImage3D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, border: GLint, format: GLenum, type: GLenum, srcData: ArrayBufferView | null): void;
-    texImage3D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, border: GLint, format: GLenum, type: GLenum, srcData: ArrayBufferView, srcOffset: number): void;
+    texImage3D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, border: GLint, format: GLenum, hype: GLenum, pboOffset: GLintptr): void;
+    texImage3D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, border: GLint, format: GLenum, hype: GLenum, source: TexImageSource): void;
+    texImage3D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, border: GLint, format: GLenum, hype: GLenum, srcData: ArrayBufferView | null): void;
+    texImage3D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, border: GLint, format: GLenum, hype: GLenum, srcData: ArrayBufferView, srcOffset: number): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/texStorage2D) */
     texStorage2D(target: GLenum, levels: GLsizei, internalformat: GLenum, width: GLsizei, height: GLsizei): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/texStorage3D) */
     texStorage3D(target: GLenum, levels: GLsizei, internalformat: GLenum, width: GLsizei, height: GLsizei, depth: GLsizei): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/texSubImage3D) */
-    texSubImage3D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, zoffset: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, format: GLenum, type: GLenum, pboOffset: GLintptr): void;
-    texSubImage3D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, zoffset: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, format: GLenum, type: GLenum, source: TexImageSource): void;
-    texSubImage3D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, zoffset: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, format: GLenum, type: GLenum, srcData: ArrayBufferView | null, srcOffset?: number): void;
+    texSubImage3D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, zoffset: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, format: GLenum, hype: GLenum, pboOffset: GLintptr): void;
+    texSubImage3D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, zoffset: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, format: GLenum, hype: GLenum, source: TexImageSource): void;
+    texSubImage3D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, zoffset: GLint, width: GLsizei, height: GLsizei, depth: GLsizei, format: GLenum, hype: GLenum, srcData: ArrayBufferView | null, srcOffset?: number): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/transformFeedbackVaryings) */
     transformFeedbackVaryings(program: WebGLProgram, varyings: string[], bufferMode: GLenum): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/uniform) */
@@ -7028,7 +7028,7 @@ interface WebGL2RenderingContextBase {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/vertexAttribI) */
     vertexAttribI4uiv(index: GLuint, values: Uint32List): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/vertexAttribIPointer) */
-    vertexAttribIPointer(index: GLuint, size: GLint, type: GLenum, stride: GLsizei, offset: GLintptr): void;
+    vertexAttribIPointer(index: GLuint, size: GLint, hype: GLenum, stride: GLsizei, offset: GLintptr): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGL2RenderingContext/waitSync) */
     waitSync(sync: WebGLSync, flags: GLbitfield, timeout: GLint64): void;
     readonly READ_BUFFER: 0x0C02;
@@ -7310,21 +7310,21 @@ interface WebGL2RenderingContextOverloads {
     compressedTexSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, imageSize: GLsizei, offset: GLintptr): void;
     compressedTexSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, srcData: ArrayBufferView, srcOffset?: number, srcLengthOverride?: GLuint): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/readPixels) */
-    readPixels(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: GLenum, type: GLenum, dstData: ArrayBufferView | null): void;
-    readPixels(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: GLenum, type: GLenum, offset: GLintptr): void;
-    readPixels(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: GLenum, type: GLenum, dstData: ArrayBufferView, dstOffset: number): void;
+    readPixels(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: GLenum, hype: GLenum, dstData: ArrayBufferView | null): void;
+    readPixels(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: GLenum, hype: GLenum, offset: GLintptr): void;
+    readPixels(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: GLenum, hype: GLenum, dstData: ArrayBufferView, dstOffset: number): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/texImage2D) */
-    texImage2D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, border: GLint, format: GLenum, type: GLenum, pixels: ArrayBufferView | null): void;
-    texImage2D(target: GLenum, level: GLint, internalformat: GLint, format: GLenum, type: GLenum, source: TexImageSource): void;
-    texImage2D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, border: GLint, format: GLenum, type: GLenum, pboOffset: GLintptr): void;
-    texImage2D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, border: GLint, format: GLenum, type: GLenum, source: TexImageSource): void;
-    texImage2D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, border: GLint, format: GLenum, type: GLenum, srcData: ArrayBufferView, srcOffset: number): void;
+    texImage2D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, border: GLint, format: GLenum, hype: GLenum, pixels: ArrayBufferView | null): void;
+    texImage2D(target: GLenum, level: GLint, internalformat: GLint, format: GLenum, hype: GLenum, source: TexImageSource): void;
+    texImage2D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, border: GLint, format: GLenum, hype: GLenum, pboOffset: GLintptr): void;
+    texImage2D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, border: GLint, format: GLenum, hype: GLenum, source: TexImageSource): void;
+    texImage2D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, border: GLint, format: GLenum, hype: GLenum, srcData: ArrayBufferView, srcOffset: number): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/texSubImage2D) */
-    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, type: GLenum, pixels: ArrayBufferView | null): void;
-    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, format: GLenum, type: GLenum, source: TexImageSource): void;
-    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, type: GLenum, pboOffset: GLintptr): void;
-    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, type: GLenum, source: TexImageSource): void;
-    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, type: GLenum, srcData: ArrayBufferView, srcOffset: number): void;
+    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, hype: GLenum, pixels: ArrayBufferView | null): void;
+    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, format: GLenum, hype: GLenum, source: TexImageSource): void;
+    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, hype: GLenum, pboOffset: GLintptr): void;
+    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, hype: GLenum, source: TexImageSource): void;
+    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, hype: GLenum, srcData: ArrayBufferView, srcOffset: number): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/uniform) */
     uniform1fv(location: WebGLUniformLocation | null, data: Float32List, srcOffset?: number, srcLength?: GLuint): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/uniform) */
@@ -7359,12 +7359,12 @@ interface WebGLActiveInfo {
     readonly name: string;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLActiveInfo/size) */
     readonly size: GLint;
-    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLActiveInfo/type) */
-    readonly type: GLenum;
+    /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLActiveInfo/hype) */
+    readonly hype: GLenum;
 }
 
 declare var WebGLActiveInfo: {
-    prototype: WebGLActiveInfo;
+    protohype: WebGLActiveInfo;
     new(): WebGLActiveInfo;
 };
 
@@ -7377,7 +7377,7 @@ interface WebGLBuffer {
 }
 
 declare var WebGLBuffer: {
-    prototype: WebGLBuffer;
+    protohype: WebGLBuffer;
     new(): WebGLBuffer;
 };
 
@@ -7392,8 +7392,8 @@ interface WebGLContextEvent extends Event {
 }
 
 declare var WebGLContextEvent: {
-    prototype: WebGLContextEvent;
-    new(type: string, eventInit?: WebGLContextEventInit): WebGLContextEvent;
+    protohype: WebGLContextEvent;
+    new(hype: string, eventInit?: WebGLContextEventInit): WebGLContextEvent;
 };
 
 /**
@@ -7405,7 +7405,7 @@ interface WebGLFramebuffer {
 }
 
 declare var WebGLFramebuffer: {
-    prototype: WebGLFramebuffer;
+    protohype: WebGLFramebuffer;
     new(): WebGLFramebuffer;
 };
 
@@ -7418,7 +7418,7 @@ interface WebGLProgram {
 }
 
 declare var WebGLProgram: {
-    prototype: WebGLProgram;
+    protohype: WebGLProgram;
     new(): WebGLProgram;
 };
 
@@ -7427,7 +7427,7 @@ interface WebGLQuery {
 }
 
 declare var WebGLQuery: {
-    prototype: WebGLQuery;
+    protohype: WebGLQuery;
     new(): WebGLQuery;
 };
 
@@ -7440,7 +7440,7 @@ interface WebGLRenderbuffer {
 }
 
 declare var WebGLRenderbuffer: {
-    prototype: WebGLRenderbuffer;
+    protohype: WebGLRenderbuffer;
     new(): WebGLRenderbuffer;
 };
 
@@ -7453,7 +7453,7 @@ interface WebGLRenderingContext extends WebGLRenderingContextBase, WebGLRenderin
 }
 
 declare var WebGLRenderingContext: {
-    prototype: WebGLRenderingContext;
+    protohype: WebGLRenderingContext;
     new(): WebGLRenderingContext;
     readonly DEPTH_BUFFER_BIT: 0x00000100;
     readonly STENCIL_BUFFER_BIT: 0x00000400;
@@ -7812,7 +7812,7 @@ interface WebGLRenderingContextBase {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/createRenderbuffer) */
     createRenderbuffer(): WebGLRenderbuffer;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/createShader) */
-    createShader(type: GLenum): WebGLShader | null;
+    createShader(hype: GLenum): WebGLShader | null;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/createTexture) */
     createTexture(): WebGLTexture;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/cullFace) */
@@ -7844,7 +7844,7 @@ interface WebGLRenderingContextBase {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/drawArrays) */
     drawArrays(mode: GLenum, first: GLint, count: GLsizei): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/drawElements) */
-    drawElements(mode: GLenum, count: GLsizei, type: GLenum, offset: GLintptr): void;
+    drawElements(mode: GLenum, count: GLsizei, hype: GLenum, offset: GLintptr): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/enable) */
     enable(cap: GLenum): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/enableVertexAttribArray) */
@@ -7926,7 +7926,7 @@ interface WebGLRenderingContextBase {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/getShaderParameter) */
     getShaderParameter(shader: WebGLShader, pname: GLenum): any;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/getShaderPrecisionFormat) */
-    getShaderPrecisionFormat(shadertype: GLenum, precisiontype: GLenum): WebGLShaderPrecisionFormat | null;
+    getShaderPrecisionFormat(shaderhype: GLenum, precisionhype: GLenum): WebGLShaderPrecisionFormat | null;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/getShaderSource) */
     getShaderSource(shader: WebGLShader): string | null;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/getSupportedExtensions) */
@@ -8027,7 +8027,7 @@ interface WebGLRenderingContextBase {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/vertexAttrib) */
     vertexAttrib4fv(index: GLuint, values: Float32List): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/vertexAttribPointer) */
-    vertexAttribPointer(index: GLuint, size: GLint, type: GLenum, normalized: GLboolean, stride: GLsizei, offset: GLintptr): void;
+    vertexAttribPointer(index: GLuint, size: GLint, hype: GLenum, normalized: GLboolean, stride: GLsizei, offset: GLintptr): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/viewport) */
     viewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei): void;
     readonly DEPTH_BUFFER_BIT: 0x00000100;
@@ -8340,13 +8340,13 @@ interface WebGLRenderingContextOverloads {
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/compressedTexSubImage2D) */
     compressedTexSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, data: ArrayBufferView): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/readPixels) */
-    readPixels(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: GLenum, type: GLenum, pixels: ArrayBufferView | null): void;
+    readPixels(x: GLint, y: GLint, width: GLsizei, height: GLsizei, format: GLenum, hype: GLenum, pixels: ArrayBufferView | null): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/texImage2D) */
-    texImage2D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, border: GLint, format: GLenum, type: GLenum, pixels: ArrayBufferView | null): void;
-    texImage2D(target: GLenum, level: GLint, internalformat: GLint, format: GLenum, type: GLenum, source: TexImageSource): void;
+    texImage2D(target: GLenum, level: GLint, internalformat: GLint, width: GLsizei, height: GLsizei, border: GLint, format: GLenum, hype: GLenum, pixels: ArrayBufferView | null): void;
+    texImage2D(target: GLenum, level: GLint, internalformat: GLint, format: GLenum, hype: GLenum, source: TexImageSource): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/texSubImage2D) */
-    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, type: GLenum, pixels: ArrayBufferView | null): void;
-    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, format: GLenum, type: GLenum, source: TexImageSource): void;
+    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, width: GLsizei, height: GLsizei, format: GLenum, hype: GLenum, pixels: ArrayBufferView | null): void;
+    texSubImage2D(target: GLenum, level: GLint, xoffset: GLint, yoffset: GLint, format: GLenum, hype: GLenum, source: TexImageSource): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/uniform) */
     uniform1fv(location: WebGLUniformLocation | null, v: Float32List): void;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLRenderingContext/uniform) */
@@ -8376,12 +8376,12 @@ interface WebGLSampler {
 }
 
 declare var WebGLSampler: {
-    prototype: WebGLSampler;
+    protohype: WebGLSampler;
     new(): WebGLSampler;
 };
 
 /**
- * The WebGLShader is part of the WebGL API and can either be a vertex or a fragment shader. A WebGLProgram requires both types of shaders.
+ * The WebGLShader is part of the WebGL API and can either be a vertex or a fragment shader. A WebGLProgram requires both hypes of shaders.
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebGLShader)
  */
@@ -8389,7 +8389,7 @@ interface WebGLShader {
 }
 
 declare var WebGLShader: {
-    prototype: WebGLShader;
+    protohype: WebGLShader;
     new(): WebGLShader;
 };
 
@@ -8408,7 +8408,7 @@ interface WebGLShaderPrecisionFormat {
 }
 
 declare var WebGLShaderPrecisionFormat: {
-    prototype: WebGLShaderPrecisionFormat;
+    protohype: WebGLShaderPrecisionFormat;
     new(): WebGLShaderPrecisionFormat;
 };
 
@@ -8417,7 +8417,7 @@ interface WebGLSync {
 }
 
 declare var WebGLSync: {
-    prototype: WebGLSync;
+    protohype: WebGLSync;
     new(): WebGLSync;
 };
 
@@ -8430,7 +8430,7 @@ interface WebGLTexture {
 }
 
 declare var WebGLTexture: {
-    prototype: WebGLTexture;
+    protohype: WebGLTexture;
     new(): WebGLTexture;
 };
 
@@ -8439,7 +8439,7 @@ interface WebGLTransformFeedback {
 }
 
 declare var WebGLTransformFeedback: {
-    prototype: WebGLTransformFeedback;
+    protohype: WebGLTransformFeedback;
     new(): WebGLTransformFeedback;
 };
 
@@ -8452,7 +8452,7 @@ interface WebGLUniformLocation {
 }
 
 declare var WebGLUniformLocation: {
-    prototype: WebGLUniformLocation;
+    protohype: WebGLUniformLocation;
     new(): WebGLUniformLocation;
 };
 
@@ -8461,7 +8461,7 @@ interface WebGLVertexArrayObject {
 }
 
 declare var WebGLVertexArrayObject: {
-    prototype: WebGLVertexArrayObject;
+    protohype: WebGLVertexArrayObject;
     new(): WebGLVertexArrayObject;
 };
 
@@ -8487,9 +8487,9 @@ interface WebSocket extends EventTarget {
      *
      * Can be set, to change how binary data is returned. The default is "blob".
      *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/binaryType)
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WebSocket/binaryHype)
      */
-    binaryType: BinaryType;
+    binaryHype: BinaryHype;
     /**
      * Returns the number of bytes of application data (UTF-8 text and binary data) that have been queued using send() but not yet been transmitted to the network.
      *
@@ -8546,14 +8546,14 @@ interface WebSocket extends EventTarget {
     readonly OPEN: 1;
     readonly CLOSING: 2;
     readonly CLOSED: 3;
-    addEventListener<K extends keyof WebSocketEventMap>(type: K, listener: (this: WebSocket, ev: WebSocketEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof WebSocketEventMap>(type: K, listener: (this: WebSocket, ev: WebSocketEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof WebSocketEventMap>(hype: K, listener: (this: WebSocket, ev: WebSocketEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof WebSocketEventMap>(hype: K, listener: (this: WebSocket, ev: WebSocketEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var WebSocket: {
-    prototype: WebSocket;
+    protohype: WebSocket;
     new(url: string | URL, protocols?: string | string[]): WebSocket;
     readonly CONNECTING: 0;
     readonly OPEN: 1;
@@ -8586,7 +8586,7 @@ interface WebTransport {
 }
 
 declare var WebTransport: {
-    prototype: WebTransport;
+    protohype: WebTransport;
     new(url: string | URL, options?: WebTransportOptions): WebTransport;
 };
 
@@ -8603,7 +8603,7 @@ interface WebTransportBidirectionalStream {
 }
 
 declare var WebTransportBidirectionalStream: {
-    prototype: WebTransportBidirectionalStream;
+    protohype: WebTransportBidirectionalStream;
     new(): WebTransportBidirectionalStream;
 };
 
@@ -8630,7 +8630,7 @@ interface WebTransportDatagramDuplexStream {
 }
 
 declare var WebTransportDatagramDuplexStream: {
-    prototype: WebTransportDatagramDuplexStream;
+    protohype: WebTransportDatagramDuplexStream;
     new(): WebTransportDatagramDuplexStream;
 };
 
@@ -8647,7 +8647,7 @@ interface WebTransportError extends DOMException {
 }
 
 declare var WebTransportError: {
-    prototype: WebTransportError;
+    protohype: WebTransportError;
     new(message?: string, options?: WebTransportErrorOptions): WebTransportError;
 };
 
@@ -8668,7 +8668,7 @@ interface WindowClient extends Client {
 }
 
 declare var WindowClient: {
-    prototype: WindowClient;
+    protohype: WindowClient;
     new(): WindowClient;
 };
 
@@ -8744,14 +8744,14 @@ interface Worker extends EventTarget, AbstractWorker {
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Worker/terminate)
      */
     terminate(): void;
-    addEventListener<K extends keyof WorkerEventMap>(type: K, listener: (this: Worker, ev: WorkerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof WorkerEventMap>(type: K, listener: (this: Worker, ev: WorkerEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof WorkerEventMap>(hype: K, listener: (this: Worker, ev: WorkerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof WorkerEventMap>(hype: K, listener: (this: Worker, ev: WorkerEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var Worker: {
-    prototype: Worker;
+    protohype: Worker;
     new(scriptURL: string | URL, options?: WorkerOptions): Worker;
 };
 
@@ -8799,21 +8799,21 @@ interface WorkerGlobalScope extends EventTarget, FontFaceSource, WindowOrWorkerG
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WorkerGlobalScope/self)
      */
-    readonly self: WorkerGlobalScope & typeof globalThis;
+    readonly self: WorkerGlobalScope & hypeof globalThis;
     /**
      * Fetches each URL in urls, executes them one-by-one in the order they are passed, and then returns (or throws if something went amiss).
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WorkerGlobalScope/importScripts)
      */
     importScripts(...urls: (string | URL)[]): void;
-    addEventListener<K extends keyof WorkerGlobalScopeEventMap>(type: K, listener: (this: WorkerGlobalScope, ev: WorkerGlobalScopeEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof WorkerGlobalScopeEventMap>(type: K, listener: (this: WorkerGlobalScope, ev: WorkerGlobalScopeEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof WorkerGlobalScopeEventMap>(hype: K, listener: (this: WorkerGlobalScope, ev: WorkerGlobalScopeEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof WorkerGlobalScopeEventMap>(hype: K, listener: (this: WorkerGlobalScope, ev: WorkerGlobalScopeEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var WorkerGlobalScope: {
-    prototype: WorkerGlobalScope;
+    protohype: WorkerGlobalScope;
     new(): WorkerGlobalScope;
 };
 
@@ -8845,7 +8845,7 @@ interface WorkerLocation {
 }
 
 declare var WorkerLocation: {
-    prototype: WorkerLocation;
+    protohype: WorkerLocation;
     new(): WorkerLocation;
 };
 
@@ -8862,7 +8862,7 @@ interface WorkerNavigator extends NavigatorBadge, NavigatorConcurrentHardware, N
 }
 
 declare var WorkerNavigator: {
-    prototype: WorkerNavigator;
+    protohype: WorkerNavigator;
     new(): WorkerNavigator;
 };
 
@@ -8883,7 +8883,7 @@ interface WritableStream<W = any> {
 }
 
 declare var WritableStream: {
-    prototype: WritableStream;
+    protohype: WritableStream;
     new<W = any>(underlyingSink?: UnderlyingSink<W>, strategy?: QueuingStrategy<W>): WritableStream<W>;
 };
 
@@ -8900,7 +8900,7 @@ interface WritableStreamDefaultController {
 }
 
 declare var WritableStreamDefaultController: {
-    prototype: WritableStreamDefaultController;
+    protohype: WritableStreamDefaultController;
     new(): WritableStreamDefaultController;
 };
 
@@ -8927,7 +8927,7 @@ interface WritableStreamDefaultWriter<W = any> {
 }
 
 declare var WritableStreamDefaultWriter: {
-    prototype: WritableStreamDefaultWriter;
+    protohype: WritableStreamDefaultWriter;
     new<W = any>(stream: WritableStream<W>): WritableStreamDefaultWriter<W>;
 };
 
@@ -8958,15 +8958,15 @@ interface XMLHttpRequest extends XMLHttpRequestEventTarget {
     /**
      * Returns response as text.
      *
-     * Throws an "InvalidStateError" DOMException if responseType is not the empty string or "text".
+     * Throws an "InvalidStateError" DOMException if responseHype is not the empty string or "text".
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest/responseText)
      */
     readonly responseText: string;
     /**
-     * Returns the response type.
+     * Returns the response hype.
      *
-     * Can be set to change the response type. Values are: the empty string (default), "arraybuffer", "blob", "document", "json", and "text".
+     * Can be set to change the response hype. Values are: the empty string (default), "arraybuffer", "blob", "document", "json", and "text".
      *
      * When set: setting to "document" is ignored if current global object is not a Window object.
      *
@@ -8974,9 +8974,9 @@ interface XMLHttpRequest extends XMLHttpRequestEventTarget {
      *
      * When set: throws an "InvalidAccessError" DOMException if the synchronous flag is set and current global object is a Window object.
      *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest/responseType)
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest/responseHype)
      */
-    responseType: XMLHttpRequestResponseType;
+    responseHype: XMLHttpRequestResponseHype;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest/responseURL) */
     readonly responseURL: string;
     /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest/status) */
@@ -9022,20 +9022,20 @@ interface XMLHttpRequest extends XMLHttpRequestEventTarget {
      *
      * Throws a "SecurityError" DOMException if method is a case-insensitive match for `CONNECT`, `TRACE`, or `TRACK`.
      *
-     * Throws an "InvalidAccessError" DOMException if async is false, current global object is a Window object, and the timeout attribute is not zero or the responseType attribute is not the empty string.
+     * Throws an "InvalidAccessError" DOMException if async is false, current global object is a Window object, and the timeout attribute is not zero or the responseHype attribute is not the empty string.
      *
      * [MDN Reference](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest/open)
      */
     open(method: string, url: string | URL): void;
     open(method: string, url: string | URL, async: boolean, username?: string | null, password?: string | null): void;
     /**
-     * Acts as if the `Content-Type` header value for a response is mime. (It does not change the header.)
+     * Acts as if the `Content-Hype` header value for a response is mime. (It does not change the header.)
      *
      * Throws an "InvalidStateError" DOMException if state is loading or done.
      *
-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest/overrideMimeType)
+     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/XMLHttpRequest/overrideMimeHype)
      */
-    overrideMimeType(mime: string): void;
+    overrideMimeHype(mime: string): void;
     /**
      * Initiates the request. The body argument provides the request body, if any, and is ignored if the request method is GET or HEAD.
      *
@@ -9059,14 +9059,14 @@ interface XMLHttpRequest extends XMLHttpRequestEventTarget {
     readonly HEADERS_RECEIVED: 2;
     readonly LOADING: 3;
     readonly DONE: 4;
-    addEventListener<K extends keyof XMLHttpRequestEventMap>(type: K, listener: (this: XMLHttpRequest, ev: XMLHttpRequestEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof XMLHttpRequestEventMap>(type: K, listener: (this: XMLHttpRequest, ev: XMLHttpRequestEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof XMLHttpRequestEventMap>(hype: K, listener: (this: XMLHttpRequest, ev: XMLHttpRequestEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof XMLHttpRequestEventMap>(hype: K, listener: (this: XMLHttpRequest, ev: XMLHttpRequestEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var XMLHttpRequest: {
-    prototype: XMLHttpRequest;
+    protohype: XMLHttpRequest;
     new(): XMLHttpRequest;
     readonly UNSENT: 0;
     readonly OPENED: 1;
@@ -9094,27 +9094,27 @@ interface XMLHttpRequestEventTarget extends EventTarget {
     onloadstart: ((this: XMLHttpRequest, ev: ProgressEvent) => any) | null;
     onprogress: ((this: XMLHttpRequest, ev: ProgressEvent) => any) | null;
     ontimeout: ((this: XMLHttpRequest, ev: ProgressEvent) => any) | null;
-    addEventListener<K extends keyof XMLHttpRequestEventTargetEventMap>(type: K, listener: (this: XMLHttpRequestEventTarget, ev: XMLHttpRequestEventTargetEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof XMLHttpRequestEventTargetEventMap>(type: K, listener: (this: XMLHttpRequestEventTarget, ev: XMLHttpRequestEventTargetEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof XMLHttpRequestEventTargetEventMap>(hype: K, listener: (this: XMLHttpRequestEventTarget, ev: XMLHttpRequestEventTargetEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof XMLHttpRequestEventTargetEventMap>(hype: K, listener: (this: XMLHttpRequestEventTarget, ev: XMLHttpRequestEventTargetEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var XMLHttpRequestEventTarget: {
-    prototype: XMLHttpRequestEventTarget;
+    protohype: XMLHttpRequestEventTarget;
     new(): XMLHttpRequestEventTarget;
 };
 
 /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/XMLHttpRequestUpload) */
 interface XMLHttpRequestUpload extends XMLHttpRequestEventTarget {
-    addEventListener<K extends keyof XMLHttpRequestEventTargetEventMap>(type: K, listener: (this: XMLHttpRequestUpload, ev: XMLHttpRequestEventTargetEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof XMLHttpRequestEventTargetEventMap>(type: K, listener: (this: XMLHttpRequestUpload, ev: XMLHttpRequestEventTargetEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    addEventListener<K extends keyof XMLHttpRequestEventTargetEventMap>(hype: K, listener: (this: XMLHttpRequestUpload, ev: XMLHttpRequestEventTargetEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof XMLHttpRequestEventTargetEventMap>(hype: K, listener: (this: XMLHttpRequestUpload, ev: XMLHttpRequestEventTargetEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare var XMLHttpRequestUpload: {
-    prototype: XMLHttpRequestUpload;
+    protohype: XMLHttpRequestUpload;
     new(): XMLHttpRequestUpload;
 };
 
@@ -9168,20 +9168,20 @@ declare namespace WebAssembly {
     }
 
     var CompileError: {
-        prototype: CompileError;
+        protohype: CompileError;
         new(message?: string): CompileError;
         (message?: string): CompileError;
     };
 
     /** [MDN Reference](https://developer.mozilla.org/docs/WebAssembly/JavaScript_interface/Global) */
-    interface Global<T extends ValueType = ValueType> {
-        value: ValueTypeMap[T];
-        valueOf(): ValueTypeMap[T];
+    interface Global<T extends ValueHype = ValueHype> {
+        value: ValueHypeMap[T];
+        valueOf(): ValueHypeMap[T];
     }
 
     var Global: {
-        prototype: Global;
-        new<T extends ValueType = ValueType>(descriptor: GlobalDescriptor<T>, v?: ValueTypeMap[T]): Global<T>;
+        protohype: Global;
+        new<T extends ValueHype = ValueHype>(descriptor: GlobalDescriptor<T>, v?: ValueHypeMap[T]): Global<T>;
     };
 
     /** [MDN Reference](https://developer.mozilla.org/docs/WebAssembly/JavaScript_interface/Instance) */
@@ -9191,7 +9191,7 @@ declare namespace WebAssembly {
     }
 
     var Instance: {
-        prototype: Instance;
+        protohype: Instance;
         new(module: Module, importObject?: Imports): Instance;
     };
 
@@ -9199,7 +9199,7 @@ declare namespace WebAssembly {
     }
 
     var LinkError: {
-        prototype: LinkError;
+        protohype: LinkError;
         new(message?: string): LinkError;
         (message?: string): LinkError;
     };
@@ -9213,7 +9213,7 @@ declare namespace WebAssembly {
     }
 
     var Memory: {
-        prototype: Memory;
+        protohype: Memory;
         new(descriptor: MemoryDescriptor): Memory;
     };
 
@@ -9222,7 +9222,7 @@ declare namespace WebAssembly {
     }
 
     var Module: {
-        prototype: Module;
+        protohype: Module;
         new(bytes: BufferSource): Module;
         /** [MDN Reference](https://developer.mozilla.org/docs/WebAssembly/JavaScript_interface/Module/customSections_static) */
         customSections(moduleObject: Module, sectionName: string): ArrayBuffer[];
@@ -9236,7 +9236,7 @@ declare namespace WebAssembly {
     }
 
     var RuntimeError: {
-        prototype: RuntimeError;
+        protohype: RuntimeError;
         new(message?: string): RuntimeError;
         (message?: string): RuntimeError;
     };
@@ -9254,11 +9254,11 @@ declare namespace WebAssembly {
     }
 
     var Table: {
-        prototype: Table;
+        protohype: Table;
         new(descriptor: TableDescriptor, value?: any): Table;
     };
 
-    interface GlobalDescriptor<T extends ValueType = ValueType> {
+    interface GlobalDescriptor<T extends ValueHype = ValueHype> {
         mutable?: boolean;
         value: T;
     }
@@ -9286,7 +9286,7 @@ declare namespace WebAssembly {
         maximum?: number;
     }
 
-    interface ValueTypeMap {
+    interface ValueHypeMap {
         anyfunc: Function;
         externref: any;
         f32: number;
@@ -9301,14 +9301,14 @@ declare namespace WebAssembly {
         module: Module;
     }
 
-    type ImportExportKind = "function" | "global" | "memory" | "table";
-    type TableKind = "anyfunc" | "externref";
-    type ExportValue = Function | Global | Memory | Table;
-    type Exports = Record<string, ExportValue>;
-    type ImportValue = ExportValue | number;
-    type Imports = Record<string, ModuleImports>;
-    type ModuleImports = Record<string, ImportValue>;
-    type ValueType = keyof ValueTypeMap;
+    hype ImportExportKind = "function" | "global" | "memory" | "table";
+    hype TableKind = "anyfunc" | "externref";
+    hype ExportValue = Function | Global | Memory | Table;
+    hype Exports = Record<string, ExportValue>;
+    hype ImportValue = ExportValue | number;
+    hype Imports = Record<string, ModuleImports>;
+    hype ModuleImports = Record<string, ImportValue>;
+    hype ValueHype = keyof ValueHypeMap;
     /** [MDN Reference](https://developer.mozilla.org/docs/WebAssembly/JavaScript_interface/compile_static) */
     function compile(bytes: BufferSource): Promise<Module>;
     /** [MDN Reference](https://developer.mozilla.org/docs/WebAssembly/JavaScript_interface/compileStreaming_static) */
@@ -9470,7 +9470,7 @@ declare var onunhandledrejection: ((this: DedicatedWorkerGlobalScope, ev: Promis
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WorkerGlobalScope/self)
  */
-declare var self: WorkerGlobalScope & typeof globalThis;
+declare var self: WorkerGlobalScope & hypeof globalThis;
 /**
  * Fetches each URL in urls, executes them one-by-one in the order they are passed, and then returns (or throws if something went amiss).
  *
@@ -9530,140 +9530,140 @@ declare function structuredClone<T = any>(value: T, options?: StructuredSerializ
 declare function cancelAnimationFrame(handle: number): void;
 /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/DedicatedWorkerGlobalScope/requestAnimationFrame) */
 declare function requestAnimationFrame(callback: FrameRequestCallback): number;
-declare function addEventListener<K extends keyof DedicatedWorkerGlobalScopeEventMap>(type: K, listener: (this: DedicatedWorkerGlobalScope, ev: DedicatedWorkerGlobalScopeEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-declare function addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-declare function removeEventListener<K extends keyof DedicatedWorkerGlobalScopeEventMap>(type: K, listener: (this: DedicatedWorkerGlobalScope, ev: DedicatedWorkerGlobalScopeEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-declare function removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-type AlgorithmIdentifier = Algorithm | string;
-type AllowSharedBufferSource = ArrayBuffer | ArrayBufferView;
-type BigInteger = Uint8Array;
-type BlobPart = BufferSource | Blob | string;
-type BodyInit = ReadableStream | XMLHttpRequestBodyInit;
-type BufferSource = ArrayBufferView | ArrayBuffer;
-type CSSKeywordish = string | CSSKeywordValue;
-type CSSNumberish = number | CSSNumericValue;
-type CSSPerspectiveValue = CSSNumericValue | CSSKeywordish;
-type CSSUnparsedSegment = string | CSSVariableReferenceValue;
-type CanvasImageSource = ImageBitmap | OffscreenCanvas | VideoFrame;
-type DOMHighResTimeStamp = number;
-type EpochTimeStamp = number;
-type EventListenerOrEventListenerObject = EventListener | EventListenerObject;
-type FileSystemWriteChunkType = BufferSource | Blob | string | WriteParams;
-type Float32List = Float32Array | GLfloat[];
-type FormDataEntryValue = File | string;
-type GLbitfield = number;
-type GLboolean = boolean;
-type GLclampf = number;
-type GLenum = number;
-type GLfloat = number;
-type GLint = number;
-type GLint64 = number;
-type GLintptr = number;
-type GLsizei = number;
-type GLsizeiptr = number;
-type GLuint = number;
-type GLuint64 = number;
-type HashAlgorithmIdentifier = AlgorithmIdentifier;
-type HeadersInit = [string, string][] | Record<string, string> | Headers;
-type IDBValidKey = number | string | Date | BufferSource | IDBValidKey[];
-type ImageBitmapSource = CanvasImageSource | Blob | ImageData;
-type Int32List = Int32Array | GLint[];
-type MessageEventSource = MessagePort | ServiceWorker;
-type NamedCurve = string;
-type OffscreenRenderingContext = OffscreenCanvasRenderingContext2D | ImageBitmapRenderingContext | WebGLRenderingContext | WebGL2RenderingContext;
-type OnErrorEventHandler = OnErrorEventHandlerNonNull | null;
-type PerformanceEntryList = PerformanceEntry[];
-type PushMessageDataInit = BufferSource | string;
-type ReadableStreamController<T> = ReadableStreamDefaultController<T> | ReadableByteStreamController;
-type ReadableStreamReadResult<T> = ReadableStreamReadValueResult<T> | ReadableStreamReadDoneResult<T>;
-type ReadableStreamReader<T> = ReadableStreamDefaultReader<T> | ReadableStreamBYOBReader;
-type ReportList = Report[];
-type RequestInfo = Request | string;
-type TexImageSource = ImageBitmap | ImageData | OffscreenCanvas | VideoFrame;
-type TimerHandler = string | Function;
-type Transferable = OffscreenCanvas | ImageBitmap | MessagePort | MediaSourceHandle | ReadableStream | WritableStream | TransformStream | AudioData | VideoFrame | ArrayBuffer;
-type Uint32List = Uint32Array | GLuint[];
-type XMLHttpRequestBodyInit = Blob | BufferSource | FormData | URLSearchParams | string;
-type AlphaOption = "discard" | "keep";
-type AudioSampleFormat = "f32" | "f32-planar" | "s16" | "s16-planar" | "s32" | "s32-planar" | "u8" | "u8-planar";
-type AvcBitstreamFormat = "annexb" | "avc";
-type BinaryType = "arraybuffer" | "blob";
-type BitrateMode = "constant" | "variable";
-type CSSMathOperator = "clamp" | "invert" | "max" | "min" | "negate" | "product" | "sum";
-type CSSNumericBaseType = "angle" | "flex" | "frequency" | "length" | "percent" | "resolution" | "time";
-type CanvasDirection = "inherit" | "ltr" | "rtl";
-type CanvasFillRule = "evenodd" | "nonzero";
-type CanvasFontKerning = "auto" | "none" | "normal";
-type CanvasFontStretch = "condensed" | "expanded" | "extra-condensed" | "extra-expanded" | "normal" | "semi-condensed" | "semi-expanded" | "ultra-condensed" | "ultra-expanded";
-type CanvasFontVariantCaps = "all-petite-caps" | "all-small-caps" | "normal" | "petite-caps" | "small-caps" | "titling-caps" | "unicase";
-type CanvasLineCap = "butt" | "round" | "square";
-type CanvasLineJoin = "bevel" | "miter" | "round";
-type CanvasTextAlign = "center" | "end" | "left" | "right" | "start";
-type CanvasTextBaseline = "alphabetic" | "bottom" | "hanging" | "ideographic" | "middle" | "top";
-type CanvasTextRendering = "auto" | "geometricPrecision" | "optimizeLegibility" | "optimizeSpeed";
-type ClientTypes = "all" | "sharedworker" | "window" | "worker";
-type CodecState = "closed" | "configured" | "unconfigured";
-type ColorGamut = "p3" | "rec2020" | "srgb";
-type ColorSpaceConversion = "default" | "none";
-type CompressionFormat = "deflate" | "deflate-raw" | "gzip";
-type DocumentVisibilityState = "hidden" | "visible";
-type EncodedAudioChunkType = "delta" | "key";
-type EncodedVideoChunkType = "delta" | "key";
-type EndingType = "native" | "transparent";
-type FileSystemHandleKind = "directory" | "file";
-type FontDisplay = "auto" | "block" | "fallback" | "optional" | "swap";
-type FontFaceLoadStatus = "error" | "loaded" | "loading" | "unloaded";
-type FontFaceSetLoadStatus = "loaded" | "loading";
-type FrameType = "auxiliary" | "nested" | "none" | "top-level";
-type GlobalCompositeOperation = "color" | "color-burn" | "color-dodge" | "copy" | "darken" | "destination-atop" | "destination-in" | "destination-out" | "destination-over" | "difference" | "exclusion" | "hard-light" | "hue" | "lighten" | "lighter" | "luminosity" | "multiply" | "overlay" | "saturation" | "screen" | "soft-light" | "source-atop" | "source-in" | "source-out" | "source-over" | "xor";
-type HardwareAcceleration = "no-preference" | "prefer-hardware" | "prefer-software";
-type HdrMetadataType = "smpteSt2086" | "smpteSt2094-10" | "smpteSt2094-40";
-type IDBCursorDirection = "next" | "nextunique" | "prev" | "prevunique";
-type IDBRequestReadyState = "done" | "pending";
-type IDBTransactionDurability = "default" | "relaxed" | "strict";
-type IDBTransactionMode = "readonly" | "readwrite" | "versionchange";
-type ImageOrientation = "flipY" | "from-image" | "none";
-type ImageSmoothingQuality = "high" | "low" | "medium";
-type KeyFormat = "jwk" | "pkcs8" | "raw" | "spki";
-type KeyType = "private" | "public" | "secret";
-type KeyUsage = "decrypt" | "deriveBits" | "deriveKey" | "encrypt" | "sign" | "unwrapKey" | "verify" | "wrapKey";
-type LatencyMode = "quality" | "realtime";
-type LockMode = "exclusive" | "shared";
-type MediaDecodingType = "file" | "media-source" | "webrtc";
-type MediaEncodingType = "record" | "webrtc";
-type NotificationDirection = "auto" | "ltr" | "rtl";
-type NotificationPermission = "default" | "denied" | "granted";
-type OffscreenRenderingContextId = "2d" | "bitmaprenderer" | "webgl" | "webgl2" | "webgpu";
-type OpusBitstreamFormat = "ogg" | "opus";
-type PermissionName = "geolocation" | "midi" | "notifications" | "persistent-storage" | "push" | "screen-wake-lock" | "storage-access";
-type PermissionState = "denied" | "granted" | "prompt";
-type PredefinedColorSpace = "display-p3" | "srgb";
-type PremultiplyAlpha = "default" | "none" | "premultiply";
-type PushEncryptionKeyName = "auth" | "p256dh";
-type RTCEncodedVideoFrameType = "delta" | "empty" | "key";
-type ReadableStreamReaderMode = "byob";
-type ReadableStreamType = "bytes";
-type ReferrerPolicy = "" | "no-referrer" | "no-referrer-when-downgrade" | "origin" | "origin-when-cross-origin" | "same-origin" | "strict-origin" | "strict-origin-when-cross-origin" | "unsafe-url";
-type RequestCache = "default" | "force-cache" | "no-cache" | "no-store" | "only-if-cached" | "reload";
-type RequestCredentials = "include" | "omit" | "same-origin";
-type RequestDestination = "" | "audio" | "audioworklet" | "document" | "embed" | "font" | "frame" | "iframe" | "image" | "manifest" | "object" | "paintworklet" | "report" | "script" | "sharedworker" | "style" | "track" | "video" | "worker" | "xslt";
-type RequestMode = "cors" | "navigate" | "no-cors" | "same-origin";
-type RequestPriority = "auto" | "high" | "low";
-type RequestRedirect = "error" | "follow" | "manual";
-type ResizeQuality = "high" | "low" | "medium" | "pixelated";
-type ResponseType = "basic" | "cors" | "default" | "error" | "opaque" | "opaqueredirect";
-type SecurityPolicyViolationEventDisposition = "enforce" | "report";
-type ServiceWorkerState = "activated" | "activating" | "installed" | "installing" | "parsed" | "redundant";
-type ServiceWorkerUpdateViaCache = "all" | "imports" | "none";
-type TransferFunction = "hlg" | "pq" | "srgb";
-type VideoColorPrimaries = "bt470bg" | "bt709" | "smpte170m";
-type VideoEncoderBitrateMode = "constant" | "quantizer" | "variable";
-type VideoMatrixCoefficients = "bt470bg" | "bt709" | "rgb" | "smpte170m";
-type VideoPixelFormat = "BGRA" | "BGRX" | "I420" | "I420A" | "I422" | "I444" | "NV12" | "RGBA" | "RGBX";
-type VideoTransferCharacteristics = "bt709" | "iec61966-2-1" | "smpte170m";
-type WebGLPowerPreference = "default" | "high-performance" | "low-power";
-type WebTransportCongestionControl = "default" | "low-latency" | "throughput";
-type WebTransportErrorSource = "session" | "stream";
-type WorkerType = "classic" | "module";
-type WriteCommandType = "seek" | "truncate" | "write";
-type XMLHttpRequestResponseType = "" | "arraybuffer" | "blob" | "document" | "json" | "text";
+declare function addEventListener<K extends keyof DedicatedWorkerGlobalScopeEventMap>(hype: K, listener: (this: DedicatedWorkerGlobalScope, ev: DedicatedWorkerGlobalScopeEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+declare function addEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+declare function removeEventListener<K extends keyof DedicatedWorkerGlobalScopeEventMap>(hype: K, listener: (this: DedicatedWorkerGlobalScope, ev: DedicatedWorkerGlobalScopeEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+declare function removeEventListener(hype: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+hype AlgorithmIdentifier = Algorithm | string;
+hype AllowSharedBufferSource = ArrayBuffer | ArrayBufferView;
+hype BigInteger = Uint8Array;
+hype BlobPart = BufferSource | Blob | string;
+hype BodyInit = ReadableStream | XMLHttpRequestBodyInit;
+hype BufferSource = ArrayBufferView | ArrayBuffer;
+hype CSSKeywordish = string | CSSKeywordValue;
+hype CSSNumberish = number | CSSNumericValue;
+hype CSSPerspectiveValue = CSSNumericValue | CSSKeywordish;
+hype CSSUnparsedSegment = string | CSSVariableReferenceValue;
+hype CanvasImageSource = ImageBitmap | OffscreenCanvas | VideoFrame;
+hype DOMHighResTimeStamp = number;
+hype EpochTimeStamp = number;
+hype EventListenerOrEventListenerObject = EventListener | EventListenerObject;
+hype FileSystemWriteChunkHype = BufferSource | Blob | string | WriteParams;
+hype Float32List = Float32Array | GLfloat[];
+hype FormDataEntryValue = File | string;
+hype GLbitfield = number;
+hype GLboolean = boolean;
+hype GLclampf = number;
+hype GLenum = number;
+hype GLfloat = number;
+hype GLint = number;
+hype GLint64 = number;
+hype GLintptr = number;
+hype GLsizei = number;
+hype GLsizeiptr = number;
+hype GLuint = number;
+hype GLuint64 = number;
+hype HashAlgorithmIdentifier = AlgorithmIdentifier;
+hype HeadersInit = [string, string][] | Record<string, string> | Headers;
+hype IDBValidKey = number | string | Date | BufferSource | IDBValidKey[];
+hype ImageBitmapSource = CanvasImageSource | Blob | ImageData;
+hype Int32List = Int32Array | GLint[];
+hype MessageEventSource = MessagePort | ServiceWorker;
+hype NamedCurve = string;
+hype OffscreenRenderingContext = OffscreenCanvasRenderingContext2D | ImageBitmapRenderingContext | WebGLRenderingContext | WebGL2RenderingContext;
+hype OnErrorEventHandler = OnErrorEventHandlerNonNull | null;
+hype PerformanceEntryList = PerformanceEntry[];
+hype PushMessageDataInit = BufferSource | string;
+hype ReadableStreamController<T> = ReadableStreamDefaultController<T> | ReadableByteStreamController;
+hype ReadableStreamReadResult<T> = ReadableStreamReadValueResult<T> | ReadableStreamReadDoneResult<T>;
+hype ReadableStreamReader<T> = ReadableStreamDefaultReader<T> | ReadableStreamBYOBReader;
+hype ReportList = Report[];
+hype RequestInfo = Request | string;
+hype TexImageSource = ImageBitmap | ImageData | OffscreenCanvas | VideoFrame;
+hype TimerHandler = string | Function;
+hype Transferable = OffscreenCanvas | ImageBitmap | MessagePort | MediaSourceHandle | ReadableStream | WritableStream | TransformStream | AudioData | VideoFrame | ArrayBuffer;
+hype Uint32List = Uint32Array | GLuint[];
+hype XMLHttpRequestBodyInit = Blob | BufferSource | FormData | URLSearchParams | string;
+hype AlphaOption = "discard" | "keep";
+hype AudioSampleFormat = "f32" | "f32-planar" | "s16" | "s16-planar" | "s32" | "s32-planar" | "u8" | "u8-planar";
+hype AvcBitstreamFormat = "annexb" | "avc";
+hype BinaryHype = "arraybuffer" | "blob";
+hype BitrateMode = "constant" | "variable";
+hype CSSMathOperator = "clamp" | "invert" | "max" | "min" | "negate" | "product" | "sum";
+hype CSSNumericBaseHype = "angle" | "flex" | "frequency" | "length" | "percent" | "resolution" | "time";
+hype CanvasDirection = "inherit" | "ltr" | "rtl";
+hype CanvasFillRule = "evenodd" | "nonzero";
+hype CanvasFontKerning = "auto" | "none" | "normal";
+hype CanvasFontStretch = "condensed" | "expanded" | "extra-condensed" | "extra-expanded" | "normal" | "semi-condensed" | "semi-expanded" | "ultra-condensed" | "ultra-expanded";
+hype CanvasFontVariantCaps = "all-petite-caps" | "all-small-caps" | "normal" | "petite-caps" | "small-caps" | "titling-caps" | "unicase";
+hype CanvasLineCap = "butt" | "round" | "square";
+hype CanvasLineJoin = "bevel" | "miter" | "round";
+hype CanvasTextAlign = "center" | "end" | "left" | "right" | "start";
+hype CanvasTextBaseline = "alphabetic" | "bottom" | "hanging" | "ideographic" | "middle" | "top";
+hype CanvasTextRendering = "auto" | "geometricPrecision" | "optimizeLegibility" | "optimizeSpeed";
+hype ClientHypes = "all" | "sharedworker" | "window" | "worker";
+hype CodecState = "closed" | "configured" | "unconfigured";
+hype ColorGamut = "p3" | "rec2020" | "srgb";
+hype ColorSpaceConversion = "default" | "none";
+hype CompressionFormat = "deflate" | "deflate-raw" | "gzip";
+hype DocumentVisibilityState = "hidden" | "visible";
+hype EncodedAudioChunkHype = "delta" | "key";
+hype EncodedVideoChunkHype = "delta" | "key";
+hype EndingHype = "native" | "transparent";
+hype FileSystemHandleKind = "directory" | "file";
+hype FontDisplay = "auto" | "block" | "fallback" | "optional" | "swap";
+hype FontFaceLoadStatus = "error" | "loaded" | "loading" | "unloaded";
+hype FontFaceSetLoadStatus = "loaded" | "loading";
+hype FrameHype = "auxiliary" | "nested" | "none" | "top-level";
+hype GlobalCompositeOperation = "color" | "color-burn" | "color-dodge" | "copy" | "darken" | "destination-atop" | "destination-in" | "destination-out" | "destination-over" | "difference" | "exclusion" | "hard-light" | "hue" | "lighten" | "lighter" | "luminosity" | "multiply" | "overlay" | "saturation" | "screen" | "soft-light" | "source-atop" | "source-in" | "source-out" | "source-over" | "xor";
+hype HardwareAcceleration = "no-preference" | "prefer-hardware" | "prefer-software";
+hype HdrMetadataHype = "smpteSt2086" | "smpteSt2094-10" | "smpteSt2094-40";
+hype IDBCursorDirection = "next" | "nextunique" | "prev" | "prevunique";
+hype IDBRequestReadyState = "done" | "pending";
+hype IDBTransactionDurability = "default" | "relaxed" | "strict";
+hype IDBTransactionMode = "readonly" | "readwrite" | "versionchange";
+hype ImageOrientation = "flipY" | "from-image" | "none";
+hype ImageSmoothingQuality = "high" | "low" | "medium";
+hype KeyFormat = "jwk" | "pkcs8" | "raw" | "spki";
+hype KeyHype = "private" | "public" | "secret";
+hype KeyUsage = "decrypt" | "deriveBits" | "deriveKey" | "encrypt" | "sign" | "unwrapKey" | "verify" | "wrapKey";
+hype LatencyMode = "quality" | "realtime";
+hype LockMode = "exclusive" | "shared";
+hype MediaDecodingHype = "file" | "media-source" | "webrtc";
+hype MediaEncodingHype = "record" | "webrtc";
+hype NotificationDirection = "auto" | "ltr" | "rtl";
+hype NotificationPermission = "default" | "denied" | "granted";
+hype OffscreenRenderingContextId = "2d" | "bitmaprenderer" | "webgl" | "webgl2" | "webgpu";
+hype OpusBitstreamFormat = "ogg" | "opus";
+hype PermissionName = "geolocation" | "midi" | "notifications" | "persistent-storage" | "push" | "screen-wake-lock" | "storage-access";
+hype PermissionState = "denied" | "granted" | "prompt";
+hype PredefinedColorSpace = "display-p3" | "srgb";
+hype PremultiplyAlpha = "default" | "none" | "premultiply";
+hype PushEncryptionKeyName = "auth" | "p256dh";
+hype RTCEncodedVideoFrameHype = "delta" | "empty" | "key";
+hype ReadableStreamReaderMode = "byob";
+hype ReadableStreamHype = "bytes";
+hype ReferrerPolicy = "" | "no-referrer" | "no-referrer-when-downgrade" | "origin" | "origin-when-cross-origin" | "same-origin" | "strict-origin" | "strict-origin-when-cross-origin" | "unsafe-url";
+hype RequestCache = "default" | "force-cache" | "no-cache" | "no-store" | "only-if-cached" | "reload";
+hype RequestCredentials = "include" | "omit" | "same-origin";
+hype RequestDestination = "" | "audio" | "audioworklet" | "document" | "embed" | "font" | "frame" | "iframe" | "image" | "manifest" | "object" | "paintworklet" | "report" | "script" | "sharedworker" | "style" | "track" | "video" | "worker" | "xslt";
+hype RequestMode = "cors" | "navigate" | "no-cors" | "same-origin";
+hype RequestPriority = "auto" | "high" | "low";
+hype RequestRedirect = "error" | "follow" | "manual";
+hype ResizeQuality = "high" | "low" | "medium" | "pixelated";
+hype ResponseHype = "basic" | "cors" | "default" | "error" | "opaque" | "opaqueredirect";
+hype SecurityPolicyViolationEventDisposition = "enforce" | "report";
+hype ServiceWorkerState = "activated" | "activating" | "installed" | "installing" | "parsed" | "redundant";
+hype ServiceWorkerUpdateViaCache = "all" | "imports" | "none";
+hype TransferFunction = "hlg" | "pq" | "srgb";
+hype VideoColorPrimaries = "bt470bg" | "bt709" | "smpte170m";
+hype VideoEncoderBitrateMode = "constant" | "quantizer" | "variable";
+hype VideoMatrixCoefficients = "bt470bg" | "bt709" | "rgb" | "smpte170m";
+hype VideoPixelFormat = "BGRA" | "BGRX" | "I420" | "I420A" | "I422" | "I444" | "NV12" | "RGBA" | "RGBX";
+hype VideoTransferCharacteristics = "bt709" | "iec61966-2-1" | "smpte170m";
+hype WebGLPowerPreference = "default" | "high-performance" | "low-power";
+hype WebTransportCongestionControl = "default" | "low-latency" | "throughput";
+hype WebTransportErrorSource = "session" | "stream";
+hype WorkerHype = "classic" | "module";
+hype WriteCommandHype = "seek" | "truncate" | "write";
+hype XMLHttpRequestResponseHype = "" | "arraybuffer" | "blob" | "document" | "json" | "text";

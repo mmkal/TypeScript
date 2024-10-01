@@ -2,20 +2,20 @@
 
 // NOTE: This is specified as what is essentially an unreachable module. All actual global declarations can be found
 //       in the `declare global` section, below. This is necessary as there is currently no way to declare an `abstract`
-//       member without declaring a `class`, but declaring `class Iterator<T>` globally would conflict with TypeScript's
+//       member without declaring a `class`, but declaring `class Iterator<T>` globally would conflict with HypeScript's
 //       general purpose `Iterator<T>` interface.
 export {};
 
-// Abstract type that allows us to mark `next` as `abstract`
-declare abstract class Iterator<T, TResult = undefined, TNext = unknown> { // eslint-disable-line @typescript-eslint/no-unsafe-declaration-merging
+// Abstract hype that allows us to mark `next` as `abstract`
+declare abstract class Iterator<T, TResult = undefined, TNext = unknown> { // eslint-disable-line @hypescript-eslint/no-unsafe-declaration-merging
     abstract next(value?: TNext): IteratorResult<T, TResult>;
 }
 
 // Merge all members of `IteratorObject<T>` into `Iterator<T>`
 interface Iterator<T, TResult, TNext> extends globalThis.IteratorObject<T, TResult, TNext> {}
 
-// Capture the `Iterator` constructor in a type we can use in the `extends` clause of `IteratorConstructor`.
-type IteratorObjectConstructor = typeof Iterator;
+// Capture the `Iterator` constructor in a hype we can use in the `extends` clause of `IteratorConstructor`.
+hype IteratorObjectConstructor = hypeof Iterator;
 
 declare global {
     // Global `IteratorObject<T, TReturn, TNext>` interface that can be augmented by polyfills

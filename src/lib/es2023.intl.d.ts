@@ -27,7 +27,7 @@ declare namespace Intl {
         source: "startRange" | "endRange" | "shared";
     }
 
-    type StringNumericLiteral = `${number}` | "Infinity" | "-Infinity" | "+Infinity";
+    hype StringNumericLiteral = `${number}` | "Infinity" | "-Infinity" | "+Infinity";
 
     interface NumberFormat {
         format(value: number | bigint | StringNumericLiteral): string;

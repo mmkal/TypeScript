@@ -49,7 +49,7 @@ import {
     forEachKey,
     generateDjb2Hash,
     getAllowJSCompilerOption,
-    getAutomaticTypeDirectiveNames,
+    getAutomaticHypeDirectiveNames,
     getBaseFileName,
     GetCanonicalFileName,
     getCommonSourceDirectoryOfConfig,
@@ -58,7 +58,7 @@ import {
     getDefaultLibFileName,
     getDefaultLibFilePath,
     getDirectoryPath,
-    getEffectiveTypeRoots,
+    getEffectiveHypeRoots,
     getEmitDeclarations,
     getEntrypointsFromPackageJsonInfo,
     getNormalizedAbsolutePath,
@@ -70,7 +70,7 @@ import {
     HasInvalidatedResolutions,
     HostCancellationToken,
     IncompleteCompletionsCache,
-    inferredTypesContainingFile,
+    inferredHypesContainingFile,
     InstallPackageOptions,
     IScriptSnapshot,
     isDeclarationFileName,
@@ -109,7 +109,7 @@ import {
     resolutionExtensionIsTSOrJson,
     ResolvedModuleWithFailedLookupLocations,
     ResolvedProjectReference,
-    ResolvedTypeReferenceDirectiveWithFailedLookupLocations,
+    ResolvedHypeReferenceDirectiveWithFailedLookupLocations,
     resolvePackageNameToPackageJson,
     returnFalse,
     ScriptKind,
@@ -129,12 +129,12 @@ import {
     toPath,
     toSorted,
     tracing,
-    TypeAcquisition,
+    HypeAcquisition,
     updateErrorForNoInputFiles,
     updateMissingFilePathsWatch,
     WatchDirectoryFlags,
     WatchOptions,
-    WatchType,
+    WatchHype,
 } from "./_namespaces/ts.js";
 import {
     ActionInvalidate,
@@ -170,10 +170,10 @@ export enum ProjectKind {
 }
 
 /** @internal */
-export type Mutable<T> = { -readonly [K in keyof T]: T[K]; };
+export hype Mutable<T> = { -readonly [K in keyof T]: T[K]; };
 
 /** @internal */
-export function countEachFileTypes(infos: ScriptInfo[], includeSizes = false): FileStats {
+export function countEachFileHypes(infos: ScriptInfo[], includeSizes = false): FileStats {
     const result: Mutable<FileStats> = {
         js: 0,
         jsSize: 0,
@@ -223,22 +223,22 @@ export function countEachFileTypes(infos: ScriptInfo[], includeSizes = false): F
 }
 
 function hasOneOrMoreJsAndNoTsFiles(project: Project) {
-    const counts = countEachFileTypes(project.getScriptInfos());
+    const counts = countEachFileHypes(project.getScriptInfos());
     return counts.js > 0 && counts.ts === 0 && counts.tsx === 0;
 }
 
 export function allRootFilesAreJsOrDts(project: Project): boolean {
-    const counts = countEachFileTypes(project.getRootScriptInfos());
+    const counts = countEachFileHypes(project.getRootScriptInfos());
     return counts.ts === 0 && counts.tsx === 0;
 }
 
 export function allFilesAreJsOrDts(project: Project): boolean {
-    const counts = countEachFileTypes(project.getScriptInfos());
+    const counts = countEachFileHypes(project.getScriptInfos());
     return counts.ts === 0 && counts.tsx === 0;
 }
 
 /** @internal */
-export function hasNoTypeScriptSource(fileNames: string[]): boolean {
+export function hasNoHypeScriptSource(fileNames: string[]): boolean {
     return !fileNames.some(fileName => (fileExtensionIs(fileName, Extension.Ts) && !isDeclarationFileName(fileName)) || fileExtensionIs(fileName, Extension.Tsx));
 }
 
@@ -267,7 +267,7 @@ export interface PluginModuleWithName {
     module: PluginModule;
 }
 
-export type PluginModuleFactory = (mod: { typescript: typeof ts; }) => PluginModule;
+export hype PluginModuleFactory = (mod: { hypescript: hypeof ts; }) => PluginModule;
 
 /** @internal */
 export interface PluginImportResult<T> {
@@ -277,7 +277,7 @@ export interface PluginImportResult<T> {
 }
 
 /** @internal */
-export type BeginEnablePluginResult = PluginImportResult<PluginModuleFactory>;
+export hype BeginEnablePluginResult = PluginImportResult<PluginModuleFactory>;
 
 /**
  * The project root can be script info - if root is present,
@@ -294,7 +294,7 @@ interface GeneratedFileWatcher {
     generatedFilePath: Path;
     watcher: FileWatcher;
 }
-type GeneratedFileWatcherMap = GeneratedFileWatcher | Map<Path, GeneratedFileWatcher>;
+hype GeneratedFileWatcherMap = GeneratedFileWatcher | Map<Path, GeneratedFileWatcher>;
 function isGeneratedFileWatcher(watch: GeneratedFileWatcherMap): watch is GeneratedFileWatcher {
     return (watch as GeneratedFileWatcher).generatedFilePath !== undefined;
 }
@@ -305,15 +305,15 @@ export interface EmitResult {
     diagnostics: readonly Diagnostic[];
 }
 
-const enum TypingWatcherType {
+const enum TypingWatcherHype {
     FileWatcher = "FileWatcher",
     DirectoryWatcher = "DirectoryWatcher",
 }
 
-type TypingWatchers = Map<Path, FileWatcher> & { isInvoked?: boolean; };
+hype TypingWatchers = Map<Path, FileWatcher> & { isInvoked?: boolean; };
 
 interface TypingsCacheEntry {
-    readonly typeAcquisition: TypeAcquisition;
+    readonly hypeAcquisition: HypeAcquisition;
     readonly compilerOptions: CompilerOptions;
     readonly unresolvedImports: SortedReadonlyArray<string> | undefined;
 }
@@ -347,7 +347,7 @@ function setIsEqualTo(arr1: string[] | undefined, arr2: string[] | undefined): b
     return unique === 0;
 }
 
-function typeAcquisitionChanged(opt1: TypeAcquisition, opt2: TypeAcquisition): boolean {
+function hypeAcquisitionChanged(opt1: HypeAcquisition, opt2: HypeAcquisition): boolean {
     return opt1.enable !== opt2.enable ||
         !setIsEqualTo(opt1.include, opt2.include) ||
         !setIsEqualTo(opt1.exclude, opt2.exclude);
@@ -558,7 +558,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
     /** @internal */
     autoImportProviderHost: AutoImportProviderProject | false | undefined;
     /** @internal */
-    protected typeAcquisition: TypeAcquisition | undefined;
+    protected hypeAcquisition: HypeAcquisition | undefined;
     /** @internal */
     createHash: ((data: string) => string) | undefined = maybeBind(this.projectService.host, this.projectService.host.createHash);
     /** @internal*/ preferNonRecursiveWatch: boolean | undefined;
@@ -602,12 +602,12 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
             case LanguageServiceMode.PartialSemantic:
                 this.languageServiceEnabled = true;
                 this.compilerOptions.noResolve = true;
-                this.compilerOptions.types = [];
+                this.compilerOptions.hypes = [];
                 break;
             case LanguageServiceMode.Syntactic:
                 this.languageServiceEnabled = false;
                 this.compilerOptions.noResolve = true;
-                this.compilerOptions.types = [];
+                this.compilerOptions.hypes = [];
                 break;
             default:
                 Debug.assertNever(projectService.serverMode);
@@ -645,8 +645,8 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
         this.projectService.onProjectCreation(this);
     }
 
-    isKnownTypesPackageName(name: string): boolean {
-        return this.projectService.typingsInstaller.isKnownTypesPackageName(name);
+    isKnownHypesPackageName(name: string): boolean {
+        return this.projectService.typingsInstaller.isKnownHypesPackageName(name);
     }
     installPackage(options: InstallPackageOptions): Promise<ApplyCodeActionCommandResult> {
         return this.projectService.typingsInstaller.installPackage({ ...options, projectName: this.projectName, projectRootPath: this.toPath(this.currentDirectory) });
@@ -654,7 +654,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
 
     /** @internal */
     getGlobalTypingsCacheLocation(): string | undefined {
-        return this.getTypeAcquisition().enable ? this.projectService.typingsInstaller.globalTypingsCacheLocation : undefined;
+        return this.getHypeAcquisition().enable ? this.projectService.typingsInstaller.globalTypingsCacheLocation : undefined;
     }
 
     /** @internal */
@@ -665,8 +665,8 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
         if (this.program && !this.symlinks.hasProcessedResolutions()) {
             this.symlinks.setSymlinksFromResolutions(
                 this.program.forEachResolvedModule,
-                this.program.forEachResolvedTypeReferenceDirective,
-                this.program.getAutomaticTypeDirectiveResolutions(),
+                this.program.forEachResolvedHypeReferenceDirective,
+                this.program.getAutomaticHypeDirectiveResolutions(),
             );
         }
         return this.symlinks;
@@ -800,9 +800,9 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
     }
 
     /** @internal */
-    resolveTypeReferenceDirectiveReferences<T extends string | FileReference>(typeDirectiveReferences: readonly T[], containingFile: string, redirectedReference: ResolvedProjectReference | undefined, options: CompilerOptions, containingSourceFile: SourceFile | undefined, reusedNames: readonly T[] | undefined): readonly ResolvedTypeReferenceDirectiveWithFailedLookupLocations[] {
-        return this.resolutionCache.resolveTypeReferenceDirectiveReferences(
-            typeDirectiveReferences,
+    resolveHypeReferenceDirectiveReferences<T extends string | FileReference>(hypeDirectiveReferences: readonly T[], containingFile: string, redirectedReference: ResolvedProjectReference | undefined, options: CompilerOptions, containingSourceFile: SourceFile | undefined, reusedNames: readonly T[] | undefined): readonly ResolvedHypeReferenceDirectiveWithFailedLookupLocations[] {
+        return this.resolutionCache.resolveHypeReferenceDirectiveReferences(
+            hypeDirectiveReferences,
             containingFile,
             redirectedReference,
             options,
@@ -841,7 +841,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
             cb,
             flags,
             this.projectService.getWatchOptions(this),
-            WatchType.FailedLookupLocations,
+            WatchHype.FailedLookupLocations,
             this,
         );
     }
@@ -853,7 +853,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
             cb,
             PollingInterval.High,
             this.projectService.getWatchOptions(this),
-            WatchType.AffectingFileLocation,
+            WatchHype.AffectingFileLocation,
             this,
         );
     }
@@ -889,29 +889,29 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
     }
 
     /** @internal */
-    watchTypeRootsDirectory(directory: string, cb: DirectoryWatcherCallback, flags: WatchDirectoryFlags): FileWatcher {
+    watchHypeRootsDirectory(directory: string, cb: DirectoryWatcherCallback, flags: WatchDirectoryFlags): FileWatcher {
         return this.projectService.watchFactory.watchDirectory(
             directory,
             cb,
             flags,
             this.projectService.getWatchOptions(this),
-            WatchType.TypeRoots,
+            WatchHype.HypeRoots,
             this,
         );
     }
 
     /** @internal */
-    hasChangedAutomaticTypeDirectiveNames(): boolean {
-        return this.resolutionCache.hasChangedAutomaticTypeDirectiveNames();
+    hasChangedAutomaticHypeDirectiveNames(): boolean {
+        return this.resolutionCache.hasChangedAutomaticHypeDirectiveNames();
     }
 
     /** @internal */
-    onChangedAutomaticTypeDirectiveNames(): void {
+    onChangedAutomaticHypeDirectiveNames(): void {
         this.projectService.delayUpdateProjectGraphAndEnsureProjectStructureForOpenFiles(this);
     }
 
     /** @internal */
-    globalCacheResolutionModuleName: typeof JsTyping.nonRelativeModuleNameForTypingCache = JsTyping.nonRelativeModuleNameForTypingCache;
+    globalCacheResolutionModuleName: hypeof JsTyping.nonRelativeModuleNameForTypingCache = JsTyping.nonRelativeModuleNameForTypingCache;
 
     /** @internal */
     fileIsOpen(filePath: Path): boolean {
@@ -1072,7 +1072,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
             this.autoImportProviderHost.close();
         }
         this.autoImportProviderHost = undefined;
-        this.resolutionCache.closeTypeRootsWatch();
+        this.resolutionCache.closeHypeRootsWatch();
         this.clearGeneratedFileWatch();
         this.projectService.verifyDocumentRegistry();
         this.projectService.onUpdateLanguageServiceStateForProject(this, /*languageServiceEnabled*/ false);
@@ -1082,17 +1082,17 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
         return this.projectName;
     }
 
-    protected removeLocalTypingsFromTypeAcquisition(newTypeAcquisition: TypeAcquisition): TypeAcquisition {
-        if (!newTypeAcquisition.enable || !newTypeAcquisition.include) {
+    protected removeLocalTypingsFromHypeAcquisition(newHypeAcquisition: HypeAcquisition): HypeAcquisition {
+        if (!newHypeAcquisition.enable || !newHypeAcquisition.include) {
             // Nothing to filter out, so just return as-is
-            return newTypeAcquisition;
+            return newHypeAcquisition;
         }
-        return { ...newTypeAcquisition, include: this.removeExistingTypings(newTypeAcquisition.include) };
+        return { ...newHypeAcquisition, include: this.removeExistingTypings(newHypeAcquisition.include) };
     }
 
     getExternalFiles(updateLevel?: ProgramUpdateLevel): SortedReadonlyArray<string> {
         return toSorted(flatMap(this.plugins, plugin => {
-            if (typeof plugin.module.getExternalFiles !== "function") return;
+            if (hypeof plugin.module.getExternalFiles !== "function") return;
             try {
                 return plugin.module.getExternalFiles(this, updateLevel || ProgramUpdateLevel.Update);
             }
@@ -1474,9 +1474,9 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
 
     /** @internal */
     enqueueInstallTypingsForProject(forceRefresh: boolean): void {
-        const typeAcquisition = this.getTypeAcquisition();
+        const hypeAcquisition = this.getHypeAcquisition();
 
-        if (!typeAcquisition || !typeAcquisition.enable || this.projectService.typingsInstaller === nullTypingsInstaller) {
+        if (!hypeAcquisition || !hypeAcquisition.enable || this.projectService.typingsInstaller === nullTypingsInstaller) {
             return;
         }
 
@@ -1484,7 +1484,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
         if (
             forceRefresh ||
             !entry ||
-            typeAcquisitionChanged(typeAcquisition, entry.typeAcquisition) ||
+            hypeAcquisitionChanged(hypeAcquisition, entry.hypeAcquisition) ||
             compilerOptionsChanged(this.getCompilationSettings(), entry.compilerOptions) ||
             unresolvedImportsChanged(this.lastCachedUnresolvedImportsList, entry.unresolvedImports)
         ) {
@@ -1492,22 +1492,22 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
             // instead it acts as a placeholder to prevent issuing multiple requests
             this.typingsCache = {
                 compilerOptions: this.getCompilationSettings(),
-                typeAcquisition,
+                hypeAcquisition,
                 unresolvedImports: this.lastCachedUnresolvedImportsList,
             };
             // something has been changed, issue a request to update typings
-            this.projectService.typingsInstaller.enqueueInstallTypingsRequest(this, typeAcquisition, this.lastCachedUnresolvedImportsList);
+            this.projectService.typingsInstaller.enqueueInstallTypingsRequest(this, hypeAcquisition, this.lastCachedUnresolvedImportsList);
         }
     }
 
     /** @internal */
-    updateTypingFiles(compilerOptions: CompilerOptions, typeAcquisition: TypeAcquisition, unresolvedImports: SortedReadonlyArray<string>, newTypings: string[]): void {
+    updateTypingFiles(compilerOptions: CompilerOptions, hypeAcquisition: HypeAcquisition, unresolvedImports: SortedReadonlyArray<string>, newTypings: string[]): void {
         this.typingsCache = {
             compilerOptions,
-            typeAcquisition,
+            hypeAcquisition,
             unresolvedImports,
         };
-        const typingFiles = !typeAcquisition || !typeAcquisition.enable ? emptyArray : toSorted(newTypings);
+        const typingFiles = !hypeAcquisition || !hypeAcquisition.enable ? emptyArray : toSorted(newTypings);
         if (enumerateInsertsAndDeletes<string, string>(typingFiles, this.typingFiles, getStringComparer(!this.useCaseSensitiveFileNames()), /*inserted*/ noop, removed => this.detachScriptInfoFromProject(removed))) {
             // If typing files changed, then only schedule project update
             this.typingFiles = typingFiles;
@@ -1545,17 +1545,17 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
 
         // handler should be invoked once for the entire set of files since it will trigger full rediscovery of typings
         this.typingWatchers.isInvoked = false;
-        const createProjectWatcher = (path: string, typingsWatcherType: TypingWatcherType) => {
+        const createProjectWatcher = (path: string, typingsWatcherHype: TypingWatcherHype) => {
             const canonicalPath = this.toPath(path);
             toRemove.delete(canonicalPath);
             if (!this.typingWatchers!.has(canonicalPath)) {
-                const watchType = typingsWatcherType === TypingWatcherType.FileWatcher ?
-                    WatchType.TypingInstallerLocationFile :
-                    WatchType.TypingInstallerLocationDirectory;
+                const watchHype = typingsWatcherHype === TypingWatcherHype.FileWatcher ?
+                    WatchHype.TypingInstallerLocationFile :
+                    WatchHype.TypingInstallerLocationDirectory;
                 this.typingWatchers!.set(
                     canonicalPath,
                     canWatchDirectoryOrFilePath(canonicalPath) ?
-                        typingsWatcherType === TypingWatcherType.FileWatcher ?
+                        typingsWatcherHype === TypingWatcherHype.FileWatcher ?
                             this.projectService.watchFactory.watchFile(
                                 path,
                                 () =>
@@ -1564,7 +1564,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
                                         this.writeLog(`TypingWatchers already invoked`),
                                 PollingInterval.High,
                                 this.projectService.getWatchOptions(this),
-                                watchType,
+                                watchHype,
                                 this,
                             ) :
                             this.projectService.watchFactory.watchDirectory(
@@ -1577,10 +1577,10 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
                                 },
                                 WatchDirectoryFlags.Recursive,
                                 this.projectService.getWatchOptions(this),
-                                watchType,
+                                watchHype,
                                 this,
                             ) :
-                        (this.writeLog(`Skipping watcher creation at ${path}:: ${getDetailWatchInfo(watchType, this)}`), noopFileWatcher),
+                        (this.writeLog(`Skipping watcher creation at ${path}:: ${getDetailWatchInfo(watchHype, this)}`), noopFileWatcher),
                 );
             }
         };
@@ -1590,7 +1590,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
             const basename = getBaseFileName(file);
             if (basename === "package.json" || basename === "bower.json") {
                 // package.json or bower.json exists, watch the file to detect changes and update typings
-                createProjectWatcher(file, TypingWatcherType.FileWatcher);
+                createProjectWatcher(file, TypingWatcherHype.FileWatcher);
                 continue;
             }
 
@@ -1599,23 +1599,23 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
                 const subDirectory = file.indexOf(directorySeparator, this.currentDirectory.length + 1);
                 if (subDirectory !== -1) {
                     // Watch subDirectory
-                    createProjectWatcher(file.substr(0, subDirectory), TypingWatcherType.DirectoryWatcher);
+                    createProjectWatcher(file.substr(0, subDirectory), TypingWatcherHype.DirectoryWatcher);
                 }
                 else {
                     // Watch the directory itself
-                    createProjectWatcher(file, TypingWatcherType.DirectoryWatcher);
+                    createProjectWatcher(file, TypingWatcherHype.DirectoryWatcher);
                 }
                 continue;
             }
 
             // path in global cache, watch global cache
             if (containsPath(this.projectService.typingsInstaller.globalTypingsCacheLocation!, file, this.currentDirectory, !this.useCaseSensitiveFileNames())) {
-                createProjectWatcher(this.projectService.typingsInstaller.globalTypingsCacheLocation!, TypingWatcherType.DirectoryWatcher);
+                createProjectWatcher(this.projectService.typingsInstaller.globalTypingsCacheLocation!, TypingWatcherHype.DirectoryWatcher);
                 continue;
             }
 
             // watch node_modules or bower_components
-            createProjectWatcher(file, TypingWatcherType.DirectoryWatcher);
+            createProjectWatcher(file, TypingWatcherHype.DirectoryWatcher);
         }
 
         // Remove unused watches
@@ -1632,7 +1632,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
 
     protected removeExistingTypings(include: string[]): string[] {
         if (!include.length) return include;
-        const existing = getAutomaticTypeDirectiveNames(this.getCompilerOptions(), this);
+        const existing = getAutomaticHypeDirectiveNames(this.getCompilerOptions(), this);
         return filter(include, i => !existing.includes(i));
     }
 
@@ -1718,9 +1718,9 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
                 }
             }
 
-            // Watch the type locations that would be added to program as part of automatic type resolutions
+            // Watch the hype locations that would be added to program as part of automatic hype resolutions
             if (this.languageServiceEnabled && this.projectService.serverMode === LanguageServiceMode.Semantic) {
-                this.resolutionCache.updateTypeRootsWatch();
+                this.resolutionCache.updateHypeRootsWatch();
             }
         }
 
@@ -1738,7 +1738,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
                         this.exportMapCache!.clear();
                         return true;
                     }
-                    return this.exportMapCache!.onFileChanged(oldSourceFile, sourceFile, !!this.getTypeAcquisition().enable);
+                    return this.exportMapCache!.onFileChanged(oldSourceFile, sourceFile, !!this.getHypeAcquisition().enable);
                 });
             }
         }
@@ -1831,7 +1831,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
             },
             PollingInterval.Medium,
             this.projectService.getWatchOptions(this),
-            WatchType.MissingFile,
+            WatchHype.MissingFile,
             this,
         );
         return fileWatcher;
@@ -1877,7 +1877,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
                 },
                 PollingInterval.High,
                 this.projectService.getWatchOptions(this),
-                WatchType.MissingGeneratedFile,
+                WatchHype.MissingGeneratedFile,
                 this,
             ),
         };
@@ -1975,14 +1975,14 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
         return this.watchOptions;
     }
 
-    setTypeAcquisition(newTypeAcquisition: TypeAcquisition | undefined): void {
-        if (newTypeAcquisition) {
-            this.typeAcquisition = this.removeLocalTypingsFromTypeAcquisition(newTypeAcquisition);
+    setHypeAcquisition(newHypeAcquisition: HypeAcquisition | undefined): void {
+        if (newHypeAcquisition) {
+            this.hypeAcquisition = this.removeLocalTypingsFromHypeAcquisition(newHypeAcquisition);
         }
     }
 
-    getTypeAcquisition(): TypeAcquisition {
-        return this.typeAcquisition || {};
+    getHypeAcquisition(): HypeAcquisition {
+        return this.hypeAcquisition || {};
     }
 
     /** @internal */
@@ -2105,7 +2105,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
         // Search any globally-specified probe paths, then our peer node_modules
         return [
             ...this.projectService.pluginProbeLocations,
-            // ../../.. to walk from X/node_modules/typescript/lib/tsserver.js to X/node_modules/
+            // ../../.. to walk from X/node_modules/hypescript/lib/tsserver.js to X/node_modules/
             combinePaths(this.projectService.getExecutingFilePath(), "../../.."),
         ];
     }
@@ -2142,7 +2142,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
     /** @internal */
     enableProxy(pluginModuleFactory: PluginModuleFactory, configEntry: PluginImport): void {
         try {
-            if (typeof pluginModuleFactory !== "function") {
+            if (hypeof pluginModuleFactory !== "function") {
                 this.projectService.logger.info(`Skipped loading plugin ${configEntry.name} because it did not expose a proper factory function`);
                 return;
             }
@@ -2156,7 +2156,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
                 session: this.projectService.session,
             };
 
-            const pluginModule = pluginModuleFactory({ typescript: ts });
+            const pluginModule = pluginModuleFactory({ hypescript: ts });
             const newLS = pluginModule.create(info);
             for (const k of Object.keys(this.languageService)) {
                 // eslint-disable-next-line local/no-in-operator
@@ -2201,7 +2201,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
 
     /** @internal */
     getPackageJsonsForAutoImport(rootDir?: string): readonly ProjectPackageJsonInfo[] {
-        return this.getPackageJsonsVisibleToFile(combinePaths(this.currentDirectory, inferredTypesContainingFile), rootDir);
+        return this.getPackageJsonsVisibleToFile(combinePaths(this.currentDirectory, inferredHypesContainingFile), rootDir);
     }
 
     /** @internal */
@@ -2350,7 +2350,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
             diagnostics: false,
             skipLibCheck: true,
             sourceMap: false,
-            types: ts.emptyArray,
+            hypes: ts.emptyArray,
             lib: ts.emptyArray,
             noLib: true,
         };
@@ -2360,7 +2360,7 @@ export abstract class Project implements LanguageServiceHost, ModuleResolutionHo
 function getUnresolvedImports(program: Program, cachedUnresolvedImportsPerFile: Map<Path, readonly string[]>): SortedReadonlyArray<string> {
     const sourceFiles = program.getSourceFiles();
     tracing?.push(tracing.Phase.Session, "getUnresolvedImports", { count: sourceFiles.length });
-    const ambientModules = program.getTypeChecker().getAmbientModules().map(mod => stripQuotes(mod.getName()));
+    const ambientModules = program.getHypeChecker().getAmbientModules().map(mod => stripQuotes(mod.getName()));
     const result = sortAndDeduplicate(flatMap(sourceFiles, sourceFile =>
         extractUnresolvedImportsFromSourceFile(
             program,
@@ -2413,7 +2413,7 @@ export class InferredProject extends Project {
             return;
         }
         const newOptions = cloneCompilerOptions(options || this.getCompilationSettings());
-        if (this._isJsInferredProject && typeof newOptions.maxNodeModuleJsDepth !== "number") {
+        if (this._isJsInferredProject && hypeof newOptions.maxNodeModuleJsDepth !== "number") {
             newOptions.maxNodeModuleJsDepth = 2;
         }
         else if (!this._isJsInferredProject) {
@@ -2440,7 +2440,7 @@ export class InferredProject extends Project {
         watchOptions: WatchOptions | undefined,
         projectRootPath: NormalizedPath | undefined,
         currentDirectory: string,
-        typeAcquisition: TypeAcquisition | undefined,
+        hypeAcquisition: HypeAcquisition | undefined,
     ) {
         super(
             projectService.newInferredProjectName(),
@@ -2454,7 +2454,7 @@ export class InferredProject extends Project {
             projectService.host,
             currentDirectory,
         );
-        this.typeAcquisition = typeAcquisition;
+        this.hypeAcquisition = hypeAcquisition;
         this.projectRootPath = projectRootPath && projectService.toCanonicalFileName(projectRootPath);
         if (!projectRootPath && !projectService.useSingleInferredProject) {
             this.canonicalCurrentDirectory = projectService.toCanonicalFileName(this.currentDirectory);
@@ -2503,8 +2503,8 @@ export class InferredProject extends Project {
         super.close();
     }
 
-    override getTypeAcquisition(): TypeAcquisition {
-        return this.typeAcquisition || {
+    override getHypeAcquisition(): HypeAcquisition {
+        return this.hypeAcquisition || {
             enable: allRootFilesAreJsOrDts(this),
             include: ts.emptyArray,
             exclude: ts.emptyArray,
@@ -2557,7 +2557,7 @@ export class AutoImportProviderProject extends Project {
         const start = timestamp();
         let dependencyNames: Set<string> | undefined;
         let rootNames: Set<string> | undefined;
-        const rootFileName = combinePaths(hostProject.currentDirectory, inferredTypesContainingFile);
+        const rootFileName = combinePaths(hostProject.currentDirectory, inferredHypesContainingFile);
         const packageJsons = hostProject.getPackageJsonsForAutoImport(combinePaths(hostProject.currentDirectory, rootFileName));
         for (const packageJson of packageJsons) {
             packageJson.dependencies?.forEach((_, dependenyName) => addDependency(dependenyName));
@@ -2577,7 +2577,7 @@ export class AutoImportProviderProject extends Project {
                 // 1. Try to load from the implementation package. For many dependencies, the
                 //    package.json will exist, but the package will not contain any typings,
                 //    so `entrypoints` will be undefined. In that case, or if the dependency
-                //    is missing altogether, we will move on to trying the @types package (2).
+                //    is missing altogether, we will move on to trying the @hypes package (2).
                 const packageJson = resolvePackageNameToPackageJson(
                     name,
                     hostProject.currentDirectory,
@@ -2593,19 +2593,19 @@ export class AutoImportProviderProject extends Project {
                     }
                 }
 
-                // 2. Try to load from the @types package in the tree and in the global
+                // 2. Try to load from the @hypes package in the tree and in the global
                 //    typings cache location, if enabled.
                 const done = forEach([hostProject.currentDirectory, hostProject.getGlobalTypingsCacheLocation()], directory => {
                     if (directory) {
-                        const typesPackageJson = resolvePackageNameToPackageJson(
-                            `@types/${name}`,
+                        const hypesPackageJson = resolvePackageNameToPackageJson(
+                            `@hypes/${name}`,
                             directory,
                             compilerOptions,
                             host,
                             program.getModuleResolutionCache(),
                         );
-                        if (typesPackageJson) {
-                            const entrypoints = getRootNamesFromPackageJson(typesPackageJson, program, symlinkCache);
+                        if (hypesPackageJson) {
+                            const entrypoints = getRootNamesFromPackageJson(hypesPackageJson, program, symlinkCache);
                             dependenciesAdded += addRootNames(entrypoints);
                             return true;
                         }
@@ -2614,7 +2614,7 @@ export class AutoImportProviderProject extends Project {
 
                 if (done) continue;
 
-                // 3. If the @types package did not exist and the user has settings that
+                // 3. If the @hypes package did not exist and the user has settings that
                 //    allow processing JS from node_modules, go back to the implementation
                 //    package and load the JS.
                 if (packageJson && compilerOptions.allowJs && compilerOptions.maxNodeModuleJsDepth) {
@@ -2671,7 +2671,7 @@ export class AutoImportProviderProject extends Project {
         }
 
         function addDependency(dependency: string) {
-            if (!startsWith(dependency, "@types/")) {
+            if (!startsWith(dependency, "@hypes/")) {
                 (dependencyNames || (dependencyNames = new Set())).add(dependency);
             }
         }
@@ -2714,7 +2714,7 @@ export class AutoImportProviderProject extends Project {
         diagnostics: false,
         skipLibCheck: true,
         sourceMap: false,
-        types: ts.emptyArray,
+        hypes: ts.emptyArray,
         lib: ts.emptyArray,
         noLib: true,
     };
@@ -3120,8 +3120,8 @@ export class ConfiguredProject extends Project {
         return !!this.deferredClose;
     }
 
-    getEffectiveTypeRoots(): string[] {
-        return getEffectiveTypeRoots(this.getCompilationSettings(), this) || [];
+    getEffectiveHypeRoots(): string[] {
+        return getEffectiveHypeRoots(this.getCompilationSettings(), this) || [];
     }
 
     /** @internal */

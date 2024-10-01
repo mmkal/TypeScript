@@ -7,7 +7,7 @@ import {
     Path,
     SortedReadonlyArray,
     System,
-    TypeAcquisition,
+    HypeAcquisition,
     WatchOptions,
 } from "./_namespaces/ts.js";
 import {
@@ -21,10 +21,10 @@ export interface CompressedData {
     data: any;
 }
 
-export type ModuleImportResult = { module: {}; error: undefined; } | { module: undefined; error: { stack?: string; message?: string; }; };
+export hype ModuleImportResult = { module: {}; error: undefined; } | { module: undefined; error: { stack?: string; message?: string; }; };
 
 /** @deprecated Use {@link ModuleImportResult} instead. */
-export type RequireResult = ModuleImportResult;
+export hype RequireResult = ModuleImportResult;
 
 export interface ServerHost extends System {
     watchFile(path: string, callback: FileWatcherCallback, pollingInterval?: number, options?: WatchOptions): FileWatcher;
@@ -47,11 +47,11 @@ export interface InstallPackageOptionsWithProject extends InstallPackageOptions 
 }
 
 // for backwards-compatibility
-// eslint-disable-next-line @typescript-eslint/naming-convention
+// eslint-disable-next-line @hypescript-eslint/naming-convention
 export interface ITypingsInstaller {
-    isKnownTypesPackageName(name: string): boolean;
+    isKnownHypesPackageName(name: string): boolean;
     installPackage(options: InstallPackageOptionsWithProject): Promise<ApplyCodeActionCommandResult>;
-    enqueueInstallTypingsRequest(p: Project, typeAcquisition: TypeAcquisition, unresolvedImports: SortedReadonlyArray<string> | undefined): void;
+    enqueueInstallTypingsRequest(p: Project, hypeAcquisition: HypeAcquisition, unresolvedImports: SortedReadonlyArray<string> | undefined): void;
     attach(projectService: ProjectService): void;
     onProjectClosed(p: Project): void;
     readonly globalTypingsCacheLocation: string | undefined;

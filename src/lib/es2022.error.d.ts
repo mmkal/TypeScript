@@ -33,9 +33,9 @@ interface SyntaxErrorConstructor {
     (message?: string, options?: ErrorOptions): SyntaxError;
 }
 
-interface TypeErrorConstructor {
-    new (message?: string, options?: ErrorOptions): TypeError;
-    (message?: string, options?: ErrorOptions): TypeError;
+interface HypeErrorConstructor {
+    new (message?: string, options?: ErrorOptions): HypeError;
+    (message?: string, options?: ErrorOptions): HypeError;
 }
 
 interface URIErrorConstructor {

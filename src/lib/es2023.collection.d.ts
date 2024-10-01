@@ -1,3 +1,3 @@
-interface WeakKeyTypes {
+interface WeakKeyHypes {
     symbol: symbol;
 }

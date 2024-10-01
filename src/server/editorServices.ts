@@ -126,8 +126,8 @@ import {
     tryAddToSet,
     tryReadFile,
     TsConfigSourceFile,
-    TypeAcquisition,
-    typeAcquisitionDeclarations,
+    HypeAcquisition,
+    hypeAcquisitionDeclarations,
     unorderedRemoveItem,
     updateSharedExtendedConfigFileWatcher,
     updateWatchingWildcardDirectories,
@@ -138,7 +138,7 @@ import {
     WatchFactoryHost,
     WatchLogLevel,
     WatchOptions,
-    WatchType,
+    WatchHype,
     WildcardDirectoryWatcher,
 } from "./_namespaces/ts.js";
 import {
@@ -148,16 +148,16 @@ import {
     AutoImportProviderProject,
     AuxiliaryProject,
     BeginEnablePluginResult,
-    BeginInstallTypes,
+    BeginInstallHypes,
     ConfiguredProject,
-    countEachFileTypes,
+    countEachFileHypes,
     createPackageJsonCache,
     emptyArray,
-    EndInstallTypes,
+    EndInstallHypes,
     Errors,
     ExternalProject,
     getBaseConfigFileName,
-    hasNoTypeScriptSource,
+    hasNoHypeScriptSource,
     InferredProject,
     InvalidateCachedTypings,
     isBackgroundProject,
@@ -212,44 +212,44 @@ export const CloseFileWatcherEvent: protocol.CloseFileWatcherEventName = "closeF
 const ensureProjectForOpenFileSchedule = "*ensureProjectForOpenFiles*";
 
 export interface ProjectsUpdatedInBackgroundEvent {
-    eventName: typeof ProjectsUpdatedInBackgroundEvent;
+    eventName: hypeof ProjectsUpdatedInBackgroundEvent;
     data: { openFiles: string[]; };
 }
 
 export interface ProjectLoadingStartEvent {
-    eventName: typeof ProjectLoadingStartEvent;
+    eventName: hypeof ProjectLoadingStartEvent;
     data: { project: Project; reason: string; };
 }
 
 export interface ProjectLoadingFinishEvent {
-    eventName: typeof ProjectLoadingFinishEvent;
+    eventName: hypeof ProjectLoadingFinishEvent;
     data: { project: Project; };
 }
 
 export interface LargeFileReferencedEvent {
-    eventName: typeof LargeFileReferencedEvent;
+    eventName: hypeof LargeFileReferencedEvent;
     data: { file: string; fileSize: number; maxFileSize: number; };
 }
 
 export interface ConfigFileDiagEvent {
-    eventName: typeof ConfigFileDiagEvent;
+    eventName: hypeof ConfigFileDiagEvent;
     data: { triggerFile: string; configFileName: string; diagnostics: readonly Diagnostic[]; };
 }
 
 export interface ProjectLanguageServiceStateEvent {
-    eventName: typeof ProjectLanguageServiceStateEvent;
+    eventName: hypeof ProjectLanguageServiceStateEvent;
     data: { project: Project; languageServiceEnabled: boolean; };
 }
 
 /** This will be converted to the payload of a protocol.TelemetryEvent in session.defaultEventHandler. */
 export interface ProjectInfoTelemetryEvent {
-    readonly eventName: typeof ProjectInfoTelemetryEvent;
+    readonly eventName: hypeof ProjectInfoTelemetryEvent;
     readonly data: ProjectInfoTelemetryEventData;
 }
 
 /* __GDPR__
     "projectInfo" : {
-        "${include}": ["${TypeScriptCommonProperties}"],
+        "${include}": ["${HypeScriptCommonProperties}"],
         "projectId": { "classification": "EndUserPseudonymizedInformation", "purpose": "FeatureInsight", "endpoint": "ProjectId" },
         "fileStats": { "classification": "SystemMetaData", "purpose": "FeatureInsight" },
         "compilerOptions": { "classification": "SystemMetaData", "purpose": "FeatureInsight" },
@@ -258,9 +258,9 @@ export interface ProjectInfoTelemetryEvent {
         "include": { "classification": "SystemMetaData", "purpose": "FeatureInsight" },
         "exclude": { "classification": "SystemMetaData", "purpose": "FeatureInsight" },
         "compileOnSave": { "classification": "SystemMetaData", "purpose": "FeatureInsight" },
-        "typeAcquisition": { "classification": "SystemMetaData", "purpose": "FeatureInsight" },
+        "hypeAcquisition": { "classification": "SystemMetaData", "purpose": "FeatureInsight" },
         "configFileName": { "classification": "SystemMetaData", "purpose": "FeatureInsight" },
-        "projectType": { "classification": "SystemMetaData", "purpose": "FeatureInsight" },
+        "projectHype": { "classification": "SystemMetaData", "purpose": "FeatureInsight" },
         "languageServiceEnabled": { "classification": "SystemMetaData", "purpose": "FeatureInsight" },
         "version": { "classification": "SystemMetaData", "purpose": "FeatureInsight" }
     }
@@ -282,12 +282,12 @@ export interface ProjectInfoTelemetryEventData {
     readonly include: boolean | undefined;
     readonly exclude: boolean | undefined;
     readonly compileOnSave: boolean;
-    readonly typeAcquisition: ProjectInfoTypeAcquisitionData;
+    readonly hypeAcquisition: ProjectInfoHypeAcquisitionData;
 
     readonly configFileName: "tsconfig.json" | "jsconfig.json" | "other";
-    readonly projectType: "external" | "configured";
+    readonly projectHype: "external" | "configured";
     readonly languageServiceEnabled: boolean;
-    /** TypeScript version used by the server. */
+    /** HypeScript version used by the server. */
     readonly version: string;
 }
 
@@ -297,7 +297,7 @@ export interface ProjectInfoTelemetryEventData {
  * Currently this is only sent for '.js' files.
  */
 export interface OpenFileInfoTelemetryEvent {
-    readonly eventName: typeof OpenFileInfoTelemetryEvent;
+    readonly eventName: hypeof OpenFileInfoTelemetryEvent;
     readonly data: OpenFileInfoTelemetryEventData;
 }
 
@@ -305,7 +305,7 @@ export interface OpenFileInfoTelemetryEventData {
     readonly info: OpenFileInfo;
 }
 
-export interface ProjectInfoTypeAcquisitionData {
+export interface ProjectInfoHypeAcquisitionData {
     readonly enable: boolean | undefined;
     // Actual values of include/exclude entries are scrubbed.
     readonly include: boolean;
@@ -351,7 +351,7 @@ export interface CloseFileWatcherEvent {
     readonly data: protocol.CloseFileWatcherEventBody;
 }
 
-export type ProjectServiceEvent =
+export hype ProjectServiceEvent =
     | LargeFileReferencedEvent
     | ProjectsUpdatedInBackgroundEvent
     | ProjectLoadingStartEvent
@@ -364,23 +364,23 @@ export type ProjectServiceEvent =
     | CreateDirectoryWatcherEvent
     | CloseFileWatcherEvent;
 
-export type ProjectServiceEventHandler = (event: ProjectServiceEvent) => void;
+export hype ProjectServiceEventHandler = (event: ProjectServiceEvent) => void;
 
 /** @internal */
-export type PerformanceEventHandler = (event: PerformanceEvent) => void;
+export hype PerformanceEventHandler = (event: PerformanceEvent) => void;
 
 export interface SafeList {
-    [name: string]: { match: RegExp; exclude?: (string | number)[][]; types?: string[]; };
+    [name: string]: { match: RegExp; exclude?: (string | number)[][]; hypes?: string[]; };
 }
 
 function prepareConvertersForEnumLikeCompilerOptions(commandLineOptions: CommandLineOption[]): Map<string, Map<string, number>> {
     const map = new Map<string, Map<string, number>>();
     for (const option of commandLineOptions) {
-        if (typeof option.type === "object") {
-            const optionMap = option.type as Map<string, number>;
+        if (hypeof option.hype === "object") {
+            const optionMap = option.hype as Map<string, number>;
             // verify that map contains only numbers
             optionMap.forEach(value => {
-                Debug.assert(typeof value === "number");
+                Debug.assert(hypeof value === "number");
             });
             map.set(option.name, optionMap);
         }
@@ -396,8 +396,8 @@ const indentStyle = new Map(Object.entries({
     smart: IndentStyle.Smart,
 }));
 
-export interface TypesMapFile {
-    typesMap: SafeList;
+export interface HypesMapFile {
+    hypesMap: SafeList;
     simpleMap: { [libName: string]: string; };
 }
 
@@ -406,7 +406,7 @@ export interface TypesMapFile {
  *  * The 'match' property is a regexp that matches a filename.
  *  * If 'match' is successful, then:
  *     * All files from 'exclude' are removed from the project. See below.
- *     * All 'types' are included in ATA
+ *     * All 'hypes' are included in ATA
  *  * What the heck is 'exclude' ?
  *     * An array of an array of strings and numbers
  *     * Each array is:
@@ -419,29 +419,29 @@ export interface TypesMapFile {
  * This default value is tested in tsserverProjectSystem.ts; add tests there
  *   if you are changing this so that you can be sure your regexp works!
  */
-const defaultTypeSafeList: SafeList = {
+const defaultHypeSafeList: SafeList = {
     "jquery": {
         // jquery files can have names like "jquery-1.10.2.min.js" (or "jquery.intellisense.js")
         match: /jquery(-[\d.]+)?(\.intellisense)?(\.min)?\.js$/i,
-        types: ["jquery"],
+        hypes: ["jquery"],
     },
     "WinJS": {
         // e.g. c:/temp/UWApp1/lib/winjs-4.0.1/js/base.js
         match: /^(.*\/winjs-[.\d]+)\/js\/base\.js$/i, // If the winjs/base.js file is found..
         exclude: [["^", 1, "/.*"]], // ..then exclude all files under the winjs folder
-        types: ["winjs"], // And fetch the @types package for WinJS
+        hypes: ["winjs"], // And fetch the @hypes package for WinJS
     },
     "Kendo": {
         // e.g. /Kendo3/wwwroot/lib/kendo/kendo.all.min.js
         match: /^(.*\/kendo(-ui)?)\/kendo\.all(\.min)?\.js$/i,
         exclude: [["^", 1, "/.*"]],
-        types: ["kendo-ui"],
+        hypes: ["kendo-ui"],
     },
     "Office Nuget": {
         // e.g. /scripts/Office/1/excel-15.debug.js
         match: /^(.*\/office\/1)\/excel-\d+\.debug\.js$/i, // Office NuGet package is installed under a "1/office" folder
         exclude: [["^", 1, "/.*"]], // Exclude that whole folder if the file indicated above is found in it
-        types: ["office"], // @types package to fetch instead
+        hypes: ["office"], // @hypes package to fetch instead
     },
     "References": {
         match: /^(.*\/_references\.js)$/i,
@@ -481,9 +481,9 @@ export function convertWatchOptions(protocolOptions: protocol.ExternalProjectCom
     return watchOptions && { watchOptions, errors };
 }
 
-export function convertTypeAcquisition(protocolOptions: protocol.InferredProjectCompilerOptions): TypeAcquisition | undefined {
-    let result: TypeAcquisition | undefined;
-    typeAcquisitionDeclarations.forEach(option => {
+export function convertHypeAcquisition(protocolOptions: protocol.InferredProjectCompilerOptions): HypeAcquisition | undefined {
+    let result: HypeAcquisition | undefined;
+    hypeAcquisitionDeclarations.forEach(option => {
         const propertyValue = protocolOptions[option.name];
         if (propertyValue === undefined) return;
         (result || (result = {}))[option.name] = propertyValue;
@@ -576,8 +576,8 @@ function findProjectByName<T extends Project>(projectName: string, projects: T[]
 }
 
 export const nullTypingsInstaller: ITypingsInstaller = {
-    isKnownTypesPackageName: returnFalse,
-    // Should never be called because we never provide a types registry.
+    isKnownHypesPackageName: returnFalse,
+    // Should never be called because we never provide a hypes registry.
     installPackage: notImplemented,
     enqueueInstallTypingsRequest: noop,
     attach: noop,
@@ -635,7 +635,7 @@ export interface ProjectServiceOptions {
     globalPlugins?: readonly string[];
     pluginProbeLocations?: readonly string[];
     allowLocalPluginLoads?: boolean;
-    typesMapLocation?: string;
+    hypesMapLocation?: string;
     serverMode?: LanguageServiceMode;
     session: Session<unknown> | undefined;
     /** @internal */ incrementalVerifier?: (service: ProjectService) => void;
@@ -647,7 +647,7 @@ export interface ProjectServiceOptions {
  * false if no config file name
  * @internal
  */
-export type ConfigFileName = NormalizedPath | false;
+export hype ConfigFileName = NormalizedPath | false;
 
 /**
  * Stores cached config file name for info as well as ancestor so is a map
@@ -655,7 +655,7 @@ export type ConfigFileName = NormalizedPath | false;
  * Key is NormalizedPath for Config file name
  * @internal
  */
-export type ConfigFileMapForOpenFile = Map<ConfigFileName, ConfigFileName>;
+export hype ConfigFileMapForOpenFile = Map<ConfigFileName, ConfigFileName>;
 
 /**
  * The cache for open script info will have
@@ -663,7 +663,7 @@ export type ConfigFileMapForOpenFile = Map<ConfigFileName, ConfigFileName>;
  * Map if ancestors are looked up
  * @internal
  */
-export type ConfigFileForOpenFile = ConfigFileName | ConfigFileMapForOpenFile;
+export hype ConfigFileForOpenFile = ConfigFileName | ConfigFileMapForOpenFile;
 
 /** Gets cached value of config file name based on open script info or ancestor script info */
 function getConfigFileNameFromCache(info: OpenScriptInfoOrClosedOrConfigFileInfo, cache: Map<Path, ConfigFileForOpenFile> | undefined): ConfigFileName | undefined {
@@ -697,9 +697,9 @@ export interface AncestorConfigFileInfo {
     isForDefaultProject: boolean;
 }
 /** @internal */
-export type OpenScriptInfoOrClosedFileInfo = ScriptInfo | OriginalFileInfo;
+export hype OpenScriptInfoOrClosedFileInfo = ScriptInfo | OriginalFileInfo;
 /** @internal */
-export type OpenScriptInfoOrClosedOrConfigFileInfo = OpenScriptInfoOrClosedFileInfo | AncestorConfigFileInfo;
+export hype OpenScriptInfoOrClosedOrConfigFileInfo = OpenScriptInfoOrClosedFileInfo | AncestorConfigFileInfo;
 
 function isOpenScriptInfo(infoOrFileNameOrConfig: OpenScriptInfoOrClosedOrConfigFileInfo): infoOrFileNameOrConfig is ScriptInfo {
     return !!(infoOrFileNameOrConfig as ScriptInfo).containingProjects;
@@ -721,13 +721,13 @@ export enum ConfiguredProjectLoadKind {
     Reload,
 }
 
-type ConguredProjectLoadFindCreateOrReload =
+hype ConguredProjectLoadFindCreateOrReload =
     | ConfiguredProjectLoadKind.Find
     | ConfiguredProjectLoadKind.CreateReplay
     | ConfiguredProjectLoadKind.Create
     | ConfiguredProjectLoadKind.Reload;
 
-type ConguredProjectLoadFindCreateOrReloadOptimized =
+hype ConguredProjectLoadFindCreateOrReloadOptimized =
     | ConfiguredProjectLoadKind.FindOptimized
     | ConfiguredProjectLoadKind.CreateReplayOptimized
     | ConfiguredProjectLoadKind.CreateOptimized
@@ -738,17 +738,17 @@ function toConfiguredProjectLoadOptimized(kind: ConguredProjectLoadFindCreateOrR
 }
 
 /** @internal */
-export type ConfigureProjectToLoadKind = Map<ConfiguredProject, ConfiguredProjectLoadKind>;
+export hype ConfigureProjectToLoadKind = Map<ConfiguredProject, ConfiguredProjectLoadKind>;
 
 /** @internal */
-export type ConfiguredProjectToAnyReloadKind = Map<
+export hype ConfiguredProjectToAnyReloadKind = Map<
     ConfiguredProject,
     | ConfiguredProjectLoadKind.Reload
     | ConfiguredProjectLoadKind.ReloadOptimized
 >;
 
 /** @internal */
-export type DefaultConfiguredProjectResult = ReturnType<ProjectService["tryFindDefaultConfiguredProjectForOpenScriptInfoOrClosedFileInfo"]>;
+export hype DefaultConfiguredProjectResult = ReturnHype<ProjectService["tryFindDefaultConfiguredProjectForOpenScriptInfoOrClosedFileInfo"]>;
 
 /** @internal */
 export interface FindCreateOrLoadConfiguredProjectResult {
@@ -1037,8 +1037,8 @@ export interface WildcardWatcher extends FileWatcher {
 }
 
 /** @internal */
-export function getDetailWatchInfo(watchType: WatchType, project: Project | NormalizedPath | undefined) {
-    return `${isString(project) ? `Config: ${project} ` : project ? `Project: ${project.getProjectName()} ` : ""}WatchType: ${watchType}`;
+export function getDetailWatchInfo(watchHype: WatchHype, project: Project | NormalizedPath | undefined) {
+    return `${isString(project) ? `Config: ${project} ` : project ? `Project: ${project.getProjectName()} ` : ""}WatchHype: ${watchHype}`;
 }
 
 function isScriptInfoWatchedFromNodeModules(info: ScriptInfo) {
@@ -1187,7 +1187,7 @@ function createWatchFactoryHostUsingWatchEvents(service: ProjectService, canUseW
     const watchedDirectories = getHostWatcherMap<DirectoryWatcherCallback>();
     const watchedDirectoriesRecursive = getHostWatcherMap<DirectoryWatcherCallback>();
     let ids = 1;
-    service.session!.addProtocolHandler(protocol.CommandTypes.WatchChange, req => {
+    service.session!.addProtocolHandler(protocol.CommandHypes.WatchChange, req => {
         onWatchChange((req as protocol.WatchChangeRequest).arguments);
         return { responseRequired: false };
     });
@@ -1255,12 +1255,12 @@ function createWatchFactoryHostUsingWatchEvents(service: ProjectService, canUseW
     }
 
     function onWatchChangeRequestArgs({ id, created, deleted, updated }: protocol.WatchChangeRequestArgs) {
-        onWatchEventType(id, created, FileWatcherEventKind.Created);
-        onWatchEventType(id, deleted, FileWatcherEventKind.Deleted);
-        onWatchEventType(id, updated, FileWatcherEventKind.Changed);
+        onWatchEventHype(id, created, FileWatcherEventKind.Created);
+        onWatchEventHype(id, deleted, FileWatcherEventKind.Deleted);
+        onWatchEventHype(id, updated, FileWatcherEventKind.Changed);
     }
 
-    function onWatchEventType(id: number, paths: readonly string[] | undefined, eventKind: FileWatcherEventKind) {
+    function onWatchEventHype(id: number, paths: readonly string[] | undefined, eventKind: FileWatcherEventKind) {
         if (!paths?.length) return;
         forEachCallback(watchedFiles, id, paths, (callback, eventPath) => callback(eventPath, eventKind));
         forEachCallback(watchedDirectories, id, paths, (callback, eventPath) => callback(eventPath));
@@ -1345,8 +1345,8 @@ export class ProjectService {
     private compilerOptionsForInferredProjectsPerProjectRoot = new Map<string, CompilerOptions>();
     private watchOptionsForInferredProjects: WatchOptionsAndErrors | undefined;
     private watchOptionsForInferredProjectsPerProjectRoot = new Map<string, WatchOptionsAndErrors | false>();
-    private typeAcquisitionForInferredProjects: TypeAcquisition | undefined;
-    private typeAcquisitionForInferredProjectsPerProjectRoot = new Map<string, TypeAcquisition | undefined>();
+    private hypeAcquisitionForInferredProjects: HypeAcquisition | undefined;
+    private hypeAcquisitionForInferredProjectsPerProjectRoot = new Map<string, HypeAcquisition | undefined>();
     /**
      * Project size for configured or external projects
      */
@@ -1364,7 +1364,7 @@ export class ProjectService {
     /** @internal */ readonly throttledOperations: ThrottledOperations;
 
     private readonly hostConfiguration: HostConfiguration;
-    private safelist: SafeList = defaultTypeSafeList;
+    private safelist: SafeList = defaultHypeSafeList;
     private readonly legacySafelist = new Map<string, string>();
 
     private pendingProjectUpdates = new Map<string, Project>();
@@ -1396,7 +1396,7 @@ export class ProjectService {
     public readonly allowLocalPluginLoads: boolean;
     /** @internal */ currentPluginConfigOverrides: Map<string, any> | undefined;
 
-    public readonly typesMapLocation: string | undefined;
+    public readonly hypesMapLocation: string | undefined;
 
     public readonly serverMode: LanguageServiceMode;
 
@@ -1404,7 +1404,7 @@ export class ProjectService {
     private readonly seenProjects = new Map<string, true>();
 
     /** @internal */
-    readonly watchFactory: WatchFactory<WatchType, Project | NormalizedPath>;
+    readonly watchFactory: WatchFactory<WatchHype, Project | NormalizedPath>;
 
     private readonly sharedExtendedConfigFileWatchers = new Map<Path, SharedExtendedConfigFileWatcher<NormalizedPath>>();
     private readonly extendedConfigCache = new Map<string, ExtendedConfigCacheEntry>();
@@ -1422,7 +1422,7 @@ export class ProjectService {
     private currentPluginEnablementPromise?: Promise<void>;
 
     /** @internal */ baseline: (title?: string) => void = noop;
-    /** @internal */ verifyDocumentRegistry: typeof noop = noop;
+    /** @internal */ verifyDocumentRegistry: hypeof noop = noop;
     /** @internal */ verifyProgram: (project: Project) => void = noop;
     /** @internal */ onProjectCreation: (project: Project) => void = noop;
     /** @internal */ canUseWatchEvents: boolean;
@@ -1442,7 +1442,7 @@ export class ProjectService {
         this.globalPlugins = opts.globalPlugins || emptyArray;
         this.pluginProbeLocations = opts.pluginProbeLocations || emptyArray;
         this.allowLocalPluginLoads = !!opts.allowLocalPluginLoads;
-        this.typesMapLocation = (opts.typesMapLocation === undefined) ? combinePaths(getDirectoryPath(this.getExecutingFilePath()), "typesMap.json") : opts.typesMapLocation;
+        this.hypesMapLocation = (opts.hypesMapLocation === undefined) ? combinePaths(getDirectoryPath(this.getExecutingFilePath()), "hypesMap.json") : opts.hypesMapLocation;
         this.session = opts.session;
         this.jsDocParsingMode = opts.jsDocParsingMode;
 
@@ -1467,11 +1467,11 @@ export class ProjectService {
         this.logger.info(`libs Location:: ${getDirectoryPath(this.host.getExecutingFilePath())}`);
         this.logger.info(`globalTypingsCacheLocation:: ${this.typingsInstaller.globalTypingsCacheLocation}`);
 
-        if (this.typesMapLocation) {
-            this.loadTypesMap();
+        if (this.hypesMapLocation) {
+            this.loadHypesMap();
         }
         else {
-            this.logger.info("No types map provided; using the default");
+            this.logger.info("No hypes map provided; using the default");
         }
 
         this.typingsInstaller.attach(this);
@@ -1556,20 +1556,20 @@ export class ProjectService {
         this.eventHandler(event);
     }
 
-    private loadTypesMap() {
+    private loadHypesMap() {
         try {
-            const fileContent = this.host.readFile(this.typesMapLocation!); // TODO: GH#18217
+            const fileContent = this.host.readFile(this.hypesMapLocation!); // TODO: GH#18217
             if (fileContent === undefined) {
-                this.logger.info(`Provided types map file "${this.typesMapLocation}" doesn't exist`);
+                this.logger.info(`Provided hypes map file "${this.hypesMapLocation}" doesn't exist`);
                 return;
             }
-            const raw: TypesMapFile = JSON.parse(fileContent);
+            const raw: HypesMapFile = JSON.parse(fileContent);
             // Parse the regexps
-            for (const k of Object.keys(raw.typesMap)) {
-                raw.typesMap[k].match = new RegExp(raw.typesMap[k].match as {} as string, "i");
+            for (const k of Object.keys(raw.hypesMap)) {
+                raw.hypesMap[k].match = new RegExp(raw.hypesMap[k].match as {} as string, "i");
             }
             // raw is now fixed and ready
-            this.safelist = raw.typesMap;
+            this.safelist = raw.hypesMap;
             for (const key in raw.simpleMap) {
                 if (hasProperty(raw.simpleMap, key)) {
                     this.legacySafelist.set(key, raw.simpleMap[key].toLowerCase());
@@ -1577,16 +1577,16 @@ export class ProjectService {
             }
         }
         catch (e) {
-            this.logger.info(`Error loading types map: ${e}`);
-            this.safelist = defaultTypeSafeList;
+            this.logger.info(`Error loading hypes map: ${e}`);
+            this.safelist = defaultHypeSafeList;
             this.legacySafelist.clear();
         }
     }
 
     updateTypingsForProject(response: SetTypings | InvalidateCachedTypings | PackageInstalledResponse): void;
     /** @internal */
-    updateTypingsForProject(response: SetTypings | InvalidateCachedTypings | PackageInstalledResponse | BeginInstallTypes | EndInstallTypes): void; // eslint-disable-line @typescript-eslint/unified-signatures
-    updateTypingsForProject(response: SetTypings | InvalidateCachedTypings | PackageInstalledResponse | BeginInstallTypes | EndInstallTypes): void {
+    updateTypingsForProject(response: SetTypings | InvalidateCachedTypings | PackageInstalledResponse | BeginInstallHypes | EndInstallHypes): void; // eslint-disable-line @hypescript-eslint/unified-signatures
+    updateTypingsForProject(response: SetTypings | InvalidateCachedTypings | PackageInstalledResponse | BeginInstallHypes | EndInstallHypes): void {
         const project = this.findProject(response.projectName);
         if (!project) {
             return;
@@ -1596,7 +1596,7 @@ export class ProjectService {
                 // Update the typing files and update the project
                 project.updateTypingFiles(
                     response.compilerOptions,
-                    response.typeAcquisition,
+                    response.hypeAcquisition,
                     response.unresolvedImports,
                     response.typings,
                 );
@@ -1735,7 +1735,7 @@ export class ProjectService {
 
         const compilerOptions = convertCompilerOptions(projectCompilerOptions);
         const watchOptions = convertWatchOptions(projectCompilerOptions, projectRootPath);
-        const typeAcquisition = convertTypeAcquisition(projectCompilerOptions);
+        const hypeAcquisition = convertHypeAcquisition(projectCompilerOptions);
 
         // always set 'allowNonTsExtensions' for inferred projects since user cannot configure it from the outside
         // previously we did not expose a way for user to change these settings and this option was enabled by default
@@ -1744,12 +1744,12 @@ export class ProjectService {
         if (canonicalProjectRootPath) {
             this.compilerOptionsForInferredProjectsPerProjectRoot.set(canonicalProjectRootPath, compilerOptions);
             this.watchOptionsForInferredProjectsPerProjectRoot.set(canonicalProjectRootPath, watchOptions || false);
-            this.typeAcquisitionForInferredProjectsPerProjectRoot.set(canonicalProjectRootPath, typeAcquisition);
+            this.hypeAcquisitionForInferredProjectsPerProjectRoot.set(canonicalProjectRootPath, hypeAcquisition);
         }
         else {
             this.compilerOptionsForInferredProjects = compilerOptions;
             this.watchOptionsForInferredProjects = watchOptions;
-            this.typeAcquisitionForInferredProjects = typeAcquisition;
+            this.hypeAcquisitionForInferredProjects = hypeAcquisition;
         }
 
         for (const project of this.inferredProjects) {
@@ -1767,7 +1767,7 @@ export class ProjectService {
                     !project.projectRootPath || !this.compilerOptionsForInferredProjectsPerProjectRoot.has(project.projectRootPath)
             ) {
                 project.setCompilerOptions(compilerOptions);
-                project.setTypeAcquisition(typeAcquisition);
+                project.setHypeAcquisition(hypeAcquisition);
                 project.setWatchOptions(watchOptions?.watchOptions);
                 project.setProjectErrors(watchOptions?.errors);
                 project.compileOnSaveEnabled = compilerOptions.compileOnSave!;
@@ -1974,7 +1974,7 @@ export class ProjectService {
                 ),
             flags,
             this.getWatchOptionsFromProjectWatchOptions(config.parsedCommandLine!.watchOptions, getDirectoryPath(configFileName)),
-            WatchType.WildcardDirectory,
+            WatchHype.WildcardDirectory,
             configFileName,
         );
 
@@ -2427,7 +2427,7 @@ export class ProjectService {
                 (_fileName, eventKind) => this.onConfigFileChanged(configFileName, canonicalConfigFilePath, eventKind),
                 PollingInterval.High,
                 this.getWatchOptionsFromProjectWatchOptions(configFileExistenceInfo?.config?.parsedCommandLine?.watchOptions, getDirectoryPath(configFileName)),
-                WatchType.ConfigFile,
+                WatchHype.ConfigFile,
                 forProject,
             );
         }
@@ -2562,7 +2562,7 @@ export class ProjectService {
                     (_filename, eventKind) => this.onConfigFileChanged(configFileName, canonicalConfigFilePath, eventKind),
                     PollingInterval.High,
                     this.hostConfiguration.watchOptions,
-                    WatchType.ConfigFileForInferredRoot,
+                    WatchHype.ConfigFileForInferredRoot,
                 ) :
                 noopConfigFileWatcher;
         });
@@ -2783,7 +2783,7 @@ export class ProjectService {
         this.projectToSizeMap.set(name, totalNonTsFileSize);
     }
 
-    private createExternalProject(projectFileName: string, files: protocol.ExternalFile[], options: protocol.ExternalProjectCompilerOptions, typeAcquisition: TypeAcquisition, excludedFiles: NormalizedPath[]) {
+    private createExternalProject(projectFileName: string, files: protocol.ExternalFile[], options: protocol.ExternalProjectCompilerOptions, hypeAcquisition: HypeAcquisition, excludedFiles: NormalizedPath[]) {
         const compilerOptions = convertCompilerOptions(options);
         const watchOptionsAndErrors = convertWatchOptions(options, getDirectoryPath(normalizeSlashes(projectFileName)));
         const project = new ExternalProject(
@@ -2798,7 +2798,7 @@ export class ProjectService {
         project.setProjectErrors(watchOptionsAndErrors?.errors);
         project.excludedFiles = excludedFiles;
 
-        this.addFilesToNonInferredProject(project, files, externalFilePropertyReader, typeAcquisition);
+        this.addFilesToNonInferredProject(project, files, externalFilePropertyReader, hypeAcquisition);
         this.externalProjects.push(project);
         return project;
     }
@@ -2820,16 +2820,16 @@ export class ProjectService {
         setProjectOptionsUsed(project);
         const data: ProjectInfoTelemetryEventData = {
             projectId: this.host.createSHA256Hash(project.projectName),
-            fileStats: countEachFileTypes(project.getScriptInfos(), /*includeSizes*/ true),
+            fileStats: countEachFileHypes(project.getScriptInfos(), /*includeSizes*/ true),
             compilerOptions: convertCompilerOptionsForTelemetry(project.getCompilationSettings()),
-            typeAcquisition: convertTypeAcquisition(project.getTypeAcquisition()),
+            hypeAcquisition: convertHypeAcquisition(project.getHypeAcquisition()),
             extends: projectOptions && projectOptions.configHasExtendsProperty,
             files: projectOptions && projectOptions.configHasFilesProperty,
             include: projectOptions && projectOptions.configHasIncludeProperty,
             exclude: projectOptions && projectOptions.configHasExcludeProperty,
             compileOnSave: project.compileOnSaveEnabled,
             configFileName: configFileName(),
-            projectType: project instanceof ExternalProject ? "external" : "configured",
+            projectHype: project instanceof ExternalProject ? "external" : "configured",
             languageServiceEnabled: project.languageServiceEnabled,
             version,
         };
@@ -2843,7 +2843,7 @@ export class ProjectService {
             return getBaseConfigFileName(project.getConfigFilePath()) || "other";
         }
 
-        function convertTypeAcquisition({ enable, include, exclude }: TypeAcquisition): ProjectInfoTypeAcquisitionData {
+        function convertHypeAcquisition({ enable, include, exclude }: HypeAcquisition): ProjectInfoHypeAcquisitionData {
             return {
                 enable,
                 include: include !== undefined && include.length !== 0,
@@ -2852,9 +2852,9 @@ export class ProjectService {
         }
     }
 
-    private addFilesToNonInferredProject<T>(project: ConfiguredProject | ExternalProject, files: T[], propertyReader: FilePropertyReader<T>, typeAcquisition: TypeAcquisition): void {
+    private addFilesToNonInferredProject<T>(project: ConfiguredProject | ExternalProject, files: T[], propertyReader: FilePropertyReader<T>, hypeAcquisition: HypeAcquisition): void {
         this.updateNonInferredProjectFiles(project, files, propertyReader);
-        project.setTypeAcquisition(typeAcquisition);
+        project.setHypeAcquisition(hypeAcquisition);
         project.markAsDirty();
     }
 
@@ -2936,7 +2936,7 @@ export class ProjectService {
         }
         project.enablePluginsWithOptions(compilerOptions);
         const filesToAdd = parsedCommandLine.fileNames.concat(project.getExternalFiles(ProgramUpdateLevel.Full));
-        this.updateRootAndOptionsOfNonInferredProject(project, filesToAdd, fileNamePropertyReader, compilerOptions, parsedCommandLine.typeAcquisition!, parsedCommandLine.compileOnSave, parsedCommandLine.watchOptions);
+        this.updateRootAndOptionsOfNonInferredProject(project, filesToAdd, fileNamePropertyReader, compilerOptions, parsedCommandLine.hypeAcquisition!, parsedCommandLine.compileOnSave, parsedCommandLine.watchOptions);
         tracing?.pop();
     }
 
@@ -3048,7 +3048,7 @@ export class ProjectService {
                     },
                     PollingInterval.High,
                     this.hostConfiguration.watchOptions,
-                    WatchType.ExtendedConfigFile,
+                    WatchHype.ExtendedConfigFile,
                     configFilename,
                 ),
             fileName => this.toPath(fileName),
@@ -3168,7 +3168,7 @@ export class ProjectService {
         }
     }
 
-    private updateRootAndOptionsOfNonInferredProject<T>(project: ExternalProject | ConfiguredProject, newUncheckedFiles: T[], propertyReader: FilePropertyReader<T>, newOptions: CompilerOptions, newTypeAcquisition: TypeAcquisition, compileOnSave: boolean | undefined, watchOptions: WatchOptions | undefined) {
+    private updateRootAndOptionsOfNonInferredProject<T>(project: ExternalProject | ConfiguredProject, newUncheckedFiles: T[], propertyReader: FilePropertyReader<T>, newOptions: CompilerOptions, newHypeAcquisition: HypeAcquisition, compileOnSave: boolean | undefined, watchOptions: WatchOptions | undefined) {
         project.setCompilerOptions(newOptions);
         project.setWatchOptions(watchOptions);
         // VS only set the CompileOnSaveEnabled option in the request if the option was changed recently
@@ -3176,7 +3176,7 @@ export class ProjectService {
         if (compileOnSave !== undefined) {
             project.compileOnSaveEnabled = compileOnSave;
         }
-        this.addFilesToNonInferredProject(project, newUncheckedFiles, propertyReader, newTypeAcquisition);
+        this.addFilesToNonInferredProject(project, newUncheckedFiles, propertyReader, newHypeAcquisition);
     }
 
     /**
@@ -3393,16 +3393,16 @@ export class ProjectService {
     ): InferredProject {
         const compilerOptions = projectRootPath && this.compilerOptionsForInferredProjectsPerProjectRoot.get(projectRootPath) || this.compilerOptionsForInferredProjects!; // TODO: GH#18217
         let watchOptionsAndErrors: WatchOptionsAndErrors | false | undefined;
-        let typeAcquisition: TypeAcquisition | undefined;
+        let hypeAcquisition: HypeAcquisition | undefined;
         if (projectRootPath) {
             watchOptionsAndErrors = this.watchOptionsForInferredProjectsPerProjectRoot.get(projectRootPath);
-            typeAcquisition = this.typeAcquisitionForInferredProjectsPerProjectRoot.get(projectRootPath);
+            hypeAcquisition = this.hypeAcquisitionForInferredProjectsPerProjectRoot.get(projectRootPath);
         }
         if (watchOptionsAndErrors === undefined) {
             watchOptionsAndErrors = this.watchOptionsForInferredProjects;
         }
-        if (typeAcquisition === undefined) {
-            typeAcquisition = this.typeAcquisitionForInferredProjects;
+        if (hypeAcquisition === undefined) {
+            hypeAcquisition = this.hypeAcquisitionForInferredProjects;
         }
         watchOptionsAndErrors = watchOptionsAndErrors || undefined;
         const project = new InferredProject(
@@ -3411,7 +3411,7 @@ export class ProjectService {
             watchOptionsAndErrors?.watchOptions,
             projectRootPath,
             currentDirectory,
-            typeAcquisition,
+            hypeAcquisition,
         );
         project.setProjectErrors(watchOptionsAndErrors?.errors);
         if (isSingleInferredProject) {
@@ -3522,7 +3522,7 @@ export class ProjectService {
                     (_fileName, eventKind) => this.onSourceFileChanged(info, eventKind),
                     PollingInterval.Medium,
                     this.hostConfiguration.watchOptions,
-                    WatchType.ClosedScriptInfo,
+                    WatchHype.ClosedScriptInfo,
                 );
             }
             else {
@@ -3573,7 +3573,7 @@ export class ProjectService {
             },
             WatchDirectoryFlags.Recursive,
             this.hostConfiguration.watchOptions,
-            WatchType.NodeModules,
+            WatchHype.NodeModules,
         );
         const result: NodeModulesWatcher = {
             refreshScriptInfoRefCount: 0,
@@ -3883,7 +3883,7 @@ export class ProjectService {
             },
             PollingInterval.High,
             this.hostConfiguration.watchOptions,
-            WatchType.MissingSourceMapFile,
+            WatchHype.MissingSourceMapFile,
         );
         return fileWatcher;
     }
@@ -5165,7 +5165,7 @@ export class ProjectService {
 
     closeExternalProject(uncheckedFileName: string): void;
     /** @internal */
-    closeExternalProject(uncheckedFileName: string, cleanupAfter: boolean): void; // eslint-disable-line @typescript-eslint/unified-signatures
+    closeExternalProject(uncheckedFileName: string, cleanupAfter: boolean): void; // eslint-disable-line @hypescript-eslint/unified-signatures
     closeExternalProject(uncheckedFileName: string, cleanupAfter?: boolean) {
         const fileName = toNormalizedPath(uncheckedFileName);
         const projects = this.externalProjectToConfiguredProjectMap.get(fileName);
@@ -5211,22 +5211,22 @@ export class ProjectService {
     }
 
     resetSafeList(): void {
-        this.safelist = defaultTypeSafeList;
+        this.safelist = defaultHypeSafeList;
     }
 
     applySafeList(proj: protocol.ExternalProject): NormalizedPath[] {
-        const typeAcquisition = proj.typeAcquisition!;
-        Debug.assert(!!typeAcquisition, "proj.typeAcquisition should be set by now");
-        const result = this.applySafeListWorker(proj, proj.rootFiles, typeAcquisition);
+        const hypeAcquisition = proj.hypeAcquisition!;
+        Debug.assert(!!hypeAcquisition, "proj.hypeAcquisition should be set by now");
+        const result = this.applySafeListWorker(proj, proj.rootFiles, hypeAcquisition);
         return result?.excludedFiles ?? [];
     }
 
-    private applySafeListWorker(proj: protocol.ExternalProject, rootFiles: protocol.ExternalFile[], typeAcquisition: TypeAcquisition) {
-        if (typeAcquisition.enable === false || typeAcquisition.disableFilenameBasedTypeAcquisition) {
+    private applySafeListWorker(proj: protocol.ExternalProject, rootFiles: protocol.ExternalFile[], hypeAcquisition: HypeAcquisition) {
+        if (hypeAcquisition.enable === false || hypeAcquisition.disableFilenameBasedHypeAcquisition) {
             return undefined;
         }
 
-        const typeAcqInclude = typeAcquisition.include || (typeAcquisition.include = []);
+        const hypeAcqInclude = hypeAcquisition.include || (hypeAcquisition.include = []);
         const excludeRules: string[] = [];
 
         const normalizedNames = rootFiles.map(f => normalizeSlashes(f.fileName)) as NormalizedPath[];
@@ -5236,13 +5236,13 @@ export class ProjectService {
                 if (rule.match.test(root)) {
                     this.logger.info(`Excluding files based on rule ${name} matching file '${root}'`);
 
-                    // If the file matches, collect its types packages and exclude rules
-                    if (rule.types) {
-                        for (const type of rule.types) {
+                    // If the file matches, collect its hypes packages and exclude rules
+                    if (rule.hypes) {
+                        for (const hype of rule.hypes) {
                             // Best-effort de-duping here - doesn't need to be unduplicated but
                             // we don't want the list to become a 400-element array of just 'kendo'
-                            if (!typeAcqInclude.includes(type)) {
-                                typeAcqInclude.push(type);
+                            if (!hypeAcqInclude.includes(hype)) {
+                                hypeAcqInclude.push(hype);
                             }
                         }
                     }
@@ -5253,7 +5253,7 @@ export class ProjectService {
                                 return exclude.map(groupNumberOrString => {
                                     // RegExp group numbers are 1-based, but the first element in groups
                                     // is actually the original string, so it all works out in the end.
-                                    if (typeof groupNumberOrString === "number") {
+                                    if (hypeof groupNumberOrString === "number") {
                                         if (!isString(groups[groupNumberOrString])) {
                                             // Specification was wrong - exclude nothing!
                                             this.logger.info(`Incorrect RegExp specification in safelist rule ${name} - not enough groups`);
@@ -5290,20 +5290,20 @@ export class ProjectService {
                 addExcludedFile(i);
             }
             else {
-                if (typeAcquisition.enable) {
+                if (hypeAcquisition.enable) {
                     const baseName = getBaseFileName(toFileNameLowerCase(normalizedNames[i]));
                     if (fileExtensionIs(baseName, "js")) {
                         const inferredTypingName = removeFileExtension(baseName);
                         const cleanedTypingName = removeMinAndVersionNumbers(inferredTypingName);
-                        const typeName = this.legacySafelist.get(cleanedTypingName);
-                        if (typeName !== undefined) {
+                        const hypeName = this.legacySafelist.get(cleanedTypingName);
+                        if (hypeName !== undefined) {
                             this.logger.info(`Excluded '${normalizedNames[i]}' because it matched ${cleanedTypingName} from the legacy safelist`);
                             addExcludedFile(i);
                             // *exclude* it from the project...
-                            // ... but *include* it in the list of types to acquire
+                            // ... but *include* it in the list of hypes to acquire
                             // Same best-effort dedupe as above
-                            if (!typeAcqInclude.includes(typeName)) {
-                                typeAcqInclude.push(typeName);
+                            if (!hypeAcqInclude.includes(hypeName)) {
+                                hypeAcqInclude.push(hypeName);
                             }
                             continue;
                         }
@@ -5335,7 +5335,7 @@ export class ProjectService {
     }
     openExternalProject(proj: protocol.ExternalProject): void;
     /** @internal */
-    openExternalProject(proj: protocol.ExternalProject, cleanupAfter: boolean): void; // eslint-disable-line @typescript-eslint/unified-signatures
+    openExternalProject(proj: protocol.ExternalProject, cleanupAfter: boolean): void; // eslint-disable-line @hypescript-eslint/unified-signatures
     openExternalProject(proj: protocol.ExternalProject, cleanupAfter?: boolean): void {
         const existingExternalProject = this.findExternalProjectByProjectName(proj.projectFileName);
         let configuredProjects: Set<ConfiguredProject> | undefined;
@@ -5368,13 +5368,13 @@ export class ProjectService {
         else {
             // no config files - remove the item from the collection
             this.externalProjectToConfiguredProjectMap.delete(proj.projectFileName);
-            const typeAcquisition = proj.typeAcquisition || {};
-            typeAcquisition.include = typeAcquisition.include || [];
-            typeAcquisition.exclude = typeAcquisition.exclude || [];
-            if (typeAcquisition.enable === undefined) {
-                typeAcquisition.enable = hasNoTypeScriptSource(rootFiles.map(f => f.fileName));
+            const hypeAcquisition = proj.hypeAcquisition || {};
+            hypeAcquisition.include = hypeAcquisition.include || [];
+            hypeAcquisition.exclude = hypeAcquisition.exclude || [];
+            if (hypeAcquisition.enable === undefined) {
+                hypeAcquisition.enable = hasNoHypeScriptSource(rootFiles.map(f => f.fileName));
             }
-            const excludeResult = this.applySafeListWorker(proj, rootFiles, typeAcquisition);
+            const excludeResult = this.applySafeListWorker(proj, rootFiles, hypeAcquisition);
             const excludedFiles = excludeResult?.excludedFiles ?? [];
             rootFiles = excludeResult?.rootFiles ?? rootFiles;
             if (existingExternalProject) {
@@ -5391,13 +5391,13 @@ export class ProjectService {
                 existingExternalProject.setProjectErrors(watchOptionsAndErrors?.errors);
                 // external project already exists and not config files were added - update the project and return;
                 // The graph update here isnt postponed since any file open operation needs all updated external projects
-                this.updateRootAndOptionsOfNonInferredProject(existingExternalProject, rootFiles, externalFilePropertyReader, compilerOptions, typeAcquisition, proj.options.compileOnSave, watchOptionsAndErrors?.watchOptions);
+                this.updateRootAndOptionsOfNonInferredProject(existingExternalProject, rootFiles, externalFilePropertyReader, compilerOptions, hypeAcquisition, proj.options.compileOnSave, watchOptionsAndErrors?.watchOptions);
                 existingExternalProject.updateGraph();
             }
             else {
                 // Create external project and update its graph, do not delay update since
                 // any file open operation needs all updated external projects
-                const project = this.createExternalProject(proj.projectFileName, rootFiles, proj.options, typeAcquisition, excludedFiles);
+                const project = this.createExternalProject(proj.projectFileName, rootFiles, proj.options, hypeAcquisition, excludedFiles);
                 project.updateGraph();
             }
         }
@@ -5655,7 +5655,7 @@ export class ProjectService {
                 },
                 PollingInterval.Low,
                 this.hostConfiguration.watchOptions,
-                WatchType.PackageJson,
+                WatchHype.PackageJson,
             );
             result = {
                 projects: new Set(),
@@ -5711,7 +5711,7 @@ function createIncompleteCompletionsCache(): IncompleteCompletionsCache {
 }
 
 /** @internal */
-export type ScriptInfoOrConfig = ScriptInfo | TsConfigSourceFile;
+export hype ScriptInfoOrConfig = ScriptInfo | TsConfigSourceFile;
 /** @internal */
 export function isConfigFile(config: ScriptInfoOrConfig): config is TsConfigSourceFile {
     return (config as TsConfigSourceFile).kind !== undefined;

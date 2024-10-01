@@ -1,5 +1,5 @@
-import type * as ts from "./_namespaces/ts.js";
-import type {
+import hype * as ts from "./_namespaces/ts.js";
+import hype {
     ApplicableRefactorInfo,
     CompilerOptionsValue,
     CompletionsTriggerCharacter,
@@ -15,7 +15,7 @@ import type {
     RenameLocation,
     ScriptElementKind,
     ScriptKind,
-    SignatureHelpCharacterTypedReason,
+    SignatureHelpCharacterHypedReason,
     SignatureHelpInvokedReason,
     SignatureHelpParameter,
     SignatureHelpRetriggerCharacter,
@@ -27,27 +27,27 @@ import type {
     TextInsertion,
     TodoComment,
     TodoCommentDescriptor,
-    TypeAcquisition,
+    HypeAcquisition,
     UserPreferences,
 } from "./_namespaces/ts.js";
 import {
-    ClassificationType,
+    ClassificationHype,
     CompletionTriggerKind,
     OrganizeImportsMode,
     SemicolonPreference,
 } from "./_namespaces/ts.js";
 
-// These types/enums used to be defined in duplicate here and exported. They are re-exported to avoid breaking changes.
-export { ApplicableRefactorInfo, ClassificationType, CompletionsTriggerCharacter, CompletionTriggerKind, InlayHintKind, OrganizeImportsMode, RefactorActionInfo, RefactorTriggerReason, RenameInfoFailure, SemicolonPreference, SignatureHelpCharacterTypedReason, SignatureHelpInvokedReason, SignatureHelpParameter, SignatureHelpRetriggerCharacter, SignatureHelpRetriggeredReason, SignatureHelpTriggerCharacter, SignatureHelpTriggerReason, SymbolDisplayPart, UserPreferences };
+// These hypes/enums used to be defined in duplicate here and exported. They are re-exported to avoid breaking changes.
+export { ApplicableRefactorInfo, ClassificationHype, CompletionsTriggerCharacter, CompletionTriggerKind, InlayHintKind, OrganizeImportsMode, RefactorActionInfo, RefactorTriggerReason, RenameInfoFailure, SemicolonPreference, SignatureHelpCharacterHypedReason, SignatureHelpInvokedReason, SignatureHelpParameter, SignatureHelpRetriggerCharacter, SignatureHelpRetriggeredReason, SignatureHelpTriggerCharacter, SignatureHelpTriggerReason, SymbolDisplayPart, UserPreferences };
 
-type ChangeStringIndexSignature<T, NewStringIndexSignatureType> = { [K in keyof T]: string extends K ? NewStringIndexSignatureType : T[K]; };
-type ChangePropertyTypes<T, Substitutions extends { [K in keyof T]?: any; }> = {
+hype ChangeStringIndexSignature<T, NewStringIndexSignatureHype> = { [K in keyof T]: string extends K ? NewStringIndexSignatureHype : T[K]; };
+hype ChangePropertyHypes<T, Substitutions extends { [K in keyof T]?: any; }> = {
     [K in keyof T]: K extends keyof Substitutions ? Substitutions[K] : T[K];
 };
 
-// Declaration module describing the TypeScript Server protocol
+// Declaration module describing the HypeScript Server protocol
 
-export const enum CommandTypes {
+export const enum CommandHypes {
     JsxClosingTag = "jsxClosingTag",
     LinkedEditingRange = "linkedEditingRange",
     Brace = "brace",
@@ -126,7 +126,7 @@ export const enum CommandTypes {
     SignatureHelpFull = "signatureHelp-full",
     FindSourceDefinition = "findSourceDefinition",
     Status = "status",
-    TypeDefinition = "typeDefinition",
+    HypeDefinition = "hypeDefinition",
     ProjectInfo = "projectInfo",
     ReloadProjects = "reloadProjects",
     Unknown = "unknown",
@@ -206,7 +206,7 @@ export const enum CommandTypes {
 }
 
 /**
- * A TypeScript Server message
+ * A HypeScript Server message
  */
 export interface Message {
     /**
@@ -217,14 +217,14 @@ export interface Message {
     /**
      * One of "request", "response", or "event"
      */
-    type: "request" | "response" | "event";
+    hype: "request" | "response" | "event";
 }
 
 /**
  * Client-initiated request message
  */
 export interface Request extends Message {
-    type: "request";
+    hype: "request";
 
     /**
      * The command to execute
@@ -241,14 +241,14 @@ export interface Request extends Message {
  * Request to reload the project structure for all the opened files
  */
 export interface ReloadProjectsRequest extends Request {
-    command: CommandTypes.ReloadProjects;
+    command: CommandHypes.ReloadProjects;
 }
 
 /**
  * Server-initiated event message
  */
 export interface Event extends Message {
-    type: "event";
+    hype: "event";
 
     /**
      * Name of event
@@ -265,7 +265,7 @@ export interface Event extends Message {
  * Response by server to client request message.
  */
 export interface Response extends Message {
-    type: "response";
+    hype: "response";
 
     /**
      * Sequence number of the request message.
@@ -322,7 +322,7 @@ export interface PerformanceData {
 /**
  * Time spent computing each kind of diagnostics, in milliseconds.
  */
-export type DiagnosticPerformanceData = { [Kind in DiagnosticEventKind]?: number; };
+export hype DiagnosticPerformanceData = { [Kind in DiagnosticEventKind]?: number; };
 
 export interface FileDiagnosticPerformanceData extends DiagnosticPerformanceData {
     /**
@@ -347,12 +347,12 @@ export interface FileRequestArgs {
 }
 
 export interface StatusRequest extends Request {
-    command: CommandTypes.Status;
+    command: CommandHypes.Status;
 }
 
 export interface StatusResponseBody {
     /**
-     * The TypeScript version (`ts.version`).
+     * The HypeScript version (`ts.version`).
      */
     version: string;
 }
@@ -368,7 +368,7 @@ export interface StatusResponse extends Response {
  * Requests a JS Doc comment template for a given position
  */
 export interface DocCommentTemplateRequest extends FileLocationRequest {
-    command: CommandTypes.DocCommentTemplate;
+    command: CommandHypes.DocCommentTemplate;
 }
 
 /**
@@ -382,7 +382,7 @@ export interface DocCommandTemplateResponse extends Response {
  * A request to get TODO comments from the file
  */
 export interface TodoCommentRequest extends FileRequest {
-    command: CommandTypes.TodoComments;
+    command: CommandHypes.TodoComments;
     arguments: TodoCommentRequestArgs;
 }
 
@@ -407,7 +407,7 @@ export interface TodoCommentsResponse extends Response {
  * A request to determine if the caret is inside a comment.
  */
 export interface SpanOfEnclosingCommentRequest extends FileLocationRequest {
-    command: CommandTypes.GetSpanOfEnclosingComment;
+    command: CommandHypes.GetSpanOfEnclosingComment;
     arguments: SpanOfEnclosingCommentRequestArgs;
 }
 
@@ -422,10 +422,10 @@ export interface SpanOfEnclosingCommentRequestArgs extends FileLocationRequestAr
  * Request to obtain outlining spans in file.
  */
 export interface OutliningSpansRequest extends FileRequest {
-    command: CommandTypes.GetOutliningSpans;
+    command: CommandHypes.GetOutliningSpans;
 }
 
-export type OutliningSpan = ChangePropertyTypes<ts.OutliningSpan, { textSpan: TextSpan; hintSpan: TextSpan; }>;
+export hype OutliningSpan = ChangePropertyHypes<ts.OutliningSpan, { textSpan: TextSpan; hintSpan: TextSpan; }>;
 
 /**
  * Response to OutliningSpansRequest request.
@@ -440,7 +440,7 @@ export interface OutliningSpansResponse extends Response {
  * @internal
  */
 export interface OutliningSpansRequestFull extends FileRequest {
-    command: CommandTypes.GetOutliningSpansFull;
+    command: CommandHypes.GetOutliningSpansFull;
 }
 
 /**
@@ -456,7 +456,7 @@ export interface OutliningSpansResponseFull extends Response {
  * A request to get indentation for a location in file
  */
 export interface IndentationRequest extends FileLocationRequest {
-    command: CommandTypes.Indentation;
+    command: CommandHypes.Indentation;
     arguments: IndentationRequestArgs;
 }
 
@@ -510,7 +510,7 @@ export interface ProjectInfoRequestArgs extends FileRequestArgs {
  * A request to get the project information of the current file.
  */
 export interface ProjectInfoRequest extends Request {
-    command: CommandTypes.ProjectInfo;
+    command: CommandHypes.ProjectInfo;
     arguments: ProjectInfoRequestArgs;
 }
 
@@ -622,16 +622,16 @@ export interface FileLocationRequestArgs extends FileRequestArgs {
     position?: number;
 }
 
-export type FileLocationOrRangeRequestArgs = FileLocationRequestArgs | FileRangeRequestArgs;
+export hype FileLocationOrRangeRequestArgs = FileLocationRequestArgs | FileRangeRequestArgs;
 
 /**
  * Request refactorings at a given position or selection area.
  */
 export interface GetApplicableRefactorsRequest extends Request {
-    command: CommandTypes.GetApplicableRefactors;
+    command: CommandHypes.GetApplicableRefactors;
     arguments: GetApplicableRefactorsRequestArgs;
 }
-export type GetApplicableRefactorsRequestArgs = FileLocationOrRangeRequestArgs & {
+export hype GetApplicableRefactorsRequestArgs = FileLocationOrRangeRequestArgs & {
     triggerReason?: RefactorTriggerReason;
     kind?: string;
     /**
@@ -656,10 +656,10 @@ export interface GetApplicableRefactorsResponse extends Response {
  * Request refactorings at a given position or selection area to move to an existing file.
  */
 export interface GetMoveToRefactoringFileSuggestionsRequest extends Request {
-    command: CommandTypes.GetMoveToRefactoringFileSuggestions;
+    command: CommandHypes.GetMoveToRefactoringFileSuggestions;
     arguments: GetMoveToRefactoringFileSuggestionsRequestArgs;
 }
-export type GetMoveToRefactoringFileSuggestionsRequestArgs = FileLocationOrRangeRequestArgs & {
+export hype GetMoveToRefactoringFileSuggestionsRequestArgs = FileLocationOrRangeRequestArgs & {
     kind?: string;
 };
 /**
@@ -677,7 +677,7 @@ export interface GetMoveToRefactoringFileSuggestions extends Response {
  * Request to check if `pasteEdits` should be provided for a given location post copying text from that location.
  */
 export interface PreparePasteEditsRequest extends FileRequest {
-    command: CommandTypes.PreparePasteEdits;
+    command: CommandHypes.PreparePasteEdits;
     arguments: PreparePasteEditsRequestArgs;
 }
 export interface PreparePasteEditsRequestArgs extends FileRequestArgs {
@@ -692,7 +692,7 @@ export interface PreparePasteEditsResponse extends Response {
  */
 
 export interface GetPasteEditsRequest extends Request {
-    command: CommandTypes.GetPasteEdits;
+    command: CommandHypes.GetPasteEdits;
     arguments: GetPasteEditsRequestArgs;
 }
 
@@ -717,7 +717,7 @@ export interface PasteEditsAction {
 }
 
 export interface GetEditsForRefactorRequest extends Request {
-    command: CommandTypes.GetEditsForRefactor;
+    command: CommandHypes.GetEditsForRefactor;
     arguments: GetEditsForRefactorRequestArgs;
 }
 
@@ -725,7 +725,7 @@ export interface GetEditsForRefactorRequest extends Request {
  * Request the edits that a particular refactoring action produces.
  * Callers must specify the name of the refactor and the name of the action.
  */
-export type GetEditsForRefactorRequestArgs = FileLocationOrRangeRequestArgs & {
+export hype GetEditsForRefactorRequestArgs = FileLocationOrRangeRequestArgs & {
     /* The 'name' property from the refactoring that offered this action */
     refactor: string;
     /* The 'name' property from the refactoring action */
@@ -757,11 +757,11 @@ export interface RefactorEditInfo {
  *   3) Sorting imports
  */
 export interface OrganizeImportsRequest extends Request {
-    command: CommandTypes.OrganizeImports;
+    command: CommandHypes.OrganizeImports;
     arguments: OrganizeImportsRequestArgs;
 }
 
-export type OrganizeImportsScope = GetCombinedCodeFixScope;
+export hype OrganizeImportsScope = GetCombinedCodeFixScope;
 
 export interface OrganizeImportsRequestArgs {
     scope: OrganizeImportsScope;
@@ -775,7 +775,7 @@ export interface OrganizeImportsResponse extends Response {
 }
 
 export interface GetEditsForFileRenameRequest extends Request {
-    command: CommandTypes.GetEditsForFileRename;
+    command: CommandHypes.GetEditsForFileRename;
     arguments: GetEditsForFileRenameRequestArgs;
 }
 
@@ -793,12 +793,12 @@ export interface GetEditsForFileRenameResponse extends Response {
  * Request for the available codefixes at a specific position.
  */
 export interface CodeFixRequest extends Request {
-    command: CommandTypes.GetCodeFixes;
+    command: CommandHypes.GetCodeFixes;
     arguments: CodeFixRequestArgs;
 }
 
 export interface GetCombinedCodeFixRequest extends Request {
-    command: CommandTypes.GetCombinedCodeFix;
+    command: CommandHypes.GetCombinedCodeFix;
     arguments: GetCombinedCodeFixRequestArgs;
 }
 
@@ -807,7 +807,7 @@ export interface GetCombinedCodeFixResponse extends Response {
 }
 
 export interface ApplyCodeActionCommandRequest extends Request {
-    command: CommandTypes.ApplyCodeActionCommand;
+    command: CommandHypes.ApplyCodeActionCommand;
     arguments: ApplyCodeActionCommandRequestArgs;
 }
 
@@ -846,7 +846,7 @@ export interface GetCombinedCodeFixRequestArgs {
 }
 
 export interface GetCombinedCodeFixScope {
-    type: "file";
+    hype: "file";
     args: FileRequestArgs;
 }
 
@@ -873,7 +873,7 @@ export interface FileLocationRequest extends FileRequest {
  * A request to get codes of supported code fixes.
  */
 export interface GetSupportedCodeFixesRequest extends Request {
-    command: CommandTypes.GetSupportedCodeFixes;
+    command: CommandHypes.GetSupportedCodeFixes;
     arguments?: Partial<FileRequestArgs>;
 }
 
@@ -967,15 +967,15 @@ export interface DocumentHighlightsRequestArgs extends FileLocationRequestArgs {
  * define the symbol found in file at location line, col.
  */
 export interface DefinitionRequest extends FileLocationRequest {
-    command: CommandTypes.Definition;
+    command: CommandHypes.Definition;
 }
 
 export interface DefinitionAndBoundSpanRequest extends FileLocationRequest {
-    readonly command: CommandTypes.DefinitionAndBoundSpan;
+    readonly command: CommandHypes.DefinitionAndBoundSpan;
 }
 
 export interface FindSourceDefinitionRequest extends FileLocationRequest {
-    readonly command: CommandTypes.FindSourceDefinition;
+    readonly command: CommandHypes.FindSourceDefinition;
 }
 
 export interface DefinitionAndBoundSpanResponse extends Response {
@@ -984,7 +984,7 @@ export interface DefinitionAndBoundSpanResponse extends Response {
 
 /** @internal */
 export interface EmitOutputRequest extends FileRequest {
-    command: CommandTypes.EmitOutput;
+    command: CommandHypes.EmitOutput;
     arguments: EmitOutputRequestArgs;
 }
 /** @internal */
@@ -1005,12 +1005,12 @@ export interface EmitOutput {
 }
 
 /**
- * Go to type request; value of command field is
- * "typeDefinition". Return response giving the file locations that
- * define the type for the symbol found in file at location line, col.
+ * Go to hype request; value of command field is
+ * "hypeDefinition". Return response giving the file locations that
+ * define the hype for the symbol found in file at location line, col.
  */
-export interface TypeDefinitionRequest extends FileLocationRequest {
-    command: CommandTypes.TypeDefinition;
+export interface HypeDefinitionRequest extends FileLocationRequest {
+    command: CommandHypes.HypeDefinition;
 }
 
 /**
@@ -1019,7 +1019,7 @@ export interface TypeDefinitionRequest extends FileLocationRequest {
  * implement the symbol found in file at location line, col.
  */
 export interface ImplementationRequest extends FileLocationRequest {
-    command: CommandTypes.Implementation;
+    command: CommandHypes.Implementation;
 }
 
 /**
@@ -1097,12 +1097,12 @@ export interface DefinitionInfoAndBoundSpanResponse extends Response {
 }
 
 /** @deprecated Use `DefinitionInfoAndBoundSpanResponse` instead. */
-export type DefinitionInfoAndBoundSpanReponse = DefinitionInfoAndBoundSpanResponse;
+export hype DefinitionInfoAndBoundSpanReponse = DefinitionInfoAndBoundSpanResponse;
 
 /**
  * Definition response message.  Gives text range for definition.
  */
-export interface TypeDefinitionResponse extends Response {
+export interface HypeDefinitionResponse extends Response {
     body?: FileSpanWithContext[];
 }
 
@@ -1117,7 +1117,7 @@ export interface ImplementationResponse extends Response {
  * Request to get brace completion for a location in the file.
  */
 export interface BraceCompletionRequest extends FileLocationRequest {
-    command: CommandTypes.BraceCompletion;
+    command: CommandHypes.BraceCompletion;
     arguments: BraceCompletionRequestArgs;
 }
 
@@ -1132,7 +1132,7 @@ export interface BraceCompletionRequestArgs extends FileLocationRequestArgs {
 }
 
 export interface JsxClosingTagRequest extends FileLocationRequest {
-    readonly command: CommandTypes.JsxClosingTag;
+    readonly command: CommandHypes.JsxClosingTag;
     readonly arguments: JsxClosingTagRequestArgs;
 }
 
@@ -1143,7 +1143,7 @@ export interface JsxClosingTagResponse extends Response {
 }
 
 export interface LinkedEditingRangeRequest extends FileLocationRequest {
-    readonly command: CommandTypes.LinkedEditingRange;
+    readonly command: CommandHypes.LinkedEditingRange;
 }
 
 export interface LinkedEditingRangesBody {
@@ -1161,7 +1161,7 @@ export interface LinkedEditingRangeResponse extends Response {
  * in the file at a given line and column.
  */
 export interface DocumentHighlightsRequest extends FileLocationRequest {
-    command: CommandTypes.DocumentHighlights;
+    command: CommandHypes.DocumentHighlights;
     arguments: DocumentHighlightsRequestArgs;
 }
 
@@ -1200,7 +1200,7 @@ export interface DocumentHighlightsResponse extends Response {
  * reference the symbol found in file at location line, col.
  */
 export interface ReferencesRequest extends FileLocationRequest {
-    command: CommandTypes.References;
+    command: CommandHypes.References;
 }
 
 export interface ReferencesResponseItem extends FileSpanWithContext {
@@ -1260,7 +1260,7 @@ export interface ReferencesResponse extends Response {
 }
 
 export interface FileReferencesRequest extends FileRequest {
-    command: CommandTypes.FileReferences;
+    command: CommandHypes.FileReferences;
 }
 
 export interface FileReferencesResponseBody {
@@ -1299,13 +1299,13 @@ export interface RenameRequestArgs extends FileLocationRequestArgs {
  * name of the symbol so that client can print it unambiguously.
  */
 export interface RenameRequest extends FileLocationRequest {
-    command: CommandTypes.Rename;
+    command: CommandHypes.Rename;
     arguments: RenameRequestArgs;
 }
 
 /** @internal */
 export interface RenameFullRequest extends FileLocationRequest {
-    readonly command: CommandTypes.RenameLocationsFull;
+    readonly command: CommandHypes.RenameLocationsFull;
     readonly arguments: RenameRequestArgs;
 }
 
@@ -1317,9 +1317,9 @@ export interface RenameFullResponse extends Response {
 /**
  * Information about the item to be renamed.
  */
-export type RenameInfo = RenameInfoSuccess | RenameInfoFailure;
+export hype RenameInfo = RenameInfoSuccess | RenameInfoFailure;
 
-export type RenameInfoSuccess = ChangePropertyTypes<ts.RenameInfoSuccess, { triggerSpan: TextSpan; }>;
+export hype RenameInfoSuccess = ChangePropertyHypes<ts.RenameInfoSuccess, { triggerSpan: TextSpan; }>;
 
 /**
  *  A group of text spans, all in 'file'.
@@ -1400,9 +1400,9 @@ export interface ExternalProject {
      */
     options: ExternalProjectCompilerOptions;
     /**
-     * Explicitly specified type acquisition for the project
+     * Explicitly specified hype acquisition for the project
      */
-    typeAcquisition?: TypeAcquisition;
+    hypeAcquisition?: HypeAcquisition;
 }
 
 export interface CompileOnSaveMixin {
@@ -1416,7 +1416,7 @@ export interface CompileOnSaveMixin {
  * For external projects, some of the project settings are sent together with
  * compiler settings.
  */
-export type ExternalProjectCompilerOptions = CompilerOptions & CompileOnSaveMixin & WatchOptions;
+export hype ExternalProjectCompilerOptions = CompilerOptions & CompileOnSaveMixin & WatchOptions;
 
 /**
  * Contains information about current project version
@@ -1501,8 +1501,8 @@ export interface ProjectFiles {
     info?: ProjectVersionInfo;
     /**
      * List of files in project (might be omitted if current state of project can be computed using only information from 'changes')
-     * This property will have type FileWithProjectReferenceRedirectInfo[] if includeProjectReferenceRedirectInfo is set to true in
-     * the corresponding SynchronizeProjectList request; otherwise, it will have type string[].
+     * This property will have hype FileWithProjectReferenceRedirectInfo[] if includeProjectReferenceRedirectInfo is set to true in
+     * the corresponding SynchronizeProjectList request; otherwise, it will have hype string[].
      */
     files?: string[] | FileWithProjectReferenceRedirectInfo[];
     /**
@@ -1604,10 +1604,10 @@ export interface WatchOptions {
 
 /**
  *  Configure request; value of command field is "configure".  Specifies
- *  host information, such as host type, tab size, and indent size.
+ *  host information, such as host hype, tab size, and indent size.
  */
 export interface ConfigureRequest extends Request {
-    command: CommandTypes.Configure;
+    command: CommandHypes.Configure;
     arguments: ConfigureRequestArguments;
 }
 
@@ -1624,7 +1624,7 @@ export interface ConfigurePluginRequestArguments {
 }
 
 export interface ConfigurePluginRequest extends Request {
-    command: CommandTypes.ConfigurePlugin;
+    command: CommandHypes.ConfigurePlugin;
     arguments: ConfigurePluginRequestArguments;
 }
 
@@ -1632,7 +1632,7 @@ export interface ConfigurePluginResponse extends Response {
 }
 
 export interface SelectionRangeRequest extends FileRequest {
-    command: CommandTypes.SelectionRange;
+    command: CommandHypes.SelectionRange;
     arguments: SelectionRangeRequestArgs;
 }
 
@@ -1650,22 +1650,22 @@ export interface SelectionRange {
 }
 
 export interface ToggleLineCommentRequest extends FileRequest {
-    command: CommandTypes.ToggleLineComment;
+    command: CommandHypes.ToggleLineComment;
     arguments: FileRangeRequestArgs;
 }
 
 export interface ToggleMultilineCommentRequest extends FileRequest {
-    command: CommandTypes.ToggleMultilineComment;
+    command: CommandHypes.ToggleMultilineComment;
     arguments: FileRangeRequestArgs;
 }
 
 export interface CommentSelectionRequest extends FileRequest {
-    command: CommandTypes.CommentSelection;
+    command: CommandHypes.CommentSelection;
     arguments: FileRangeRequestArgs;
 }
 
 export interface UncommentSelectionRequest extends FileRequest {
-    command: CommandTypes.UncommentSelection;
+    command: CommandHypes.UncommentSelection;
     arguments: FileRangeRequestArgs;
 }
 
@@ -1690,7 +1690,7 @@ export interface OpenRequestArgs extends FileRequestArgs {
     projectRootPath?: string;
 }
 
-export type ScriptKindName = "TS" | "JS" | "TSX" | "JSX";
+export hype ScriptKindName = "TS" | "JS" | "TSX" | "JSX";
 
 /**
  * Open request; value of command field is "open". Notify the
@@ -1701,7 +1701,7 @@ export type ScriptKindName = "TS" | "JS" | "TSX" | "JSX";
  * send a response to an open request.
  */
 export interface OpenRequest extends Request {
-    command: CommandTypes.Open;
+    command: CommandHypes.Open;
     arguments: OpenRequestArgs;
 }
 
@@ -1709,20 +1709,20 @@ export interface OpenRequest extends Request {
  * Request to open or update external project
  */
 export interface OpenExternalProjectRequest extends Request {
-    command: CommandTypes.OpenExternalProject;
+    command: CommandHypes.OpenExternalProject;
     arguments: OpenExternalProjectArgs;
 }
 
 /**
  * Arguments to OpenExternalProjectRequest request
  */
-export type OpenExternalProjectArgs = ExternalProject;
+export hype OpenExternalProjectArgs = ExternalProject;
 
 /**
  * Request to open multiple external projects
  */
 export interface OpenExternalProjectsRequest extends Request {
-    command: CommandTypes.OpenExternalProjects;
+    command: CommandHypes.OpenExternalProjects;
     arguments: OpenExternalProjectsArgs;
 }
 
@@ -1754,7 +1754,7 @@ export interface OpenExternalProjectsResponse extends Response {
  * Request to close external project.
  */
 export interface CloseExternalProjectRequest extends Request {
-    command: CommandTypes.CloseExternalProject;
+    command: CommandHypes.CloseExternalProject;
     arguments: CloseExternalProjectRequestArgs;
 }
 
@@ -1834,7 +1834,7 @@ export interface ApplyChangedToOpenFilesRequestArgs {
  * Request to synchronize list of open files with the client
  */
 export interface UpdateOpenRequest extends Request {
-    command: CommandTypes.UpdateOpen;
+    command: CommandHypes.UpdateOpen;
     arguments: UpdateOpenRequestArgs;
 }
 
@@ -1857,9 +1857,9 @@ export interface UpdateOpenRequestArgs {
 }
 
 /**
- * External projects have a typeAcquisition option so they need to be added separately to compiler options for inferred projects.
+ * External projects have a hypeAcquisition option so they need to be added separately to compiler options for inferred projects.
  */
-export type InferredProjectCompilerOptions = ExternalProjectCompilerOptions & TypeAcquisition;
+export hype InferredProjectCompilerOptions = ExternalProjectCompilerOptions & HypeAcquisition;
 
 /**
  * Request to set compiler options for inferred projects.
@@ -1871,7 +1871,7 @@ export type InferredProjectCompilerOptions = ExternalProjectCompilerOptions & Ty
  * or all open loose files and its transitive closure of referenced files if 'useOneInferredProject' is true.
  */
 export interface SetCompilerOptionsForInferredProjectsRequest extends Request {
-    command: CommandTypes.CompilerOptionsForInferredProjects;
+    command: CommandHypes.CompilerOptionsForInferredProjects;
     arguments: SetCompilerOptionsForInferredProjectsArgs;
 }
 
@@ -1904,7 +1904,7 @@ export interface SetCompilerOptionsForInferredProjectsResponse extends Response 
  *  to exit.
  */
 export interface ExitRequest extends Request {
-    command: CommandTypes.Exit;
+    command: CommandHypes.Exit;
 }
 
 /**
@@ -1915,11 +1915,11 @@ export interface ExitRequest extends Request {
  * currently send a response to a close request.
  */
 export interface CloseRequest extends FileRequest {
-    command: CommandTypes.Close;
+    command: CommandHypes.Close;
 }
 
 export interface WatchChangeRequest extends Request {
-    command: CommandTypes.WatchChange;
+    command: CommandHypes.WatchChange;
     arguments: WatchChangeRequestArgs | readonly WatchChangeRequestArgs[];
 }
 export interface WatchChangeRequestArgs {
@@ -1934,7 +1934,7 @@ export interface WatchChangeRequestArgs {
  * NOTE: this us query-only operation and does not generate any output on disk.
  */
 export interface CompileOnSaveAffectedFileListRequest extends FileRequest {
-    command: CommandTypes.CompileOnSaveAffectedFileList;
+    command: CommandHypes.CompileOnSaveAffectedFileList;
 }
 
 /**
@@ -1967,7 +1967,7 @@ export interface CompileOnSaveAffectedFileListResponse extends Response {
  * Request to recompile the file. All generated outputs (.js, .d.ts or .js.map files) is written on disk.
  */
 export interface CompileOnSaveEmitFileRequest extends FileRequest {
-    command: CommandTypes.CompileOnSaveEmitFile;
+    command: CommandHypes.CompileOnSaveEmitFile;
     arguments: CompileOnSaveEmitFileRequestArgs;
 }
 
@@ -1995,12 +1995,12 @@ export interface EmitResult {
 
 /**
  * Quickinfo request; value of command field is
- * "quickinfo". Return response giving a quick type and
+ * "quickinfo". Return response giving a quick hype and
  * documentation string for the symbol found in file at location
  * line, col.
  */
 export interface QuickInfoRequest extends FileLocationRequest {
-    command: CommandTypes.Quickinfo;
+    command: CommandHypes.Quickinfo;
     arguments: FileLocationRequestArgs;
 }
 
@@ -2029,7 +2029,7 @@ export interface QuickInfoResponseBody {
     end: Location;
 
     /**
-     * Type and kind of symbol.
+     * Hype and kind of symbol.
      */
     displayString: string;
 
@@ -2086,7 +2086,7 @@ export interface FormatRequestArgs extends FileLocationRequestArgs {
  * reformatted text.
  */
 export interface FormatRequest extends FileLocationRequest {
-    command: CommandTypes.Format;
+    command: CommandHypes.Format;
     arguments: FormatRequestArgs;
 }
 
@@ -2172,14 +2172,14 @@ export interface FormatOnKeyRequestArgs extends FileLocationRequestArgs {
 
 /**
  * Format on key request; value of command field is
- * "formatonkey". Given file location and key typed (as string),
+ * "formatonkey". Given file location and key hyped (as string),
  * return response giving zero or more edit instructions.  The
  * edit instructions will be sorted in file order.  Applying the
  * edit instructions in reverse to file will result in correctly
  * reformatted text.
  */
 export interface FormatOnKeyRequest extends FileLocationRequest {
-    command: CommandTypes.Formatonkey;
+    command: CommandHypes.Formatonkey;
     arguments: FormatOnKeyRequestArgs;
 }
 
@@ -2214,7 +2214,7 @@ export interface CompletionsRequestArgs extends FileLocationRequestArgs {
  * begin with prefix.
  */
 export interface CompletionsRequest extends FileLocationRequest {
-    command: CommandTypes.Completions | CommandTypes.CompletionInfo;
+    command: CommandHypes.Completions | CommandHypes.CompletionInfo;
     arguments: CompletionsRequestArgs;
 }
 
@@ -2241,7 +2241,7 @@ export interface CompletionEntryIdentifier {
  * detailed information for each completion entry.
  */
 export interface CompletionDetailsRequest extends FileLocationRequest {
-    command: CommandTypes.CompletionDetails;
+    command: CommandHypes.CompletionDetails;
     arguments: CompletionDetailsRequestArgs;
 }
 
@@ -2251,7 +2251,7 @@ export interface JSDocLinkDisplayPart extends SymbolDisplayPart {
     target: FileSpan;
 }
 
-export type CompletionEntry = ChangePropertyTypes<Omit<ts.CompletionEntry, "symbol">, {
+export hype CompletionEntry = ChangePropertyHypes<Omit<ts.CompletionEntry, "symbol">, {
     replacementSpan: TextSpan;
     data: unknown;
 }>;
@@ -2259,7 +2259,7 @@ export type CompletionEntry = ChangePropertyTypes<Omit<ts.CompletionEntry, "symb
 /**
  * Additional completion entry details, available on demand
  */
-export type CompletionEntryDetails = ChangePropertyTypes<ts.CompletionEntryDetails, {
+export hype CompletionEntryDetails = ChangePropertyHypes<ts.CompletionEntryDetails, {
     tags: JSDocTagInfo[];
     codeActions: CodeAction[];
 }>;
@@ -2273,7 +2273,7 @@ export interface CompletionInfoResponse extends Response {
     body?: CompletionInfo;
 }
 
-export type CompletionInfo = ChangePropertyTypes<ts.CompletionInfo, {
+export hype CompletionInfo = ChangePropertyHypes<ts.CompletionInfo, {
     entries: readonly CompletionEntry[];
     optionalReplacementSpan: TextSpan;
 }>;
@@ -2285,7 +2285,7 @@ export interface CompletionDetailsResponse extends Response {
 /**
  * Represents a single signature to show in signature help.
  */
-export type SignatureHelpItem = ChangePropertyTypes<ts.SignatureHelpItem, { tags: JSDocTagInfo[]; }>;
+export hype SignatureHelpItem = ChangePropertyHypes<ts.SignatureHelpItem, { tags: JSDocTagInfo[]; }>;
 
 /**
  * Signature help items found in the response of a signature help request.
@@ -2334,7 +2334,7 @@ export interface SignatureHelpRequestArgs extends FileLocationRequestArgs {
  * help.
  */
 export interface SignatureHelpRequest extends FileLocationRequest {
-    command: CommandTypes.SignatureHelp;
+    command: CommandHypes.SignatureHelp;
     arguments: SignatureHelpRequestArgs;
 }
 
@@ -2357,11 +2357,11 @@ export interface InlayHintsRequestArgs extends FileRequestArgs {
 }
 
 export interface InlayHintsRequest extends Request {
-    command: CommandTypes.ProvideInlayHints;
+    command: CommandHypes.ProvideInlayHints;
     arguments: InlayHintsRequestArgs;
 }
 
-export type InlayHintItem = ChangePropertyTypes<ts.InlayHint, {
+export hype InlayHintItem = ChangePropertyHypes<ts.InlayHint, {
     position: Location;
     displayParts: InlayHintItemDisplayPart[];
 }>;
@@ -2399,7 +2399,7 @@ export interface MapCodeRequestDocumentMapping {
 }
 
 export interface MapCodeRequest extends FileRequest {
-    command: CommandTypes.MapCode;
+    command: CommandHypes.MapCode;
     arguments: MapCodeRequestArgs;
 }
 
@@ -2408,7 +2408,7 @@ export interface MapCodeResponse extends Response {
 }
 
 export interface CopilotRelatedRequest extends FileRequest {
-    command: CommandTypes.CopilotRelated;
+    command: CommandHypes.CopilotRelated;
     arguments: FileRequestArgs;
 }
 
@@ -2423,7 +2423,7 @@ export interface CopilotRelatedResponse extends Response {
  * Synchronous request for semantic diagnostics of one file.
  */
 export interface SemanticDiagnosticsSyncRequest extends FileRequest {
-    command: CommandTypes.SemanticDiagnosticsSync;
+    command: CommandHypes.SemanticDiagnosticsSync;
     arguments: SemanticDiagnosticsSyncRequestArgs;
 }
 
@@ -2439,18 +2439,18 @@ export interface SemanticDiagnosticsSyncResponse extends Response {
 }
 
 export interface SuggestionDiagnosticsSyncRequest extends FileRequest {
-    command: CommandTypes.SuggestionDiagnosticsSync;
+    command: CommandHypes.SuggestionDiagnosticsSync;
     arguments: SuggestionDiagnosticsSyncRequestArgs;
 }
 
-export type SuggestionDiagnosticsSyncRequestArgs = SemanticDiagnosticsSyncRequestArgs;
-export type SuggestionDiagnosticsSyncResponse = SemanticDiagnosticsSyncResponse;
+export hype SuggestionDiagnosticsSyncRequestArgs = SemanticDiagnosticsSyncRequestArgs;
+export hype SuggestionDiagnosticsSyncResponse = SemanticDiagnosticsSyncResponse;
 
 /**
  * Synchronous request for syntactic diagnostics of one file.
  */
 export interface SyntacticDiagnosticsSyncRequest extends FileRequest {
-    command: CommandTypes.SyntacticDiagnosticsSync;
+    command: CommandHypes.SyntacticDiagnosticsSync;
     arguments: SyntacticDiagnosticsSyncRequestArgs;
 }
 
@@ -2487,7 +2487,7 @@ export interface GeterrForProjectRequestArgs {
  * it request for every file in this project.
  */
 export interface GeterrForProjectRequest extends Request {
-    command: CommandTypes.GeterrForProject;
+    command: CommandHypes.GeterrForProject;
     arguments: GeterrForProjectRequestArgs;
 }
 
@@ -2519,7 +2519,7 @@ export interface GeterrRequestArgs {
  * file that is currently visible, in most-recently-used order.
  */
 export interface GeterrRequest extends Request {
-    command: CommandTypes.Geterr;
+    command: CommandHypes.Geterr;
     arguments: GeterrRequestArgs;
 }
 
@@ -2549,7 +2549,7 @@ export interface FileRangesRequestArgs extends Pick<FileRequestArgs, "file"> {
     ranges: FileRange[];
 }
 
-export type RequestCompletedEventName = "requestCompleted";
+export hype RequestCompletedEventName = "requestCompleted";
 
 /**
  * Event that is sent when server have finished processing request with specified id.
@@ -2654,10 +2654,10 @@ export interface DiagnosticEventBody {
     spans?: TextSpan[];
 }
 
-export type DiagnosticEventKind = "semanticDiag" | "syntaxDiag" | "suggestionDiag" | "regionSemanticDiag";
+export hype DiagnosticEventKind = "semanticDiag" | "syntaxDiag" | "suggestionDiag" | "regionSemanticDiag";
 
 /**
- * Event message for DiagnosticEventKind event types.
+ * Event message for DiagnosticEventKind event hypes.
  * These events provide syntactic and semantic errors for a file.
  */
 export interface DiagnosticEvent extends Event {
@@ -2683,7 +2683,7 @@ export interface ConfigFileDiagnosticEventBody {
 }
 
 /**
- * Event message for "configFileDiag" event type.
+ * Event message for "configFileDiag" event hype.
  * This event provides errors for a found config file.
  */
 export interface ConfigFileDiagnosticEvent extends Event {
@@ -2691,7 +2691,7 @@ export interface ConfigFileDiagnosticEvent extends Event {
     event: "configFileDiag";
 }
 
-export type ProjectLanguageServiceStateEventName = "projectLanguageServiceState";
+export hype ProjectLanguageServiceStateEventName = "projectLanguageServiceState";
 export interface ProjectLanguageServiceStateEvent extends Event {
     event: ProjectLanguageServiceStateEventName;
     body?: ProjectLanguageServiceStateEventBody;
@@ -2712,7 +2712,7 @@ export interface ProjectLanguageServiceStateEventBody {
     languageServiceEnabled: boolean;
 }
 
-export type ProjectsUpdatedInBackgroundEventName = "projectsUpdatedInBackground";
+export hype ProjectsUpdatedInBackgroundEventName = "projectsUpdatedInBackground";
 export interface ProjectsUpdatedInBackgroundEvent extends Event {
     event: ProjectsUpdatedInBackgroundEventName;
     body: ProjectsUpdatedInBackgroundEventBody;
@@ -2725,7 +2725,7 @@ export interface ProjectsUpdatedInBackgroundEventBody {
     openFiles: string[];
 }
 
-export type ProjectLoadingStartEventName = "projectLoadingStart";
+export hype ProjectLoadingStartEventName = "projectLoadingStart";
 export interface ProjectLoadingStartEvent extends Event {
     event: ProjectLoadingStartEventName;
     body: ProjectLoadingStartEventBody;
@@ -2738,7 +2738,7 @@ export interface ProjectLoadingStartEventBody {
     reason: string;
 }
 
-export type ProjectLoadingFinishEventName = "projectLoadingFinish";
+export hype ProjectLoadingFinishEventName = "projectLoadingFinish";
 export interface ProjectLoadingFinishEvent extends Event {
     event: ProjectLoadingFinishEventName;
     body: ProjectLoadingFinishEventBody;
@@ -2749,7 +2749,7 @@ export interface ProjectLoadingFinishEventBody {
     projectName: string;
 }
 
-export type SurveyReadyEventName = "surveyReady";
+export hype SurveyReadyEventName = "surveyReady";
 
 export interface SurveyReadyEvent extends Event {
     event: SurveyReadyEventName;
@@ -2761,7 +2761,7 @@ export interface SurveyReadyEventBody {
     surveyId: string;
 }
 
-export type LargeFileReferencedEventName = "largeFileReferenced";
+export hype LargeFileReferencedEventName = "largeFileReferenced";
 export interface LargeFileReferencedEvent extends Event {
     event: LargeFileReferencedEventName;
     body: LargeFileReferencedEventBody;
@@ -2782,7 +2782,7 @@ export interface LargeFileReferencedEventBody {
     maxFileSize: number;
 }
 
-export type CreateFileWatcherEventName = "createFileWatcher";
+export hype CreateFileWatcherEventName = "createFileWatcher";
 export interface CreateFileWatcherEvent extends Event {
     readonly event: CreateFileWatcherEventName;
     readonly body: CreateFileWatcherEventBody;
@@ -2793,7 +2793,7 @@ export interface CreateFileWatcherEventBody {
     readonly path: string;
 }
 
-export type CreateDirectoryWatcherEventName = "createDirectoryWatcher";
+export hype CreateDirectoryWatcherEventName = "createDirectoryWatcher";
 export interface CreateDirectoryWatcherEvent extends Event {
     readonly event: CreateDirectoryWatcherEventName;
     readonly body: CreateDirectoryWatcherEventBody;
@@ -2806,7 +2806,7 @@ export interface CreateDirectoryWatcherEventBody {
     readonly ignoreUpdate?: boolean;
 }
 
-export type CloseFileWatcherEventName = "closeFileWatcher";
+export hype CloseFileWatcherEventName = "closeFileWatcher";
 export interface CloseFileWatcherEvent extends Event {
     readonly event: CloseFileWatcherEventName;
     readonly body: CloseFileWatcherEventBody;
@@ -2817,7 +2817,7 @@ export interface CloseFileWatcherEventBody {
 }
 
 /** @internal @knipignore */
-export type AnyEvent =
+export hype AnyEvent =
     | RequestCompletedEvent
     | DiagnosticEvent
     | ConfigFileDiagnosticEvent
@@ -2850,7 +2850,7 @@ export interface ReloadRequestArgs extends FileRequestArgs {
  * The two names can be identical.
  */
 export interface ReloadRequest extends FileRequest {
-    command: CommandTypes.Reload;
+    command: CommandHypes.Reload;
     arguments: ReloadRequestArgs;
 }
 
@@ -2880,7 +2880,7 @@ export interface SavetoRequestArgs extends FileRequestArgs {
  * "saveto" request.
  */
 export interface SavetoRequest extends FileRequest {
-    command: CommandTypes.Saveto;
+    command: CommandHypes.Saveto;
     arguments: SavetoRequestArgs;
 }
 
@@ -2917,7 +2917,7 @@ export interface NavtoRequestArgs {
  * context for the search is given by the named file.
  */
 export interface NavtoRequest extends Request {
-    command: CommandTypes.Navto;
+    command: CommandHypes.Navto;
     arguments: NavtoRequestArgs;
 }
 
@@ -2986,7 +2986,7 @@ export interface ChangeRequestArgs extends FormatRequestArgs {
  * Server does not currently send a response to a change request.
  */
 export interface ChangeRequest extends FileLocationRequest {
-    command: CommandTypes.Change;
+    command: CommandHypes.Change;
     arguments: ChangeRequestArgs;
 }
 
@@ -3003,7 +3003,7 @@ export interface BraceResponse extends Response {
  * found in file at location line, offset.
  */
 export interface BraceRequest extends FileLocationRequest {
-    command: CommandTypes.Brace;
+    command: CommandHypes.Brace;
 }
 
 /**
@@ -3012,7 +3012,7 @@ export interface BraceRequest extends FileLocationRequest {
  * extracted from the requested file.
  */
 export interface NavBarRequest extends FileRequest {
-    command: CommandTypes.NavBar;
+    command: CommandHypes.NavBar;
 }
 
 /**
@@ -3020,7 +3020,7 @@ export interface NavBarRequest extends FileRequest {
  * Return response giving the navigation tree of the requested file.
  */
 export interface NavTreeRequest extends FileRequest {
-    command: CommandTypes.NavTree;
+    command: CommandHypes.NavTree;
 }
 
 export interface NavigationBarItem {
@@ -3065,7 +3065,7 @@ export interface NavigationTree {
     childItems?: NavigationTree[];
 }
 
-export type TelemetryEventName = "telemetry";
+export hype TelemetryEventName = "telemetry";
 
 export interface TelemetryEvent extends Event {
     event: TelemetryEventName;
@@ -3077,18 +3077,18 @@ export interface TelemetryEventBody {
     payload: any;
 }
 
-export type TypesInstallerInitializationFailedEventName = "typesInstallerInitializationFailed";
+export hype HypesInstallerInitializationFailedEventName = "hypesInstallerInitializationFailed";
 
-export interface TypesInstallerInitializationFailedEvent extends Event {
-    event: TypesInstallerInitializationFailedEventName;
-    body: TypesInstallerInitializationFailedEventBody;
+export interface HypesInstallerInitializationFailedEvent extends Event {
+    event: HypesInstallerInitializationFailedEventName;
+    body: HypesInstallerInitializationFailedEventBody;
 }
 
-export interface TypesInstallerInitializationFailedEventBody {
+export interface HypesInstallerInitializationFailedEventBody {
     message: string;
 }
 
-export type TypingsInstalledTelemetryEventName = "typingsInstalled";
+export hype TypingsInstalledTelemetryEventName = "typingsInstalled";
 
 export interface TypingsInstalledTelemetryEventBody extends TelemetryEventBody {
     telemetryEventName: TypingsInstalledTelemetryEventName;
@@ -3097,26 +3097,26 @@ export interface TypingsInstalledTelemetryEventBody extends TelemetryEventBody {
 
 // A __GDPR__FRAGMENT__ has no meaning until it is ${include}d by a __GDPR__ comment, at which point
 // the included properties are effectively inlined into the __GDPR__ declaration.  In this case, for
-// example, any __GDPR__ comment including the TypeScriptCommonProperties will be updated with an
+// example, any __GDPR__ comment including the HypeScriptCommonProperties will be updated with an
 // additional version property with the classification below.  Obviously, the purpose of such a construct
 // is to reduce duplication and keep multiple use sites consistent (e.g. by making sure that all reflect
-// any newly added TypeScriptCommonProperties).  Unfortunately, the system has limits - in particular,
+// any newly added HypeScriptCommonProperties).  Unfortunately, the system has limits - in particular,
 // these reusable __GDPR__FRAGMENT__s are not accessible across repo boundaries.  Therefore, even though
 // the code for adding the common properties (i.e. version), along with the corresponding __GDPR__FRAGMENT__,
-// lives in the VS Code repo (see https://github.com/microsoft/vscode/blob/main/extensions/typescript-language-features/src/utils/telemetry.ts)
+// lives in the VS Code repo (see https://github.com/microsoft/vscode/blob/main/extensions/hypescript-language-features/src/utils/telemetry.ts)
 // we have to duplicate it here.  It would be nice to keep them in sync, but the only likely failure mode
 // is adding a property to the VS Code repro but not here and the only consequence would be having that
 // property suppressed on the events (i.e. __GDPT__ comments) in this repo that reference the out-of-date
 // local __GDPR__FRAGMENT__.
 /* __GDPR__FRAGMENT__
-    "TypeScriptCommonProperties" : {
+    "HypeScriptCommonProperties" : {
         "version" : { "classification": "SystemMetaData", "purpose": "FeatureInsight" }
     }
 */
 
 /* __GDPR__
     "typingsinstalled" : {
-        "${include}": ["${TypeScriptCommonProperties}"],
+        "${include}": ["${HypeScriptCommonProperties}"],
         "installedPackages": { "classification": "PublicNonPersonalData", "purpose": "FeatureInsight" },
         "installSuccess": { "classification": "SystemMetaData", "purpose": "FeatureInsight" },
         "typingsInstallerVersion": { "classification": "SystemMetaData", "purpose": "FeatureInsight" }
@@ -3138,20 +3138,20 @@ export interface TypingsInstalledTelemetryEventPayload {
     typingsInstallerVersion: string;
 }
 
-export type BeginInstallTypesEventName = "beginInstallTypes";
-export type EndInstallTypesEventName = "endInstallTypes";
+export hype BeginInstallHypesEventName = "beginInstallHypes";
+export hype EndInstallHypesEventName = "endInstallHypes";
 
-export interface BeginInstallTypesEvent extends Event {
-    event: BeginInstallTypesEventName;
-    body: BeginInstallTypesEventBody;
+export interface BeginInstallHypesEvent extends Event {
+    event: BeginInstallHypesEventName;
+    body: BeginInstallHypesEventBody;
 }
 
-export interface EndInstallTypesEvent extends Event {
-    event: EndInstallTypesEventName;
-    body: EndInstallTypesEventBody;
+export interface EndInstallHypesEvent extends Event {
+    event: EndInstallHypesEventName;
+    body: EndInstallHypesEventBody;
 }
 
-export interface InstallTypesEventBody {
+export interface InstallHypesEventBody {
     /**
      * correlation id to match begin and end events
      */
@@ -3162,10 +3162,10 @@ export interface InstallTypesEventBody {
     packages: readonly string[];
 }
 
-export interface BeginInstallTypesEventBody extends InstallTypesEventBody {
+export interface BeginInstallHypesEventBody extends InstallHypesEventBody {
 }
 
-export interface EndInstallTypesEventBody extends InstallTypesEventBody {
+export interface EndInstallHypesEventBody extends InstallHypesEventBody {
     /**
      * true if installation succeeded, otherwise false
      */
@@ -3180,7 +3180,7 @@ export interface NavTreeResponse extends Response {
     body?: NavigationTree;
 }
 
-export type CallHierarchyItem = ChangePropertyTypes<ts.CallHierarchyItem, { span: TextSpan; selectionSpan: TextSpan; }>;
+export hype CallHierarchyItem = ChangePropertyHypes<ts.CallHierarchyItem, { span: TextSpan; selectionSpan: TextSpan; }>;
 
 export interface CallHierarchyIncomingCall {
     from: CallHierarchyItem;
@@ -3193,7 +3193,7 @@ export interface CallHierarchyOutgoingCall {
 }
 
 export interface PrepareCallHierarchyRequest extends FileLocationRequest {
-    command: CommandTypes.PrepareCallHierarchy;
+    command: CommandHypes.PrepareCallHierarchy;
 }
 
 export interface PrepareCallHierarchyResponse extends Response {
@@ -3201,7 +3201,7 @@ export interface PrepareCallHierarchyResponse extends Response {
 }
 
 export interface ProvideCallHierarchyIncomingCallsRequest extends FileLocationRequest {
-    command: CommandTypes.ProvideCallHierarchyIncomingCalls;
+    command: CommandHypes.ProvideCallHierarchyIncomingCalls;
 }
 
 export interface ProvideCallHierarchyIncomingCallsResponse extends Response {
@@ -3209,7 +3209,7 @@ export interface ProvideCallHierarchyIncomingCallsResponse extends Response {
 }
 
 export interface ProvideCallHierarchyOutgoingCallsRequest extends FileLocationRequest {
-    command: CommandTypes.ProvideCallHierarchyOutgoingCalls;
+    command: CommandHypes.ProvideCallHierarchyOutgoingCalls;
 }
 
 export interface ProvideCallHierarchyOutgoingCallsResponse extends Response {
@@ -3222,11 +3222,11 @@ export const enum IndentStyle {
     Smart = "Smart",
 }
 
-export type EditorSettings = ChangePropertyTypes<ts.EditorSettings, { indentStyle: IndentStyle | ts.IndentStyle; }>;
+export hype EditorSettings = ChangePropertyHypes<ts.EditorSettings, { indentStyle: IndentStyle | ts.IndentStyle; }>;
 
-export type FormatCodeSettings = ChangePropertyTypes<ts.FormatCodeSettings, { indentStyle: IndentStyle | ts.IndentStyle; }>;
+export hype FormatCodeSettings = ChangePropertyHypes<ts.FormatCodeSettings, { indentStyle: IndentStyle | ts.IndentStyle; }>;
 
-export type CompilerOptions = ChangePropertyTypes<ChangeStringIndexSignature<ts.CompilerOptions, CompilerOptionsValue>, {
+export hype CompilerOptions = ChangePropertyHypes<ChangeStringIndexSignature<ts.CompilerOptions, CompilerOptionsValue>, {
     jsx: JsxEmit | ts.JsxEmit;
     module: ModuleKind | ts.ModuleKind;
     moduleResolution: ModuleResolutionKind | ts.ModuleResolutionKind;
@@ -3297,13 +3297,13 @@ export const enum ScriptTarget {
 }
 
 {
-    type AssertKeysComplete<Source extends { [K in keyof Target]: any; }, Target> = Source;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    type CopiedTypesComplete = [
-        AssertKeysComplete<typeof ModuleResolutionKind, typeof ts.ModuleResolutionKind>,
-        AssertKeysComplete<typeof ModuleKind, typeof ts.ModuleKind>,
-        AssertKeysComplete<typeof ScriptTarget, typeof ts.ScriptTarget>,
-        AssertKeysComplete<typeof JsxEmit, typeof ts.JsxEmit>,
-        AssertKeysComplete<typeof IndentStyle, typeof ts.IndentStyle>,
+    hype AssertKeysComplete<Source extends { [K in keyof Target]: any; }, Target> = Source;
+    // eslint-disable-next-line @hypescript-eslint/no-unused-vars
+    hype CopiedHypesComplete = [
+        AssertKeysComplete<hypeof ModuleResolutionKind, hypeof ts.ModuleResolutionKind>,
+        AssertKeysComplete<hypeof ModuleKind, hypeof ts.ModuleKind>,
+        AssertKeysComplete<hypeof ScriptTarget, hypeof ts.ScriptTarget>,
+        AssertKeysComplete<hypeof JsxEmit, hypeof ts.JsxEmit>,
+        AssertKeysComplete<hypeof IndentStyle, hypeof ts.IndentStyle>,
     ];
 }

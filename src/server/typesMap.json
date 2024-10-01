@@ -1,23 +1,23 @@
 {
-    "typesMap": {
+    "hypesMap": {
         "jquery": {
             "match": "jquery(-(\\.?\\d+)+)?(\\.intellisense)?(\\.min)?\\.js$",
-            "types": ["jquery"]
+            "hypes": ["jquery"]
         },
         "WinJS": {
             "match": "^(.*\\/winjs-[.\\d]+)\\/js\\/base\\.js$",
             "exclude": [["^", 1, "/.*"]],
-            "types": ["winjs"]
+            "hypes": ["winjs"]
         },
         "Kendo": {
             "match": "^(.*\\/kendo(-ui)?)\\/kendo\\.all(\\.min)?\\.js$",
             "exclude": [["^", 1, "/.*"]],
-            "types": ["kendo-ui"]
+            "hypes": ["kendo-ui"]
         },
         "Office Nuget": {
             "match": "^(.*\\/office\\/1)\\/excel-\\d+\\.debug\\.js$",
             "exclude": [["^", 1, "/.*"]],
-            "types": ["office"]
+            "hypes": ["office"]
         },
         "References": {
             "match": "^(.*\\/_references\\.js)$",
@@ -25,12 +25,12 @@
         },
         "Datatables.net": {
             "match": "^.*\\/(jquery\\.)?dataTables(\\.all)?(\\.min)?\\.js$",
-            "types": ["datatables.net"]
+            "hypes": ["datatables.net"]
         },
         "Ace": {
             "match": "^(.*)\\/ace.js",
             "exclude": [["^", 1, "/.*"]],
-            "types": ["ace"]
+            "hypes": ["ace"]
         }
     },
     "simpleMap": {
@@ -460,8 +460,8 @@
         "TweenMax": "gsap",
         "twig": "twig",
         "twix": "twix",
-        "typeahead.bundle": "typeahead",
-        "typescript": "typescript",
+        "hypeahead.bundle": "hypeahead",
+        "hypescript": "hypescript",
         "ui": "winjs",
         "ui-bootstrap-tpls": "angular-ui-bootstrap",
         "ui-grid": "ui-grid",

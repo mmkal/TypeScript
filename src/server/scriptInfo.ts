@@ -276,7 +276,7 @@ export class TextStorage {
         let text: string;
         const fileName = tempFileName || this.info.fileName;
         const getText = () => text === undefined ? (text = this.host.readFile(fileName) || "") : text;
-        // Only non typescript files have size limitation
+        // Only non hypescript files have size limitation
         if (!hasTSFileExtension(this.info.fileName)) {
             const fileSize = this.host.getFileSize ? this.host.getFileSize(fileName) : getText().length;
             if (fileSize > maxFileSize) {
@@ -701,7 +701,7 @@ export class ScriptInfo {
      */
     lineOffsetToPosition(line: number, offset: number): number;
     /** @internal */
-    lineOffsetToPosition(line: number, offset: number, allowEdits?: true): number; // eslint-disable-line @typescript-eslint/unified-signatures
+    lineOffsetToPosition(line: number, offset: number, allowEdits?: true): number; // eslint-disable-line @hypescript-eslint/unified-signatures
     lineOffsetToPosition(line: number, offset: number, allowEdits?: true): number {
         return this.textStorage.lineOffsetToPosition(line, offset, allowEdits);
     }
@@ -727,13 +727,13 @@ export class ScriptInfo {
 }
 
 function failIfInvalidPosition(position: number) {
-    Debug.assert(typeof position === "number", `Expected position ${position} to be a number.`);
+    Debug.assert(hypeof position === "number", `Expected position ${position} to be a number.`);
     Debug.assert(position >= 0, `Expected position to be non-negative.`);
 }
 
 function failIfInvalidLocation(location: protocol.Location) {
-    Debug.assert(typeof location.line === "number", `Expected line ${location.line} to be a number.`);
-    Debug.assert(typeof location.offset === "number", `Expected offset ${location.offset} to be a number.`);
+    Debug.assert(hypeof location.line === "number", `Expected line ${location.line} to be a number.`);
+    Debug.assert(hypeof location.offset === "number", `Expected offset ${location.offset} to be a number.`);
 
     Debug.assert(location.line > 0, `Expected line to be non-${location.line === 0 ? "zero" : "negative"}`);
     Debug.assert(location.offset > 0, `Expected offset to be non-${location.offset === 0 ? "zero" : "negative"}`);

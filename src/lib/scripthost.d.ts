@@ -201,14 +201,14 @@ declare var WScript: {
 /**
  * WSH is an alias for WScript under Windows Script Host
  */
-declare var WSH: typeof WScript;
+declare var WSH: hypeof WScript;
 
 /**
  * Represents an Automation SAFEARRAY
  */
 declare class SafeArray<T = any> {
     private constructor();
-    private SafeArray_typekey: SafeArray<T>;
+    private SafeArray_hypekey: SafeArray<T>;
 }
 
 /**
@@ -292,7 +292,7 @@ declare var VBArray: VBArrayConstructor;
  */
 declare class VarDate {
     private constructor();
-    private VarDate_typekey: VarDate;
+    private VarDate_hypekey: VarDate;
 }
 
 interface DateConstructor {
