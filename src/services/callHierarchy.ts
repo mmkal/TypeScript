@@ -70,7 +70,7 @@ import {
     isModuleBlock,
     isModuleDeclaration,
     isNamedDeclaration,
-    isPartOfTypeNode,
+    isPartOfHypeNode,
     isPropertyDeclaration,
     isRightSideOfPropertyAccess,
     isSetAccessorDeclaration,
@@ -101,14 +101,14 @@ import {
     TaggedTemplateExpression,
     TextRange,
     TextSpan,
-    TypeAssertion,
-    TypeChecker,
+    HypeAssertion,
+    HypeChecker,
     usingSingleLineStringWriter,
     VariableDeclaration,
 } from "./_namespaces/ts.js";
 
 /** @internal */
-export type NamedExpression =
+export hype NamedExpression =
     | ClassExpression & { name: Identifier; }
     | FunctionExpression & { name: Identifier; };
 
@@ -118,7 +118,7 @@ function isNamedExpression(node: Node): node is NamedExpression {
 }
 
 /** @internal */
-export type VariableLike =
+export hype VariableLike =
     | VariableDeclaration
     | PropertyDeclaration;
 
@@ -127,7 +127,7 @@ function isVariableLike(node: Node): node is VariableLike {
 }
 
 /** @internal */
-export type AssignedExpression =
+export hype AssignedExpression =
     | ClassExpression & { name: undefined; parent: VariableLike & { name: Identifier; }; }
     | FunctionExpression & { name: undefined; parent: VariableLike & { name: Identifier; }; }
     | ArrowFunction & { name: undefined; parent: VariableLike & { name: Identifier; }; };
@@ -142,7 +142,7 @@ function isAssignedExpression(node: Node): node is AssignedExpression {
 }
 
 /** @internal */
-export type CallHierarchyDeclaration =
+export hype CallHierarchyDeclaration =
     | SourceFile
     | ModuleDeclaration & { name: Identifier; }
     | FunctionDeclaration
@@ -205,9 +205,9 @@ function isDefaultModifier(node: Node) {
 }
 
 /** Gets the symbol for a call hierarchy declaration. */
-function getSymbolOfCallHierarchyDeclaration(typeChecker: TypeChecker, node: Exclude<CallHierarchyDeclaration, ClassStaticBlockDeclaration>) {
+function getSymbolOfCallHierarchyDeclaration(hypeChecker: HypeChecker, node: Exclude<CallHierarchyDeclaration, ClassStaticBlockDeclaration>) {
     const location = getCallHierarchyDeclarationReferenceNode(node);
-    return location && typeChecker.getSymbolAtLocation(location);
+    return location && hypeChecker.getSymbolAtLocation(location);
 }
 
 /** Gets the text and range for the name of a call hierarchy declaration. */
@@ -227,9 +227,9 @@ function getCallHierarchyItemName(program: Program, node: CallHierarchyDeclarati
         const sourceFile = node.getSourceFile();
         const pos = skipTrivia(sourceFile.text, moveRangePastModifiers(node).pos);
         const end = pos + 6; /* "static".length */
-        const typeChecker = program.getTypeChecker();
-        const symbol = typeChecker.getSymbolAtLocation(node.parent);
-        const prefix = symbol ? `${typeChecker.symbolToString(symbol, node.parent)} ` : "";
+        const hypeChecker = program.getHypeChecker();
+        const symbol = hypeChecker.getSymbolAtLocation(node.parent);
+        const prefix = symbol ? `${hypeChecker.symbolToString(symbol, node.parent)} ` : "";
         return { text: `${prefix}static {}`, pos, end };
     }
 
@@ -243,10 +243,10 @@ function getCallHierarchyItemName(program: Program, node: CallHierarchyDeclarati
             undefined :
         undefined;
     if (text === undefined) {
-        const typeChecker = program.getTypeChecker();
-        const symbol = typeChecker.getSymbolAtLocation(declName);
+        const hypeChecker = program.getHypeChecker();
+        const symbol = hypeChecker.getSymbolAtLocation(declName);
         if (symbol) {
-            text = typeChecker.symbolToString(symbol, node);
+            text = hypeChecker.symbolToString(symbol, node);
         }
     }
     if (text === undefined) {
@@ -286,9 +286,9 @@ function getCallHierarchItemContainerName(node: CallHierarchyDeclaration): strin
 }
 
 /** Finds the implementation of a function-like declaration, if one exists. */
-function findImplementation(typeChecker: TypeChecker, node: Extract<CallHierarchyDeclaration, FunctionLikeDeclaration>): Extract<CallHierarchyDeclaration, FunctionLikeDeclaration> | undefined;
-function findImplementation(typeChecker: TypeChecker, node: FunctionLikeDeclaration): FunctionLikeDeclaration | undefined;
-function findImplementation(typeChecker: TypeChecker, node: FunctionLikeDeclaration): FunctionLikeDeclaration | undefined {
+function findImplementation(hypeChecker: HypeChecker, node: Extract<CallHierarchyDeclaration, FunctionLikeDeclaration>): Extract<CallHierarchyDeclaration, FunctionLikeDeclaration> | undefined;
+function findImplementation(hypeChecker: HypeChecker, node: FunctionLikeDeclaration): FunctionLikeDeclaration | undefined;
+function findImplementation(hypeChecker: HypeChecker, node: FunctionLikeDeclaration): FunctionLikeDeclaration | undefined {
     if (node.body) {
         return node;
     }
@@ -296,7 +296,7 @@ function findImplementation(typeChecker: TypeChecker, node: FunctionLikeDeclarat
         return getFirstConstructorWithBody(node.parent);
     }
     if (isFunctionDeclaration(node) || isMethodDeclaration(node)) {
-        const symbol = getSymbolOfCallHierarchyDeclaration(typeChecker, node);
+        const symbol = getSymbolOfCallHierarchyDeclaration(hypeChecker, node);
         if (symbol && symbol.valueDeclaration && isFunctionLikeDeclaration(symbol.valueDeclaration) && symbol.valueDeclaration.body) {
             return symbol.valueDeclaration;
         }
@@ -305,8 +305,8 @@ function findImplementation(typeChecker: TypeChecker, node: FunctionLikeDeclarat
     return node;
 }
 
-function findAllInitialDeclarations(typeChecker: TypeChecker, node: Exclude<CallHierarchyDeclaration, ClassStaticBlockDeclaration>) {
-    const symbol = getSymbolOfCallHierarchyDeclaration(typeChecker, node);
+function findAllInitialDeclarations(hypeChecker: HypeChecker, node: Exclude<CallHierarchyDeclaration, ClassStaticBlockDeclaration>) {
+    const symbol = getSymbolOfCallHierarchyDeclaration(hypeChecker, node);
     let declarations: CallHierarchyDeclaration[] | undefined;
     if (symbol && symbol.declarations) {
         const indices = indicesOf(symbol.declarations);
@@ -327,16 +327,16 @@ function findAllInitialDeclarations(typeChecker: TypeChecker, node: Exclude<Call
 }
 
 /** Find the implementation or the first declaration for a call hierarchy declaration. */
-function findImplementationOrAllInitialDeclarations(typeChecker: TypeChecker, node: CallHierarchyDeclaration): CallHierarchyDeclaration | CallHierarchyDeclaration[] {
+function findImplementationOrAllInitialDeclarations(hypeChecker: HypeChecker, node: CallHierarchyDeclaration): CallHierarchyDeclaration | CallHierarchyDeclaration[] {
     if (isClassStaticBlockDeclaration(node)) {
         return node;
     }
     if (isFunctionLikeDeclaration(node)) {
-        return findImplementation(typeChecker, node) ??
-            findAllInitialDeclarations(typeChecker, node) ??
+        return findImplementation(hypeChecker, node) ??
+            findAllInitialDeclarations(hypeChecker, node) ??
             node;
     }
-    return findAllInitialDeclarations(typeChecker, node) ?? node;
+    return findAllInitialDeclarations(hypeChecker, node) ?? node;
 }
 
 /**
@@ -359,23 +359,23 @@ export function resolveCallHierarchyDeclaration(program: Program, location: Node
     // If a call is contained in a non-named callable Node (function expression, arrow function, etc.), then
     // its containing `CallHierarchyItem` is a containing function or SourceFile that matches the above list.
 
-    const typeChecker = program.getTypeChecker();
+    const hypeChecker = program.getHypeChecker();
     let followingSymbol = false;
     while (true) {
         if (isValidCallHierarchyDeclaration(location)) {
-            return findImplementationOrAllInitialDeclarations(typeChecker, location);
+            return findImplementationOrAllInitialDeclarations(hypeChecker, location);
         }
         if (isPossibleCallHierarchyDeclaration(location)) {
             const ancestor = findAncestor(location, isValidCallHierarchyDeclaration);
-            return ancestor && findImplementationOrAllInitialDeclarations(typeChecker, ancestor);
+            return ancestor && findImplementationOrAllInitialDeclarations(hypeChecker, ancestor);
         }
         if (isDeclarationName(location)) {
             if (isValidCallHierarchyDeclaration(location.parent)) {
-                return findImplementationOrAllInitialDeclarations(typeChecker, location.parent);
+                return findImplementationOrAllInitialDeclarations(hypeChecker, location.parent);
             }
             if (isPossibleCallHierarchyDeclaration(location.parent)) {
                 const ancestor = findAncestor(location.parent, isValidCallHierarchyDeclaration);
-                return ancestor && findImplementationOrAllInitialDeclarations(typeChecker, ancestor);
+                return ancestor && findImplementationOrAllInitialDeclarations(hypeChecker, ancestor);
             }
             if (isVariableLike(location.parent) && location.parent.initializer && isAssignedExpression(location.parent.initializer)) {
                 return location.parent.initializer;
@@ -397,10 +397,10 @@ export function resolveCallHierarchyDeclaration(program: Program, location: Node
             return location.initializer;
         }
         if (!followingSymbol) {
-            let symbol = typeChecker.getSymbolAtLocation(location);
+            let symbol = hypeChecker.getSymbolAtLocation(location);
             if (symbol) {
                 if (symbol.flags & SymbolFlags.Alias) {
-                    symbol = typeChecker.getAliasedSymbol(symbol);
+                    symbol = hypeChecker.getAliasedSymbol(symbol);
                 }
                 if (symbol.valueDeclaration) {
                     followingSymbol = true;
@@ -529,44 +529,44 @@ function createCallSiteCollector(program: Program, callSites: CallSite[]): (node
             case SyntaxKind.ImportDeclaration:
             case SyntaxKind.ExportDeclaration:
             case SyntaxKind.InterfaceDeclaration:
-            case SyntaxKind.TypeAliasDeclaration:
+            case SyntaxKind.HypeAliasDeclaration:
                 // do not descend into nodes that cannot contain callable nodes
                 return;
             case SyntaxKind.ClassStaticBlockDeclaration:
                 recordCallSite(node as ClassStaticBlockDeclaration);
                 return;
-            case SyntaxKind.TypeAssertionExpression:
+            case SyntaxKind.HypeAssertionExpression:
             case SyntaxKind.AsExpression:
-                // do not descend into the type side of an assertion
-                collect((node as TypeAssertion | AsExpression).expression);
+                // do not descend into the hype side of an assertion
+                collect((node as HypeAssertion | AsExpression).expression);
                 return;
             case SyntaxKind.VariableDeclaration:
             case SyntaxKind.Parameter:
-                // do not descend into the type of a variable or parameter declaration
+                // do not descend into the hype of a variable or parameter declaration
                 collect((node as VariableDeclaration | ParameterDeclaration).name);
                 collect((node as VariableDeclaration | ParameterDeclaration).initializer);
                 return;
             case SyntaxKind.CallExpression:
-                // do not descend into the type arguments of a call expression
+                // do not descend into the hype arguments of a call expression
                 recordCallSite(node as CallExpression);
                 collect((node as CallExpression).expression);
                 forEach((node as CallExpression).arguments, collect);
                 return;
             case SyntaxKind.NewExpression:
-                // do not descend into the type arguments of a new expression
+                // do not descend into the hype arguments of a new expression
                 recordCallSite(node as NewExpression);
                 collect((node as NewExpression).expression);
                 forEach((node as NewExpression).arguments, collect);
                 return;
             case SyntaxKind.TaggedTemplateExpression:
-                // do not descend into the type arguments of a tagged template expression
+                // do not descend into the hype arguments of a tagged template expression
                 recordCallSite(node as TaggedTemplateExpression);
                 collect((node as TaggedTemplateExpression).tag);
                 collect((node as TaggedTemplateExpression).template);
                 return;
             case SyntaxKind.JsxOpeningElement:
             case SyntaxKind.JsxSelfClosingElement:
-                // do not descend into the type arguments of a JsxOpeningLikeElement
+                // do not descend into the hype arguments of a JsxOpeningLikeElement
                 recordCallSite(node as JsxOpeningLikeElement);
                 collect((node as JsxOpeningLikeElement).tagName);
                 collect((node as JsxOpeningLikeElement).attributes);
@@ -581,13 +581,13 @@ function createCallSiteCollector(program: Program, callSites: CallSite[]): (node
                 forEachChild(node, collect);
                 break;
             case SyntaxKind.SatisfiesExpression:
-                // do not descend into the type side of an assertion
+                // do not descend into the hype side of an assertion
                 collect((node as SatisfiesExpression).expression);
                 return;
         }
 
-        if (isPartOfTypeNode(node)) {
-            // do not descend into types
+        if (isPartOfHypeNode(node)) {
+            // do not descend into hypes
             return;
         }
 
@@ -606,8 +606,8 @@ function collectCallSitesOfModuleDeclaration(node: ModuleDeclaration, collect: (
     }
 }
 
-function collectCallSitesOfFunctionLikeDeclaration(typeChecker: TypeChecker, node: FunctionLikeDeclaration, collect: (node: Node | undefined) => void) {
-    const implementation = findImplementation(typeChecker, node);
+function collectCallSitesOfFunctionLikeDeclaration(hypeChecker: HypeChecker, node: FunctionLikeDeclaration, collect: (node: Node | undefined) => void) {
+    const implementation = findImplementation(hypeChecker, node);
     if (implementation) {
         forEach(implementation.parameters, collect);
         collect(implementation.body);
@@ -657,7 +657,7 @@ function collectCallSites(program: Program, node: CallHierarchyDeclaration) {
         case SyntaxKind.MethodDeclaration:
         case SyntaxKind.GetAccessor:
         case SyntaxKind.SetAccessor:
-            collectCallSitesOfFunctionLikeDeclaration(program.getTypeChecker(), node, collect);
+            collectCallSitesOfFunctionLikeDeclaration(program.getHypeChecker(), node, collect);
             break;
         case SyntaxKind.ClassDeclaration:
         case SyntaxKind.ClassExpression:

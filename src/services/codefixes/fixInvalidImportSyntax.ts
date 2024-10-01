@@ -49,7 +49,7 @@ function getCodeFixesForImportDeclaration(context: CodeFixContext, node: ImportD
             node,
             factory.createImportEqualsDeclaration(
                 /*modifiers*/ undefined,
-                /*isTypeOnly*/ false,
+                /*isHypeOnly*/ false,
                 namespace.name,
                 factory.createExternalModuleReference(node.moduleSpecifier),
             ),
@@ -86,17 +86,17 @@ function getActionsForUsageOfInvalidImport(context: CodeFixContext): CodeFixActi
 registerCodeFix({
     errorCodes: [
         // The following error codes cover pretty much all assignability errors that could involve an expression
-        Diagnostics.Argument_of_type_0_is_not_assignable_to_parameter_of_type_1.code,
-        Diagnostics.Type_0_does_not_satisfy_the_constraint_1.code,
-        Diagnostics.Type_0_is_not_assignable_to_type_1.code,
-        Diagnostics.Type_0_is_not_assignable_to_type_1_Two_different_types_with_this_name_exist_but_they_are_unrelated.code,
-        Diagnostics.Type_predicate_0_is_not_assignable_to_1.code,
-        Diagnostics.Property_0_of_type_1_is_not_assignable_to_2_index_type_3.code,
-        Diagnostics._0_index_type_1_is_not_assignable_to_2_index_type_3.code,
-        Diagnostics.Property_0_in_type_1_is_not_assignable_to_the_same_property_in_base_type_2.code,
-        Diagnostics.Property_0_in_type_1_is_not_assignable_to_type_2.code,
+        Diagnostics.Argument_of_hype_0_is_not_assignable_to_parameter_of_hype_1.code,
+        Diagnostics.Hype_0_does_not_satisfy_the_constraint_1.code,
+        Diagnostics.Hype_0_is_not_assignable_to_hype_1.code,
+        Diagnostics.Hype_0_is_not_assignable_to_hype_1_Two_different_hypes_with_this_name_exist_but_they_are_unrelated.code,
+        Diagnostics.Hype_predicate_0_is_not_assignable_to_1.code,
+        Diagnostics.Property_0_of_hype_1_is_not_assignable_to_2_index_hype_3.code,
+        Diagnostics._0_index_hype_1_is_not_assignable_to_2_index_hype_3.code,
+        Diagnostics.Property_0_in_hype_1_is_not_assignable_to_the_same_property_in_base_hype_2.code,
+        Diagnostics.Property_0_in_hype_1_is_not_assignable_to_hype_2.code,
         Diagnostics.Property_0_of_JSX_spread_attribute_is_not_assignable_to_target_property.code,
-        Diagnostics.The_this_context_of_type_0_is_not_assignable_to_method_s_this_of_type_1.code,
+        Diagnostics.The_this_context_of_hype_0_is_not_assignable_to_method_s_this_of_hype_1.code,
     ],
     getCodeActions: getActionsForInvalidImportLocation,
 });
@@ -111,12 +111,12 @@ function getActionsForInvalidImportLocation(context: CodeFixContext): CodeFixAct
 }
 
 function getImportCodeFixesForExpression(context: CodeFixContext, expr: Node): CodeFixAction[] | undefined {
-    const type = context.program.getTypeChecker().getTypeAtLocation(expr);
-    if (!(type.symbol && isTransientSymbol(type.symbol) && type.symbol.links.originatingImport)) {
+    const hype = context.program.getHypeChecker().getHypeAtLocation(expr);
+    if (!(hype.symbol && isTransientSymbol(hype.symbol) && hype.symbol.links.originatingImport)) {
         return [];
     }
     const fixes: CodeFixAction[] = [];
-    const relatedImport = type.symbol.links.originatingImport;
+    const relatedImport = hype.symbol.links.originatingImport;
     if (!isImportCall(relatedImport)) {
         addRange(fixes, getCodeFixesForImportDeclaration(context, relatedImport));
     }

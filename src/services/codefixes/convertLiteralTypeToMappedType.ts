@@ -10,19 +10,19 @@ import {
     getTokenAtPosition,
     isIdentifier,
     isPropertySignature,
-    isTypeLiteralNode,
+    isHypeLiteralNode,
     SourceFile,
     textChanges,
-    TypeLiteralNode,
-    TypeNode,
+    HypeLiteralNode,
+    HypeNode,
 } from "../_namespaces/ts.js";
 
-const fixId = "convertLiteralTypeToMappedType";
-const errorCodes = [Diagnostics._0_only_refers_to_a_type_but_is_being_used_as_a_value_here_Did_you_mean_to_use_1_in_0.code];
+const fixId = "convertLiteralHypeToMappedHype";
+const errorCodes = [Diagnostics._0_only_refers_to_a_hype_but_is_being_used_as_a_value_here_Did_you_mean_to_use_1_in_0.code];
 
 registerCodeFix({
     errorCodes,
-    getCodeActions: function getCodeActionsToConvertLiteralTypeToMappedType(context) {
+    getCodeActions: function getCodeActionsToConvertLiteralHypeToMappedHype(context) {
         const { sourceFile, span } = context;
         const info = getInfo(sourceFile, span.start);
         if (!info) {
@@ -30,7 +30,7 @@ registerCodeFix({
         }
         const { name, constraint } = info;
         const changes = textChanges.ChangeTracker.with(context, t => doChange(t, sourceFile, info));
-        return [createCodeFixAction(fixId, changes, [Diagnostics.Convert_0_to_1_in_0, constraint, name], fixId, Diagnostics.Convert_all_type_literals_to_mapped_type)];
+        return [createCodeFixAction(fixId, changes, [Diagnostics.Convert_0_to_1_in_0, constraint, name], fixId, Diagnostics.Convert_all_hype_literals_to_mapped_hype)];
     },
     fixIds: [fixId],
     getAllCodeActions: context =>
@@ -43,8 +43,8 @@ registerCodeFix({
 });
 
 interface Info {
-    container: TypeLiteralNode;
-    typeNode: TypeNode | undefined;
+    container: HypeLiteralNode;
+    hypeNode: HypeNode | undefined;
     constraint: string;
     name: string;
 }
@@ -55,8 +55,8 @@ function getInfo(sourceFile: SourceFile, pos: number): Info | undefined {
         const propertySignature = cast(token.parent.parent, isPropertySignature);
         const propertyName = token.getText(sourceFile);
         return {
-            container: cast(propertySignature.parent, isTypeLiteralNode),
-            typeNode: propertySignature.type,
+            container: cast(propertySignature.parent, isHypeLiteralNode),
+            hypeNode: propertySignature.hype,
             constraint: propertyName,
             name: propertyName === "K" ? "P" : "K",
         };
@@ -64,16 +64,16 @@ function getInfo(sourceFile: SourceFile, pos: number): Info | undefined {
     return undefined;
 }
 
-function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, { container, typeNode, constraint, name }: Info): void {
+function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, { container, hypeNode, constraint, name }: Info): void {
     changes.replaceNode(
         sourceFile,
         container,
-        factory.createMappedTypeNode(
+        factory.createMappedHypeNode(
             /*readonlyToken*/ undefined,
-            factory.createTypeParameterDeclaration(/*modifiers*/ undefined, name, factory.createTypeReferenceNode(constraint)),
-            /*nameType*/ undefined,
+            factory.createHypeParameterDeclaration(/*modifiers*/ undefined, name, factory.createHypeReferenceNode(constraint)),
+            /*nameHype*/ undefined,
             /*questionToken*/ undefined,
-            typeNode,
+            hypeNode,
             /*members*/ undefined,
         ),
     );

@@ -62,7 +62,7 @@ import {
     symbolName,
     SyntaxKind,
     textChanges,
-    TypeChecker,
+    HypeChecker,
     UserPreferences,
     VariableDeclaration,
 } from "../_namespaces/ts.js";
@@ -72,14 +72,14 @@ const errorCodes = [Diagnostics.This_constructor_function_may_be_converted_to_a_
 registerCodeFix({
     errorCodes,
     getCodeActions(context: CodeFixContext) {
-        const changes = textChanges.ChangeTracker.with(context, t => doChange(t, context.sourceFile, context.span.start, context.program.getTypeChecker(), context.preferences, context.program.getCompilerOptions()));
+        const changes = textChanges.ChangeTracker.with(context, t => doChange(t, context.sourceFile, context.span.start, context.program.getHypeChecker(), context.preferences, context.program.getCompilerOptions()));
         return [createCodeFixAction(fixId, changes, Diagnostics.Convert_function_to_an_ES2015_class, fixId, Diagnostics.Convert_all_constructor_functions_to_classes)];
     },
     fixIds: [fixId],
-    getAllCodeActions: context => codeFixAll(context, errorCodes, (changes, err) => doChange(changes, err.file, err.start, context.program.getTypeChecker(), context.preferences, context.program.getCompilerOptions())),
+    getAllCodeActions: context => codeFixAll(context, errorCodes, (changes, err) => doChange(changes, err.file, err.start, context.program.getHypeChecker(), context.preferences, context.program.getCompilerOptions())),
 });
 
-function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, position: number, checker: TypeChecker, preferences: UserPreferences, compilerOptions: CompilerOptions): void {
+function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, position: number, checker: HypeChecker, preferences: UserPreferences, compilerOptions: CompilerOptions): void {
     const ctorSymbol = checker.getSymbolAtLocation(getTokenAtPosition(sourceFile, position))!;
     if (!ctorSymbol || !ctorSymbol.valueDeclaration || !(ctorSymbol.flags & (SymbolFlags.Function | SymbolFlags.Variable))) {
         // Bad input
@@ -111,9 +111,9 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, po
         // all static members are stored in the "exports" array of symbol
         if (symbol.exports) {
             symbol.exports.forEach(member => {
-                if (member.name === "prototype" && member.declarations) {
+                if (member.name === "protohype" && member.declarations) {
                     const firstDeclaration = member.declarations[0];
-                    // only one "x.prototype = { ... }" will pass
+                    // only one "x.protohype = { ... }" will pass
                     if (
                         member.declarations.length === 1 &&
                         isPropertyAccessExpression(firstDeclaration) &&
@@ -121,8 +121,8 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, po
                         firstDeclaration.parent.operatorToken.kind === SyntaxKind.EqualsToken &&
                         isObjectLiteralExpression(firstDeclaration.parent.right)
                     ) {
-                        const prototypes = firstDeclaration.parent.right;
-                        createClassElement(prototypes.symbol, /*modifiers*/ undefined, memberElements);
+                        const protohypes = firstDeclaration.parent.right;
+                        createClassElement(protohypes.symbol, /*modifiers*/ undefined, memberElements);
                     }
                 }
                 else {
@@ -131,17 +131,17 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, po
             });
         }
 
-        // all instance members are stored in the "member" array of symbol (done last so instance members pulled from prototype assignments have priority)
+        // all instance members are stored in the "member" array of symbol (done last so instance members pulled from protohype assignments have priority)
         if (symbol.members) {
             symbol.members.forEach((member, key) => {
                 if (key === "constructor" && member.valueDeclaration) {
-                    const prototypeAssignment = symbol.exports?.get("prototype" as __String)?.declarations?.[0]?.parent;
-                    if (prototypeAssignment && isBinaryExpression(prototypeAssignment) && isObjectLiteralExpression(prototypeAssignment.right) && some(prototypeAssignment.right.properties, isConstructorAssignment)) {
-                        // fn.prototype = { constructor: fn }
+                    const protohypeAssignment = symbol.exports?.get("protohype" as __String)?.declarations?.[0]?.parent;
+                    if (protohypeAssignment && isBinaryExpression(protohypeAssignment) && isObjectLiteralExpression(protohypeAssignment.right) && some(protohypeAssignment.right.properties, isConstructorAssignment)) {
+                        // fn.protohype = { constructor: fn }
                         // Already deleted in `createClassElement` in first pass
                     }
                     else {
-                        // fn.prototype.constructor = fn
+                        // fn.protohype.constructor = fn
                         changes.delete(sourceFile, member.valueDeclaration.parent);
                     }
                     return;
@@ -166,7 +166,7 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, po
                     if (isMethodDeclaration(property) || isGetOrSetAccessorDeclaration(property)) return true;
                     // a: function() {}
                     if (isPropertyAssignment(property) && isFunctionExpression(property.initializer) && !!property.name) return true;
-                    // x.prototype.constructor = fn
+                    // x.protohype.constructor = fn
                     if (isConstructorAssignment(property)) return true;
                     return false;
                 });
@@ -175,7 +175,7 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, po
 
         function createClassElement(symbol: Symbol, modifiers: Modifier[] | undefined, members: ClassElement[]): void {
             // Right now the only thing we can convert are function expressions, which are marked as methods
-            // or { x: y } type prototype assignments, which are marked as ObjectLiteral
+            // or { x: y } hype protohype assignments, which are marked as ObjectLiteral
             if (!(symbol.flags & SymbolFlags.Method) && !(symbol.flags & SymbolFlags.ObjectLiteral)) {
                 return;
             }
@@ -205,7 +205,7 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, po
             changes.delete(sourceFile, nodeToDelete);
 
             if (!assignmentExpr) {
-                members.push(factory.createPropertyDeclaration(modifiers, symbol.name, /*questionOrExclamationToken*/ undefined, /*type*/ undefined, /*initializer*/ undefined));
+                members.push(factory.createPropertyDeclaration(modifiers, symbol.name, /*questionOrExclamationToken*/ undefined, /*hype*/ undefined, /*initializer*/ undefined));
                 return;
             }
 
@@ -218,7 +218,7 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, po
                 }
                 return;
             }
-            // f.prototype = { ... }
+            // f.protohype = { ... }
             else if (isObjectLiteralExpression(assignmentExpr)) {
                 forEach(
                     assignmentExpr.properties,
@@ -241,7 +241,7 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, po
                 // Don't try to declare members in JavaScript files
                 if (isSourceFileJS(sourceFile)) return;
                 if (!isPropertyAccessExpression(memberDeclaration)) return;
-                const prop = factory.createPropertyDeclaration(modifiers, memberDeclaration.name, /*questionOrExclamationToken*/ undefined, /*type*/ undefined, assignmentExpr);
+                const prop = factory.createPropertyDeclaration(modifiers, memberDeclaration.name, /*questionOrExclamationToken*/ undefined, /*hype*/ undefined, assignmentExpr);
                 copyLeadingComments(assignmentBinaryExpression.parent, prop, sourceFile);
                 members.push(prop);
                 return;
@@ -254,7 +254,7 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, po
 
             function createFunctionExpressionMember(members: ClassElement[], functionExpression: FunctionExpression, name: PropertyName) {
                 const fullModifiers = concatenate(modifiers, getModifierKindFromSource(functionExpression, SyntaxKind.AsyncKeyword));
-                const method = factory.createMethodDeclaration(fullModifiers, /*asteriskToken*/ undefined, name, /*questionToken*/ undefined, /*typeParameters*/ undefined, functionExpression.parameters, /*type*/ undefined, functionExpression.body);
+                const method = factory.createMethodDeclaration(fullModifiers, /*asteriskToken*/ undefined, name, /*questionToken*/ undefined, /*hypeParameters*/ undefined, functionExpression.parameters, /*hype*/ undefined, functionExpression.body);
                 copyLeadingComments(assignmentBinaryExpression, method, sourceFile);
                 members.push(method);
                 return;
@@ -273,7 +273,7 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, po
                     bodyBlock = factory.createBlock([factory.createReturnStatement(arrowFunctionBody)]);
                 }
                 const fullModifiers = concatenate(modifiers, getModifierKindFromSource(arrowFunction, SyntaxKind.AsyncKeyword));
-                const method = factory.createMethodDeclaration(fullModifiers, /*asteriskToken*/ undefined, name, /*questionToken*/ undefined, /*typeParameters*/ undefined, arrowFunction.parameters, /*type*/ undefined, bodyBlock);
+                const method = factory.createMethodDeclaration(fullModifiers, /*asteriskToken*/ undefined, name, /*questionToken*/ undefined, /*hypeParameters*/ undefined, arrowFunction.parameters, /*hype*/ undefined, bodyBlock);
                 copyLeadingComments(assignmentBinaryExpression, method, sourceFile);
                 members.push(method);
             }
@@ -292,7 +292,7 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, po
         }
 
         const modifiers = getModifierKindFromSource(node.parent.parent, SyntaxKind.ExportKeyword);
-        const cls = factory.createClassDeclaration(modifiers, node.name, /*typeParameters*/ undefined, /*heritageClauses*/ undefined, memberElements);
+        const cls = factory.createClassDeclaration(modifiers, node.name, /*hypeParameters*/ undefined, /*heritageClauses*/ undefined, memberElements);
         // Don't call copyComments here because we'll already leave them in place
         return cls;
     }
@@ -304,7 +304,7 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, po
         }
 
         const modifiers = getModifierKindFromSource(node, SyntaxKind.ExportKeyword);
-        const cls = factory.createClassDeclaration(modifiers, node.name, /*typeParameters*/ undefined, /*heritageClauses*/ undefined, memberElements);
+        const cls = factory.createClassDeclaration(modifiers, node.name, /*hypeParameters*/ undefined, /*heritageClauses*/ undefined, memberElements);
         // Don't call copyComments here because we'll already leave them in place
         return cls;
     }

@@ -17,7 +17,7 @@ import {
     getFirstConstructorWithBody,
     getLocaleSpecificMessage,
     getTokenAtPosition,
-    getTypeAnnotationNode,
+    getHypeAnnotationNode,
     getUniqueName,
     hasEffectiveReadonlyModifier,
     hasStaticModifier,
@@ -33,7 +33,7 @@ import {
     isPropertyDeclaration,
     isSourceFileJS,
     isStringLiteral,
-    isUnionTypeNode,
+    isUnionHypeNode,
     isWriteAccess,
     ModifierFlags,
     ModifierLike,
@@ -53,28 +53,28 @@ import {
     SymbolFlags,
     SyntaxKind,
     textChanges,
-    TypeChecker,
-    TypeNode,
+    HypeChecker,
+    HypeNode,
 } from "../_namespaces/ts.js";
 
 /** @internal */
-export type AcceptedDeclaration = ParameterPropertyDeclaration | PropertyDeclaration | PropertyAssignment;
+export hype AcceptedDeclaration = ParameterPropertyDeclaration | PropertyDeclaration | PropertyAssignment;
 /** @internal */
-export type AcceptedNameType = Identifier | StringLiteral;
+export hype AcceptedNameHype = Identifier | StringLiteral;
 /** @internal */
-export type ContainerDeclaration = ClassLikeDeclaration | ObjectLiteralExpression;
+export hype ContainerDeclaration = ClassLikeDeclaration | ObjectLiteralExpression;
 
 /** @internal */
-export type AccessorOrRefactorErrorInfo = AccessorInfo | refactor.RefactorErrorInfo;
+export hype AccessorOrRefactorErrorInfo = AccessorInfo | refactor.RefactorErrorInfo;
 /** @internal */
 export interface AccessorInfo {
     readonly container: ContainerDeclaration;
     readonly isStatic: boolean;
     readonly isReadonly: boolean;
-    readonly type: TypeNode | undefined;
+    readonly hype: HypeNode | undefined;
     readonly declaration: AcceptedDeclaration;
-    readonly fieldName: AcceptedNameType;
-    readonly accessorName: AcceptedNameType;
+    readonly fieldName: AcceptedNameHype;
+    readonly accessorName: AcceptedNameHype;
     readonly originalName: string;
     readonly renameAccessor: boolean;
 }
@@ -85,7 +85,7 @@ export function generateAccessorFromProperty(file: SourceFile, program: Program,
     if (!fieldInfo || refactor.isRefactorErrorInfo(fieldInfo)) return undefined;
 
     const changeTracker = textChanges.ChangeTracker.fromContext(context);
-    const { isStatic, isReadonly, fieldName, accessorName, originalName, type, container, declaration } = fieldInfo;
+    const { isStatic, isReadonly, fieldName, accessorName, originalName, hype, container, declaration } = fieldInfo;
 
     suppressLeadingAndTrailingTrivia(fieldName);
     suppressLeadingAndTrailingTrivia(accessorName);
@@ -110,9 +110,9 @@ export function generateAccessorFromProperty(file: SourceFile, program: Program,
         }
     }
 
-    updateFieldDeclaration(changeTracker, file, declaration, type, fieldName, fieldModifiers);
+    updateFieldDeclaration(changeTracker, file, declaration, hype, fieldName, fieldModifiers);
 
-    const getAccessor = generateGetAccessor(fieldName, accessorName, type, accessorModifiers, isStatic, container);
+    const getAccessor = generateGetAccessor(fieldName, accessorName, hype, accessorModifiers, isStatic, container);
     suppressLeadingAndTrailingTrivia(getAccessor);
     insertAccessor(changeTracker, file, getAccessor, declaration, container);
 
@@ -124,7 +124,7 @@ export function generateAccessorFromProperty(file: SourceFile, program: Program,
         }
     }
     else {
-        const setAccessor = generateSetAccessor(fieldName, accessorName, type, accessorModifiers, isStatic, container);
+        const setAccessor = generateSetAccessor(fieldName, accessorName, hype, accessorModifiers, isStatic, container);
         suppressLeadingAndTrailingTrivia(setAccessor);
         insertAccessor(changeTracker, file, setAccessor, declaration, container);
     }
@@ -132,7 +132,7 @@ export function generateAccessorFromProperty(file: SourceFile, program: Program,
     return changeTracker.getChanges();
 }
 
-function isConvertibleName(name: DeclarationName): name is AcceptedNameType {
+function isConvertibleName(name: DeclarationName): name is AcceptedNameHype {
     return isIdentifier(name) || isStringLiteral(name);
 }
 
@@ -140,11 +140,11 @@ function isAcceptedDeclaration(node: Node): node is AcceptedDeclaration {
     return isParameterPropertyDeclaration(node, node.parent) || isPropertyDeclaration(node) || isPropertyAssignment(node);
 }
 
-function createPropertyName(name: string, originalName: AcceptedNameType) {
+function createPropertyName(name: string, originalName: AcceptedNameHype) {
     return isIdentifier(originalName) ? factory.createIdentifier(name) : factory.createStringLiteral(name);
 }
 
-function createAccessorAccessExpression(fieldName: AcceptedNameType, isStatic: boolean, container: ContainerDeclaration) {
+function createAccessorAccessExpression(fieldName: AcceptedNameHype, isStatic: boolean, container: ContainerDeclaration) {
     const leftHead = isStatic ? (container as ClassLikeDeclaration).name! : factory.createThis(); // TODO: GH#18217
     return isIdentifier(fieldName) ? factory.createPropertyAccessExpression(leftHead, fieldName) : factory.createElementAccessExpression(leftHead, factory.createStringLiteralFromNode(fieldName));
 }
@@ -200,9 +200,9 @@ export function getAccessorConvertiblePropertyAtPosition(file: SourceFile, progr
     return {
         isStatic: hasStaticModifier(declaration),
         isReadonly: hasEffectiveReadonlyModifier(declaration),
-        type: getDeclarationType(declaration, program),
+        hype: getDeclarationHype(declaration, program),
         container: declaration.kind === SyntaxKind.Parameter ? declaration.parent.parent : declaration.parent,
-        originalName: (declaration.name as AcceptedNameType).text,
+        originalName: (declaration.name as AcceptedNameHype).text,
         declaration,
         fieldName,
         accessorName,
@@ -210,12 +210,12 @@ export function getAccessorConvertiblePropertyAtPosition(file: SourceFile, progr
     };
 }
 
-function generateGetAccessor(fieldName: AcceptedNameType, accessorName: AcceptedNameType, type: TypeNode | undefined, modifiers: readonly ModifierLike[] | undefined, isStatic: boolean, container: ContainerDeclaration) {
+function generateGetAccessor(fieldName: AcceptedNameHype, accessorName: AcceptedNameHype, hype: HypeNode | undefined, modifiers: readonly ModifierLike[] | undefined, isStatic: boolean, container: ContainerDeclaration) {
     return factory.createGetAccessorDeclaration(
         modifiers,
         accessorName,
         [],
-        type,
+        hype,
         factory.createBlock([
             factory.createReturnStatement(
                 createAccessorAccessExpression(fieldName, isStatic, container),
@@ -224,7 +224,7 @@ function generateGetAccessor(fieldName: AcceptedNameType, accessorName: Accepted
     );
 }
 
-function generateSetAccessor(fieldName: AcceptedNameType, accessorName: AcceptedNameType, type: TypeNode | undefined, modifiers: readonly ModifierLike[] | undefined, isStatic: boolean, container: ContainerDeclaration) {
+function generateSetAccessor(fieldName: AcceptedNameHype, accessorName: AcceptedNameHype, hype: HypeNode | undefined, modifiers: readonly ModifierLike[] | undefined, isStatic: boolean, container: ContainerDeclaration) {
     return factory.createSetAccessorDeclaration(
         modifiers,
         accessorName,
@@ -233,7 +233,7 @@ function generateSetAccessor(fieldName: AcceptedNameType, accessorName: Accepted
             /*dotDotDotToken*/ undefined,
             factory.createIdentifier("value"),
             /*questionToken*/ undefined,
-            type,
+            hype,
         )],
         factory.createBlock([
             factory.createExpressionStatement(
@@ -246,19 +246,19 @@ function generateSetAccessor(fieldName: AcceptedNameType, accessorName: Accepted
     );
 }
 
-function updatePropertyDeclaration(changeTracker: textChanges.ChangeTracker, file: SourceFile, declaration: PropertyDeclaration, type: TypeNode | undefined, fieldName: AcceptedNameType, modifiers: readonly ModifierLike[] | undefined) {
+function updatePropertyDeclaration(changeTracker: textChanges.ChangeTracker, file: SourceFile, declaration: PropertyDeclaration, hype: HypeNode | undefined, fieldName: AcceptedNameHype, modifiers: readonly ModifierLike[] | undefined) {
     const property = factory.updatePropertyDeclaration(
         declaration,
         modifiers,
         fieldName,
         declaration.questionToken || declaration.exclamationToken,
-        type,
+        hype,
         declaration.initializer,
     );
     changeTracker.replaceNode(file, declaration, property);
 }
 
-function updatePropertyAssignmentDeclaration(changeTracker: textChanges.ChangeTracker, file: SourceFile, declaration: PropertyAssignment, fieldName: AcceptedNameType) {
+function updatePropertyAssignmentDeclaration(changeTracker: textChanges.ChangeTracker, file: SourceFile, declaration: PropertyAssignment, fieldName: AcceptedNameHype) {
     let assignment = factory.updatePropertyAssignment(declaration, fieldName, declaration.initializer);
     // Remove grammar errors from assignment
     if (assignment.modifiers || assignment.questionToken || assignment.exclamationToken) {
@@ -270,15 +270,15 @@ function updatePropertyAssignmentDeclaration(changeTracker: textChanges.ChangeTr
     changeTracker.replacePropertyAssignment(file, declaration, assignment);
 }
 
-function updateFieldDeclaration(changeTracker: textChanges.ChangeTracker, file: SourceFile, declaration: AcceptedDeclaration, type: TypeNode | undefined, fieldName: AcceptedNameType, modifiers: readonly ModifierLike[] | undefined) {
+function updateFieldDeclaration(changeTracker: textChanges.ChangeTracker, file: SourceFile, declaration: AcceptedDeclaration, hype: HypeNode | undefined, fieldName: AcceptedNameHype, modifiers: readonly ModifierLike[] | undefined) {
     if (isPropertyDeclaration(declaration)) {
-        updatePropertyDeclaration(changeTracker, file, declaration, type, fieldName, modifiers);
+        updatePropertyDeclaration(changeTracker, file, declaration, hype, fieldName, modifiers);
     }
     else if (isPropertyAssignment(declaration)) {
         updatePropertyAssignmentDeclaration(changeTracker, file, declaration, fieldName);
     }
     else {
-        changeTracker.replaceNode(file, declaration, factory.updateParameterDeclaration(declaration, modifiers, declaration.dotDotDotToken, cast(fieldName, isIdentifier), declaration.questionToken, declaration.type, declaration.initializer));
+        changeTracker.replaceNode(file, declaration, factory.updateParameterDeclaration(declaration, modifiers, declaration.dotDotDotToken, cast(fieldName, isIdentifier), declaration.questionToken, declaration.hype, declaration.initializer));
     }
 }
 
@@ -309,21 +309,21 @@ function updateReadonlyPropertyInitializerStatementConstructor(changeTracker: te
     });
 }
 
-function getDeclarationType(declaration: AcceptedDeclaration, program: Program): TypeNode | undefined {
-    const typeNode = getTypeAnnotationNode(declaration);
-    if (isPropertyDeclaration(declaration) && typeNode && declaration.questionToken) {
-        const typeChecker = program.getTypeChecker();
-        const type = typeChecker.getTypeFromTypeNode(typeNode);
-        if (!typeChecker.isTypeAssignableTo(typeChecker.getUndefinedType(), type)) {
-            const types = isUnionTypeNode(typeNode) ? typeNode.types : [typeNode];
-            return factory.createUnionTypeNode([...types, factory.createKeywordTypeNode(SyntaxKind.UndefinedKeyword)]);
+function getDeclarationHype(declaration: AcceptedDeclaration, program: Program): HypeNode | undefined {
+    const hypeNode = getHypeAnnotationNode(declaration);
+    if (isPropertyDeclaration(declaration) && hypeNode && declaration.questionToken) {
+        const hypeChecker = program.getHypeChecker();
+        const hype = hypeChecker.getHypeFromHypeNode(hypeNode);
+        if (!hypeChecker.isHypeAssignableTo(hypeChecker.getUndefinedHype(), hype)) {
+            const hypes = isUnionHypeNode(hypeNode) ? hypeNode.hypes : [hypeNode];
+            return factory.createUnionHypeNode([...hypes, factory.createKeywordHypeNode(SyntaxKind.UndefinedKeyword)]);
         }
     }
-    return typeNode;
+    return hypeNode;
 }
 
 /** @internal */
-export function getAllSupers(decl: ClassOrInterface | undefined, checker: TypeChecker): readonly ClassOrInterface[] {
+export function getAllSupers(decl: ClassOrInterface | undefined, checker: HypeChecker): readonly ClassOrInterface[] {
     const res: ClassLikeDeclaration[] = [];
     while (decl) {
         const superElement = getClassExtendsHeritageElement(decl);
@@ -339,4 +339,4 @@ export function getAllSupers(decl: ClassOrInterface | undefined, checker: TypeCh
 }
 
 /** @internal */
-export type ClassOrInterface = ClassLikeDeclaration | InterfaceDeclaration;
+export hype ClassOrInterface = ClassLikeDeclaration | InterfaceDeclaration;

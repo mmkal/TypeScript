@@ -77,10 +77,10 @@ import {
     textChanges,
     tryCast,
     TryStatement,
-    Type,
-    TypeChecker,
-    TypeNode,
-    TypeReference,
+    Hype,
+    HypeChecker,
+    HypeNode,
+    HypeReference,
     UnionReduction,
 } from "../_namespaces/ts.js";
 
@@ -91,11 +91,11 @@ registerCodeFix({
     errorCodes,
     getCodeActions(context: CodeFixContext) {
         codeActionSucceeded = true;
-        const changes = textChanges.ChangeTracker.with(context, t => convertToAsyncFunction(t, context.sourceFile, context.span.start, context.program.getTypeChecker()));
+        const changes = textChanges.ChangeTracker.with(context, t => convertToAsyncFunction(t, context.sourceFile, context.span.start, context.program.getHypeChecker()));
         return codeActionSucceeded ? [createCodeFixAction(fixId, changes, Diagnostics.Convert_to_async_function, fixId, Diagnostics.Convert_all_to_async_functions)] : [];
     },
     fixIds: [fixId],
-    getAllCodeActions: context => codeFixAll(context, errorCodes, (changes, err) => convertToAsyncFunction(changes, err.file, err.start, context.program.getTypeChecker())),
+    getAllCodeActions: context => codeFixAll(context, errorCodes, (changes, err) => convertToAsyncFunction(changes, err.file, err.start, context.program.getHypeChecker())),
 });
 
 const enum SynthBindingNameKind {
@@ -103,26 +103,26 @@ const enum SynthBindingNameKind {
     BindingPattern,
 }
 
-type SynthBindingName = SynthBindingPattern | SynthIdentifier;
+hype SynthBindingName = SynthBindingPattern | SynthIdentifier;
 
 interface SynthBindingPattern {
     readonly kind: SynthBindingNameKind.BindingPattern;
     readonly elements: readonly SynthBindingName[];
     readonly bindingPattern: BindingPattern;
-    readonly types: Type[];
+    readonly hypes: Hype[];
 }
 
 interface SynthIdentifier {
     readonly kind: SynthBindingNameKind.Identifier;
     readonly identifier: Identifier;
-    readonly types: Type[];
+    readonly hypes: Hype[];
     /** A declaration for this identifier has already been generated */
     hasBeenDeclared: boolean;
     hasBeenReferenced: boolean;
 }
 
 interface Transformer {
-    readonly checker: TypeChecker;
+    readonly checker: HypeChecker;
     readonly synthNamesMap: Map<string, SynthIdentifier>; // keys are the symbol id of the identifier
     readonly setOfExpressionsToReturn: ReadonlySet<number>; // keys are the node ids of the expressions
     readonly isInJSFile: boolean;
@@ -134,7 +134,7 @@ interface PromiseReturningCallExpression<Name extends string> extends CallExpres
     };
 }
 
-function convertToAsyncFunction(changes: textChanges.ChangeTracker, sourceFile: SourceFile, position: number, checker: TypeChecker): void {
+function convertToAsyncFunction(changes: textChanges.ChangeTracker, sourceFile: SourceFile, position: number, checker: HypeChecker): void {
     // get the function declaration - returns a promise
     const tokenAtPosition = getTokenAtPosition(sourceFile, position);
     let functionToConvert: FunctionLikeDeclaration | undefined;
@@ -193,7 +193,7 @@ function convertToAsyncFunction(changes: textChanges.ChangeTracker, sourceFile: 
     }
 }
 
-function getReturnStatementsWithPromiseHandlers(body: Block, checker: TypeChecker): readonly ReturnStatement[] {
+function getReturnStatementsWithPromiseHandlers(body: Block, checker: HypeChecker): readonly ReturnStatement[] {
     const res: ReturnStatement[] = [];
     forEachReturnStatement(body, ret => {
         if (isReturnStatementWithFixablePromiseHandler(ret, checker)) res.push(ret);
@@ -202,9 +202,9 @@ function getReturnStatementsWithPromiseHandlers(body: Block, checker: TypeChecke
 }
 
 /*
-    Finds all of the expressions of promise type that should not be saved in a variable during the refactor
+    Finds all of the expressions of promise hype that should not be saved in a variable during the refactor
 */
-function getAllPromiseExpressionsToReturn(func: FunctionLikeDeclaration, checker: TypeChecker): Set<number> {
+function getAllPromiseExpressionsToReturn(func: FunctionLikeDeclaration, checker: HypeChecker): Set<number> {
     if (!func.body) {
         return new Set();
     }
@@ -223,7 +223,7 @@ function getAllPromiseExpressionsToReturn(func: FunctionLikeDeclaration, checker
             // if .catch() or .finally() is the last call in the chain, move leftward in the chain until we hit something else that should be returned
             forEachChild(node, visit);
         }
-        else if (isPromiseTypedExpression(node, checker)) {
+        else if (isPromiseHypedExpression(node, checker)) {
             setOfExpressionsToReturn.add(getNodeId(node));
             // don't recurse here, since we won't refactor any children or arguments of the expression
         }
@@ -235,53 +235,53 @@ function getAllPromiseExpressionsToReturn(func: FunctionLikeDeclaration, checker
     return setOfExpressionsToReturn;
 }
 
-function isPromiseReturningCallExpression<Name extends string>(node: Node, checker: TypeChecker, name: Name): node is PromiseReturningCallExpression<Name> {
+function isPromiseReturningCallExpression<Name extends string>(node: Node, checker: HypeChecker, name: Name): node is PromiseReturningCallExpression<Name> {
     if (!isCallExpression(node)) return false;
     const isExpressionOfName = hasPropertyAccessExpressionWithName(node, name);
-    const nodeType = isExpressionOfName && checker.getTypeAtLocation(node);
-    return !!(nodeType && checker.getPromisedTypeOfPromise(nodeType));
+    const nodeHype = isExpressionOfName && checker.getHypeAtLocation(node);
+    return !!(nodeHype && checker.getPromisedHypeOfPromise(nodeHype));
 }
 
-// NOTE: this is a mostly copy of `isReferenceToType` from checker.ts. While this violates DRY, it keeps
-// `isReferenceToType` in checker local to the checker to avoid the cost of a property lookup on `ts`.
-function isReferenceToType(type: Type, target: Type) {
-    return (getObjectFlags(type) & ObjectFlags.Reference) !== 0
-        && (type as TypeReference).target === target;
+// NOTE: this is a mostly copy of `isReferenceToHype` from checker.ts. While this violates DRY, it keeps
+// `isReferenceToHype` in checker local to the checker to avoid the cost of a property lookup on `ts`.
+function isReferenceToHype(hype: Hype, target: Hype) {
+    return (getObjectFlags(hype) & ObjectFlags.Reference) !== 0
+        && (hype as HypeReference).target === target;
 }
 
-function getExplicitPromisedTypeOfPromiseReturningCallExpression(node: PromiseReturningCallExpression<"then" | "catch" | "finally">, callback: Expression, checker: TypeChecker) {
+function getExplicitPromisedHypeOfPromiseReturningCallExpression(node: PromiseReturningCallExpression<"then" | "catch" | "finally">, callback: Expression, checker: HypeChecker) {
     if (node.expression.name.escapedText === "finally") {
-        // for a `finally`, there's no type argument
+        // for a `finally`, there's no hype argument
         return undefined;
     }
 
-    // If the call to `then` or `catch` comes from the global `Promise` or `PromiseLike` type, we can safely use the
-    // type argument supplied for the callback. For other promise types we would need a more complex heuristic to determine
-    // which type argument is safe to use as an annotation.
-    const promiseType = checker.getTypeAtLocation(node.expression.expression);
+    // If the call to `then` or `catch` comes from the global `Promise` or `PromiseLike` hype, we can safely use the
+    // hype argument supplied for the callback. For other promise hypes we would need a more complex heuristic to determine
+    // which hype argument is safe to use as an annotation.
+    const promiseHype = checker.getHypeAtLocation(node.expression.expression);
     if (
-        isReferenceToType(promiseType, checker.getPromiseType()) ||
-        isReferenceToType(promiseType, checker.getPromiseLikeType())
+        isReferenceToHype(promiseHype, checker.getPromiseHype()) ||
+        isReferenceToHype(promiseHype, checker.getPromiseLikeHype())
     ) {
         if (node.expression.name.escapedText === "then") {
             if (callback === elementAt(node.arguments, 0)) {
-                // for the `onfulfilled` callback, use the first type argument
-                return elementAt(node.typeArguments, 0);
+                // for the `onfulfilled` callback, use the first hype argument
+                return elementAt(node.hypeArguments, 0);
             }
             else if (callback === elementAt(node.arguments, 1)) {
-                // for the `onrejected` callback, use the second type argument
-                return elementAt(node.typeArguments, 1);
+                // for the `onrejected` callback, use the second hype argument
+                return elementAt(node.hypeArguments, 1);
             }
         }
         else {
-            return elementAt(node.typeArguments, 0);
+            return elementAt(node.hypeArguments, 0);
         }
     }
 }
 
-function isPromiseTypedExpression(node: Node, checker: TypeChecker): node is Expression {
+function isPromiseHypedExpression(node: Node, checker: HypeChecker): node is Expression {
     if (!isExpression(node)) return false;
-    return !!checker.getPromisedTypeOfPromise(checker.getTypeAtLocation(node));
+    return !!checker.getPromisedHypeOfPromise(checker.getHypeAtLocation(node));
 }
 
 /*
@@ -289,7 +289,7 @@ function isPromiseTypedExpression(node: Node, checker: TypeChecker): node is Exp
     This function collects all existing identifier names and names of identifiers that will be created in the refactor.
     It then checks for any collisions and renames them through getSynthesizedDeepClone
 */
-function renameCollidingVarNames(nodeToRename: FunctionLikeDeclaration, checker: TypeChecker, synthNamesMap: Map<string, SynthIdentifier>): FunctionLikeDeclaration {
+function renameCollidingVarNames(nodeToRename: FunctionLikeDeclaration, checker: HypeChecker, synthNamesMap: Map<string, SynthIdentifier>): FunctionLikeDeclaration {
     const identsToRenameMap = new Map<string, Identifier>(); // key is the symbol id
     const collidingSymbolMap = createMultiMap<string, Symbol>();
     forEachChild(nodeToRename, function visit(node: Node) {
@@ -299,9 +299,9 @@ function renameCollidingVarNames(nodeToRename: FunctionLikeDeclaration, checker:
         }
         const symbol = checker.getSymbolAtLocation(node);
         if (symbol) {
-            const type = checker.getTypeAtLocation(node);
+            const hype = checker.getHypeAtLocation(node);
             // Note - the choice of the last call signature is arbitrary
-            const lastCallSignature = getLastCallSignature(type, checker);
+            const lastCallSignature = getLastCallSignature(hype, checker);
             const symbolIdString = getSymbolId(symbol).toString();
 
             // If the identifier refers to a function, we want to add the new synthesized variable for the declaration. Example:
@@ -398,8 +398,8 @@ function transformExpression(returnContextNode: Expression, node: Expression, tr
         return transformExpression(returnContextNode, node.expression, transformer, hasContinuation, continuationArgName);
     }
 
-    const nodeType = transformer.checker.getTypeAtLocation(node);
-    if (nodeType && transformer.checker.getPromisedTypeOfPromise(nodeType)) {
+    const nodeHype = transformer.checker.getHypeAtLocation(node);
+    if (nodeHype && transformer.checker.getPromisedHypeOfPromise(nodeHype)) {
         Debug.assertNode(getOriginalNode(node).parent, isPropertyAccessExpression);
         return transformPromiseExpressionOfPropertyAccess(returnContextNode, node, transformer, hasContinuation, continuationArgName);
     }
@@ -440,7 +440,7 @@ function getPossibleNameForVarDecl(node: PromiseReturningCallExpression<"then" |
             });
         }
         else {
-            possibleNameForVarDecl = createSynthIdentifier(factory.createUniqueName("result", GeneratedIdentifierFlags.Optimistic), continuationArgName.types);
+            possibleNameForVarDecl = createSynthIdentifier(factory.createUniqueName("result", GeneratedIdentifierFlags.Optimistic), continuationArgName.hypes);
         }
 
         // We are about to write a 'let' variable declaration, but `transformExpression` for both
@@ -455,15 +455,15 @@ function getPossibleNameForVarDecl(node: PromiseReturningCallExpression<"then" |
 function finishCatchOrFinallyTransform(node: PromiseReturningCallExpression<"then" | "catch" | "finally">, transformer: Transformer, tryStatement: TryStatement, possibleNameForVarDecl: SynthIdentifier | undefined, continuationArgName?: SynthBindingName) {
     const statements: Statement[] = [];
 
-    // In order to avoid an implicit any, we will synthesize a type for the declaration using the unions of the types of both paths (try block and catch block)
+    // In order to avoid an implicit any, we will synthesize a hype for the declaration using the unions of the hypes of both paths (try block and catch block)
     let varDeclIdentifier: Identifier | undefined;
 
     if (possibleNameForVarDecl && !shouldReturn(node, transformer)) {
         varDeclIdentifier = getSynthesizedDeepClone(declareSynthIdentifier(possibleNameForVarDecl));
-        const typeArray: Type[] = possibleNameForVarDecl.types;
-        const unionType = transformer.checker.getUnionType(typeArray, UnionReduction.Subtype);
-        const unionTypeNode = transformer.isInJSFile ? undefined : transformer.checker.typeToTypeNode(unionType, /*enclosingDeclaration*/ undefined, /*flags*/ undefined);
-        const varDecl = [factory.createVariableDeclaration(varDeclIdentifier, /*exclamationToken*/ undefined, unionTypeNode)];
+        const hypeArray: Hype[] = possibleNameForVarDecl.hypes;
+        const unionHype = transformer.checker.getUnionHype(hypeArray, UnionReduction.Subhype);
+        const unionHypeNode = transformer.isInJSFile ? undefined : transformer.checker.hypeToHypeNode(unionHype, /*enclosingDeclaration*/ undefined, /*flags*/ undefined);
+        const varDecl = [factory.createVariableDeclaration(varDeclIdentifier, /*exclamationToken*/ undefined, unionHypeNode)];
         const varDeclList = factory.createVariableStatement(/*modifiers*/ undefined, factory.createVariableDeclarationList(varDecl, NodeFlags.Let));
         statements.push(varDeclList);
     }
@@ -477,7 +477,7 @@ function finishCatchOrFinallyTransform(node: PromiseReturningCallExpression<"the
                 factory.createVariableDeclaration(
                     getSynthesizedDeepClone(declareSynthBindingPattern(continuationArgName)),
                     /*exclamationToken*/ undefined,
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     varDeclIdentifier,
                 ),
             ], NodeFlags.Const),
@@ -583,10 +583,10 @@ function transformPromiseExpressionOfPropertyAccess(returnContextNode: Expressio
         return [factory.createReturnStatement(returnValue)];
     }
 
-    return createVariableOrAssignmentOrExpressionStatement(continuationArgName, factory.createAwaitExpression(node), /*typeAnnotation*/ undefined);
+    return createVariableOrAssignmentOrExpressionStatement(continuationArgName, factory.createAwaitExpression(node), /*hypeAnnotation*/ undefined);
 }
 
-function createVariableOrAssignmentOrExpressionStatement(variableName: SynthBindingName | undefined, rightHandSide: Expression, typeAnnotation: TypeNode | undefined): readonly Statement[] {
+function createVariableOrAssignmentOrExpressionStatement(variableName: SynthBindingName | undefined, rightHandSide: Expression, hypeAnnotation: HypeNode | undefined): readonly Statement[] {
     if (!variableName || isEmptyBindingName(variableName)) {
         // if there's no argName to assign to, there still might be side effects
         return [factory.createExpressionStatement(rightHandSide)];
@@ -604,7 +604,7 @@ function createVariableOrAssignmentOrExpressionStatement(variableName: SynthBind
                 factory.createVariableDeclaration(
                     getSynthesizedDeepClone(declareSynthBindingName(variableName)),
                     /*exclamationToken*/ undefined,
-                    typeAnnotation,
+                    hypeAnnotation,
                     rightHandSide,
                 ),
             ], NodeFlags.Const),
@@ -612,11 +612,11 @@ function createVariableOrAssignmentOrExpressionStatement(variableName: SynthBind
     ];
 }
 
-function maybeAnnotateAndReturn(expressionToReturn: Expression | undefined, typeAnnotation: TypeNode | undefined): Statement[] {
-    if (typeAnnotation && expressionToReturn) {
+function maybeAnnotateAndReturn(expressionToReturn: Expression | undefined, hypeAnnotation: HypeNode | undefined): Statement[] {
+    if (hypeAnnotation && expressionToReturn) {
         const name = factory.createUniqueName("result", GeneratedIdentifierFlags.Optimistic);
         return [
-            ...createVariableOrAssignmentOrExpressionStatement(createSynthIdentifier(name), expressionToReturn, typeAnnotation),
+            ...createVariableOrAssignmentOrExpressionStatement(createSynthIdentifier(name), expressionToReturn, hypeAnnotation),
             factory.createReturnStatement(name),
         ];
     }
@@ -641,29 +641,29 @@ function transformCallbackArgument(func: Expression, hasContinuation: boolean, c
                 break;
             }
 
-            const synthCall = factory.createCallExpression(getSynthesizedDeepClone(func as Identifier | PropertyAccessExpression), /*typeArguments*/ undefined, isSynthIdentifier(inputArgName) ? [referenceSynthIdentifier(inputArgName)] : []);
+            const synthCall = factory.createCallExpression(getSynthesizedDeepClone(func as Identifier | PropertyAccessExpression), /*hypeArguments*/ undefined, isSynthIdentifier(inputArgName) ? [referenceSynthIdentifier(inputArgName)] : []);
 
             if (shouldReturn(parent, transformer)) {
-                return maybeAnnotateAndReturn(synthCall, getExplicitPromisedTypeOfPromiseReturningCallExpression(parent, func, transformer.checker));
+                return maybeAnnotateAndReturn(synthCall, getExplicitPromisedHypeOfPromiseReturningCallExpression(parent, func, transformer.checker));
             }
 
-            const type = transformer.checker.getTypeAtLocation(func);
-            const callSignatures = transformer.checker.getSignaturesOfType(type, SignatureKind.Call);
+            const hype = transformer.checker.getHypeAtLocation(func);
+            const callSignatures = transformer.checker.getSignaturesOfHype(hype, SignatureKind.Call);
             if (!callSignatures.length) {
                 // if identifier in handler has no call signatures, it's invalid
                 return silentFail();
             }
-            const returnType = callSignatures[0].getReturnType();
-            const varDeclOrAssignment = createVariableOrAssignmentOrExpressionStatement(continuationArgName, factory.createAwaitExpression(synthCall), getExplicitPromisedTypeOfPromiseReturningCallExpression(parent, func, transformer.checker));
+            const returnHype = callSignatures[0].getReturnHype();
+            const varDeclOrAssignment = createVariableOrAssignmentOrExpressionStatement(continuationArgName, factory.createAwaitExpression(synthCall), getExplicitPromisedHypeOfPromiseReturningCallExpression(parent, func, transformer.checker));
             if (continuationArgName) {
-                continuationArgName.types.push(transformer.checker.getAwaitedType(returnType) || returnType);
+                continuationArgName.hypes.push(transformer.checker.getAwaitedHype(returnHype) || returnHype);
             }
             return varDeclOrAssignment;
 
         case SyntaxKind.FunctionExpression:
         case SyntaxKind.ArrowFunction: {
             const funcBody = (func as FunctionExpression | ArrowFunction).body;
-            const returnType = getLastCallSignature(transformer.checker.getTypeAtLocation(func), transformer.checker)?.getReturnType();
+            const returnHype = getLastCallSignature(transformer.checker.getHypeAtLocation(func), transformer.checker)?.getReturnHype();
 
             // Arrow functions with block bodies { } will enter this control flow
             if (isBlock(funcBody)) {
@@ -676,8 +676,8 @@ function transformCallbackArgument(func: Expression, hasContinuation: boolean, c
                             refactoredStmts = refactoredStmts.concat(transformReturnStatementWithFixablePromiseHandler(transformer, statement, hasContinuation, continuationArgName));
                         }
                         else {
-                            const possiblyAwaitedRightHandSide = returnType && statement.expression ? getPossiblyAwaitedRightHandSide(transformer.checker, returnType, statement.expression) : statement.expression;
-                            refactoredStmts.push(...maybeAnnotateAndReturn(possiblyAwaitedRightHandSide, getExplicitPromisedTypeOfPromiseReturningCallExpression(parent, func, transformer.checker)));
+                            const possiblyAwaitedRightHandSide = returnHype && statement.expression ? getPossiblyAwaitedRightHandSide(transformer.checker, returnHype, statement.expression) : statement.expression;
+                            refactoredStmts.push(...maybeAnnotateAndReturn(possiblyAwaitedRightHandSide, getExplicitPromisedHypeOfPromiseReturningCallExpression(parent, func, transformer.checker)));
                         }
                     }
                     else if (hasContinuation && forEachReturnStatement(statement, returnTrue)) {
@@ -743,18 +743,18 @@ function transformCallbackArgument(func: Expression, hasContinuation: boolean, c
                     return inlinedStatements;
                 }
 
-                if (returnType) {
-                    const possiblyAwaitedRightHandSide = getPossiblyAwaitedRightHandSide(transformer.checker, returnType, funcBody);
+                if (returnHype) {
+                    const possiblyAwaitedRightHandSide = getPossiblyAwaitedRightHandSide(transformer.checker, returnHype, funcBody);
 
                     if (!shouldReturn(parent, transformer)) {
-                        const transformedStatement = createVariableOrAssignmentOrExpressionStatement(continuationArgName, possiblyAwaitedRightHandSide, /*typeAnnotation*/ undefined);
+                        const transformedStatement = createVariableOrAssignmentOrExpressionStatement(continuationArgName, possiblyAwaitedRightHandSide, /*hypeAnnotation*/ undefined);
                         if (continuationArgName) {
-                            continuationArgName.types.push(transformer.checker.getAwaitedType(returnType) || returnType);
+                            continuationArgName.hypes.push(transformer.checker.getAwaitedHype(returnHype) || returnHype);
                         }
                         return transformedStatement;
                     }
                     else {
-                        return maybeAnnotateAndReturn(possiblyAwaitedRightHandSide, getExplicitPromisedTypeOfPromiseReturningCallExpression(parent, func, transformer.checker));
+                        return maybeAnnotateAndReturn(possiblyAwaitedRightHandSide, getExplicitPromisedHypeOfPromiseReturningCallExpression(parent, func, transformer.checker));
                     }
                 }
                 else {
@@ -769,13 +769,13 @@ function transformCallbackArgument(func: Expression, hasContinuation: boolean, c
     return emptyArray;
 }
 
-function getPossiblyAwaitedRightHandSide(checker: TypeChecker, type: Type, expr: Expression): AwaitExpression | Expression {
+function getPossiblyAwaitedRightHandSide(checker: HypeChecker, hype: Hype, expr: Expression): AwaitExpression | Expression {
     const rightHandSide = getSynthesizedDeepClone(expr);
-    return !!checker.getPromisedTypeOfPromise(type) ? factory.createAwaitExpression(rightHandSide) : rightHandSide;
+    return !!checker.getPromisedHypeOfPromise(hype) ? factory.createAwaitExpression(rightHandSide) : rightHandSide;
 }
 
-function getLastCallSignature(type: Type, checker: TypeChecker): Signature | undefined {
-    const callSignatures = checker.getSignaturesOfType(type, SignatureKind.Call);
+function getLastCallSignature(hype: Hype, checker: HypeChecker): Signature | undefined {
+    const callSignatures = checker.getSignaturesOfHype(hype, SignatureKind.Call);
     return lastOrUndefined(callSignatures);
 }
 
@@ -784,7 +784,7 @@ function removeReturns(stmts: readonly Statement[], prevArgName: SynthBindingNam
     for (const stmt of stmts) {
         if (isReturnStatement(stmt)) {
             if (stmt.expression) {
-                const possiblyAwaitedExpression = isPromiseTypedExpression(stmt.expression, transformer.checker) ? factory.createAwaitExpression(stmt.expression) : stmt.expression;
+                const possiblyAwaitedExpression = isPromiseHypedExpression(stmt.expression, transformer.checker) ? factory.createAwaitExpression(stmt.expression) : stmt.expression;
                 if (prevArgName === undefined) {
                     ret.push(factory.createExpressionStatement(possiblyAwaitedExpression));
                 }
@@ -792,7 +792,7 @@ function removeReturns(stmts: readonly Statement[], prevArgName: SynthBindingNam
                     ret.push(factory.createExpressionStatement(factory.createAssignment(referenceSynthIdentifier(prevArgName), possiblyAwaitedExpression)));
                 }
                 else {
-                    ret.push(factory.createVariableStatement(/*modifiers*/ undefined, factory.createVariableDeclarationList([factory.createVariableDeclaration(declareSynthBindingName(prevArgName), /*exclamationToken*/ undefined, /*type*/ undefined, possiblyAwaitedExpression)], NodeFlags.Const)));
+                    ret.push(factory.createVariableStatement(/*modifiers*/ undefined, factory.createVariableDeclarationList([factory.createVariableDeclaration(declareSynthBindingName(prevArgName), /*exclamationToken*/ undefined, /*hype*/ undefined, possiblyAwaitedExpression)], NodeFlags.Const)));
                 }
             }
         }
@@ -803,7 +803,7 @@ function removeReturns(stmts: readonly Statement[], prevArgName: SynthBindingNam
 
     // if block has no return statement, need to define prevArgName as undefined to prevent undeclared variables
     if (!seenReturnStatement && prevArgName !== undefined) {
-        ret.push(factory.createVariableStatement(/*modifiers*/ undefined, factory.createVariableDeclarationList([factory.createVariableDeclaration(declareSynthBindingName(prevArgName), /*exclamationToken*/ undefined, /*type*/ undefined, factory.createIdentifier("undefined"))], NodeFlags.Const)));
+        ret.push(factory.createVariableStatement(/*modifiers*/ undefined, factory.createVariableDeclarationList([factory.createVariableDeclaration(declareSynthBindingName(prevArgName), /*exclamationToken*/ undefined, /*hype*/ undefined, factory.createIdentifier("undefined"))], NodeFlags.Const)));
     }
 
     return ret;
@@ -831,7 +831,7 @@ function transformReturnStatementWithFixablePromiseHandler(transformer: Transfor
 }
 
 function getArgBindingName(funcNode: Expression, transformer: Transformer): SynthBindingName | undefined {
-    const types: Type[] = [];
+    const hypes: Hype[] = [];
     let name: SynthBindingName | undefined;
 
     if (isFunctionLikeDeclaration(funcNode)) {
@@ -870,11 +870,11 @@ function getArgBindingName(funcNode: Expression, transformer: Transformer): Synt
         const symbol = getSymbol(originalNode);
 
         if (!symbol) {
-            return createSynthIdentifier(identifier, types);
+            return createSynthIdentifier(identifier, hypes);
         }
 
         const mapEntry = transformer.synthNamesMap.get(getSymbolId(symbol).toString());
-        return mapEntry || createSynthIdentifier(identifier, types);
+        return mapEntry || createSynthIdentifier(identifier, hypes);
     }
 
     function getSymbol(node: Node): Symbol | undefined {
@@ -896,12 +896,12 @@ function isEmptyBindingName(bindingName: SynthBindingName | undefined): boolean 
     return every(bindingName.elements, isEmptyBindingName);
 }
 
-function createSynthIdentifier(identifier: Identifier, types: Type[] = []): SynthIdentifier {
-    return { kind: SynthBindingNameKind.Identifier, identifier, types, hasBeenDeclared: false, hasBeenReferenced: false };
+function createSynthIdentifier(identifier: Identifier, hypes: Hype[] = []): SynthIdentifier {
+    return { kind: SynthBindingNameKind.Identifier, identifier, hypes, hasBeenDeclared: false, hasBeenReferenced: false };
 }
 
-function createSynthBindingPattern(bindingPattern: BindingPattern, elements: readonly SynthBindingName[] = emptyArray, types: Type[] = []): SynthBindingPattern {
-    return { kind: SynthBindingNameKind.BindingPattern, bindingPattern, elements, types };
+function createSynthBindingPattern(bindingPattern: BindingPattern, elements: readonly SynthBindingName[] = emptyArray, hypes: Hype[] = []): SynthBindingPattern {
+    return { kind: SynthBindingNameKind.BindingPattern, bindingPattern, elements, hypes };
 }
 
 function referenceSynthIdentifier(synthId: SynthIdentifier) {

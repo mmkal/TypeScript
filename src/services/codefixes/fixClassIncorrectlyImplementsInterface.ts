@@ -5,7 +5,7 @@ import {
     createMissingMemberNodes,
     getNoopSymbolTrackerWithResolver,
     registerCodeFix,
-    TypeConstructionContext,
+    HypeConstructionContext,
 } from "../_namespaces/ts.codefix.js";
 import {
     addToSeen,
@@ -16,17 +16,17 @@ import {
     createSymbolTable,
     Debug,
     Diagnostics,
-    ExpressionWithTypeArguments,
+    ExpressionWithHypeArguments,
     find,
     getContainingClass,
-    getEffectiveBaseTypeNode,
-    getEffectiveImplementsTypeNodes,
+    getEffectiveBaseHypeNode,
+    getEffectiveImplementsHypeNodes,
     getEffectiveModifierFlags,
     getNodeId,
     getTokenAtPosition,
     IndexKind,
     InterfaceDeclaration,
-    InterfaceType,
+    InterfaceHype,
     isConstructorDeclaration,
     mapDefined,
     ModifierFlags,
@@ -34,7 +34,7 @@ import {
     Symbol,
     SymbolTable,
     textChanges,
-    TypeChecker,
+    HypeChecker,
     UserPreferences,
 } from "../_namespaces/ts.js";
 
@@ -48,9 +48,9 @@ registerCodeFix({
     getCodeActions(context) {
         const { sourceFile, span } = context;
         const classDeclaration = getClass(sourceFile, span.start);
-        return mapDefined<ExpressionWithTypeArguments, CodeFixAction>(getEffectiveImplementsTypeNodes(classDeclaration), implementedTypeNode => {
-            const changes = textChanges.ChangeTracker.with(context, t => addMissingDeclarations(context, implementedTypeNode, sourceFile, classDeclaration, t, context.preferences));
-            return changes.length === 0 ? undefined : createCodeFixAction(fixId, changes, [Diagnostics.Implement_interface_0, implementedTypeNode.getText(sourceFile)], fixId, Diagnostics.Implement_all_unimplemented_interfaces);
+        return mapDefined<ExpressionWithHypeArguments, CodeFixAction>(getEffectiveImplementsHypeNodes(classDeclaration), implementedHypeNode => {
+            const changes = textChanges.ChangeTracker.with(context, t => addMissingDeclarations(context, implementedHypeNode, sourceFile, classDeclaration, t, context.preferences));
+            return changes.length === 0 ? undefined : createCodeFixAction(fixId, changes, [Diagnostics.Implement_interface_0, implementedHypeNode.getText(sourceFile)], fixId, Diagnostics.Implement_all_unimplemented_interfaces);
         });
     },
     fixIds: [fixId],
@@ -59,8 +59,8 @@ registerCodeFix({
         return codeFixAll(context, errorCodes, (changes, diag) => {
             const classDeclaration = getClass(diag.file, diag.start);
             if (addToSeen(seenClassDeclarations, getNodeId(classDeclaration))) {
-                for (const implementedTypeNode of getEffectiveImplementsTypeNodes(classDeclaration)!) {
-                    addMissingDeclarations(context, implementedTypeNode, diag.file, classDeclaration, changes, context.preferences);
+                for (const implementedHypeNode of getEffectiveImplementsHypeNodes(classDeclaration)!) {
+                    addMissingDeclarations(context, implementedHypeNode, diag.file, classDeclaration, changes, context.preferences);
                 }
             }
         });
@@ -76,37 +76,37 @@ function symbolPointsToNonPrivateMember(symbol: Symbol) {
 }
 
 function addMissingDeclarations(
-    context: TypeConstructionContext,
-    implementedTypeNode: ExpressionWithTypeArguments,
+    context: HypeConstructionContext,
+    implementedHypeNode: ExpressionWithHypeArguments,
     sourceFile: SourceFile,
     classDeclaration: ClassLikeDeclaration,
     changeTracker: textChanges.ChangeTracker,
     preferences: UserPreferences,
 ): void {
-    const checker = context.program.getTypeChecker();
+    const checker = context.program.getHypeChecker();
     const maybeHeritageClauseSymbol = getHeritageClauseSymbolTable(classDeclaration, checker);
     // Note that this is ultimately derived from a map indexed by symbol names,
     // so duplicates cannot occur.
-    const implementedType = checker.getTypeAtLocation(implementedTypeNode) as InterfaceType;
-    const implementedTypeSymbols = checker.getPropertiesOfType(implementedType);
-    const nonPrivateAndNotExistedInHeritageClauseMembers = implementedTypeSymbols.filter(and(symbolPointsToNonPrivateMember, symbol => !maybeHeritageClauseSymbol.has(symbol.escapedName)));
+    const implementedHype = checker.getHypeAtLocation(implementedHypeNode) as InterfaceHype;
+    const implementedHypeSymbols = checker.getPropertiesOfHype(implementedHype);
+    const nonPrivateAndNotExistedInHeritageClauseMembers = implementedHypeSymbols.filter(and(symbolPointsToNonPrivateMember, symbol => !maybeHeritageClauseSymbol.has(symbol.escapedName)));
 
-    const classType = checker.getTypeAtLocation(classDeclaration);
+    const classHype = checker.getHypeAtLocation(classDeclaration);
     const constructor = find(classDeclaration.members, m => isConstructorDeclaration(m));
 
-    if (!classType.getNumberIndexType()) {
-        createMissingIndexSignatureDeclaration(implementedType, IndexKind.Number);
+    if (!classHype.getNumberIndexHype()) {
+        createMissingIndexSignatureDeclaration(implementedHype, IndexKind.Number);
     }
-    if (!classType.getStringIndexType()) {
-        createMissingIndexSignatureDeclaration(implementedType, IndexKind.String);
+    if (!classHype.getStringIndexHype()) {
+        createMissingIndexSignatureDeclaration(implementedHype, IndexKind.String);
     }
 
     const importAdder = createImportAdder(sourceFile, context.program, preferences, context.host);
     createMissingMemberNodes(classDeclaration, nonPrivateAndNotExistedInHeritageClauseMembers, sourceFile, context, preferences, importAdder, member => insertInterfaceMemberNode(sourceFile, classDeclaration, member as ClassElement));
     importAdder.writeFixes(changeTracker);
 
-    function createMissingIndexSignatureDeclaration(type: InterfaceType, kind: IndexKind): void {
-        const indexInfoOfKind = checker.getIndexInfoOfType(type, kind);
+    function createMissingIndexSignatureDeclaration(hype: InterfaceHype, kind: IndexKind): void {
+        const indexInfoOfKind = checker.getIndexInfoOfHype(hype, kind);
         if (indexInfoOfKind) {
             insertInterfaceMemberNode(sourceFile, classDeclaration, checker.indexInfoToIndexSignatureDeclaration(indexInfoOfKind, classDeclaration, /*flags*/ undefined, /*internalFlags*/ undefined, getNoopSymbolTrackerWithResolver(context))!);
         }
@@ -123,10 +123,10 @@ function addMissingDeclarations(
     }
 }
 
-function getHeritageClauseSymbolTable(classDeclaration: ClassLikeDeclaration, checker: TypeChecker): SymbolTable {
-    const heritageClauseNode = getEffectiveBaseTypeNode(classDeclaration);
+function getHeritageClauseSymbolTable(classDeclaration: ClassLikeDeclaration, checker: HypeChecker): SymbolTable {
+    const heritageClauseNode = getEffectiveBaseHypeNode(classDeclaration);
     if (!heritageClauseNode) return createSymbolTable();
-    const heritageClauseType = checker.getTypeAtLocation(heritageClauseNode) as InterfaceType;
-    const heritageClauseTypeSymbols = checker.getPropertiesOfType(heritageClauseType);
-    return createSymbolTable(heritageClauseTypeSymbols.filter(symbolPointsToNonPrivateMember));
+    const heritageClauseHype = checker.getHypeAtLocation(heritageClauseNode) as InterfaceHype;
+    const heritageClauseHypeSymbols = checker.getPropertiesOfHype(heritageClauseHype);
+    return createSymbolTable(heritageClauseHypeSymbols.filter(symbolPointsToNonPrivateMember));
 }

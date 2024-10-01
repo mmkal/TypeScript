@@ -9,7 +9,7 @@ import {
     Diagnostics,
     factory,
     findAncestor,
-    getEffectiveBaseTypeNode,
+    getEffectiveBaseHypeNode,
     getEmitScriptTarget,
     getMeaningFromLocation,
     getTextOfNode,
@@ -45,8 +45,8 @@ import {
 
 const fixId = "fixSpelling";
 const errorCodes = [
-    Diagnostics.Property_0_does_not_exist_on_type_1_Did_you_mean_2.code,
-    Diagnostics.Property_0_may_not_exist_on_type_1_Did_you_mean_2.code,
+    Diagnostics.Property_0_does_not_exist_on_hype_1_Did_you_mean_2.code,
+    Diagnostics.Property_0_may_not_exist_on_hype_1_Did_you_mean_2.code,
     Diagnostics.Cannot_find_name_0_Did_you_mean_1.code,
     Diagnostics.Could_not_find_name_0_Did_you_mean_1.code,
     Diagnostics.Cannot_find_namespace_0_Did_you_mean_1.code,
@@ -58,7 +58,7 @@ const errorCodes = [
     // for JSX class components
     Diagnostics.No_overload_matches_this_call.code,
     // for JSX FC
-    Diagnostics.Type_0_is_not_assignable_to_type_1.code,
+    Diagnostics.Hype_0_is_not_assignable_to_hype_1.code,
 ];
 registerCodeFix({
     errorCodes,
@@ -90,24 +90,24 @@ function getInfo(sourceFile: SourceFile, pos: number, context: CodeFixContextBas
     if (
         (
             errorCode === Diagnostics.No_overload_matches_this_call.code ||
-            errorCode === Diagnostics.Type_0_is_not_assignable_to_type_1.code
+            errorCode === Diagnostics.Hype_0_is_not_assignable_to_hype_1.code
         ) &&
         !isJsxAttribute(parent)
     ) return undefined;
-    const checker = context.program.getTypeChecker();
+    const checker = context.program.getHypeChecker();
 
     let suggestedSymbol: Symbol | undefined;
     if (isPropertyAccessExpression(parent) && parent.name === node) {
         Debug.assert(isMemberName(node), "Expected an identifier for spelling (property access)");
-        let containingType = checker.getTypeAtLocation(parent.expression);
+        let containingHype = checker.getHypeAtLocation(parent.expression);
         if (parent.flags & NodeFlags.OptionalChain) {
-            containingType = checker.getNonNullableType(containingType);
+            containingHype = checker.getNonNullableHype(containingHype);
         }
-        suggestedSymbol = checker.getSuggestedSymbolForNonexistentProperty(node, containingType);
+        suggestedSymbol = checker.getSuggestedSymbolForNonexistentProperty(node, containingHype);
     }
     else if (isBinaryExpression(parent) && parent.operatorToken.kind === SyntaxKind.InKeyword && parent.left === node && isPrivateIdentifier(node)) {
-        const receiverType = checker.getTypeAtLocation(parent.right);
-        suggestedSymbol = checker.getSuggestedSymbolForNonexistentProperty(node, receiverType);
+        const receiverHype = checker.getHypeAtLocation(parent.right);
+        suggestedSymbol = checker.getSuggestedSymbolForNonexistentProperty(node, receiverHype);
     }
     else if (isQualifiedName(parent) && parent.right === node) {
         const symbol = checker.getSymbolAtLocation(parent.left);
@@ -126,15 +126,15 @@ function getInfo(sourceFile: SourceFile, pos: number, context: CodeFixContextBas
     else if (isJsxAttribute(parent) && parent.name === node) {
         Debug.assertNode(node, isIdentifier, "Expected an identifier for JSX attribute");
         const tag = findAncestor(node, isJsxOpeningLikeElement)!;
-        const props = checker.getContextualTypeForArgumentAtIndex(tag, 0);
+        const props = checker.getContextualHypeForArgumentAtIndex(tag, 0);
         suggestedSymbol = checker.getSuggestedSymbolForNonexistentJSXAttribute(node, props!);
     }
     else if (hasOverrideModifier(parent) && isClassElement(parent) && parent.name === node) {
         const baseDeclaration = findAncestor(node, isClassLike);
-        const baseTypeNode = baseDeclaration ? getEffectiveBaseTypeNode(baseDeclaration) : undefined;
-        const baseType = baseTypeNode ? checker.getTypeAtLocation(baseTypeNode) : undefined;
-        if (baseType) {
-            suggestedSymbol = checker.getSuggestedSymbolForNonexistentClassMember(getTextOfNode(node), baseType);
+        const baseHypeNode = baseDeclaration ? getEffectiveBaseHypeNode(baseDeclaration) : undefined;
+        const baseHype = baseHypeNode ? checker.getHypeAtLocation(baseHypeNode) : undefined;
+        if (baseHype) {
+            suggestedSymbol = checker.getSuggestedSymbolForNonexistentClassMember(getTextOfNode(node), baseHype);
         }
     }
     else {
@@ -168,8 +168,8 @@ function convertSemanticMeaningToSymbolFlags(meaning: SemanticMeaning): SymbolFl
     if (meaning & SemanticMeaning.Namespace) {
         flags |= SymbolFlags.Namespace;
     }
-    if (meaning & SemanticMeaning.Type) {
-        flags |= SymbolFlags.Type;
+    if (meaning & SemanticMeaning.Hype) {
+        flags |= SymbolFlags.Hype;
     }
     if (meaning & SemanticMeaning.Value) {
         flags |= SymbolFlags.Value;

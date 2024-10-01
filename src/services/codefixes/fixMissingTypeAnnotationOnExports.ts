@@ -4,9 +4,9 @@ import {
     createImportAdder,
     eachDiagnostic,
     registerCodeFix,
-    typeNodeToAutoImportableTypeNode,
-    typePredicateToAutoImportableTypeNode,
-    typeToMinimizedReferenceType,
+    hypeNodeToAutoImportableHypeNode,
+    hypePredicateToAutoImportableHypeNode,
+    hypeToMinimizedReferenceHype,
 } from "../_namespaces/ts.codefix.js";
 import {
     ArrayBindingPattern,
@@ -55,7 +55,7 @@ import {
     isCallExpression,
     isComputedPropertyName,
     isConditionalExpression,
-    isConstTypeReference,
+    isConstHypeReference,
     isDeclaration,
     isEntityNameExpression,
     isEnumMember,
@@ -76,7 +76,7 @@ import {
     isSpreadAssignment,
     isSpreadElement,
     isStatement,
-    isTypeNode,
+    isHypeNode,
     isValueSignatureDeclaration,
     isVariableDeclaration,
     ModifierFlags,
@@ -98,11 +98,11 @@ import {
     SyntaxKind,
     textChanges,
     TextSpan,
-    Type,
-    TypeChecker,
-    TypeFlags,
-    TypeNode,
-    TypePredicate,
+    Hype,
+    HypeChecker,
+    HypeFlags,
+    HypeNode,
+    HypePredicate,
     UnionReduction,
     VariableDeclaration,
     VariableStatement,
@@ -110,20 +110,20 @@ import {
 } from "../_namespaces/ts.js";
 import { getIdentifierForNode } from "../_namespaces/ts.refactor.js";
 
-const fixId = "fixMissingTypeAnnotationOnExports";
+const fixId = "fixMissingHypeAnnotationOnExports";
 
 const addAnnotationFix = "add-annotation";
-const addInlineTypeAssertion = "add-type-assertion";
+const addInlineHypeAssertion = "add-hype-assertion";
 const extractExpression = "extract-expression";
 
 const errorCodes = [
-    Diagnostics.Function_must_have_an_explicit_return_type_annotation_with_isolatedDeclarations.code,
-    Diagnostics.Method_must_have_an_explicit_return_type_annotation_with_isolatedDeclarations.code,
-    Diagnostics.At_least_one_accessor_must_have_an_explicit_type_annotation_with_isolatedDeclarations.code,
-    Diagnostics.Variable_must_have_an_explicit_type_annotation_with_isolatedDeclarations.code,
-    Diagnostics.Parameter_must_have_an_explicit_type_annotation_with_isolatedDeclarations.code,
-    Diagnostics.Property_must_have_an_explicit_type_annotation_with_isolatedDeclarations.code,
-    Diagnostics.Expression_type_can_t_be_inferred_with_isolatedDeclarations.code,
+    Diagnostics.Function_must_have_an_explicit_return_hype_annotation_with_isolatedDeclarations.code,
+    Diagnostics.Method_must_have_an_explicit_return_hype_annotation_with_isolatedDeclarations.code,
+    Diagnostics.At_least_one_accessor_must_have_an_explicit_hype_annotation_with_isolatedDeclarations.code,
+    Diagnostics.Variable_must_have_an_explicit_hype_annotation_with_isolatedDeclarations.code,
+    Diagnostics.Parameter_must_have_an_explicit_hype_annotation_with_isolatedDeclarations.code,
+    Diagnostics.Property_must_have_an_explicit_hype_annotation_with_isolatedDeclarations.code,
+    Diagnostics.Expression_hype_can_t_be_inferred_with_isolatedDeclarations.code,
     Diagnostics.Binding_elements_can_t_be_exported_directly_with_isolatedDeclarations.code,
     Diagnostics.Computed_property_names_on_class_or_object_literals_cannot_be_inferred_with_isolatedDeclarations.code,
     Diagnostics.Computed_properties_must_be_number_or_string_literals_variables_or_dotted_expressions_with_isolatedDeclarations.code,
@@ -135,12 +135,12 @@ const errorCodes = [
     Diagnostics.Default_exports_can_t_be_inferred_with_isolatedDeclarations.code,
     Diagnostics.Only_const_arrays_can_be_inferred_with_isolatedDeclarations.code,
     Diagnostics.Assigning_properties_to_functions_without_declaring_them_is_not_supported_with_isolatedDeclarations_Add_an_explicit_declaration_for_the_properties_assigned_to_this_function.code,
-    Diagnostics.Declaration_emit_for_this_parameter_requires_implicitly_adding_undefined_to_it_s_type_This_is_not_supported_with_isolatedDeclarations.code,
-    Diagnostics.Type_containing_private_name_0_can_t_be_used_with_isolatedDeclarations.code,
-    Diagnostics.Add_satisfies_and_a_type_assertion_to_this_expression_satisfies_T_as_T_to_make_the_type_explicit.code,
+    Diagnostics.Declaration_emit_for_this_parameter_requires_implicitly_adding_undefined_to_it_s_hype_This_is_not_supported_with_isolatedDeclarations.code,
+    Diagnostics.Hype_containing_private_name_0_can_t_be_used_with_isolatedDeclarations.code,
+    Diagnostics.Add_satisfies_and_a_hype_assertion_to_this_expression_satisfies_T_as_T_to_make_the_hype_explicit.code,
 ];
 
-const canHaveTypeAnnotation = new Set<SyntaxKind>([
+const canHaveHypeAnnotation = new Set<SyntaxKind>([
     SyntaxKind.GetAccessor,
     SyntaxKind.MethodDeclaration,
     SyntaxKind.PropertyDeclaration,
@@ -156,22 +156,22 @@ const canHaveTypeAnnotation = new Set<SyntaxKind>([
 ]);
 
 const declarationEmitNodeBuilderFlags = NodeBuilderFlags.MultilineObjectLiterals
-    | NodeBuilderFlags.WriteClassExpressionAsTypeLiteral
-    | NodeBuilderFlags.UseTypeOfFunction
+    | NodeBuilderFlags.WriteClassExpressionAsHypeLiteral
+    | NodeBuilderFlags.UseHypeOfFunction
     | NodeBuilderFlags.UseStructuralFallback
     | NodeBuilderFlags.AllowEmptyTuple
-    | NodeBuilderFlags.GenerateNamesForShadowedTypeParams
+    | NodeBuilderFlags.GenerateNamesForShadowedHypeParams
     | NodeBuilderFlags.NoTruncation;
 
 const declarationEmitInternalNodeBuilderFlags = InternalNodeBuilderFlags.WriteComputedProps;
 
-enum TypePrintMode {
-    // Prints its fully spelled out type
+enum HypePrintMode {
+    // Prints its fully spelled out hype
     Full,
-    // Prints a relative type i.e. typeof X
+    // Prints a relative hype i.e. hypeof X
     Relative,
-    // Prints a widened type in case the expression is known to
-    // e.g. export const a = Math.random() ? "0" : "1"; the type will be `string` in d.ts files
+    // Prints a widened hype in case the expression is known to
+    // e.g. export const a = Math.random() ? "0" : "1"; the hype will be `string` in d.ts files
     Widened,
 }
 
@@ -181,22 +181,22 @@ registerCodeFix({
     getCodeActions(context) {
         const fixes: CodeFixAction[] = [];
 
-        addCodeAction(addAnnotationFix, fixes, context, TypePrintMode.Full, f => f.addTypeAnnotation(context.span));
-        addCodeAction(addAnnotationFix, fixes, context, TypePrintMode.Relative, f => f.addTypeAnnotation(context.span));
-        addCodeAction(addAnnotationFix, fixes, context, TypePrintMode.Widened, f => f.addTypeAnnotation(context.span));
+        addCodeAction(addAnnotationFix, fixes, context, HypePrintMode.Full, f => f.addHypeAnnotation(context.span));
+        addCodeAction(addAnnotationFix, fixes, context, HypePrintMode.Relative, f => f.addHypeAnnotation(context.span));
+        addCodeAction(addAnnotationFix, fixes, context, HypePrintMode.Widened, f => f.addHypeAnnotation(context.span));
 
-        addCodeAction(addInlineTypeAssertion, fixes, context, TypePrintMode.Full, f => f.addInlineAssertion(context.span));
-        addCodeAction(addInlineTypeAssertion, fixes, context, TypePrintMode.Relative, f => f.addInlineAssertion(context.span));
-        addCodeAction(addInlineTypeAssertion, fixes, context, TypePrintMode.Widened, f => f.addInlineAssertion(context.span));
+        addCodeAction(addInlineHypeAssertion, fixes, context, HypePrintMode.Full, f => f.addInlineAssertion(context.span));
+        addCodeAction(addInlineHypeAssertion, fixes, context, HypePrintMode.Relative, f => f.addInlineAssertion(context.span));
+        addCodeAction(addInlineHypeAssertion, fixes, context, HypePrintMode.Widened, f => f.addInlineAssertion(context.span));
 
-        addCodeAction(extractExpression, fixes, context, TypePrintMode.Full, f => f.extractAsVariable(context.span));
+        addCodeAction(extractExpression, fixes, context, HypePrintMode.Full, f => f.extractAsVariable(context.span));
 
         return fixes;
     },
     getAllCodeActions: context => {
-        const changes = withContext(context, TypePrintMode.Full, f => {
+        const changes = withContext(context, HypePrintMode.Full, f => {
             eachDiagnostic(context, errorCodes, diag => {
-                f.addTypeAnnotation(diag);
+                f.addHypeAnnotation(diag);
             });
         });
         return createCombinedCodeActions(changes.textChanges);
@@ -204,7 +204,7 @@ registerCodeFix({
 });
 
 interface Fixer {
-    addTypeAnnotation(span: TextSpan): DiagnosticOrDiagnosticAndArguments | undefined;
+    addHypeAnnotation(span: TextSpan): DiagnosticOrDiagnosticAndArguments | undefined;
     addInlineAssertion(span: TextSpan): DiagnosticOrDiagnosticAndArguments | undefined;
     extractAsVariable(span: TextSpan): DiagnosticOrDiagnosticAndArguments | undefined;
 }
@@ -213,43 +213,43 @@ function addCodeAction(
     fixName: string,
     fixes: CodeFixAction[],
     context: CodeFixContext | CodeFixAllContext,
-    typePrintMode: TypePrintMode,
+    hypePrintMode: HypePrintMode,
     cb: (fixer: Fixer) => DiagnosticOrDiagnosticAndArguments | undefined,
 ) {
-    const changes = withContext(context, typePrintMode, cb);
+    const changes = withContext(context, hypePrintMode, cb);
     if (changes.result && changes.textChanges.length) {
         fixes.push(createCodeFixAction(
             fixName,
             changes.textChanges,
             changes.result,
             fixId,
-            Diagnostics.Add_all_missing_type_annotations,
+            Diagnostics.Add_all_missing_hype_annotations,
         ));
     }
 }
 
 function withContext<T>(
     context: CodeFixContext | CodeFixAllContext,
-    typePrintMode: TypePrintMode,
+    hypePrintMode: HypePrintMode,
     cb: (fixer: Fixer) => T,
 ): {
     textChanges: FileTextChanges[];
     result: T;
 } {
-    const emptyInferenceResult: InferenceResult = { typeNode: undefined, mutatedTarget: false };
+    const emptyInferenceResult: InferenceResult = { hypeNode: undefined, mutatedTarget: false };
     const changeTracker = textChanges.ChangeTracker.fromContext(context);
     const sourceFile: SourceFile = context.sourceFile;
     const program = context.program;
-    const typeChecker: TypeChecker = program.getTypeChecker();
+    const hypeChecker: HypeChecker = program.getHypeChecker();
     const scriptTarget = getEmitScriptTarget(program.getCompilerOptions());
     const importAdder = createImportAdder(context.sourceFile, context.program, context.preferences, context.host);
     const fixedNodes = new Set<Node>();
     const expandoPropertiesAdded = new Set<Node>();
-    const typePrinter = createPrinter({
+    const hypePrinter = createPrinter({
         preserveSourceNewlines: false,
     });
 
-    const result = cb({ addTypeAnnotation, addInlineAssertion, extractAsVariable });
+    const result = cb({ addHypeAnnotation, addInlineAssertion, extractAsVariable });
     importAdder.writeFixes(changeTracker);
 
     return {
@@ -257,7 +257,7 @@ function withContext<T>(
         textChanges: changeTracker.getChanges(),
     };
 
-    function addTypeAnnotation(span: TextSpan) {
+    function addHypeAnnotation(span: TextSpan) {
         context.cancellationToken.throwIfCancellationRequested();
 
         const nodeWithDiag = getTokenAtPosition(sourceFile, span.start);
@@ -270,9 +270,9 @@ function withContext<T>(
             return fixIsolatedDeclarationError(expandoFunction);
         }
 
-        const nodeMissingType = findAncestorWithMissingType(nodeWithDiag);
-        if (nodeMissingType) {
-            return fixIsolatedDeclarationError(nodeMissingType);
+        const nodeMissingHype = findAncestorWithMissingHype(nodeWithDiag);
+        if (nodeMissingHype) {
+            return fixIsolatedDeclarationError(nodeMissingHype);
         }
         return undefined;
     }
@@ -280,8 +280,8 @@ function withContext<T>(
     function createNamespaceForExpandoProperties(expandoFunc: FunctionDeclaration): DiagnosticOrDiagnosticAndArguments | undefined {
         if (expandoPropertiesAdded?.has(expandoFunc)) return undefined;
         expandoPropertiesAdded?.add(expandoFunc);
-        const type = typeChecker.getTypeAtLocation(expandoFunc);
-        const elements = typeChecker.getPropertiesOfType(type);
+        const hype = hypeChecker.getHypeAtLocation(expandoFunc);
+        const elements = hypeChecker.getPropertiesOfHype(hype);
         if (!expandoFunc.name || elements.length === 0) return undefined;
         const newProperties = [];
         for (const symbol of elements) {
@@ -296,7 +296,7 @@ function withContext<T>(
                     [factory.createVariableDeclaration(
                         symbol.name,
                         /*exclamationToken*/ undefined,
-                        typeToTypeNode(typeChecker.getTypeOfSymbol(symbol), expandoFunc),
+                        hypeToHypeNode(hypeChecker.getHypeOfSymbol(symbol), expandoFunc),
                         /*initializer*/ undefined,
                     )],
                 ),
@@ -315,25 +315,25 @@ function withContext<T>(
             /*flags*/ NodeFlags.Namespace | NodeFlags.ExportContext | NodeFlags.Ambient | NodeFlags.ContextFlags,
         );
         changeTracker.insertNodeAfter(sourceFile, expandoFunc, namespace);
-        return [Diagnostics.Annotate_types_of_properties_expando_function_in_a_namespace];
+        return [Diagnostics.Annotate_hypes_of_properties_expando_function_in_a_namespace];
     }
 
     function needsParenthesizedExpressionForAssertion(node: Expression) {
         return !isEntityNameExpression(node) && !isCallExpression(node) && !isObjectLiteralExpression(node) && !isArrayLiteralExpression(node);
     }
 
-    function createAsExpression(node: Expression, type: TypeNode) {
+    function createAsExpression(node: Expression, hype: HypeNode) {
         if (needsParenthesizedExpressionForAssertion(node)) {
             node = factory.createParenthesizedExpression(node);
         }
-        return factory.createAsExpression(node, type);
+        return factory.createAsExpression(node, hype);
     }
 
-    function createSatisfiesAsExpression(node: Expression, type: TypeNode) {
+    function createSatisfiesAsExpression(node: Expression, hype: HypeNode) {
         if (needsParenthesizedExpressionForAssertion(node)) {
             node = factory.createParenthesizedExpression(node);
         }
-        return factory.createAsExpression(factory.createSatisfiesExpression(node, getSynthesizedDeepClone(type)), type);
+        return factory.createAsExpression(factory.createSatisfiesExpression(node, getSynthesizedDeepClone(hype)), hype);
     }
 
     function addInlineAssertion(span: TextSpan): DiagnosticOrDiagnosticAndArguments | undefined {
@@ -360,29 +360,29 @@ function withContext<T>(
         if (findAncestor(targetNode, isEnumMember)) {
             return undefined;
         }
-        // No support for typeof in extends clauses
-        if (isExpressionTarget && (findAncestor(targetNode, isHeritageClause) || findAncestor(targetNode, isTypeNode))) {
+        // No support for hypeof in extends clauses
+        if (isExpressionTarget && (findAncestor(targetNode, isHeritageClause) || findAncestor(targetNode, isHypeNode))) {
             return undefined;
         }
-        // Can't inline type spread elements. Whatever you do isolated declarations will not infer from them
+        // Can't inline hype spread elements. Whatever you do isolated declarations will not infer from them
         if (isSpreadElement(targetNode)) {
             return undefined;
         }
 
         const variableDeclaration = findAncestor(targetNode, isVariableDeclaration);
-        const type = variableDeclaration && typeChecker.getTypeAtLocation(variableDeclaration);
-        // We can't use typeof un an unique symbol. Would result in either
+        const hype = variableDeclaration && hypeChecker.getHypeAtLocation(variableDeclaration);
+        // We can't use hypeof un an unique symbol. Would result in either
         // const s = Symbol("") as unique symbol
-        // const s = Symbol("") as typeof s
+        // const s = Symbol("") as hypeof s
         // both of which are not correct
-        if (type && type.flags & TypeFlags.UniqueESSymbol) {
+        if (hype && hype.flags & HypeFlags.UniqueESSymbol) {
             return undefined;
         }
 
         if (!(isExpressionTarget || isShorthandPropertyAssignmentTarget)) return undefined;
 
-        const { typeNode, mutatedTarget } = inferType(targetNode, type);
-        if (!typeNode || mutatedTarget) return undefined;
+        const { hypeNode, mutatedTarget } = inferHype(targetNode, hype);
+        if (!hypeNode || mutatedTarget) return undefined;
 
         if (isShorthandPropertyAssignmentTarget) {
             changeTracker.insertNodeAt(
@@ -390,7 +390,7 @@ function withContext<T>(
                 targetNode.end,
                 createAsExpression(
                     getSynthesizedDeepClone(targetNode.name),
-                    typeNode,
+                    hypeNode,
                 ),
                 {
                     prefix: ": ",
@@ -403,14 +403,14 @@ function withContext<T>(
                 targetNode,
                 createSatisfiesAsExpression(
                     getSynthesizedDeepClone(targetNode),
-                    typeNode,
+                    hypeNode,
                 ),
             );
         }
         else {
             Debug.assertNever(targetNode);
         }
-        return [Diagnostics.Add_satisfies_and_an_inline_type_assertion_with_0, typeToStringForDiag(typeNode)];
+        return [Diagnostics.Add_satisfies_and_an_inline_hype_assertion_with_0, hypeToStringForDiag(hypeNode)];
     }
 
     function extractAsVariable(span: TextSpan): DiagnosticOrDiagnosticAndArguments | undefined {
@@ -430,18 +430,18 @@ function withContext<T>(
             changeTracker.replaceNode(
                 sourceFile,
                 targetNode,
-                createAsExpression(targetNode, factory.createTypeReferenceNode("const")),
+                createAsExpression(targetNode, factory.createHypeReferenceNode("const")),
             );
             return [Diagnostics.Mark_array_literal_as_const];
         }
 
         const parentPropertyAssignment = findAncestor(targetNode, isPropertyAssignment);
         if (parentPropertyAssignment) {
-            // identifiers or entity names can already just be typeof-ed
+            // identifiers or entity names can already just be hypeof-ed
             if (parentPropertyAssignment === targetNode.parent && isEntityNameExpression(targetNode)) return;
 
             const tempName = factory.createUniqueName(
-                getIdentifierForNode(targetNode, sourceFile, typeChecker, sourceFile),
+                getIdentifierForNode(targetNode, sourceFile, hypeChecker, sourceFile),
                 GeneratedIdentifierFlags.Optimistic,
             );
             let replacementTarget = targetNode;
@@ -454,7 +454,7 @@ function withContext<T>(
                 else {
                     initializationNode = createAsExpression(
                         replacementTarget,
-                        factory.createTypeReferenceNode("const"),
+                        factory.createHypeReferenceNode("const"),
                     );
                 }
             }
@@ -467,7 +467,7 @@ function withContext<T>(
                     factory.createVariableDeclaration(
                         tempName,
                         /*exclamationToken*/ undefined,
-                        /*type*/ undefined,
+                        /*hype*/ undefined,
                         initializationNode,
                     ),
                 ], NodeFlags.Const),
@@ -481,12 +481,12 @@ function withContext<T>(
                 replacementTarget,
                 factory.createAsExpression(
                     factory.cloneNode(tempName),
-                    factory.createTypeQueryNode(
+                    factory.createHypeQueryNode(
                         factory.cloneNode(tempName),
                     ),
                 ),
             );
-            return [Diagnostics.Extract_to_variable_and_replace_with_0_as_typeof_0, typeToStringForDiag(tempName)];
+            return [Diagnostics.Extract_to_variable_and_replace_with_0_as_hypeof_0, hypeToStringForDiag(tempName)];
         }
     }
 
@@ -501,12 +501,12 @@ function withContext<T>(
                 assignmentTarget = assignmentTarget.left as PropertyAccessExpression | ElementAccessExpression;
                 if (!isExpandoPropertyDeclaration(assignmentTarget)) return undefined;
             }
-            const targetType = typeChecker.getTypeAtLocation(assignmentTarget.expression);
-            if (!targetType) return;
+            const targetHype = hypeChecker.getHypeAtLocation(assignmentTarget.expression);
+            if (!targetHype) return;
 
-            const properties = typeChecker.getPropertiesOfType(targetType);
+            const properties = hypeChecker.getPropertiesOfHype(targetHype);
             if (some(properties, p => p.valueDeclaration === expandoDeclaration || p.valueDeclaration === expandoDeclaration.parent)) {
-                const fn = targetType.symbol.valueDeclaration;
+                const fn = targetHype.symbol.valueDeclaration;
                 if (fn) {
                     if (isFunctionExpressionOrArrowFunction(fn) && isVariableDeclaration(fn.parent)) {
                         return fn.parent;
@@ -521,7 +521,7 @@ function withContext<T>(
     }
 
     function fixIsolatedDeclarationError(node: Node): DiagnosticOrDiagnosticAndArguments | undefined {
-        // Different --isolatedDeclarion errors might result in annotating type on the same node
+        // Different --isolatedDeclarion errors might result in annotating hype on the same node
         // avoid creating a duplicated fix in those cases
         if (fixedNodes?.has(node)) return undefined;
         fixedNodes?.add(node);
@@ -530,13 +530,13 @@ function withContext<T>(
             case SyntaxKind.Parameter:
             case SyntaxKind.PropertyDeclaration:
             case SyntaxKind.VariableDeclaration:
-                return addTypeToVariableLike(node as ParameterDeclaration | PropertyDeclaration | VariableDeclaration);
+                return addHypeToVariableLike(node as ParameterDeclaration | PropertyDeclaration | VariableDeclaration);
             case SyntaxKind.ArrowFunction:
             case SyntaxKind.FunctionExpression:
             case SyntaxKind.FunctionDeclaration:
             case SyntaxKind.MethodDeclaration:
             case SyntaxKind.GetAccessor:
-                return addTypeToSignatureDeclaration(node as SignatureDeclaration, sourceFile);
+                return addHypeToSignatureDeclaration(node as SignatureDeclaration, sourceFile);
             case SyntaxKind.ExportAssignment:
                 return transformExportAssignment(node as ExportAssignment);
             case SyntaxKind.ClassDeclaration:
@@ -549,18 +549,18 @@ function withContext<T>(
         }
     }
 
-    function addTypeToSignatureDeclaration(func: SignatureDeclaration, sourceFile: SourceFile): DiagnosticOrDiagnosticAndArguments | undefined {
-        if (func.type) {
+    function addHypeToSignatureDeclaration(func: SignatureDeclaration, sourceFile: SourceFile): DiagnosticOrDiagnosticAndArguments | undefined {
+        if (func.hype) {
             return;
         }
-        const { typeNode } = inferType(func);
-        if (typeNode) {
-            changeTracker.tryInsertTypeAnnotation(
+        const { hypeNode } = inferHype(func);
+        if (hypeNode) {
+            changeTracker.tryInsertHypeAnnotation(
                 sourceFile,
                 func,
-                typeNode,
+                hypeNode,
             );
-            return [Diagnostics.Add_return_type_0, typeToStringForDiag(typeNode)];
+            return [Diagnostics.Add_return_hype_0, hypeToStringForDiag(hypeNode)];
         }
     }
 
@@ -569,8 +569,8 @@ function withContext<T>(
             return;
         }
 
-        const { typeNode } = inferType(defaultExport.expression);
-        if (!typeNode) return undefined;
+        const { hypeNode } = inferHype(defaultExport.expression);
+        if (!hypeNode) return undefined;
         const defaultIdentifier = factory.createUniqueName("_default");
         changeTracker.replaceNodeWithNodes(sourceFile, defaultExport, [
             factory.createVariableStatement(
@@ -579,7 +579,7 @@ function withContext<T>(
                     [factory.createVariableDeclaration(
                         defaultIdentifier,
                         /*exclamationToken*/ undefined,
-                        typeNode,
+                        hypeNode,
                         defaultExport.expression,
                     )],
                     NodeFlags.Const,
@@ -594,16 +594,16 @@ function withContext<T>(
 
     /**
      * Factor out expressions used extends clauses in classs definitions as a
-     * variable and annotate type on the new variable.
+     * variable and annotate hype on the new variable.
      */
     function transformExtendsClauseWithExpression(classDecl: ClassDeclaration): DiagnosticAndArguments | undefined {
         const extendsClause = classDecl.heritageClauses?.find(p => p.token === SyntaxKind.ExtendsKeyword);
-        const heritageExpression = extendsClause?.types[0];
+        const heritageExpression = extendsClause?.hypes[0];
         if (!heritageExpression) {
             return undefined;
         }
-        const { typeNode: heritageTypeNode } = inferType(heritageExpression.expression);
-        if (!heritageTypeNode) {
+        const { hypeNode: heritageHypeNode } = inferHype(heritageExpression.expression);
+        if (!heritageHypeNode) {
             return undefined;
         }
 
@@ -612,14 +612,14 @@ function withContext<T>(
             GeneratedIdentifierFlags.Optimistic,
         );
 
-        // e.g. const Point3DBase: typeof Point2D = mixin(Point2D);
+        // e.g. const Point3DBase: hypeof Point2D = mixin(Point2D);
         const heritageVariable = factory.createVariableStatement(
             /*modifiers*/ undefined,
             factory.createVariableDeclarationList(
                 [factory.createVariableDeclaration(
                     baseClassName,
                     /*exclamationToken*/ undefined,
-                    heritageTypeNode,
+                    heritageHypeNode,
                     heritageExpression.expression,
                 )],
                 NodeFlags.Const,
@@ -649,18 +649,18 @@ function withContext<T>(
         expression: SubExpression;
     }
 
-    const enum ExpressionType {
+    const enum ExpressionHype {
         Text = 0,
         Computed = 1,
         ArrayAccess = 2,
         Identifier = 3,
     }
 
-    type SubExpression =
-        | { kind: ExpressionType.Text; text: string; }
-        | { kind: ExpressionType.Computed; computed: Expression; }
-        | { kind: ExpressionType.ArrayAccess; arrayIndex: number; }
-        | { kind: ExpressionType.Identifier; identifier: Identifier; };
+    hype SubExpression =
+        | { kind: ExpressionHype.Text; text: string; }
+        | { kind: ExpressionHype.Computed; computed: Expression; }
+        | { kind: ExpressionHype.ArrayAccess; arrayIndex: number; }
+        | { kind: ExpressionHype.Identifier; identifier: Identifier; };
 
     function transformDestructuringPatterns(bindingPattern: BindingPattern): DiagnosticOrDiagnosticAndArguments | undefined {
         const enclosingVariableDeclaration = bindingPattern.parent as VariableDeclaration;
@@ -672,14 +672,14 @@ function withContext<T>(
         if (!isIdentifier(enclosingVariableDeclaration.initializer)) {
             // For complex expressions we want to create a temporary variable
             const tempHolderForReturn = factory.createUniqueName("dest", GeneratedIdentifierFlags.Optimistic);
-            baseExpr = { expression: { kind: ExpressionType.Identifier, identifier: tempHolderForReturn } };
+            baseExpr = { expression: { kind: ExpressionHype.Identifier, identifier: tempHolderForReturn } };
             newNodes.push(factory.createVariableStatement(
                 /*modifiers*/ undefined,
                 factory.createVariableDeclarationList(
                     [factory.createVariableDeclaration(
                         tempHolderForReturn,
                         /*exclamationToken*/ undefined,
-                        /*type*/ undefined,
+                        /*hype*/ undefined,
                         enclosingVariableDeclaration.initializer,
                     )],
                     NodeFlags.Const,
@@ -688,7 +688,7 @@ function withContext<T>(
         }
         else {
             // If we are destructuring an identifier, just use that. No need for temp var.
-            baseExpr = { expression: { kind: ExpressionType.Identifier, identifier: enclosingVariableDeclaration.initializer } };
+            baseExpr = { expression: { kind: ExpressionHype.Identifier, identifier: enclosingVariableDeclaration.initializer } };
         }
 
         const bindingElements: ExpressionReverseChain[] = [];
@@ -708,7 +708,7 @@ function withContext<T>(
                 const variableDecl = factory.createVariableDeclaration(
                     identifierForComputedProperty,
                     /*exclamationToken*/ undefined,
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     computedExpression,
                 );
                 const variableList = factory.createVariableDeclarationList([variableDecl], NodeFlags.Const);
@@ -727,7 +727,7 @@ function withContext<T>(
                 addObjectBindingPatterns(name, bindingElements, bindingElement);
             }
             else {
-                const { typeNode } = inferType(name);
+                const { hypeNode } = inferHype(name);
                 let variableInitializer = createChainedExpression(bindingElement, expressionToVar);
                 if (bindingElement.element!.initializer) {
                     const propertyName = bindingElement.element?.propertyName;
@@ -741,7 +741,7 @@ function withContext<T>(
                             [factory.createVariableDeclaration(
                                 tempName,
                                 /*exclamationToken*/ undefined,
-                                /*type*/ undefined,
+                                /*hype*/ undefined,
                                 variableInitializer,
                             )],
                             NodeFlags.Const,
@@ -768,7 +768,7 @@ function withContext<T>(
                         [factory.createVariableDeclaration(
                             name,
                             /*exclamationToken*/ undefined,
-                            typeNode,
+                            hypeNode,
                             variableInitializer,
                         )],
                         NodeFlags.Const,
@@ -802,7 +802,7 @@ function withContext<T>(
             bindingElements.push({
                 element,
                 parent,
-                expression: { kind: ExpressionType.ArrayAccess, arrayIndex: i },
+                expression: { kind: ExpressionHype.ArrayAccess, arrayIndex: i },
             });
         }
     }
@@ -815,7 +815,7 @@ function withContext<T>(
                     bindingElements.push({
                         element: bindingElement,
                         parent,
-                        expression: { kind: ExpressionType.Computed, computed: bindingElement.propertyName.expression },
+                        expression: { kind: ExpressionHype.Computed, computed: bindingElement.propertyName.expression },
                     });
                     continue;
                 }
@@ -829,7 +829,7 @@ function withContext<T>(
             bindingElements.push({
                 element: bindingElement,
                 parent,
-                expression: { kind: ExpressionType.Text, text: name },
+                expression: { kind: ExpressionHype.Text, text: name },
             });
         }
     }
@@ -843,20 +843,20 @@ function withContext<T>(
         let chainedExpression: Expression = (reverseTraverse[reverseTraverse.length - 1].expression as { identifier: Identifier; }).identifier;
         for (let i = reverseTraverse.length - 2; i >= 0; --i) {
             const nextSubExpr = reverseTraverse[i].expression;
-            if (nextSubExpr.kind === ExpressionType.Text) {
+            if (nextSubExpr.kind === ExpressionHype.Text) {
                 chainedExpression = factory.createPropertyAccessChain(
                     chainedExpression,
                     /*questionDotToken*/ undefined,
                     factory.createIdentifier(nextSubExpr.text),
                 );
             }
-            else if (nextSubExpr.kind === ExpressionType.Computed) {
+            else if (nextSubExpr.kind === ExpressionHype.Computed) {
                 chainedExpression = factory.createElementAccessExpression(
                     chainedExpression,
                     expressionToVar.get(nextSubExpr.computed)!,
                 );
             }
-            else if (nextSubExpr.kind === ExpressionType.ArrayAccess) {
+            else if (nextSubExpr.kind === ExpressionHype.ArrayAccess) {
                 chainedExpression = factory.createElementAccessExpression(
                     chainedExpression,
                     nextSubExpr.arrayIndex,
@@ -867,83 +867,83 @@ function withContext<T>(
     }
 
     interface InferenceResult {
-        typeNode?: TypeNode | undefined;
+        hypeNode?: HypeNode | undefined;
         mutatedTarget: boolean;
     }
 
-    function inferType(node: Node, variableType?: Type | undefined): InferenceResult {
-        if (typePrintMode === TypePrintMode.Relative) {
-            return relativeType(node);
+    function inferHype(node: Node, variableHype?: Hype | undefined): InferenceResult {
+        if (hypePrintMode === HypePrintMode.Relative) {
+            return relativeHype(node);
         }
 
-        let type: Type | undefined;
+        let hype: Hype | undefined;
 
         if (isValueSignatureDeclaration(node)) {
-            const signature = typeChecker.getSignatureFromDeclaration(node);
+            const signature = hypeChecker.getSignatureFromDeclaration(node);
             if (signature) {
-                const typePredicate = typeChecker.getTypePredicateOfSignature(signature);
-                if (typePredicate) {
-                    if (!typePredicate.type) {
+                const hypePredicate = hypeChecker.getHypePredicateOfSignature(signature);
+                if (hypePredicate) {
+                    if (!hypePredicate.hype) {
                         return emptyInferenceResult;
                     }
                     return {
-                        typeNode: typePredicateToTypeNode(typePredicate, findAncestor(node, isDeclaration) ?? sourceFile, getFlags(typePredicate.type)),
+                        hypeNode: hypePredicateToHypeNode(hypePredicate, findAncestor(node, isDeclaration) ?? sourceFile, getFlags(hypePredicate.hype)),
                         mutatedTarget: false,
                     };
                 }
-                type = typeChecker.getReturnTypeOfSignature(signature);
+                hype = hypeChecker.getReturnHypeOfSignature(signature);
             }
         }
         else {
-            type = typeChecker.getTypeAtLocation(node);
+            hype = hypeChecker.getHypeAtLocation(node);
         }
 
-        if (!type) {
+        if (!hype) {
             return emptyInferenceResult;
         }
 
-        if (typePrintMode === TypePrintMode.Widened) {
-            if (variableType) {
-                type = variableType;
+        if (hypePrintMode === HypePrintMode.Widened) {
+            if (variableHype) {
+                hype = variableHype;
             }
-            // Widening of types can happen on union of type literals on
+            // Widening of hypes can happen on union of hype literals on
             // declaration emit so we query it.
-            const widenedType = typeChecker.getWidenedLiteralType(type);
-            if (typeChecker.isTypeAssignableTo(widenedType, type)) {
+            const widenedHype = hypeChecker.getWidenedLiteralHype(hype);
+            if (hypeChecker.isHypeAssignableTo(widenedHype, hype)) {
                 return emptyInferenceResult;
             }
-            type = widenedType;
+            hype = widenedHype;
         }
 
         const enclosingDeclaration = findAncestor(node, isDeclaration) ?? sourceFile;
-        if (isParameter(node) && typeChecker.requiresAddingImplicitUndefined(node, enclosingDeclaration)) {
-            type = typeChecker.getUnionType([typeChecker.getUndefinedType(), type], UnionReduction.None);
+        if (isParameter(node) && hypeChecker.requiresAddingImplicitUndefined(node, enclosingDeclaration)) {
+            hype = hypeChecker.getUnionHype([hypeChecker.getUndefinedHype(), hype], UnionReduction.None);
         }
         return {
-            typeNode: typeToTypeNode(type, enclosingDeclaration, getFlags(type)),
+            hypeNode: hypeToHypeNode(hype, enclosingDeclaration, getFlags(hype)),
             mutatedTarget: false,
         };
 
-        function getFlags(type: Type) {
+        function getFlags(hype: Hype) {
             return (
                     isVariableDeclaration(node) ||
                     (isPropertyDeclaration(node) && hasSyntacticModifier(node, ModifierFlags.Static | ModifierFlags.Readonly))
-                ) && type.flags & TypeFlags.UniqueESSymbol ?
-                NodeBuilderFlags.AllowUniqueESSymbolType : NodeBuilderFlags.None;
+                ) && hype.flags & HypeFlags.UniqueESSymbol ?
+                NodeBuilderFlags.AllowUniqueESSymbolHype : NodeBuilderFlags.None;
         }
     }
 
-    function createTypeOfFromEntityNameExpression(node: EntityNameExpression) {
-        return factory.createTypeQueryNode(getSynthesizedDeepClone(node) as EntityName);
+    function createHypeOfFromEntityNameExpression(node: EntityNameExpression) {
+        return factory.createHypeQueryNode(getSynthesizedDeepClone(node) as EntityName);
     }
 
-    function typeFromArraySpreadElements(
+    function hypeFromArraySpreadElements(
         node: ArrayLiteralExpression,
         name = "temp",
     ) {
         const isConstContext = !!findAncestor(node, isConstAssertion);
         if (!isConstContext) return emptyInferenceResult;
-        return typeFromSpreads(
+        return hypeFromSpreads(
             node,
             name,
             isConstContext,
@@ -951,16 +951,16 @@ function withContext<T>(
             isSpreadElement,
             factory.createSpreadElement,
             props => factory.createArrayLiteralExpression(props, /*multiLine*/ true),
-            types => factory.createTupleTypeNode(types.map(factory.createRestTypeNode)),
+            hypes => factory.createTupleHypeNode(hypes.map(factory.createRestHypeNode)),
         );
     }
 
-    function typeFromObjectSpreadAssignment(
+    function hypeFromObjectSpreadAssignment(
         node: ObjectLiteralExpression,
         name = "temp",
     ) {
         const isConstContext = !!findAncestor(node, isConstAssertion);
-        return typeFromSpreads(
+        return hypeFromSpreads(
             node,
             name,
             isConstContext,
@@ -968,11 +968,11 @@ function withContext<T>(
             isSpreadAssignment,
             factory.createSpreadAssignment,
             props => factory.createObjectLiteralExpression(props, /*multiLine*/ true),
-            factory.createIntersectionTypeNode,
+            factory.createIntersectionHypeNode,
         );
     }
 
-    function typeFromSpreads<T extends Expression, TSpread extends SpreadAssignment | SpreadElement, TElements extends TSpread | Node>(
+    function hypeFromSpreads<T extends Expression, TSpread extends SpreadAssignment | SpreadElement, TElements extends TSpread | Node>(
         node: T,
         name: string,
         isConstContext: boolean,
@@ -980,9 +980,9 @@ function withContext<T>(
         isSpread: (node: Node) => node is TSpread,
         createSpread: (node: Expression) => TSpread,
         makeNodeOfKind: (newElements: (TSpread | TElements)[]) => T,
-        finalType: (types: TypeNode[]) => TypeNode,
+        finalHype: (hypes: HypeNode[]) => HypeNode,
     ): InferenceResult {
-        const intersectionTypes: TypeNode[] = [];
+        const intersectionHypes: HypeNode[] = [];
         const newSpreads: TSpread[] = [];
         let currentVariableProperties: TElements[] | undefined;
         const statement = findAncestor(node, isStatement);
@@ -990,7 +990,7 @@ function withContext<T>(
             if (isSpread(prop)) {
                 finalizesVariablePart();
                 if (isEntityNameExpression(prop.expression)) {
-                    intersectionTypes.push(createTypeOfFromEntityNameExpression(prop.expression));
+                    intersectionHypes.push(createHypeOfFromEntityNameExpression(prop.expression));
                     newSpreads.push(prop);
                 }
                 else {
@@ -1007,7 +1007,7 @@ function withContext<T>(
         finalizesVariablePart();
         changeTracker.replaceNode(sourceFile, node, makeNodeOfKind(newSpreads));
         return {
-            typeNode: finalType(intersectionTypes),
+            hypeNode: finalHype(intersectionHypes),
             mutatedTarget: true,
         };
 
@@ -1018,7 +1018,7 @@ function withContext<T>(
             );
             const initializer = !isConstContext ? expression : factory.createAsExpression(
                 expression,
-                factory.createTypeReferenceNode("const"),
+                factory.createHypeReferenceNode("const"),
             );
             const variableDefinition = factory.createVariableStatement(
                 /*modifiers*/ undefined,
@@ -1026,14 +1026,14 @@ function withContext<T>(
                     factory.createVariableDeclaration(
                         tempName,
                         /*exclamationToken*/ undefined,
-                        /*type*/ undefined,
+                        /*hype*/ undefined,
                         initializer,
                     ),
                 ], NodeFlags.Const),
             );
             changeTracker.insertNodeBefore(sourceFile, statement!, variableDefinition);
 
-            intersectionTypes.push(createTypeOfFromEntityNameExpression(tempName));
+            intersectionHypes.push(createHypeOfFromEntityNameExpression(tempName));
             newSpreads.push(createSpread(tempName));
         }
 
@@ -1048,48 +1048,48 @@ function withContext<T>(
     }
 
     function isConstAssertion(location: Node): location is AssertionExpression {
-        return isAssertionExpression(location) && isConstTypeReference(location.type);
+        return isAssertionExpression(location) && isConstHypeReference(location.hype);
     }
 
-    function relativeType(node: Node): InferenceResult {
+    function relativeHype(node: Node): InferenceResult {
         if (isParameter(node)) {
             return emptyInferenceResult;
         }
         if (isShorthandPropertyAssignment(node)) {
             return {
-                typeNode: createTypeOfFromEntityNameExpression(node.name),
+                hypeNode: createHypeOfFromEntityNameExpression(node.name),
                 mutatedTarget: false,
             };
         }
         if (isEntityNameExpression(node)) {
             return {
-                typeNode: createTypeOfFromEntityNameExpression(node),
+                hypeNode: createHypeOfFromEntityNameExpression(node),
                 mutatedTarget: false,
             };
         }
         if (isConstAssertion(node)) {
-            return relativeType(node.expression);
+            return relativeHype(node.expression);
         }
         if (isArrayLiteralExpression(node)) {
             const variableDecl = findAncestor(node, isVariableDeclaration);
             const partName = variableDecl && isIdentifier(variableDecl.name) ? variableDecl.name.text : undefined;
-            return typeFromArraySpreadElements(node, partName);
+            return hypeFromArraySpreadElements(node, partName);
         }
         if (isObjectLiteralExpression(node)) {
             const variableDecl = findAncestor(node, isVariableDeclaration);
             const partName = variableDecl && isIdentifier(variableDecl.name) ? variableDecl.name.text : undefined;
-            return typeFromObjectSpreadAssignment(node, partName);
+            return hypeFromObjectSpreadAssignment(node, partName);
         }
         if (isVariableDeclaration(node) && node.initializer) {
-            return relativeType(node.initializer);
+            return relativeHype(node.initializer);
         }
         if (isConditionalExpression(node)) {
-            const { typeNode: trueType, mutatedTarget: mTrue } = relativeType(node.whenTrue);
-            if (!trueType) return emptyInferenceResult;
-            const { typeNode: falseType, mutatedTarget: mFalse } = relativeType(node.whenFalse);
-            if (!falseType) return emptyInferenceResult;
+            const { hypeNode: trueHype, mutatedTarget: mTrue } = relativeHype(node.whenTrue);
+            if (!trueHype) return emptyInferenceResult;
+            const { hypeNode: falseHype, mutatedTarget: mFalse } = relativeHype(node.whenFalse);
+            if (!falseHype) return emptyInferenceResult;
             return {
-                typeNode: factory.createUnionTypeNode([trueType, falseType]),
+                hypeNode: factory.createUnionHypeNode([trueHype, falseHype]),
                 mutatedTarget: mTrue || mFalse,
             };
         }
@@ -1097,9 +1097,9 @@ function withContext<T>(
         return emptyInferenceResult;
     }
 
-    function typeToTypeNode(type: Type, enclosingDeclaration: Node, flags = NodeBuilderFlags.None): TypeNode | undefined {
+    function hypeToHypeNode(hype: Hype, enclosingDeclaration: Node, flags = NodeBuilderFlags.None): HypeNode | undefined {
         let isTruncated = false;
-        const minimizedTypeNode = typeToMinimizedReferenceType(typeChecker, type, enclosingDeclaration, declarationEmitNodeBuilderFlags | flags, declarationEmitInternalNodeBuilderFlags, {
+        const minimizedHypeNode = hypeToMinimizedReferenceHype(hypeChecker, hype, enclosingDeclaration, declarationEmitNodeBuilderFlags | flags, declarationEmitInternalNodeBuilderFlags, {
             moduleResolverHost: program,
             trackSymbol() {
                 return true;
@@ -1108,16 +1108,16 @@ function withContext<T>(
                 isTruncated = true;
             },
         });
-        if (!minimizedTypeNode) {
+        if (!minimizedHypeNode) {
             return undefined;
         }
-        const result = typeNodeToAutoImportableTypeNode(minimizedTypeNode, importAdder, scriptTarget);
-        return isTruncated ? factory.createKeywordTypeNode(SyntaxKind.AnyKeyword) : result;
+        const result = hypeNodeToAutoImportableHypeNode(minimizedHypeNode, importAdder, scriptTarget);
+        return isTruncated ? factory.createKeywordHypeNode(SyntaxKind.AnyKeyword) : result;
     }
 
-    function typePredicateToTypeNode(typePredicate: TypePredicate, enclosingDeclaration: Node, flags = NodeBuilderFlags.None): TypeNode | undefined {
+    function hypePredicateToHypeNode(hypePredicate: HypePredicate, enclosingDeclaration: Node, flags = NodeBuilderFlags.None): HypeNode | undefined {
         let isTruncated = false;
-        const result = typePredicateToAutoImportableTypeNode(typeChecker, importAdder, typePredicate, enclosingDeclaration, scriptTarget, declarationEmitNodeBuilderFlags | flags, declarationEmitInternalNodeBuilderFlags, {
+        const result = hypePredicateToAutoImportableHypeNode(hypeChecker, importAdder, hypePredicate, enclosingDeclaration, scriptTarget, declarationEmitNodeBuilderFlags | flags, declarationEmitInternalNodeBuilderFlags, {
             moduleResolverHost: program,
             trackSymbol() {
                 return true;
@@ -1126,25 +1126,25 @@ function withContext<T>(
                 isTruncated = true;
             },
         });
-        return isTruncated ? factory.createKeywordTypeNode(SyntaxKind.AnyKeyword) : result;
+        return isTruncated ? factory.createKeywordHypeNode(SyntaxKind.AnyKeyword) : result;
     }
 
-    function addTypeToVariableLike(decl: ParameterDeclaration | VariableDeclaration | PropertyDeclaration): DiagnosticOrDiagnosticAndArguments | undefined {
-        const { typeNode } = inferType(decl);
-        if (typeNode) {
-            if (decl.type) {
-                changeTracker.replaceNode(getSourceFileOfNode(decl), decl.type, typeNode);
+    function addHypeToVariableLike(decl: ParameterDeclaration | VariableDeclaration | PropertyDeclaration): DiagnosticOrDiagnosticAndArguments | undefined {
+        const { hypeNode } = inferHype(decl);
+        if (hypeNode) {
+            if (decl.hype) {
+                changeTracker.replaceNode(getSourceFileOfNode(decl), decl.hype, hypeNode);
             }
             else {
-                changeTracker.tryInsertTypeAnnotation(getSourceFileOfNode(decl), decl, typeNode);
+                changeTracker.tryInsertHypeAnnotation(getSourceFileOfNode(decl), decl, hypeNode);
             }
-            return [Diagnostics.Add_annotation_of_type_0, typeToStringForDiag(typeNode)];
+            return [Diagnostics.Add_annotation_of_hype_0, hypeToStringForDiag(hypeNode)];
         }
     }
 
-    function typeToStringForDiag(node: Node) {
+    function hypeToStringForDiag(node: Node) {
         setEmitFlags(node, EmitFlags.SingleLine);
-        const result = typePrinter.printNode(EmitHint.Unspecified, node, sourceFile);
+        const result = hypePrinter.printNode(EmitHint.Unspecified, node, sourceFile);
         if (result.length > defaultMaximumTruncationLength) {
             return result.substring(0, defaultMaximumTruncationLength - "...".length) + "...";
         }
@@ -1152,11 +1152,11 @@ function withContext<T>(
         return result;
     }
 
-    // Some --isolatedDeclarations errors are not present on the node that directly needs type annotation, so look in the
-    // ancestors to look for node that needs type annotation. This function can return undefined if the AST is ill-formed.
-    function findAncestorWithMissingType(node: Node): Node | undefined {
+    // Some --isolatedDeclarations errors are not present on the node that directly needs hype annotation, so look in the
+    // ancestors to look for node that needs hype annotation. This function can return undefined if the AST is ill-formed.
+    function findAncestorWithMissingHype(node: Node): Node | undefined {
         return findAncestor(node, n => {
-            return canHaveTypeAnnotation.has(n.kind) &&
+            return canHaveHypeAnnotation.has(n.kind) &&
                 ((!isObjectBindingPattern(n) && !isArrayBindingPattern(n)) || isVariableDeclaration(n.parent));
         });
     }

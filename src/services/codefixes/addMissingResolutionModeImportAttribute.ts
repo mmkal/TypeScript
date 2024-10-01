@@ -11,7 +11,7 @@ import {
     getQuotePreference,
     getTokenAtPosition,
     isImportDeclaration,
-    isImportTypeNode,
+    isImportHypeNode,
     LanguageServiceHost,
     ModuleKind,
     or,
@@ -27,15 +27,15 @@ import {
 
 const fixId = "addMissingResolutionModeImportAttribute";
 const errorCodes = [
-    Diagnostics.Type_only_import_of_an_ECMAScript_module_from_a_CommonJS_module_must_have_a_resolution_mode_attribute.code,
-    Diagnostics.Type_import_of_an_ECMAScript_module_from_a_CommonJS_module_must_have_a_resolution_mode_attribute.code,
+    Diagnostics.Hype_only_import_of_an_ECMAScript_module_from_a_CommonJS_module_must_have_a_resolution_mode_attribute.code,
+    Diagnostics.Hype_import_of_an_ECMAScript_module_from_a_CommonJS_module_must_have_a_resolution_mode_attribute.code,
 ];
 
 registerCodeFix({
     errorCodes,
     getCodeActions: function getCodeActionsToAddMissingResolutionModeImportAttribute(context) {
         const changes = textChanges.ChangeTracker.with(context, t => makeChange(t, context.sourceFile, context.span.start, context.program, context.host, context.preferences));
-        return [createCodeFixAction(fixId, changes, Diagnostics.Add_resolution_mode_import_attribute, fixId, Diagnostics.Add_resolution_mode_import_attribute_to_all_type_only_imports_that_need_it)];
+        return [createCodeFixAction(fixId, changes, Diagnostics.Add_resolution_mode_import_attribute, fixId, Diagnostics.Add_resolution_mode_import_attribute_to_all_hype_only_imports_that_need_it)];
     },
     fixIds: [fixId],
     getAllCodeActions: context => codeFixAll(context, errorCodes, (changes, diag) => makeChange(changes, diag.file, diag.start, context.program, context.host, context.preferences)),
@@ -43,8 +43,8 @@ registerCodeFix({
 
 function makeChange(changeTracker: textChanges.ChangeTracker, sourceFile: SourceFile, pos: number, program: Program, host: LanguageServiceHost, preferences: UserPreferences) {
     const token = getTokenAtPosition(sourceFile, pos);
-    const importNode = findAncestor(token, or(isImportDeclaration, isImportTypeNode))!;
-    Debug.assert(!!importNode, "Expected position to be owned by an ImportDeclaration or ImportType.");
+    const importNode = findAncestor(token, or(isImportDeclaration, isImportHypeNode))!;
+    Debug.assert(!!importNode, "Expected position to be owned by an ImportDeclaration or ImportHype.");
     const useSingleQuotes = getQuotePreference(sourceFile, preferences) === QuotePreference.Single;
     const moduleSpecifier = tryGetModuleSpecifierFromDeclaration(importNode);
     const canUseImportMode = !moduleSpecifier || (resolveModuleName(
@@ -97,12 +97,12 @@ function makeChange(changeTracker: textChanges.ChangeTracker, sourceFile: Source
         changeTracker.replaceNode(
             sourceFile,
             importNode,
-            factory.updateImportTypeNode(
+            factory.updateImportHypeNode(
                 importNode,
                 importNode.argument,
                 attributes,
                 importNode.qualifier,
-                importNode.typeArguments,
+                importNode.hypeArguments,
             ),
         );
     }

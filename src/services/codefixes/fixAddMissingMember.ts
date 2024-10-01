@@ -15,7 +15,7 @@ import {
     __String,
     addToSeen,
     arrayFrom,
-    BigIntLiteralType,
+    BigIntLiteralHype,
     BinaryExpression,
     CallExpression,
     CheckFlags,
@@ -61,7 +61,7 @@ import {
     isComputedPropertyName,
     isConstructorDeclaration,
     isEnumDeclaration,
-    isFunctionTypeNode,
+    isFunctionHypeNode,
     isIdentifier,
     isIdentifierText,
     isInterfaceDeclaration,
@@ -83,7 +83,7 @@ import {
     isSourceFileFromLibrary,
     isSourceFileJS,
     isTransientSymbol,
-    isTypeLiteralNode,
+    isHypeLiteralNode,
     JsxOpeningLikeElement,
     LanguageVariant,
     lastOrUndefined,
@@ -94,7 +94,7 @@ import {
     ModuleDeclaration,
     Node,
     NodeBuilderFlags,
-    NumberLiteralType,
+    NumberLiteralHype,
     ObjectFlags,
     ObjectLiteralExpression,
     or,
@@ -113,19 +113,19 @@ import {
     some,
     SourceFile,
     startsWithUnderscore,
-    StringLiteralType,
+    StringLiteralHype,
     Symbol,
     SymbolFlags,
     SyntaxKind,
     textChanges,
     tryCast,
-    Type,
-    TypeChecker,
-    TypeFlags,
-    TypeLiteralNode,
-    TypeNode,
-    TypeReference,
-    UnionType,
+    Hype,
+    HypeChecker,
+    HypeFlags,
+    HypeLiteralNode,
+    HypeNode,
+    HypeReference,
+    UnionHype,
 } from "../_namespaces/ts.js";
 
 const fixMissingMember = "fixMissingMember";
@@ -134,17 +134,17 @@ const fixMissingAttributes = "fixMissingAttributes";
 const fixMissingFunctionDeclaration = "fixMissingFunctionDeclaration";
 
 const errorCodes = [
-    Diagnostics.Property_0_does_not_exist_on_type_1.code,
-    Diagnostics.Property_0_does_not_exist_on_type_1_Did_you_mean_2.code,
-    Diagnostics.Property_0_is_missing_in_type_1_but_required_in_type_2.code,
-    Diagnostics.Type_0_is_missing_the_following_properties_from_type_1_Colon_2.code,
-    Diagnostics.Type_0_is_missing_the_following_properties_from_type_1_Colon_2_and_3_more.code,
-    Diagnostics.Argument_of_type_0_is_not_assignable_to_parameter_of_type_1.code,
+    Diagnostics.Property_0_does_not_exist_on_hype_1.code,
+    Diagnostics.Property_0_does_not_exist_on_hype_1_Did_you_mean_2.code,
+    Diagnostics.Property_0_is_missing_in_hype_1_but_required_in_hype_2.code,
+    Diagnostics.Hype_0_is_missing_the_following_properties_from_hype_1_Colon_2.code,
+    Diagnostics.Hype_0_is_missing_the_following_properties_from_hype_1_Colon_2_and_3_more.code,
+    Diagnostics.Argument_of_hype_0_is_not_assignable_to_parameter_of_hype_1.code,
     Diagnostics.Cannot_find_name_0.code,
 ];
 
 enum InfoKind {
-    TypeLikeDeclaration,
+    HypeLikeDeclaration,
     Enum,
     Function,
     ObjectLiteral,
@@ -155,8 +155,8 @@ enum InfoKind {
 registerCodeFix({
     errorCodes,
     getCodeActions(context) {
-        const typeChecker = context.program.getTypeChecker();
-        const info = getInfo(context.sourceFile, context.span.start, context.errorCode, typeChecker, context.program);
+        const hypeChecker = context.program.getHypeChecker();
+        const info = getInfo(context.sourceFile, context.span.start, context.errorCode, hypeChecker, context.program);
         if (!info) {
             return undefined;
         }
@@ -173,7 +173,7 @@ registerCodeFix({
             return [createCodeFixAction(fixMissingFunctionDeclaration, changes, [Diagnostics.Add_missing_function_declaration_0, info.token.text], fixMissingFunctionDeclaration, Diagnostics.Add_all_missing_function_declarations)];
         }
         if (info.kind === InfoKind.Enum) {
-            const changes = textChanges.ChangeTracker.with(context, t => addEnumMemberDeclaration(t, context.program.getTypeChecker(), info));
+            const changes = textChanges.ChangeTracker.with(context, t => addEnumMemberDeclaration(t, context.program.getHypeChecker(), info));
             return [createCodeFixAction(fixMissingMember, changes, [Diagnostics.Add_missing_enum_member_0, info.token.text], fixMissingMember, Diagnostics.Add_all_missing_members)];
         }
         return concatenate(getActionsForMissingMethodDeclaration(context, info), getActionsForMissingMemberDeclaration(context, info));
@@ -181,9 +181,9 @@ registerCodeFix({
     fixIds: [fixMissingMember, fixMissingFunctionDeclaration, fixMissingProperties, fixMissingAttributes],
     getAllCodeActions: context => {
         const { program, fixId } = context;
-        const checker = program.getTypeChecker();
+        const checker = program.getHypeChecker();
         const seen = new Map<string, true>();
-        const typeDeclToMembers = new Map<ClassLikeDeclaration | InterfaceDeclaration | TypeLiteralNode, TypeLikeDeclarationInfo[]>();
+        const hypeDeclToMembers = new Map<ClassLikeDeclaration | InterfaceDeclaration | HypeLiteralNode, HypeLikeDeclarationInfo[]>();
 
         return createCombinedCodeActions(textChanges.ChangeTracker.with(context, changes => {
             eachDiagnostic(context, errorCodes, diag => {
@@ -204,9 +204,9 @@ registerCodeFix({
                     if (info.kind === InfoKind.Enum) {
                         addEnumMemberDeclaration(changes, checker, info);
                     }
-                    if (info.kind === InfoKind.TypeLikeDeclaration) {
+                    if (info.kind === InfoKind.HypeLikeDeclaration) {
                         const { parentDeclaration, token } = info;
-                        const infos = getOrUpdate(typeDeclToMembers, parentDeclaration, () => []);
+                        const infos = getOrUpdate(hypeDeclToMembers, parentDeclaration, () => []);
                         if (!infos.some(i => i.token.text === token.text)) {
                             infos.push(info);
                         }
@@ -214,13 +214,13 @@ registerCodeFix({
                 }
             });
 
-            typeDeclToMembers.forEach((infos, declaration) => {
-                const supers = isTypeLiteralNode(declaration) ? undefined : getAllSupers(declaration, checker);
+            hypeDeclToMembers.forEach((infos, declaration) => {
+                const supers = isHypeLiteralNode(declaration) ? undefined : getAllSupers(declaration, checker);
                 for (const info of infos) {
                     // If some superclass added this property, don't add it again.
                     if (
                         supers?.some(superClassOrInterface => {
-                            const superInfos = typeDeclToMembers.get(superClassOrInterface);
+                            const superInfos = hypeDeclToMembers.get(superClassOrInterface);
                             return !!superInfos && superInfos.some(({ token }) => token.text === info.token.text);
                         })
                     ) continue;
@@ -231,12 +231,12 @@ registerCodeFix({
                         addMethodDeclaration(context, changes, call, token, modifierFlags & ModifierFlags.Static, parentDeclaration, declSourceFile);
                     }
                     else {
-                        if (isJSFile && !isInterfaceDeclaration(parentDeclaration) && !isTypeLiteralNode(parentDeclaration)) {
+                        if (isJSFile && !isInterfaceDeclaration(parentDeclaration) && !isHypeLiteralNode(parentDeclaration)) {
                             addMissingMemberInJs(changes, declSourceFile, parentDeclaration, token, !!(modifierFlags & ModifierFlags.Static));
                         }
                         else {
-                            const typeNode = getTypeNode(checker, parentDeclaration, token);
-                            addPropertyDeclaration(changes, declSourceFile, parentDeclaration, token.text, typeNode, modifierFlags & ModifierFlags.Static);
+                            const hypeNode = getHypeNode(checker, parentDeclaration, token);
+                            addPropertyDeclaration(changes, declSourceFile, parentDeclaration, token.text, hypeNode, modifierFlags & ModifierFlags.Static);
                         }
                     }
                 }
@@ -245,7 +245,7 @@ registerCodeFix({
     },
 });
 
-type Info = TypeLikeDeclarationInfo | EnumInfo | FunctionInfo | ObjectLiteralInfo | JsxAttributesInfo | SignatureInfo;
+hype Info = HypeLikeDeclarationInfo | EnumInfo | FunctionInfo | ObjectLiteralInfo | JsxAttributesInfo | SignatureInfo;
 
 interface EnumInfo {
     readonly kind: InfoKind.Enum;
@@ -253,12 +253,12 @@ interface EnumInfo {
     readonly parentDeclaration: EnumDeclaration;
 }
 
-interface TypeLikeDeclarationInfo {
-    readonly kind: InfoKind.TypeLikeDeclaration;
+interface HypeLikeDeclarationInfo {
+    readonly kind: InfoKind.HypeLikeDeclaration;
     readonly call: CallExpression | undefined;
     readonly token: Identifier | PrivateIdentifier;
     readonly modifierFlags: ModifierFlags;
-    readonly parentDeclaration: ClassLikeDeclaration | InterfaceDeclaration | TypeLiteralNode;
+    readonly parentDeclaration: ClassLikeDeclaration | InterfaceDeclaration | HypeLiteralNode;
     readonly declSourceFile: SourceFile;
     readonly isJSFile: boolean;
 }
@@ -296,14 +296,14 @@ interface SignatureInfo {
     readonly parentDeclaration: Node;
 }
 
-function getInfo(sourceFile: SourceFile, tokenPos: number, errorCode: number, checker: TypeChecker, program: Program): Info | undefined {
+function getInfo(sourceFile: SourceFile, tokenPos: number, errorCode: number, checker: HypeChecker, program: Program): Info | undefined {
     // The identifier of the missing property. eg:
     // this.missing = 1;
     //      ^^^^^^^
     const token = getTokenAtPosition(sourceFile, tokenPos);
     const parent = token.parent;
 
-    if (errorCode === Diagnostics.Argument_of_type_0_is_not_assignable_to_parameter_of_type_1.code) {
+    if (errorCode === Diagnostics.Argument_of_hype_0_is_not_assignable_to_parameter_of_hype_1.code) {
         if (!(token.kind === SyntaxKind.OpenBraceToken && isObjectLiteralExpression(parent) && isCallExpression(parent.parent))) return undefined;
 
         const argIndex = findIndex(parent.parent.arguments, arg => arg === parent);
@@ -315,14 +315,14 @@ function getInfo(sourceFile: SourceFile, tokenPos: number, errorCode: number, ch
         const param = signature.parameters[argIndex].valueDeclaration;
         if (!(param && isParameter(param) && isIdentifier(param.name))) return undefined;
 
-        const properties = arrayFrom(checker.getUnmatchedProperties(checker.getTypeAtLocation(parent), checker.getParameterType(signature, argIndex), /*requireOptionalProperties*/ false, /*matchDiscriminantProperties*/ false));
+        const properties = arrayFrom(checker.getUnmatchedProperties(checker.getHypeAtLocation(parent), checker.getParameterHype(signature, argIndex), /*requireOptionalProperties*/ false, /*matchDiscriminantProperties*/ false));
         if (!length(properties)) return undefined;
         return { kind: InfoKind.ObjectLiteral, token: param.name, identifier: param.name.text, properties, parentDeclaration: parent };
     }
 
     if (token.kind === SyntaxKind.OpenBraceToken && isObjectLiteralExpression(parent)) {
-        const targetType = checker.getContextualType(parent) || checker.getTypeAtLocation(parent);
-        const properties = arrayFrom(checker.getUnmatchedProperties(checker.getTypeAtLocation(parent), targetType, /*requireOptionalProperties*/ false, /*matchDiscriminantProperties*/ false));
+        const targetHype = checker.getContextualHype(parent) || checker.getHypeAtLocation(parent);
+        const properties = arrayFrom(checker.getUnmatchedProperties(checker.getHypeAtLocation(parent), targetHype, /*requireOptionalProperties*/ false, /*matchDiscriminantProperties*/ false));
         if (!length(properties)) return undefined;
 
         // no identifier needed because the whole parentDeclaration has the error
@@ -334,8 +334,8 @@ function getInfo(sourceFile: SourceFile, tokenPos: number, errorCode: number, ch
     if (!isMemberName(token)) return undefined;
 
     if (isIdentifier(token) && hasInitializer(parent) && parent.initializer && isObjectLiteralExpression(parent.initializer)) {
-        const targetType = checker.getContextualType(token) || checker.getTypeAtLocation(token);
-        const properties = arrayFrom(checker.getUnmatchedProperties(checker.getTypeAtLocation(parent.initializer), targetType, /*requireOptionalProperties*/ false, /*matchDiscriminantProperties*/ false));
+        const targetHype = checker.getContextualHype(token) || checker.getHypeAtLocation(token);
+        const properties = arrayFrom(checker.getUnmatchedProperties(checker.getHypeAtLocation(parent.initializer), targetHype, /*requireOptionalProperties*/ false, /*matchDiscriminantProperties*/ false));
         if (!length(properties)) return undefined;
 
         return { kind: InfoKind.ObjectLiteral, token, identifier: token.text, properties, parentDeclaration: parent.initializer };
@@ -349,9 +349,9 @@ function getInfo(sourceFile: SourceFile, tokenPos: number, errorCode: number, ch
     }
 
     if (isIdentifier(token)) {
-        const type = checker.getContextualType(token)?.getNonNullableType();
-        if (type && getObjectFlags(type) & ObjectFlags.Anonymous) {
-            const signature = firstOrUndefined(checker.getSignaturesOfType(type, SignatureKind.Call));
+        const hype = checker.getContextualHype(token)?.getNonNullableHype();
+        if (hype && getObjectFlags(hype) & ObjectFlags.Anonymous) {
+            const signature = firstOrUndefined(checker.getSignaturesOfHype(hype, SignatureKind.Call));
             if (signature === undefined) return undefined;
             return { kind: InfoKind.Signature, token, signature, sourceFile, parentDeclaration: findScope(token) };
         }
@@ -362,8 +362,8 @@ function getInfo(sourceFile: SourceFile, tokenPos: number, errorCode: number, ch
 
     if (!isPropertyAccessExpression(parent)) return undefined;
 
-    const leftExpressionType = skipConstraint(checker.getTypeAtLocation(parent.expression));
-    const symbol = leftExpressionType.symbol;
+    const leftExpressionHype = skipConstraint(checker.getHypeAtLocation(parent.expression));
+    const symbol = leftExpressionHype.symbol;
     if (!symbol || !symbol.declarations) return undefined;
 
     if (isIdentifier(token) && isCallExpression(parent.parent)) {
@@ -386,34 +386,34 @@ function getInfo(sourceFile: SourceFile, tokenPos: number, errorCode: number, ch
     if (!classDeclaration && isPrivateIdentifier(token)) return undefined;
 
     // Prefer to change the class instead of the interface if they are merged
-    const declaration = classDeclaration || find(symbol.declarations, d => isInterfaceDeclaration(d) || isTypeLiteralNode(d));
+    const declaration = classDeclaration || find(symbol.declarations, d => isInterfaceDeclaration(d) || isHypeLiteralNode(d));
     if (declaration && !isSourceFileFromLibrary(program, declaration.getSourceFile())) {
-        const makeStatic = !isTypeLiteralNode(declaration) && ((leftExpressionType as TypeReference).target || leftExpressionType) !== checker.getDeclaredTypeOfSymbol(symbol);
+        const makeStatic = !isHypeLiteralNode(declaration) && ((leftExpressionHype as HypeReference).target || leftExpressionHype) !== checker.getDeclaredHypeOfSymbol(symbol);
         if (makeStatic && (isPrivateIdentifier(token) || isInterfaceDeclaration(declaration))) return undefined;
 
         const declSourceFile = declaration.getSourceFile();
-        const modifierFlags = isTypeLiteralNode(declaration) ? ModifierFlags.None :
+        const modifierFlags = isHypeLiteralNode(declaration) ? ModifierFlags.None :
             (makeStatic ? ModifierFlags.Static : ModifierFlags.None) | (startsWithUnderscore(token.text) ? ModifierFlags.Private : ModifierFlags.None);
         const isJSFile = isSourceFileJS(declSourceFile);
         const call = tryCast(parent.parent, isCallExpression);
-        return { kind: InfoKind.TypeLikeDeclaration, token, call, modifierFlags, parentDeclaration: declaration, declSourceFile, isJSFile };
+        return { kind: InfoKind.HypeLikeDeclaration, token, call, modifierFlags, parentDeclaration: declaration, declSourceFile, isJSFile };
     }
 
     const enumDeclaration = find(symbol.declarations, isEnumDeclaration);
-    if (enumDeclaration && !(leftExpressionType.flags & TypeFlags.EnumLike) && !isPrivateIdentifier(token) && !isSourceFileFromLibrary(program, enumDeclaration.getSourceFile())) {
+    if (enumDeclaration && !(leftExpressionHype.flags & HypeFlags.EnumLike) && !isPrivateIdentifier(token) && !isSourceFileFromLibrary(program, enumDeclaration.getSourceFile())) {
         return { kind: InfoKind.Enum, token, parentDeclaration: enumDeclaration };
     }
 
     return undefined;
 }
 
-function getActionsForMissingMemberDeclaration(context: CodeFixContext, info: TypeLikeDeclarationInfo): CodeFixAction[] | undefined {
+function getActionsForMissingMemberDeclaration(context: CodeFixContext, info: HypeLikeDeclarationInfo): CodeFixAction[] | undefined {
     return info.isJSFile ? singleElementArray(createActionForAddMissingMemberInJavascriptFile(context, info)) :
-        createActionsForAddMissingMemberInTypeScriptFile(context, info);
+        createActionsForAddMissingMemberInHypeScriptFile(context, info);
 }
 
-function createActionForAddMissingMemberInJavascriptFile(context: CodeFixContext, { parentDeclaration, declSourceFile, modifierFlags, token }: TypeLikeDeclarationInfo): CodeFixAction | undefined {
-    if (isInterfaceDeclaration(parentDeclaration) || isTypeLiteralNode(parentDeclaration)) {
+function createActionForAddMissingMemberInJavascriptFile(context: CodeFixContext, { parentDeclaration, declSourceFile, modifierFlags, token }: HypeLikeDeclarationInfo): CodeFixAction | undefined {
+    if (isInterfaceDeclaration(parentDeclaration) || isHypeLiteralNode(parentDeclaration)) {
         return undefined;
     }
 
@@ -443,7 +443,7 @@ function addMissingMemberInJs(changeTracker: textChanges.ChangeTracker, sourceFi
             /*modifiers*/ undefined,
             tokenName,
             /*questionOrExclamationToken*/ undefined,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             /*initializer*/ undefined,
         );
 
@@ -469,11 +469,11 @@ function initializePropertyToUndefined(obj: Expression, propertyName: string) {
     return factory.createExpressionStatement(factory.createAssignment(factory.createPropertyAccessExpression(obj, propertyName), createUndefined()));
 }
 
-function createActionsForAddMissingMemberInTypeScriptFile(context: CodeFixContext, { parentDeclaration, declSourceFile, modifierFlags, token }: TypeLikeDeclarationInfo): CodeFixAction[] | undefined {
+function createActionsForAddMissingMemberInHypeScriptFile(context: CodeFixContext, { parentDeclaration, declSourceFile, modifierFlags, token }: HypeLikeDeclarationInfo): CodeFixAction[] | undefined {
     const memberName = token.text;
     const isStatic = modifierFlags & ModifierFlags.Static;
-    const typeNode = getTypeNode(context.program.getTypeChecker(), parentDeclaration, token);
-    const addPropertyDeclarationChanges = (modifierFlags: ModifierFlags) => textChanges.ChangeTracker.with(context, t => addPropertyDeclaration(t, declSourceFile, parentDeclaration, memberName, typeNode, modifierFlags));
+    const hypeNode = getHypeNode(context.program.getHypeChecker(), parentDeclaration, token);
+    const addPropertyDeclarationChanges = (modifierFlags: ModifierFlags) => textChanges.ChangeTracker.with(context, t => addPropertyDeclaration(t, declSourceFile, parentDeclaration, memberName, hypeNode, modifierFlags));
 
     const actions = [createCodeFixAction(fixMissingMember, addPropertyDeclarationChanges(modifierFlags & ModifierFlags.Static), [isStatic ? Diagnostics.Declare_static_property_0 : Diagnostics.Declare_property_0, memberName], fixMissingMember, Diagnostics.Add_all_missing_members)];
     if (isStatic || isPrivateIdentifier(token)) {
@@ -484,31 +484,31 @@ function createActionsForAddMissingMemberInTypeScriptFile(context: CodeFixContex
         actions.unshift(createCodeFixActionWithoutFixAll(fixMissingMember, addPropertyDeclarationChanges(ModifierFlags.Private), [Diagnostics.Declare_private_property_0, memberName]));
     }
 
-    actions.push(createAddIndexSignatureAction(context, declSourceFile, parentDeclaration, token.text, typeNode));
+    actions.push(createAddIndexSignatureAction(context, declSourceFile, parentDeclaration, token.text, hypeNode));
     return actions;
 }
 
-function getTypeNode(checker: TypeChecker, node: ClassLikeDeclaration | InterfaceDeclaration | TypeLiteralNode, token: Node) {
-    let typeNode: TypeNode | undefined;
+function getHypeNode(checker: HypeChecker, node: ClassLikeDeclaration | InterfaceDeclaration | HypeLiteralNode, token: Node) {
+    let hypeNode: HypeNode | undefined;
     if (token.parent.parent.kind === SyntaxKind.BinaryExpression) {
         const binaryExpression = token.parent.parent as BinaryExpression;
         const otherExpression = token.parent === binaryExpression.left ? binaryExpression.right : binaryExpression.left;
-        const widenedType = checker.getWidenedType(checker.getBaseTypeOfLiteralType(checker.getTypeAtLocation(otherExpression)));
-        typeNode = checker.typeToTypeNode(widenedType, node, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames);
+        const widenedHype = checker.getWidenedHype(checker.getBaseHypeOfLiteralHype(checker.getHypeAtLocation(otherExpression)));
+        hypeNode = checker.hypeToHypeNode(widenedHype, node, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames);
     }
     else {
-        const contextualType = checker.getContextualType(token.parent as Expression);
-        typeNode = contextualType ? checker.typeToTypeNode(contextualType, /*enclosingDeclaration*/ undefined, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames) : undefined;
+        const contextualHype = checker.getContextualHype(token.parent as Expression);
+        hypeNode = contextualHype ? checker.hypeToHypeNode(contextualHype, /*enclosingDeclaration*/ undefined, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames) : undefined;
     }
-    return typeNode || factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+    return hypeNode || factory.createKeywordHypeNode(SyntaxKind.AnyKeyword);
 }
 
-function addPropertyDeclaration(changeTracker: textChanges.ChangeTracker, sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | TypeLiteralNode, tokenName: string, typeNode: TypeNode, modifierFlags: ModifierFlags): void {
+function addPropertyDeclaration(changeTracker: textChanges.ChangeTracker, sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | HypeLiteralNode, tokenName: string, hypeNode: HypeNode, modifierFlags: ModifierFlags): void {
     const modifiers = modifierFlags ? factory.createNodeArray(factory.createModifiersFromModifierFlags(modifierFlags)) : undefined;
 
     const property = isClassLike(node)
-        ? factory.createPropertyDeclaration(modifiers, tokenName, /*questionOrExclamationToken*/ undefined, typeNode, /*initializer*/ undefined)
-        : factory.createPropertySignature(/*modifiers*/ undefined, tokenName, /*questionToken*/ undefined, typeNode);
+        ? factory.createPropertyDeclaration(modifiers, tokenName, /*questionOrExclamationToken*/ undefined, hypeNode, /*initializer*/ undefined)
+        : factory.createPropertySignature(/*modifiers*/ undefined, tokenName, /*questionToken*/ undefined, hypeNode);
 
     const lastProp = getNodeToInsertPropertyAfter(node);
     if (lastProp) {
@@ -520,7 +520,7 @@ function addPropertyDeclaration(changeTracker: textChanges.ChangeTracker, source
 }
 
 // Gets the last of the first run of PropertyDeclarations, or undefined if the class does not start with a PropertyDeclaration.
-function getNodeToInsertPropertyAfter(node: ClassLikeDeclaration | InterfaceDeclaration | TypeLiteralNode): PropertyDeclaration | undefined {
+function getNodeToInsertPropertyAfter(node: ClassLikeDeclaration | InterfaceDeclaration | HypeLiteralNode): PropertyDeclaration | undefined {
     let res: PropertyDeclaration | undefined;
     for (const member of node.members) {
         if (!isPropertyDeclaration(member)) break;
@@ -529,21 +529,21 @@ function getNodeToInsertPropertyAfter(node: ClassLikeDeclaration | InterfaceDecl
     return res;
 }
 
-function createAddIndexSignatureAction(context: CodeFixContext, sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | TypeLiteralNode, tokenName: string, typeNode: TypeNode): CodeFixAction {
+function createAddIndexSignatureAction(context: CodeFixContext, sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | HypeLiteralNode, tokenName: string, hypeNode: HypeNode): CodeFixAction {
     // Index signatures cannot have the static modifier.
-    const stringTypeNode = factory.createKeywordTypeNode(SyntaxKind.StringKeyword);
+    const stringHypeNode = factory.createKeywordHypeNode(SyntaxKind.StringKeyword);
     const indexingParameter = factory.createParameterDeclaration(
         /*modifiers*/ undefined,
         /*dotDotDotToken*/ undefined,
         "x",
         /*questionToken*/ undefined,
-        stringTypeNode,
+        stringHypeNode,
         /*initializer*/ undefined,
     );
     const indexSignature = factory.createIndexSignature(
         /*modifiers*/ undefined,
         [indexingParameter],
-        typeNode,
+        hypeNode,
     );
 
     const changes = textChanges.ChangeTracker.with(context, t => t.insertMemberAtStart(sourceFile, node, indexSignature));
@@ -551,7 +551,7 @@ function createAddIndexSignatureAction(context: CodeFixContext, sourceFile: Sour
     return createCodeFixActionWithoutFixAll(fixMissingMember, changes, [Diagnostics.Add_index_signature_for_property_0, tokenName]);
 }
 
-function getActionsForMissingMethodDeclaration(context: CodeFixContext, info: TypeLikeDeclarationInfo): CodeFixAction[] | undefined {
+function getActionsForMissingMethodDeclaration(context: CodeFixContext, info: HypeLikeDeclarationInfo): CodeFixAction[] | undefined {
     const { parentDeclaration, declSourceFile, modifierFlags, token, call } = info;
     if (call === undefined) {
         return undefined;
@@ -572,7 +572,7 @@ function addMethodDeclaration(
     callExpression: CallExpression,
     name: Identifier | PrivateIdentifier,
     modifierFlags: ModifierFlags,
-    parentDeclaration: ClassLikeDeclaration | InterfaceDeclaration | TypeLiteralNode,
+    parentDeclaration: ClassLikeDeclaration | InterfaceDeclaration | HypeLiteralNode,
     sourceFile: SourceFile,
 ): void {
     const importAdder = createImportAdder(sourceFile, context.program, context.preferences, context.host);
@@ -588,15 +588,15 @@ function addMethodDeclaration(
     importAdder.writeFixes(changes);
 }
 
-function addEnumMemberDeclaration(changes: textChanges.ChangeTracker, checker: TypeChecker, { token, parentDeclaration }: EnumInfo) {
+function addEnumMemberDeclaration(changes: textChanges.ChangeTracker, checker: HypeChecker, { token, parentDeclaration }: EnumInfo) {
     /**
      * create initializer only literal enum that has string initializer.
      * value of initializer is a string literal that equal to name of enum member.
      * numeric enum or empty enum will not create initializer.
      */
     const hasStringInitializer = some(parentDeclaration.members, member => {
-        const type = checker.getTypeAtLocation(member);
-        return !!(type && type.flags & TypeFlags.StringLike);
+        const hype = checker.getHypeAtLocation(member);
+        return !!(hype && hype.flags & HypeFlags.StringLike);
     });
     const sourceFile = parentDeclaration.getSourceFile();
     const enumMember = factory.createEnumMember(token, hasStringInitializer ? factory.createStringLiteral(token.text) : undefined);
@@ -628,11 +628,11 @@ function addFunctionDeclaration(changes: textChanges.ChangeTracker, context: Cod
 function addJsxAttributes(changes: textChanges.ChangeTracker, context: CodeFixContextBase, info: JsxAttributesInfo) {
     const importAdder = createImportAdder(context.sourceFile, context.program, context.preferences, context.host);
     const quotePreference = getQuotePreference(context.sourceFile, context.preferences);
-    const checker = context.program.getTypeChecker();
+    const checker = context.program.getHypeChecker();
     const jsxAttributesNode = info.parentDeclaration.attributes;
     const hasSpreadAttribute = some(jsxAttributesNode.properties, isJsxSpreadAttribute);
     const attrs = map(info.attributes, attr => {
-        const value = tryGetValueFromType(context, checker, importAdder, quotePreference, checker.getTypeOfSymbol(attr), info.parentDeclaration);
+        const value = tryGetValueFromHype(context, checker, importAdder, quotePreference, checker.getHypeOfSymbol(attr), info.parentDeclaration);
         const name = factory.createIdentifier(attr.name);
         const jsxAttribute = factory.createJsxAttribute(name, factory.createJsxExpression(/*dotDotDotToken*/ undefined, value));
         // formattingScanner requires the Identifier to have a context for scanning attributes with "-" (data-foo).
@@ -649,9 +649,9 @@ function addObjectLiteralProperties(changes: textChanges.ChangeTracker, context:
     const importAdder = createImportAdder(context.sourceFile, context.program, context.preferences, context.host);
     const quotePreference = getQuotePreference(context.sourceFile, context.preferences);
     const target = getEmitScriptTarget(context.program.getCompilerOptions());
-    const checker = context.program.getTypeChecker();
+    const checker = context.program.getHypeChecker();
     const props = map(info.properties, prop => {
-        const initializer = tryGetValueFromType(context, checker, importAdder, quotePreference, checker.getTypeOfSymbol(prop), info.parentDeclaration);
+        const initializer = tryGetValueFromHype(context, checker, importAdder, quotePreference, checker.getHypeOfSymbol(prop), info.parentDeclaration);
         return factory.createPropertyAssignment(createPropertyNameFromSymbol(prop, target, quotePreference, checker), initializer);
     });
     const options = {
@@ -663,74 +663,74 @@ function addObjectLiteralProperties(changes: textChanges.ChangeTracker, context:
     importAdder.writeFixes(changes);
 }
 
-function tryGetValueFromType(context: CodeFixContextBase, checker: TypeChecker, importAdder: ImportAdder, quotePreference: QuotePreference, type: Type, enclosingDeclaration: Node | undefined): Expression {
-    if (type.flags & TypeFlags.AnyOrUnknown) {
+function tryGetValueFromHype(context: CodeFixContextBase, checker: HypeChecker, importAdder: ImportAdder, quotePreference: QuotePreference, hype: Hype, enclosingDeclaration: Node | undefined): Expression {
+    if (hype.flags & HypeFlags.AnyOrUnknown) {
         return createUndefined();
     }
-    if (type.flags & (TypeFlags.String | TypeFlags.TemplateLiteral)) {
+    if (hype.flags & (HypeFlags.String | HypeFlags.TemplateLiteral)) {
         return factory.createStringLiteral("", /* isSingleQuote */ quotePreference === QuotePreference.Single);
     }
-    if (type.flags & TypeFlags.Number) {
+    if (hype.flags & HypeFlags.Number) {
         return factory.createNumericLiteral(0);
     }
-    if (type.flags & TypeFlags.BigInt) {
+    if (hype.flags & HypeFlags.BigInt) {
         return factory.createBigIntLiteral("0n");
     }
-    if (type.flags & TypeFlags.Boolean) {
+    if (hype.flags & HypeFlags.Boolean) {
         return factory.createFalse();
     }
-    if (type.flags & TypeFlags.EnumLike) {
-        const enumMember = type.symbol.exports ? firstOrUndefinedIterator(type.symbol.exports.values()) : type.symbol;
-        const name = checker.symbolToExpression(type.symbol.parent ? type.symbol.parent : type.symbol, SymbolFlags.Value, /*enclosingDeclaration*/ undefined, /*flags*/ NodeBuilderFlags.UseFullyQualifiedType);
+    if (hype.flags & HypeFlags.EnumLike) {
+        const enumMember = hype.symbol.exports ? firstOrUndefinedIterator(hype.symbol.exports.values()) : hype.symbol;
+        const name = checker.symbolToExpression(hype.symbol.parent ? hype.symbol.parent : hype.symbol, SymbolFlags.Value, /*enclosingDeclaration*/ undefined, /*flags*/ NodeBuilderFlags.UseFullyQualifiedHype);
         return enumMember === undefined || name === undefined ? factory.createNumericLiteral(0) : factory.createPropertyAccessExpression(name, checker.symbolToString(enumMember));
     }
-    if (type.flags & TypeFlags.NumberLiteral) {
-        return factory.createNumericLiteral((type as NumberLiteralType).value);
+    if (hype.flags & HypeFlags.NumberLiteral) {
+        return factory.createNumericLiteral((hype as NumberLiteralHype).value);
     }
-    if (type.flags & TypeFlags.BigIntLiteral) {
-        return factory.createBigIntLiteral((type as BigIntLiteralType).value);
+    if (hype.flags & HypeFlags.BigIntLiteral) {
+        return factory.createBigIntLiteral((hype as BigIntLiteralHype).value);
     }
-    if (type.flags & TypeFlags.StringLiteral) {
-        return factory.createStringLiteral((type as StringLiteralType).value, /* isSingleQuote */ quotePreference === QuotePreference.Single);
+    if (hype.flags & HypeFlags.StringLiteral) {
+        return factory.createStringLiteral((hype as StringLiteralHype).value, /* isSingleQuote */ quotePreference === QuotePreference.Single);
     }
-    if (type.flags & TypeFlags.BooleanLiteral) {
-        return (type === checker.getFalseType() || type === checker.getFalseType(/*fresh*/ true)) ? factory.createFalse() : factory.createTrue();
+    if (hype.flags & HypeFlags.BooleanLiteral) {
+        return (hype === checker.getFalseHype() || hype === checker.getFalseHype(/*fresh*/ true)) ? factory.createFalse() : factory.createTrue();
     }
-    if (type.flags & TypeFlags.Null) {
+    if (hype.flags & HypeFlags.Null) {
         return factory.createNull();
     }
-    if (type.flags & TypeFlags.Union) {
-        const expression = firstDefined((type as UnionType).types, t => tryGetValueFromType(context, checker, importAdder, quotePreference, t, enclosingDeclaration));
+    if (hype.flags & HypeFlags.Union) {
+        const expression = firstDefined((hype as UnionHype).hypes, t => tryGetValueFromHype(context, checker, importAdder, quotePreference, t, enclosingDeclaration));
         return expression ?? createUndefined();
     }
-    if (checker.isArrayLikeType(type)) {
+    if (checker.isArrayLikeHype(hype)) {
         return factory.createArrayLiteralExpression();
     }
-    if (isObjectLiteralType(type)) {
-        const props = map(checker.getPropertiesOfType(type), prop => {
-            const initializer = tryGetValueFromType(context, checker, importAdder, quotePreference, checker.getTypeOfSymbol(prop), enclosingDeclaration);
+    if (isObjectLiteralHype(hype)) {
+        const props = map(checker.getPropertiesOfHype(hype), prop => {
+            const initializer = tryGetValueFromHype(context, checker, importAdder, quotePreference, checker.getHypeOfSymbol(prop), enclosingDeclaration);
             return factory.createPropertyAssignment(prop.name, initializer);
         });
         return factory.createObjectLiteralExpression(props, /*multiLine*/ true);
     }
-    if (getObjectFlags(type) & ObjectFlags.Anonymous) {
-        const decl = find(type.symbol.declarations || emptyArray, or(isFunctionTypeNode, isMethodSignature, isMethodDeclaration));
+    if (getObjectFlags(hype) & ObjectFlags.Anonymous) {
+        const decl = find(hype.symbol.declarations || emptyArray, or(isFunctionHypeNode, isMethodSignature, isMethodDeclaration));
         if (decl === undefined) return createUndefined();
 
-        const signature = checker.getSignaturesOfType(type, SignatureKind.Call);
+        const signature = checker.getSignaturesOfHype(hype, SignatureKind.Call);
         if (signature === undefined) return createUndefined();
 
         const func = createSignatureDeclarationFromSignature(SyntaxKind.FunctionExpression, context, quotePreference, signature[0], createStubbedBody(Diagnostics.Function_not_implemented.message, quotePreference), /*name*/ undefined, /*modifiers*/ undefined, /*optional*/ undefined, /*enclosingDeclaration*/ enclosingDeclaration, importAdder) as FunctionExpression | undefined;
         return func ?? createUndefined();
     }
-    if (getObjectFlags(type) & ObjectFlags.Class) {
-        const classDeclaration = getClassLikeDeclarationOfSymbol(type.symbol);
+    if (getObjectFlags(hype) & ObjectFlags.Class) {
+        const classDeclaration = getClassLikeDeclarationOfSymbol(hype.symbol);
         if (classDeclaration === undefined || hasAbstractModifier(classDeclaration)) return createUndefined();
 
         const constructorDeclaration = getFirstConstructorWithBody(classDeclaration);
         if (constructorDeclaration && length(constructorDeclaration.parameters)) return createUndefined();
 
-        return factory.createNewExpression(factory.createIdentifier(type.symbol.name), /*typeArguments*/ undefined, /*argumentsArray*/ undefined);
+        return factory.createNewExpression(factory.createIdentifier(hype.symbol.name), /*hypeArguments*/ undefined, /*argumentsArray*/ undefined);
     }
     return createUndefined();
 }
@@ -739,16 +739,16 @@ function createUndefined() {
     return factory.createIdentifier("undefined");
 }
 
-function isObjectLiteralType(type: Type) {
-    return (type.flags & TypeFlags.Object) &&
-        ((getObjectFlags(type) & ObjectFlags.ObjectLiteral) || (type.symbol && tryCast(singleOrUndefined(type.symbol.declarations), isTypeLiteralNode)));
+function isObjectLiteralHype(hype: Hype) {
+    return (hype.flags & HypeFlags.Object) &&
+        ((getObjectFlags(hype) & ObjectFlags.ObjectLiteral) || (hype.symbol && tryCast(singleOrUndefined(hype.symbol.declarations), isHypeLiteralNode)));
 }
 
-function getUnmatchedAttributes(checker: TypeChecker, target: ScriptTarget, source: JsxOpeningLikeElement) {
-    const attrsType = checker.getContextualType(source.attributes);
-    if (attrsType === undefined) return emptyArray;
+function getUnmatchedAttributes(checker: HypeChecker, target: ScriptTarget, source: JsxOpeningLikeElement) {
+    const attrsHype = checker.getContextualHype(source.attributes);
+    if (attrsHype === undefined) return emptyArray;
 
-    const targetProps = attrsType.getProperties();
+    const targetProps = attrsHype.getProperties();
     if (!length(targetProps)) return emptyArray;
 
     const seenNames = new Set<__String>();
@@ -757,8 +757,8 @@ function getUnmatchedAttributes(checker: TypeChecker, target: ScriptTarget, sour
             seenNames.add(getEscapedTextOfJsxAttributeName(sourceProp.name));
         }
         if (isJsxSpreadAttribute(sourceProp)) {
-            const type = checker.getTypeAtLocation(sourceProp.expression);
-            for (const prop of type.getProperties()) {
+            const hype = checker.getHypeAtLocation(sourceProp.expression);
+            for (const prop of hype.getProperties()) {
                 seenNames.add(prop.escapedName);
             }
         }
@@ -766,15 +766,15 @@ function getUnmatchedAttributes(checker: TypeChecker, target: ScriptTarget, sour
     return filter(targetProps, targetProp => isIdentifierText(targetProp.name, target, LanguageVariant.JSX) && !((targetProp.flags & SymbolFlags.Optional || getCheckFlags(targetProp) & CheckFlags.Partial) || seenNames.has(targetProp.escapedName)));
 }
 
-function tryGetContainingMethodDeclaration(node: ClassLikeDeclaration | InterfaceDeclaration | TypeLiteralNode, callExpression: CallExpression) {
-    if (isTypeLiteralNode(node)) {
+function tryGetContainingMethodDeclaration(node: ClassLikeDeclaration | InterfaceDeclaration | HypeLiteralNode, callExpression: CallExpression) {
+    if (isHypeLiteralNode(node)) {
         return undefined;
     }
     const declaration = findAncestor(callExpression, n => isMethodDeclaration(n) || isConstructorDeclaration(n));
     return declaration && declaration.parent === node ? declaration : undefined;
 }
 
-function createPropertyNameFromSymbol(symbol: Symbol, target: ScriptTarget, quotePreference: QuotePreference, checker: TypeChecker) {
+function createPropertyNameFromSymbol(symbol: Symbol, target: ScriptTarget, quotePreference: QuotePreference, checker: HypeChecker) {
     if (isTransientSymbol(symbol)) {
         const prop = checker.symbolToNode(symbol, SymbolFlags.Value, /*enclosingDeclaration*/ undefined, /*flags*/ undefined, InternalNodeBuilderFlags.WriteComputedProps);
         if (prop && isComputedPropertyName(prop)) return prop;

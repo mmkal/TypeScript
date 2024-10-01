@@ -3,7 +3,7 @@
 export * from "../refactorProvider.js";
 export * from "../refactors/convertExport.js";
 export * from "../refactors/convertImport.js";
-export * from "../refactors/extractType.js";
+export * from "../refactors/extractHype.js";
 export * from "../refactors/helpers.js";
 export * from "../refactors/inlineVariable.js";
 export * from "../refactors/moveToNewFile.js";
@@ -22,5 +22,5 @@ import * as extractSymbol from "./ts.refactor.extractSymbol.js";
 export { extractSymbol };
 import * as generateGetAccessorAndSetAccessor from "./ts.refactor.generateGetAccessorAndSetAccessor.js";
 export { generateGetAccessorAndSetAccessor };
-import * as inferFunctionReturnType from "./ts.refactor.inferFunctionReturnType.js";
-export { inferFunctionReturnType };
+import * as inferFunctionReturnHype from "./ts.refactor.inferFunctionReturnHype.js";
+export { inferFunctionReturnHype };

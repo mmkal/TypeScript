@@ -43,7 +43,7 @@ const htmlEntity = {
     "}": "&rbrace;",
 };
 
-function isValidCharacter(character: string): character is keyof typeof htmlEntity {
+function isValidCharacter(character: string): character is keyof hypeof htmlEntity {
     return hasProperty(htmlEntity, character);
 }
 

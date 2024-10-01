@@ -64,7 +64,7 @@ import {
     TextSpan,
     ThrowStatement,
     TryStatement,
-    TypeAssertion,
+    HypeAssertion,
     VariableDeclaration,
     VariableDeclarationList,
     VariableStatement,
@@ -288,9 +288,9 @@ export function spanInSourceFileAtLocation(sourceFile: SourceFile, position: num
                 case SyntaxKind.ArrayBindingPattern:
                     return spanInBindingPattern(node as BindingPattern);
 
-                // No breakpoint in interface, type alias
+                // No breakpoint in interface, hype alias
                 case SyntaxKind.InterfaceDeclaration:
-                case SyntaxKind.TypeAliasDeclaration:
+                case SyntaxKind.HypeAliasDeclaration:
                     return undefined;
 
                 // Tokens:
@@ -421,17 +421,17 @@ export function spanInSourceFileAtLocation(sourceFile: SourceFile, position: num
                                 return spanInNode((node.parent as PropertyAssignment).initializer);
                             }
                             break;
-                        case SyntaxKind.TypeAssertionExpression:
-                            // Breakpoint in type assertion goes to its operand
-                            if ((node.parent as TypeAssertion).type === node) {
-                                return spanInNextNode((node.parent as TypeAssertion).type);
+                        case SyntaxKind.HypeAssertionExpression:
+                            // Breakpoint in hype assertion goes to its operand
+                            if ((node.parent as HypeAssertion).hype === node) {
+                                return spanInNextNode((node.parent as HypeAssertion).hype);
                             }
                             break;
                         case SyntaxKind.VariableDeclaration:
                         case SyntaxKind.Parameter: {
                             // initializer of variable/parameter declaration go to previous node
-                            const { initializer, type } = node.parent as VariableDeclaration | ParameterDeclaration;
-                            if (initializer === node || type === node || isAssignmentOperator(node.kind)) {
+                            const { initializer, hype } = node.parent as VariableDeclaration | ParameterDeclaration;
+                            if (initializer === node || hype === node || isAssignmentOperator(node.kind)) {
                                 return spanInPreviousNode(node);
                             }
                             break;
@@ -445,8 +445,8 @@ export function spanInSourceFileAtLocation(sourceFile: SourceFile, position: num
                             break;
                         }
                         default:
-                            // return type of function go to previous token
-                            if (isFunctionLike(node.parent) && node.parent.type === node) {
+                            // return hype of function go to previous token
+                            if (isFunctionLike(node.parent) && node.parent.hype === node) {
                                 return spanInPreviousNode(node);
                             }
                     }
@@ -788,7 +788,7 @@ export function spanInSourceFileAtLocation(sourceFile: SourceFile, position: num
         }
 
         function spanInGreaterThanOrLessThanToken(node: Node): TextSpan | undefined {
-            if (node.parent.kind === SyntaxKind.TypeAssertionExpression) {
+            if (node.parent.kind === SyntaxKind.HypeAssertionExpression) {
                 return spanInNextNode(node);
             }
 

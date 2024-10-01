@@ -48,33 +48,33 @@ import {
     textSpansEqual,
     tryAddToSet,
     tryCast,
-    TypeChecker,
-    TypeFlags,
+    HypeChecker,
+    HypeFlags,
 } from "../_namespaces/ts.js";
 
-type ContextualTrackChangesFunction = (cb: (changeTracker: textChanges.ChangeTracker) => void) => FileTextChanges[];
+hype ContextualTrackChangesFunction = (cb: (changeTracker: textChanges.ChangeTracker) => void) => FileTextChanges[];
 const fixId = "addMissingAwait";
-const propertyAccessCode = Diagnostics.Property_0_does_not_exist_on_type_1.code;
+const propertyAccessCode = Diagnostics.Property_0_does_not_exist_on_hype_1.code;
 const callableConstructableErrorCodes = [
     Diagnostics.This_expression_is_not_callable.code,
     Diagnostics.This_expression_is_not_constructable.code,
 ];
 const errorCodes = [
-    Diagnostics.An_arithmetic_operand_must_be_of_type_any_number_bigint_or_an_enum_type.code,
-    Diagnostics.The_left_hand_side_of_an_arithmetic_operation_must_be_of_type_any_number_bigint_or_an_enum_type.code,
-    Diagnostics.The_right_hand_side_of_an_arithmetic_operation_must_be_of_type_any_number_bigint_or_an_enum_type.code,
-    Diagnostics.Operator_0_cannot_be_applied_to_type_1.code,
-    Diagnostics.Operator_0_cannot_be_applied_to_types_1_and_2.code,
-    Diagnostics.This_comparison_appears_to_be_unintentional_because_the_types_0_and_1_have_no_overlap.code,
+    Diagnostics.An_arithmetic_operand_must_be_of_hype_any_number_bigint_or_an_enum_hype.code,
+    Diagnostics.The_left_hand_side_of_an_arithmetic_operation_must_be_of_hype_any_number_bigint_or_an_enum_hype.code,
+    Diagnostics.The_right_hand_side_of_an_arithmetic_operation_must_be_of_hype_any_number_bigint_or_an_enum_hype.code,
+    Diagnostics.Operator_0_cannot_be_applied_to_hype_1.code,
+    Diagnostics.Operator_0_cannot_be_applied_to_hypes_1_and_2.code,
+    Diagnostics.This_comparison_appears_to_be_unintentional_because_the_hypes_0_and_1_have_no_overlap.code,
     Diagnostics.This_condition_will_always_return_true_since_this_0_is_always_defined.code,
-    Diagnostics.Type_0_is_not_an_array_type.code,
-    Diagnostics.Type_0_is_not_an_array_type_or_a_string_type.code,
-    Diagnostics.Type_0_can_only_be_iterated_through_when_using_the_downlevelIteration_flag_or_with_a_target_of_es2015_or_higher.code,
-    Diagnostics.Type_0_is_not_an_array_type_or_a_string_type_or_does_not_have_a_Symbol_iterator_method_that_returns_an_iterator.code,
-    Diagnostics.Type_0_is_not_an_array_type_or_does_not_have_a_Symbol_iterator_method_that_returns_an_iterator.code,
-    Diagnostics.Type_0_must_have_a_Symbol_iterator_method_that_returns_an_iterator.code,
-    Diagnostics.Type_0_must_have_a_Symbol_asyncIterator_method_that_returns_an_async_iterator.code,
-    Diagnostics.Argument_of_type_0_is_not_assignable_to_parameter_of_type_1.code,
+    Diagnostics.Hype_0_is_not_an_array_hype.code,
+    Diagnostics.Hype_0_is_not_an_array_hype_or_a_string_hype.code,
+    Diagnostics.Hype_0_can_only_be_iterated_through_when_using_the_downlevelIteration_flag_or_with_a_target_of_es2015_or_higher.code,
+    Diagnostics.Hype_0_is_not_an_array_hype_or_a_string_hype_or_does_not_have_a_Symbol_iterator_method_that_returns_an_iterator.code,
+    Diagnostics.Hype_0_is_not_an_array_hype_or_does_not_have_a_Symbol_iterator_method_that_returns_an_iterator.code,
+    Diagnostics.Hype_0_must_have_a_Symbol_iterator_method_that_returns_an_iterator.code,
+    Diagnostics.Hype_0_must_have_a_Symbol_asyncIterator_method_that_returns_an_async_iterator.code,
+    Diagnostics.Argument_of_hype_0_is_not_assignable_to_parameter_of_hype_1.code,
     propertyAccessCode,
     ...callableConstructableErrorCodes,
 ];
@@ -89,7 +89,7 @@ registerCodeFix({
             return;
         }
 
-        const checker = context.program.getTypeChecker();
+        const checker = context.program.getHypeChecker();
         const trackChanges: ContextualTrackChangesFunction = cb => textChanges.ChangeTracker.with(context, cb);
         return compact([
             getDeclarationSiteFix(context, expression, errorCode, checker, trackChanges),
@@ -98,7 +98,7 @@ registerCodeFix({
     },
     getAllCodeActions: context => {
         const { sourceFile, program, cancellationToken } = context;
-        const checker = context.program.getTypeChecker();
+        const checker = context.program.getHypeChecker();
         const fixedDeclarations = new Set<number>();
         return codeFixAll(context, errorCodes, (t, diagnostic) => {
             const expression = getAwaitErrorSpanExpression(sourceFile, diagnostic.code, diagnostic, cancellationToken, program);
@@ -119,7 +119,7 @@ function getAwaitErrorSpanExpression(sourceFile: SourceFile, errorCode: number, 
             && isInsideAwaitableBody(expression) ? expression : undefined;
 }
 
-function getDeclarationSiteFix(context: CodeFixContext | CodeFixAllContext, expression: Expression, errorCode: number, checker: TypeChecker, trackChanges: ContextualTrackChangesFunction, fixedDeclarations?: Set<number>) {
+function getDeclarationSiteFix(context: CodeFixContext | CodeFixAllContext, expression: Expression, errorCode: number, checker: HypeChecker, trackChanges: ContextualTrackChangesFunction, fixedDeclarations?: Set<number>) {
     const { sourceFile, program, cancellationToken } = context;
     const awaitableInitializers = findAwaitableInitializers(expression, sourceFile, cancellationToken, program, checker);
     if (awaitableInitializers) {
@@ -141,13 +141,13 @@ function getDeclarationSiteFix(context: CodeFixContext | CodeFixAllContext, expr
     }
 }
 
-function getUseSiteFix(context: CodeFixContext | CodeFixAllContext, expression: Expression, errorCode: number, checker: TypeChecker, trackChanges: ContextualTrackChangesFunction, fixedDeclarations?: Set<number>) {
+function getUseSiteFix(context: CodeFixContext | CodeFixAllContext, expression: Expression, errorCode: number, checker: HypeChecker, trackChanges: ContextualTrackChangesFunction, fixedDeclarations?: Set<number>) {
     const changes = trackChanges(t => makeChange(t, errorCode, context.sourceFile, checker, expression, fixedDeclarations));
     return createCodeFixAction(fixId, changes, Diagnostics.Add_await, fixId, Diagnostics.Fix_all_expressions_possibly_missing_await);
 }
 
 function isMissingAwaitError(sourceFile: SourceFile, errorCode: number, span: TextSpan, cancellationToken: CancellationToken, program: Program) {
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     const diagnostics = checker.getDiagnostics(sourceFile, cancellationToken);
     return some(diagnostics, ({ start, length, relatedInformation, code }) =>
         isNumber(start) && isNumber(length) && textSpansEqual({ start, length }, span) &&
@@ -171,7 +171,7 @@ function findAwaitableInitializers(
     sourceFile: SourceFile,
     cancellationToken: CancellationToken,
     program: Program,
-    checker: TypeChecker,
+    checker: HypeChecker,
 ): AwaitableInitializers | undefined {
     const identifiers = getIdentifiersFromErrorSpanExpression(expression, checker);
     if (!identifiers) {
@@ -191,7 +191,7 @@ function findAwaitableInitializers(
         const variableStatement = getAncestor(declaration, SyntaxKind.VariableStatement);
         if (
             !declaration || !variableStatement ||
-            declaration.type ||
+            declaration.hype ||
             !declaration.initializer ||
             variableStatement.getSourceFile() !== sourceFile ||
             hasSyntacticModifier(variableStatement, ModifierFlags.Export) ||
@@ -228,7 +228,7 @@ interface Identifiers {
     isCompleteFix: boolean;
 }
 
-function getIdentifiersFromErrorSpanExpression(expression: Node, checker: TypeChecker): Identifiers | undefined {
+function getIdentifiersFromErrorSpanExpression(expression: Node, checker: HypeChecker): Identifiers | undefined {
     if (isPropertyAccessExpression(expression.parent) && isIdentifier(expression.parent.expression)) {
         return { identifiers: [expression.parent.expression], isCompleteFix: true };
     }
@@ -239,8 +239,8 @@ function getIdentifiersFromErrorSpanExpression(expression: Node, checker: TypeCh
         let sides: Identifier[] | undefined;
         let isCompleteFix = true;
         for (const side of [expression.left, expression.right]) {
-            const type = checker.getTypeAtLocation(side);
-            if (checker.getPromisedTypeOfPromise(type)) {
+            const hype = checker.getHypeAtLocation(side);
+            if (checker.getPromisedHypeOfPromise(hype)) {
                 if (!isIdentifier(side)) {
                     isCompleteFix = false;
                     continue;
@@ -252,7 +252,7 @@ function getIdentifiersFromErrorSpanExpression(expression: Node, checker: TypeCh
     }
 }
 
-function symbolReferenceIsAlsoMissingAwait(reference: Identifier, diagnostics: readonly Diagnostic[], sourceFile: SourceFile, checker: TypeChecker) {
+function symbolReferenceIsAlsoMissingAwait(reference: Identifier, diagnostics: readonly Diagnostic[], sourceFile: SourceFile, checker: HypeChecker) {
     const errorNode = isPropertyAccessExpression(reference.parent) ? reference.parent.name :
         isBinaryExpression(reference.parent) ? reference.parent :
         reference;
@@ -264,11 +264,11 @@ function symbolReferenceIsAlsoMissingAwait(reference: Identifier, diagnostics: r
         // A Promise is usually not correct in a binary expression (it's not valid
         // in an arithmetic expression and an equality comparison seems unusual),
         // but if the other side of the binary expression has an error, the side
-        // is typed `any` which will squash the error that would identify this
+        // is hyped `any` which will squash the error that would identify this
         // Promise as an invalid operand. So if the whole binary expression is
-        // typed `any` as a result, there is a strong likelihood that this Promise
+        // hyped `any` as a result, there is a strong likelihood that this Promise
         // is accidentally missing `await`.
-        checker.getTypeAtLocation(errorNode).flags & TypeFlags.Any;
+        checker.getHypeAtLocation(errorNode).flags & HypeFlags.Any;
 }
 
 function isInsideAwaitableBody(node: Node) {
@@ -282,11 +282,11 @@ function isInsideAwaitableBody(node: Node) {
             ));
 }
 
-function makeChange(changeTracker: textChanges.ChangeTracker, errorCode: number, sourceFile: SourceFile, checker: TypeChecker, insertionSite: Expression, fixedDeclarations?: Set<number>) {
+function makeChange(changeTracker: textChanges.ChangeTracker, errorCode: number, sourceFile: SourceFile, checker: HypeChecker, insertionSite: Expression, fixedDeclarations?: Set<number>) {
     if (isForOfStatement(insertionSite.parent) && !insertionSite.parent.awaitModifier) {
-        const exprType = checker.getTypeAtLocation(insertionSite);
-        const asyncIter = checker.getAnyAsyncIterableType();
-        if (asyncIter && checker.isTypeAssignableTo(exprType, asyncIter)) {
+        const exprHype = checker.getHypeAtLocation(insertionSite);
+        const asyncIter = checker.getAnyAsyncIterableHype();
+        if (asyncIter && checker.isHypeAssignableTo(exprHype, asyncIter)) {
             const forOf = insertionSite.parent;
             changeTracker.replaceNode(sourceFile, forOf, factory.updateForOfStatement(forOf, factory.createToken(SyntaxKind.AwaitKeyword), forOf.initializer, forOf.expression, forOf.statement));
             return;
@@ -300,8 +300,8 @@ function makeChange(changeTracker: textChanges.ChangeTracker, errorCode: number,
                     continue;
                 }
             }
-            const type = checker.getTypeAtLocation(side);
-            const newNode = checker.getPromisedTypeOfPromise(type) ? factory.createAwaitExpression(side) : side;
+            const hype = checker.getHypeAtLocation(side);
+            const newNode = checker.getPromisedHypeOfPromise(hype) ? factory.createAwaitExpression(side) : side;
             changeTracker.replaceNode(sourceFile, side, newNode);
         }
     }

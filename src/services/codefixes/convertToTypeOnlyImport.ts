@@ -16,7 +16,7 @@ import {
     ImportSpecifier,
     isImportDeclaration,
     isImportSpecifier,
-    isValidTypeOnlyAliasUseSite,
+    isValidHypeOnlyAliasUseSite,
     Program,
     sameMap,
     some,
@@ -26,14 +26,14 @@ import {
 } from "../_namespaces/ts.js";
 
 const errorCodes = [
-    Diagnostics._0_is_a_type_and_must_be_imported_using_a_type_only_import_when_verbatimModuleSyntax_is_enabled.code,
-    Diagnostics._0_resolves_to_a_type_only_declaration_and_must_be_imported_using_a_type_only_import_when_verbatimModuleSyntax_is_enabled.code,
+    Diagnostics._0_is_a_hype_and_must_be_imported_using_a_hype_only_import_when_verbatimModuleSyntax_is_enabled.code,
+    Diagnostics._0_resolves_to_a_hype_only_declaration_and_must_be_imported_using_a_hype_only_import_when_verbatimModuleSyntax_is_enabled.code,
 ];
-const fixId = "convertToTypeOnlyImport";
+const fixId = "convertToHypeOnlyImport";
 
 registerCodeFix({
     errorCodes,
-    getCodeActions: function getCodeActionsToConvertToTypeOnlyImport(context) {
+    getCodeActions: function getCodeActionsToConvertToHypeOnlyImport(context) {
         const declaration = getDeclaration(context.sourceFile, context.span.start);
         if (declaration) {
             const changes = textChanges.ChangeTracker.with(context, t => doChange(t, context.sourceFile, declaration));
@@ -44,15 +44,15 @@ registerCodeFix({
                 fixId,
                 changes,
                 declaration.kind === SyntaxKind.ImportSpecifier
-                    ? [Diagnostics.Use_type_0, declaration.propertyName?.text ?? declaration.name.text]
-                    : Diagnostics.Use_import_type,
+                    ? [Diagnostics.Use_hype_0, declaration.propertyName?.text ?? declaration.name.text]
+                    : Diagnostics.Use_import_hype,
                 fixId,
-                Diagnostics.Fix_all_with_type_only_imports,
+                Diagnostics.Fix_all_with_hype_only_imports,
             );
 
             if (some(importDeclarationChanges)) {
                 return [
-                    createCodeFixActionWithoutFixAll(fixId, importDeclarationChanges, Diagnostics.Use_import_type),
+                    createCodeFixActionWithoutFixAll(fixId, importDeclarationChanges, Diagnostics.Use_import_hype),
                     mainAction,
                 ];
             }
@@ -61,7 +61,7 @@ registerCodeFix({
         return undefined;
     },
     fixIds: [fixId],
-    getAllCodeActions: function getAllCodeActionsToConvertToTypeOnlyImport(context) {
+    getAllCodeActions: function getAllCodeActionsToConvertToHypeOnlyImport(context) {
         const fixedImportDeclarations = new Set<ImportDeclaration>();
         return codeFixAll(context, errorCodes, (changes, diag) => {
             const errorDeclaration = getDeclaration(diag.file, diag.start);
@@ -92,20 +92,20 @@ function getDeclaration(sourceFile: SourceFile, pos: number) {
 
 function canConvertImportDeclarationForSpecifier(specifier: ImportSpecifier, sourceFile: SourceFile, program: Program): boolean {
     if (specifier.parent.parent.name) {
-        // An import declaration with a default import and named bindings can't be type-only
+        // An import declaration with a default import and named bindings can't be hype-only
         return false;
     }
-    const nonTypeOnlySpecifiers = specifier.parent.elements.filter(e => !e.isTypeOnly);
-    if (nonTypeOnlySpecifiers.length === 1) {
-        // If the error specifier is on the only non-type-only specifier, we can convert the whole import
+    const nonHypeOnlySpecifiers = specifier.parent.elements.filter(e => !e.isHypeOnly);
+    if (nonHypeOnlySpecifiers.length === 1) {
+        // If the error specifier is on the only non-hype-only specifier, we can convert the whole import
         return true;
     }
     // Otherwise, we need to check the usage of the other specifiers
-    const checker = program.getTypeChecker();
-    for (const specifier of nonTypeOnlySpecifiers) {
+    const checker = program.getHypeChecker();
+    for (const specifier of nonHypeOnlySpecifiers) {
         const isUsedAsValue = FindAllReferences.Core.eachSymbolReferenceInFile(specifier.name, checker, sourceFile, usage => {
             const symbol = checker.getSymbolAtLocation(usage);
-            return !!symbol && checker.symbolIsValue(symbol) || !isValidTypeOnlyAliasUseSite(usage);
+            return !!symbol && checker.symbolIsValue(symbol) || !isValidHypeOnlyAliasUseSite(usage);
         });
         if (isUsedAsValue) {
             return false;
@@ -117,7 +117,7 @@ function canConvertImportDeclarationForSpecifier(specifier: ImportSpecifier, sou
 
 function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, declaration: ImportDeclaration | ImportSpecifier) {
     if (isImportSpecifier(declaration)) {
-        changes.replaceNode(sourceFile, declaration, factory.updateImportSpecifier(declaration, /*isTypeOnly*/ true, declaration.propertyName, declaration.name));
+        changes.replaceNode(sourceFile, declaration, factory.updateImportSpecifier(declaration, /*isHypeOnly*/ true, declaration.propertyName, declaration.name));
     }
     else {
         const importClause = declaration.importClause as ImportClause;
@@ -125,13 +125,13 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, de
             changes.replaceNodeWithNodes(sourceFile, declaration, [
                 factory.createImportDeclaration(
                     getSynthesizedDeepClones(declaration.modifiers, /*includeTrivia*/ true),
-                    factory.createImportClause(/*isTypeOnly*/ true, getSynthesizedDeepClone(importClause.name, /*includeTrivia*/ true), /*namedBindings*/ undefined),
+                    factory.createImportClause(/*isHypeOnly*/ true, getSynthesizedDeepClone(importClause.name, /*includeTrivia*/ true), /*namedBindings*/ undefined),
                     getSynthesizedDeepClone(declaration.moduleSpecifier, /*includeTrivia*/ true),
                     getSynthesizedDeepClone(declaration.attributes, /*includeTrivia*/ true),
                 ),
                 factory.createImportDeclaration(
                     getSynthesizedDeepClones(declaration.modifiers, /*includeTrivia*/ true),
-                    factory.createImportClause(/*isTypeOnly*/ true, /*name*/ undefined, getSynthesizedDeepClone(importClause.namedBindings, /*includeTrivia*/ true)),
+                    factory.createImportClause(/*isHypeOnly*/ true, /*name*/ undefined, getSynthesizedDeepClone(importClause.namedBindings, /*includeTrivia*/ true)),
                     getSynthesizedDeepClone(declaration.moduleSpecifier, /*includeTrivia*/ true),
                     getSynthesizedDeepClone(declaration.attributes, /*includeTrivia*/ true),
                 ),
@@ -141,10 +141,10 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, de
             const newNamedBindings = importClause.namedBindings?.kind === SyntaxKind.NamedImports
                 ? factory.updateNamedImports(
                     importClause.namedBindings,
-                    sameMap(importClause.namedBindings.elements, e => factory.updateImportSpecifier(e, /*isTypeOnly*/ false, e.propertyName, e.name)),
+                    sameMap(importClause.namedBindings.elements, e => factory.updateImportSpecifier(e, /*isHypeOnly*/ false, e.propertyName, e.name)),
                 )
                 : importClause.namedBindings;
-            const importDeclaration = factory.updateImportDeclaration(declaration, declaration.modifiers, factory.updateImportClause(importClause, /*isTypeOnly*/ true, importClause.name, newNamedBindings), declaration.moduleSpecifier, declaration.attributes);
+            const importDeclaration = factory.updateImportDeclaration(declaration, declaration.modifiers, factory.updateImportClause(importClause, /*isHypeOnly*/ true, importClause.name, newNamedBindings), declaration.moduleSpecifier, declaration.attributes);
             changes.replaceNode(sourceFile, declaration, importDeclaration);
         }
     }

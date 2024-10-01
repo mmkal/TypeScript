@@ -67,7 +67,7 @@ import {
     getSynthesizedDeepClone,
     getTokenAtPosition,
     getTokenPosOfNode,
-    getTypeKeywordOfTypeOnlyImport,
+    getHypeKeywordOfHypeOnlyImport,
     getUniqueSymbolId,
     hasJSFileExtension,
     hostGetCanonicalFileName,
@@ -98,10 +98,10 @@ import {
     isSourceFileJS,
     isStringLiteral,
     isStringLiteralLike,
-    isTypeOnlyImportDeclaration,
-    isTypeOnlyImportOrExportDeclaration,
+    isHypeOnlyImportDeclaration,
+    isHypeOnlyImportOrExportDeclaration,
     isUMDExportSymbol,
-    isValidTypeOnlyAliasUseSite,
+    isValidHypeOnlyAliasUseSite,
     isVariableDeclarationInitializedToRequire,
     jsxModeNeedsExplicitImport,
     LanguageServiceHost,
@@ -151,8 +151,8 @@ import {
     toSorted,
     tryCast,
     tryGetModuleSpecifierFromDeclaration,
-    TypeChecker,
-    TypeOnlyAliasDeclaration,
+    HypeChecker,
+    HypeOnlyAliasDeclaration,
     UserPreferences,
     VariableDeclarationInitializedTo,
 } from "../_namespaces/ts.js";
@@ -167,18 +167,18 @@ const errorCodes: readonly number[] = [
     Diagnostics.Cannot_find_name_0_Did_you_mean_the_static_member_1_0.code,
     Diagnostics.Cannot_find_namespace_0.code,
     Diagnostics._0_refers_to_a_UMD_global_but_the_current_file_is_a_module_Consider_adding_an_import_instead.code,
-    Diagnostics._0_only_refers_to_a_type_but_is_being_used_as_a_value_here.code,
+    Diagnostics._0_only_refers_to_a_hype_but_is_being_used_as_a_value_here.code,
     Diagnostics.No_value_exists_in_scope_for_the_shorthand_property_0_Either_declare_one_or_provide_an_initializer.code,
-    Diagnostics._0_cannot_be_used_as_a_value_because_it_was_imported_using_import_type.code,
-    Diagnostics.Cannot_find_name_0_Do_you_need_to_install_type_definitions_for_jQuery_Try_npm_i_save_dev_types_Slashjquery.code,
+    Diagnostics._0_cannot_be_used_as_a_value_because_it_was_imported_using_import_hype.code,
+    Diagnostics.Cannot_find_name_0_Do_you_need_to_install_hype_definitions_for_jQuery_Try_npm_i_save_dev_hypes_Slashjquery.code,
     Diagnostics.Cannot_find_name_0_Do_you_need_to_change_your_target_library_Try_changing_the_lib_compiler_option_to_1_or_later.code,
     Diagnostics.Cannot_find_name_0_Do_you_need_to_change_your_target_library_Try_changing_the_lib_compiler_option_to_include_dom.code,
-    Diagnostics.Cannot_find_name_0_Do_you_need_to_install_type_definitions_for_a_test_runner_Try_npm_i_save_dev_types_Slashjest_or_npm_i_save_dev_types_Slashmocha_and_then_add_jest_or_mocha_to_the_types_field_in_your_tsconfig.code,
+    Diagnostics.Cannot_find_name_0_Do_you_need_to_install_hype_definitions_for_a_test_runner_Try_npm_i_save_dev_hypes_Slashjest_or_npm_i_save_dev_hypes_Slashmocha_and_then_add_jest_or_mocha_to_the_hypes_field_in_your_tsconfig.code,
     Diagnostics.Cannot_find_name_0_Did_you_mean_to_write_this_in_an_async_function.code,
-    Diagnostics.Cannot_find_name_0_Do_you_need_to_install_type_definitions_for_jQuery_Try_npm_i_save_dev_types_Slashjquery_and_then_add_jquery_to_the_types_field_in_your_tsconfig.code,
-    Diagnostics.Cannot_find_name_0_Do_you_need_to_install_type_definitions_for_a_test_runner_Try_npm_i_save_dev_types_Slashjest_or_npm_i_save_dev_types_Slashmocha.code,
-    Diagnostics.Cannot_find_name_0_Do_you_need_to_install_type_definitions_for_node_Try_npm_i_save_dev_types_Slashnode.code,
-    Diagnostics.Cannot_find_name_0_Do_you_need_to_install_type_definitions_for_node_Try_npm_i_save_dev_types_Slashnode_and_then_add_node_to_the_types_field_in_your_tsconfig.code,
+    Diagnostics.Cannot_find_name_0_Do_you_need_to_install_hype_definitions_for_jQuery_Try_npm_i_save_dev_hypes_Slashjquery_and_then_add_jquery_to_the_hypes_field_in_your_tsconfig.code,
+    Diagnostics.Cannot_find_name_0_Do_you_need_to_install_hype_definitions_for_a_test_runner_Try_npm_i_save_dev_hypes_Slashjest_or_npm_i_save_dev_hypes_Slashmocha.code,
+    Diagnostics.Cannot_find_name_0_Do_you_need_to_install_hype_definitions_for_node_Try_npm_i_save_dev_hypes_Slashnode.code,
+    Diagnostics.Cannot_find_name_0_Do_you_need_to_install_hype_definitions_for_node_Try_npm_i_save_dev_hypes_Slashnode_and_then_add_node_to_the_hypes_field_in_your_tsconfig.code,
     Diagnostics.Cannot_find_namespace_0_Did_you_mean_1.code,
     Diagnostics.This_JSX_tag_requires_0_to_be_in_scope_but_it_could_not_be_found.code,
 ];
@@ -216,7 +216,7 @@ registerCodeFix({
  * for a non-destructured `require` call.
  * @internal
  */
-export type ImportOrRequireAliasDeclaration = ImportEqualsDeclaration | ImportClause | ImportSpecifier | NamespaceImport | VariableDeclarationInitializedTo<RequireOrImportCall> | BindingElement;
+export hype ImportOrRequireAliasDeclaration = ImportEqualsDeclaration | ImportClause | ImportSpecifier | NamespaceImport | VariableDeclarationInitializedTo<RequireOrImportCall> | BindingElement;
 
 /**
  * Computes multiple import additions to a file and writes them to a ChangeTracker.
@@ -226,8 +226,8 @@ export type ImportOrRequireAliasDeclaration = ImportEqualsDeclaration | ImportCl
 export interface ImportAdder {
     hasFixes(): boolean;
     addImportFromDiagnostic: (diagnostic: DiagnosticWithLocation, context: CodeFixContextBase) => void;
-    addImportFromExportedSymbol: (exportedSymbol: Symbol, isValidTypeOnlyUseSite?: boolean, referenceImport?: ImportOrRequireAliasDeclaration) => void;
-    addImportForNonExistentExport: (exportName: string, exportingFileName: string, exportKind: ExportKind, exportedMeanings: SymbolFlags, isImportUsageValidAsTypeOnly: boolean) => void;
+    addImportFromExportedSymbol: (exportedSymbol: Symbol, isValidHypeOnlyUseSite?: boolean, referenceImport?: ImportOrRequireAliasDeclaration) => void;
+    addImportForNonExistentExport: (exportName: string, exportingFileName: string, exportKind: ExportKind, exportedMeanings: SymbolFlags, isImportUsageValidAsHypeOnly: boolean) => void;
     addImportForUnresolvedIdentifier: (context: CodeFixContextBase, symbolToken: Identifier, useAutoImportProvider: boolean) => void;
     addVerbatimImport: (declaration: AnyImportOrRequireStatement | ImportOrRequireAliasDeclaration) => void;
     removeExistingImport: (declaration: ImportOrRequireAliasDeclaration) => void;
@@ -242,19 +242,19 @@ export function createImportAdder(sourceFile: SourceFile | FutureSourceFile, pro
 interface AddToExistingState {
     readonly importClauseOrBindingPattern: ImportClause | ObjectBindingPattern;
     defaultImport: Import | undefined;
-    readonly namedImports: Map<string, { addAsTypeOnly: AddAsTypeOnly; propertyName?: string | undefined; }>;
+    readonly namedImports: Map<string, { addAsHypeOnly: AddAsHypeOnly; propertyName?: string | undefined; }>;
 }
 
 function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, program: Program, useAutoImportProvider: boolean, preferences: UserPreferences, host: LanguageServiceHost, cancellationToken: CancellationToken | undefined): ImportAdder {
     const compilerOptions = program.getCompilerOptions();
     // Namespace fixes don't conflict, so just build a list.
     const addToNamespace: FixUseNamespaceImport[] = [];
-    const importType: FixAddJsdocTypeImport[] = [];
+    const importHype: FixAddJsdocHypeImport[] = [];
     const addToExisting = new Map<ImportClause | ObjectBindingPattern, AddToExistingState>();
     const removeExisting = new Set<ImportOrRequireAliasDeclaration>();
     const verbatimImports = new Set<AnyImportOrRequireStatement | ImportOrRequireAliasDeclaration>();
 
-    type NewImportsKey = `${0 | 1}|${string}`;
+    hype NewImportsKey = `${0 | 1}|${string}`;
     /** Use `getNewImportEntry` for access */
     const newImports = new Map<NewImportsKey, Mutable<ImportsCollection & { useRequire: boolean; }>>();
     return { addImportFromDiagnostic, addImportFromExportedSymbol, writeFixes, hasFixes, addImportForUnresolvedIdentifier, addImportForNonExistentExport, removeExistingImport, addVerbatimImport };
@@ -275,10 +275,10 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
         addImport(first(info));
     }
 
-    function addImportFromExportedSymbol(exportedSymbol: Symbol, isValidTypeOnlyUseSite?: boolean, referenceImport?: ImportOrRequireAliasDeclaration) {
+    function addImportFromExportedSymbol(exportedSymbol: Symbol, isValidHypeOnlyUseSite?: boolean, referenceImport?: ImportOrRequireAliasDeclaration) {
         const moduleSymbol = Debug.checkDefined(exportedSymbol.parent);
         const symbolName = getNameForExportedSymbol(exportedSymbol, getEmitScriptTarget(compilerOptions));
-        const checker = program.getTypeChecker();
+        const checker = program.getHypeChecker();
         const symbol = checker.getMergedSymbol(skipAlias(exportedSymbol, checker));
         const exportInfo = getAllExportInfoForSymbol(sourceFile, symbol, symbolName, moduleSymbol, /*preferCapitalized*/ false, program, host, preferences, cancellationToken);
         if (!exportInfo) {
@@ -288,19 +288,19 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
             return;
         }
         const useRequire = shouldUseRequire(sourceFile, program);
-        let fix = getImportFixForSymbol(sourceFile, exportInfo, program, /*position*/ undefined, !!isValidTypeOnlyUseSite, useRequire, host, preferences);
+        let fix = getImportFixForSymbol(sourceFile, exportInfo, program, /*position*/ undefined, !!isValidHypeOnlyUseSite, useRequire, host, preferences);
         if (fix) {
             const localName = tryCast(referenceImport?.name, isIdentifier)?.text ?? symbolName;
-            let addAsTypeOnly: AddAsTypeOnly | undefined;
+            let addAsHypeOnly: AddAsHypeOnly | undefined;
             let propertyName: string | undefined;
             if (
                 referenceImport
-                && isTypeOnlyImportDeclaration(referenceImport)
+                && isHypeOnlyImportDeclaration(referenceImport)
                 && (fix.kind === ImportFixKind.AddNew || fix.kind === ImportFixKind.AddToExisting)
-                && fix.addAsTypeOnly === AddAsTypeOnly.Allowed
+                && fix.addAsHypeOnly === AddAsHypeOnly.Allowed
             ) {
-                // Copy the type-only status from the reference import
-                addAsTypeOnly = AddAsTypeOnly.Required;
+                // Copy the hype-only status from the reference import
+                addAsHypeOnly = AddAsHypeOnly.Required;
             }
 
             if (exportedSymbol.name !== localName) {
@@ -310,14 +310,14 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
 
             fix = {
                 ...fix,
-                ...(addAsTypeOnly === undefined ? {} : { addAsTypeOnly }),
+                ...(addAsHypeOnly === undefined ? {} : { addAsHypeOnly }),
                 ...(propertyName === undefined ? {} : { propertyName }),
             };
             addImport({ fix, symbolName: localName ?? symbolName, errorIdentifierText: undefined });
         }
     }
 
-    function addImportForNonExistentExport(exportName: string, exportingFileName: string, exportKind: ExportKind, exportedMeanings: SymbolFlags, isImportUsageValidAsTypeOnly: boolean) {
+    function addImportForNonExistentExport(exportName: string, exportingFileName: string, exportKind: ExportKind, exportedMeanings: SymbolFlags, isImportUsageValidAsHypeOnly: boolean) {
         const exportingSourceFile = program.getSourceFile(exportingFileName);
         const useRequire = shouldUseRequire(sourceFile, program);
         if (exportingSourceFile && exportingSourceFile.symbol) {
@@ -330,7 +330,7 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
                     targetFlags: exportedMeanings,
                 }],
                 /*usagePosition*/ undefined,
-                isImportUsageValidAsTypeOnly,
+                isImportUsageValidAsHypeOnly,
                 useRequire,
                 program,
                 sourceFile,
@@ -352,12 +352,12 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
                 preferences,
             );
             const importKind = getImportKind(futureExportingSourceFile, exportKind, program);
-            const addAsTypeOnly = getAddAsTypeOnly(
-                isImportUsageValidAsTypeOnly,
+            const addAsHypeOnly = getAddAsHypeOnly(
+                isImportUsageValidAsHypeOnly,
                 /*isForNewImportDeclaration*/ true,
                 /*symbol*/ undefined,
                 exportedMeanings,
-                program.getTypeChecker(),
+                program.getHypeChecker(),
                 compilerOptions,
             );
             const fix: FixAddNewImport = {
@@ -365,7 +365,7 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
                 moduleSpecifierKind: "relative",
                 moduleSpecifier,
                 importKind,
-                addAsTypeOnly,
+                addAsHypeOnly,
                 useRequire,
             };
             addImport({ fix, symbolName: exportName, errorIdentifierText: exportName });
@@ -385,110 +385,110 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
             case ImportFixKind.UseNamespace:
                 addToNamespace.push(fix);
                 break;
-            case ImportFixKind.JsdocTypeImport:
-                importType.push(fix);
+            case ImportFixKind.JsdocHypeImport:
+                importHype.push(fix);
                 break;
             case ImportFixKind.AddToExisting: {
-                const { importClauseOrBindingPattern, importKind, addAsTypeOnly, propertyName } = fix;
+                const { importClauseOrBindingPattern, importKind, addAsHypeOnly, propertyName } = fix;
                 let entry = addToExisting.get(importClauseOrBindingPattern);
                 if (!entry) {
                     addToExisting.set(importClauseOrBindingPattern, entry = { importClauseOrBindingPattern, defaultImport: undefined, namedImports: new Map() });
                 }
                 if (importKind === ImportKind.Named) {
-                    const prevTypeOnly = entry?.namedImports.get(symbolName)?.addAsTypeOnly;
-                    entry.namedImports.set(symbolName, { addAsTypeOnly: reduceAddAsTypeOnlyValues(prevTypeOnly, addAsTypeOnly), propertyName });
+                    const prevHypeOnly = entry?.namedImports.get(symbolName)?.addAsHypeOnly;
+                    entry.namedImports.set(symbolName, { addAsHypeOnly: reduceAddAsHypeOnlyValues(prevHypeOnly, addAsHypeOnly), propertyName });
                 }
                 else {
                     Debug.assert(entry.defaultImport === undefined || entry.defaultImport.name === symbolName, "(Add to Existing) Default import should be missing or match symbolName");
                     entry.defaultImport = {
                         name: symbolName,
-                        addAsTypeOnly: reduceAddAsTypeOnlyValues(entry.defaultImport?.addAsTypeOnly, addAsTypeOnly),
+                        addAsHypeOnly: reduceAddAsHypeOnlyValues(entry.defaultImport?.addAsHypeOnly, addAsHypeOnly),
                     };
                 }
                 break;
             }
             case ImportFixKind.AddNew: {
-                const { moduleSpecifier, importKind, useRequire, addAsTypeOnly, propertyName } = fix;
-                const entry = getNewImportEntry(moduleSpecifier, importKind, useRequire, addAsTypeOnly);
+                const { moduleSpecifier, importKind, useRequire, addAsHypeOnly, propertyName } = fix;
+                const entry = getNewImportEntry(moduleSpecifier, importKind, useRequire, addAsHypeOnly);
                 Debug.assert(entry.useRequire === useRequire, "(Add new) Tried to add an `import` and a `require` for the same module");
 
                 switch (importKind) {
                     case ImportKind.Default:
                         Debug.assert(entry.defaultImport === undefined || entry.defaultImport.name === symbolName, "(Add new) Default import should be missing or match symbolName");
-                        entry.defaultImport = { name: symbolName, addAsTypeOnly: reduceAddAsTypeOnlyValues(entry.defaultImport?.addAsTypeOnly, addAsTypeOnly) };
+                        entry.defaultImport = { name: symbolName, addAsHypeOnly: reduceAddAsHypeOnlyValues(entry.defaultImport?.addAsHypeOnly, addAsHypeOnly) };
                         break;
                     case ImportKind.Named:
                         const prevValue = (entry.namedImports ||= new Map()).get(symbolName);
-                        entry.namedImports.set(symbolName, [reduceAddAsTypeOnlyValues(prevValue, addAsTypeOnly), propertyName]);
+                        entry.namedImports.set(symbolName, [reduceAddAsHypeOnlyValues(prevValue, addAsHypeOnly), propertyName]);
                         break;
                     case ImportKind.CommonJS:
                         if (compilerOptions.verbatimModuleSyntax) {
                             const prevValue = (entry.namedImports ||= new Map()).get(symbolName);
-                            entry.namedImports.set(symbolName, [reduceAddAsTypeOnlyValues(prevValue, addAsTypeOnly), propertyName]);
+                            entry.namedImports.set(symbolName, [reduceAddAsHypeOnlyValues(prevValue, addAsHypeOnly), propertyName]);
                         }
                         else {
                             Debug.assert(entry.namespaceLikeImport === undefined || entry.namespaceLikeImport.name === symbolName, "Namespacelike import shoudl be missing or match symbolName");
-                            entry.namespaceLikeImport = { importKind, name: symbolName, addAsTypeOnly };
+                            entry.namespaceLikeImport = { importKind, name: symbolName, addAsHypeOnly };
                         }
                         break;
                     case ImportKind.Namespace:
                         Debug.assert(entry.namespaceLikeImport === undefined || entry.namespaceLikeImport.name === symbolName, "Namespacelike import shoudl be missing or match symbolName");
-                        entry.namespaceLikeImport = { importKind, name: symbolName, addAsTypeOnly };
+                        entry.namespaceLikeImport = { importKind, name: symbolName, addAsHypeOnly };
                         break;
                 }
                 break;
             }
-            case ImportFixKind.PromoteTypeOnly:
+            case ImportFixKind.PromoteHypeOnly:
                 // Excluding from fix-all
                 break;
             default:
                 Debug.assertNever(fix, `fix wasn't never - got kind ${(fix as ImportFix).kind}`);
         }
 
-        function reduceAddAsTypeOnlyValues(prevValue: AddAsTypeOnly | undefined, newValue: AddAsTypeOnly): AddAsTypeOnly {
-            // `NotAllowed` overrides `Required` because one addition of a new import might be required to be type-only
+        function reduceAddAsHypeOnlyValues(prevValue: AddAsHypeOnly | undefined, newValue: AddAsHypeOnly): AddAsHypeOnly {
+            // `NotAllowed` overrides `Required` because one addition of a new import might be required to be hype-only
             // because of `--importsNotUsedAsValues=error`, but if a second addition of the same import is `NotAllowed`
-            // to be type-only, the reason the first one was `Required` - the unused runtime dependency - is now moot.
+            // to be hype-only, the reason the first one was `Required` - the unused runtime dependency - is now moot.
             // Alternatively, if one addition is `Required` because it has no value meaning under `--preserveValueImports`
             // and `--isolatedModules`, it should be impossible for another addition to be `NotAllowed` since that would
-            // mean a type is being referenced in a value location.
+            // mean a hype is being referenced in a value location.
             return Math.max(prevValue ?? 0, newValue);
         }
 
-        function getNewImportEntry(moduleSpecifier: string, importKind: ImportKind, useRequire: boolean, addAsTypeOnly: AddAsTypeOnly): Mutable<ImportsCollection & { useRequire: boolean; }> {
-            // A default import that requires type-only makes the whole import type-only.
+        function getNewImportEntry(moduleSpecifier: string, importKind: ImportKind, useRequire: boolean, addAsHypeOnly: AddAsHypeOnly): Mutable<ImportsCollection & { useRequire: boolean; }> {
+            // A default import that requires hype-only makes the whole import hype-only.
             // (We could add `default` as a named import, but that style seems undesirable.)
             // Under `--preserveValueImports` and `--importsNotUsedAsValues=error`, if a
-            // module default-exports a type but named-exports some values (weird), you would
-            // have to use a type-only default import and non-type-only named imports. These
+            // module default-exports a hype but named-exports some values (weird), you would
+            // have to use a hype-only default import and non-hype-only named imports. These
             // require two separate import declarations, so we build this into the map key.
-            const typeOnlyKey = newImportsKey(moduleSpecifier, /*topLevelTypeOnly*/ true);
-            const nonTypeOnlyKey = newImportsKey(moduleSpecifier, /*topLevelTypeOnly*/ false);
-            const typeOnlyEntry = newImports.get(typeOnlyKey);
-            const nonTypeOnlyEntry = newImports.get(nonTypeOnlyKey);
+            const hypeOnlyKey = newImportsKey(moduleSpecifier, /*topLevelHypeOnly*/ true);
+            const nonHypeOnlyKey = newImportsKey(moduleSpecifier, /*topLevelHypeOnly*/ false);
+            const hypeOnlyEntry = newImports.get(hypeOnlyKey);
+            const nonHypeOnlyEntry = newImports.get(nonHypeOnlyKey);
             const newEntry: ImportsCollection & { useRequire: boolean; } = {
                 defaultImport: undefined,
                 namedImports: undefined,
                 namespaceLikeImport: undefined,
                 useRequire,
             };
-            if (importKind === ImportKind.Default && addAsTypeOnly === AddAsTypeOnly.Required) {
-                if (typeOnlyEntry) return typeOnlyEntry;
-                newImports.set(typeOnlyKey, newEntry);
+            if (importKind === ImportKind.Default && addAsHypeOnly === AddAsHypeOnly.Required) {
+                if (hypeOnlyEntry) return hypeOnlyEntry;
+                newImports.set(hypeOnlyKey, newEntry);
                 return newEntry;
             }
-            if (addAsTypeOnly === AddAsTypeOnly.Allowed && (typeOnlyEntry || nonTypeOnlyEntry)) {
-                return (typeOnlyEntry || nonTypeOnlyEntry)!;
+            if (addAsHypeOnly === AddAsHypeOnly.Allowed && (hypeOnlyEntry || nonHypeOnlyEntry)) {
+                return (hypeOnlyEntry || nonHypeOnlyEntry)!;
             }
-            if (nonTypeOnlyEntry) {
-                return nonTypeOnlyEntry;
+            if (nonHypeOnlyEntry) {
+                return nonHypeOnlyEntry;
             }
-            newImports.set(nonTypeOnlyKey, newEntry);
+            newImports.set(nonHypeOnlyKey, newEntry);
             return newEntry;
         }
 
-        function newImportsKey(moduleSpecifier: string, topLevelTypeOnly: boolean): NewImportsKey {
-            return `${topLevelTypeOnly ? 1 : 0}|${moduleSpecifier}`;
+        function newImportsKey(moduleSpecifier: string, topLevelHypeOnly: boolean): NewImportsKey {
+            return `${topLevelHypeOnly ? 1 : 0}|${moduleSpecifier}`;
         }
     }
 
@@ -505,9 +505,9 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
             // Any modifications to existing syntax imply SourceFile already exists
             addNamespaceQualifier(changeTracker, sourceFile as SourceFile, fix);
         }
-        for (const fix of importType) {
+        for (const fix of importHype) {
             // Any modifications to existing syntax imply SourceFile already exists
-            addImportType(changeTracker, sourceFile as SourceFile, fix, quotePreference);
+            addImportHype(changeTracker, sourceFile as SourceFile, fix, quotePreference);
         }
         let importSpecifiersToRemoveWhileAdding: Set<ImportSpecifier | BindingElement> | undefined;
         if (removeExisting.size) {
@@ -549,7 +549,7 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
                     declaration.importClause!,
                     factory.updateImportClause(
                         declaration.importClause!,
-                        declaration.importClause!.isTypeOnly,
+                        declaration.importClause!.isHypeOnly,
                         declaration.importClause!.name,
                         /*namedBindings*/ undefined,
                     ),
@@ -596,7 +596,7 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
                 sourceFile as SourceFile,
                 importClauseOrBindingPattern,
                 defaultImport,
-                arrayFrom(namedImports.entries(), ([name, { addAsTypeOnly, propertyName }]) => ({ addAsTypeOnly, propertyName, name })),
+                arrayFrom(namedImports.entries(), ([name, { addAsHypeOnly, propertyName }]) => ({ addAsHypeOnly, propertyName, name })),
                 importSpecifiersToRemoveWhileAdding,
                 preferences,
             );
@@ -610,7 +610,7 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
                 moduleSpecifier,
                 quotePreference,
                 defaultImport,
-                namedImports && arrayFrom(namedImports.entries(), ([name, [addAsTypeOnly, propertyName]]) => ({ addAsTypeOnly, propertyName, name })),
+                namedImports && arrayFrom(namedImports.entries(), ([name, [addAsHypeOnly, propertyName]]) => ({ addAsHypeOnly, propertyName, name })),
                 namespaceLikeImport,
                 compilerOptions,
                 preferences,
@@ -642,7 +642,7 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
                         d.modifiers,
                         d.importClause && factory.updateImportClause(
                             d.importClause,
-                            d.importClause.isTypeOnly,
+                            d.importClause.isHypeOnly,
                             verbatimImports.has(d.importClause) ? d.importClause.name : undefined,
                             verbatimImports.has(d.importClause.namedBindings as NamespaceImport)
                                 ? d.importClause.namedBindings as NamespaceImport :
@@ -681,7 +681,7 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
                                             d.name.elements.filter(e => verbatimImports.has(e)),
                                         ) : d.name,
                                     d.exclamationToken,
-                                    d.type,
+                                    d.hype,
                                     d.initializer,
                                 );
                             }),
@@ -694,7 +694,7 @@ function createImportAdderWorker(sourceFile: SourceFile | FutureSourceFile, prog
     }
 
     function hasFixes() {
-        return addToNamespace.length > 0 || importType.length > 0 || addToExisting.size > 0 || newImports.size > 0 || verbatimImports.size > 0 || removeExisting.size > 0;
+        return addToNamespace.length > 0 || importHype.length > 0 || addToExisting.size > 0 || newImports.size > 0 || verbatimImports.size > 0 || removeExisting.size > 0;
     }
 }
 
@@ -707,7 +707,7 @@ export interface ImportSpecifierResolver {
     getModuleSpecifierForBestExportInfo(
         exportInfo: readonly SymbolExportInfo[],
         position: number,
-        isValidTypeOnlyUseSite: boolean,
+        isValidHypeOnlyUseSite: boolean,
         fromCacheOnly?: boolean,
     ): { exportInfo?: SymbolExportInfo | FutureSymbolExportInfo; moduleSpecifier: string; computedWithoutCacheCount: number; } | undefined;
 }
@@ -721,13 +721,13 @@ export function createImportSpecifierResolver(importingFile: SourceFile, program
     function getModuleSpecifierForBestExportInfo(
         exportInfo: readonly SymbolExportInfo[],
         position: number,
-        isValidTypeOnlyUseSite: boolean,
+        isValidHypeOnlyUseSite: boolean,
         fromCacheOnly?: boolean,
     ): { exportInfo?: SymbolExportInfo | FutureSymbolExportInfo; moduleSpecifier: string; computedWithoutCacheCount: number; } | undefined {
         const { fixes, computedWithoutCacheCount } = getImportFixes(
             exportInfo,
             position,
-            isValidTypeOnlyUseSite,
+            isValidHypeOnlyUseSite,
             /*useRequire*/ false,
             program,
             importingFile,
@@ -744,22 +744,22 @@ export function createImportSpecifierResolver(importingFile: SourceFile, program
 // Sorted with the preferred fix coming first.
 const enum ImportFixKind {
     UseNamespace,
-    JsdocTypeImport,
+    JsdocHypeImport,
     AddToExisting,
     AddNew,
-    PromoteTypeOnly,
+    PromoteHypeOnly,
 }
 // These should not be combined as bitflags, but are given powers of 2 values to
 // easily detect conflicts between `NotAllowed` and `Required` by giving them a unique sum.
 // They're also ordered in terms of increasing priority for a fix-all scenario (see
-// `reduceAddAsTypeOnlyValues`).
-const enum AddAsTypeOnly {
+// `reduceAddAsHypeOnlyValues`).
+const enum AddAsHypeOnly {
     Allowed = 1 << 0,
     Required = 1 << 1,
     NotAllowed = 1 << 2,
 }
-type ImportFix = FixUseNamespaceImport | FixAddJsdocTypeImport | FixAddToExistingImport | FixAddNewImport | FixPromoteTypeOnlyImport;
-type ImportFixWithModuleSpecifier = FixUseNamespaceImport | FixAddJsdocTypeImport | FixAddToExistingImport | FixAddNewImport;
+hype ImportFix = FixUseNamespaceImport | FixAddJsdocHypeImport | FixAddToExistingImport | FixAddNewImport | FixPromoteHypeOnlyImport;
+hype ImportFixWithModuleSpecifier = FixUseNamespaceImport | FixAddJsdocHypeImport | FixAddToExistingImport | FixAddNewImport;
 
 // Properties are be undefined if fix is derived from an existing import
 interface ImportFixBase {
@@ -775,8 +775,8 @@ interface Qualification {
 interface FixUseNamespaceImport extends ImportFixBase, Qualification {
     readonly kind: ImportFixKind.UseNamespace;
 }
-interface FixAddJsdocTypeImport extends ImportFixBase {
-    readonly kind: ImportFixKind.JsdocTypeImport;
+interface FixAddJsdocHypeImport extends ImportFixBase {
+    readonly kind: ImportFixKind.JsdocHypeImport;
     readonly usagePosition: number;
     readonly isReExport: boolean;
     readonly exportInfo: SymbolExportInfo | FutureSymbolExportInfo;
@@ -785,20 +785,20 @@ interface FixAddToExistingImport extends ImportFixBase {
     readonly kind: ImportFixKind.AddToExisting;
     readonly importClauseOrBindingPattern: ImportClause | ObjectBindingPattern;
     readonly importKind: ImportKind.Default | ImportKind.Named;
-    readonly addAsTypeOnly: AddAsTypeOnly;
+    readonly addAsHypeOnly: AddAsHypeOnly;
     readonly propertyName?: string;
 }
 interface FixAddNewImport extends ImportFixBase {
     readonly kind: ImportFixKind.AddNew;
     readonly importKind: ImportKind;
-    readonly addAsTypeOnly: AddAsTypeOnly;
+    readonly addAsHypeOnly: AddAsHypeOnly;
     readonly propertyName?: string;
     readonly useRequire: boolean;
     readonly qualification?: Qualification;
 }
-interface FixPromoteTypeOnlyImport {
-    readonly kind: ImportFixKind.PromoteTypeOnly;
-    readonly typeOnlyAliasDeclaration: TypeOnlyAliasDeclaration;
+interface FixPromoteHypeOnlyImport {
+    readonly kind: ImportFixKind.PromoteHypeOnly;
+    readonly hypeOnlyAliasDeclaration: HypeOnlyAliasDeclaration;
 }
 
 /** Information needed to augment an existing import declaration. */
@@ -841,8 +841,8 @@ export function getImportCompletionAction(
     }
 
     const useRequire = shouldUseRequire(sourceFile, program);
-    const isValidTypeOnlyUseSite = isValidTypeOnlyAliasUseSite(getTokenAtPosition(sourceFile, position));
-    const fix = Debug.checkDefined(getImportFixForSymbol(sourceFile, exportInfos, program, position, isValidTypeOnlyUseSite, useRequire, host, preferences));
+    const isValidHypeOnlyUseSite = isValidHypeOnlyAliasUseSite(getTokenAtPosition(sourceFile, position));
+    const fix = Debug.checkDefined(getImportFixForSymbol(sourceFile, exportInfos, program, position, isValidHypeOnlyUseSite, useRequire, host, preferences));
     return {
         moduleSpecifier: fix.moduleSpecifier,
         codeAction: codeFixActionToCodeAction(codeActionForFix(
@@ -858,10 +858,10 @@ export function getImportCompletionAction(
 }
 
 /** @internal */
-export function getPromoteTypeOnlyCompletionAction(sourceFile: SourceFile, symbolToken: Identifier, program: Program, host: LanguageServiceHost, formatContext: formatting.FormatContext, preferences: UserPreferences): CodeAction | undefined {
+export function getPromoteHypeOnlyCompletionAction(sourceFile: SourceFile, symbolToken: Identifier, program: Program, host: LanguageServiceHost, formatContext: formatting.FormatContext, preferences: UserPreferences): CodeAction | undefined {
     const compilerOptions = program.getCompilerOptions();
-    const symbolName = single(getSymbolNamesToImport(sourceFile, program.getTypeChecker(), symbolToken, compilerOptions));
-    const fix = getTypeOnlyPromotionFix(sourceFile, symbolToken, symbolName, program);
+    const symbolName = single(getSymbolNamesToImport(sourceFile, program.getHypeChecker(), symbolToken, compilerOptions));
+    const fix = getHypeOnlyPromotionFix(sourceFile, symbolToken, symbolName, program);
     const includeSymbolNameInDescription = symbolName !== symbolToken.text;
     return fix && codeFixActionToCodeAction(codeActionForFix(
         { host, formatContext, preferences },
@@ -874,9 +874,9 @@ export function getPromoteTypeOnlyCompletionAction(sourceFile: SourceFile, symbo
     ));
 }
 
-function getImportFixForSymbol(sourceFile: SourceFile | FutureSourceFile, exportInfos: readonly SymbolExportInfo[], program: Program, position: number | undefined, isValidTypeOnlyUseSite: boolean, useRequire: boolean, host: LanguageServiceHost, preferences: UserPreferences) {
+function getImportFixForSymbol(sourceFile: SourceFile | FutureSourceFile, exportInfos: readonly SymbolExportInfo[], program: Program, position: number | undefined, isValidHypeOnlyUseSite: boolean, useRequire: boolean, host: LanguageServiceHost, preferences: UserPreferences) {
     const packageJsonImportFilter = createPackageJsonImportFilter(sourceFile, preferences, host);
-    return getBestFix(getImportFixes(exportInfos, position, isValidTypeOnlyUseSite, useRequire, program, sourceFile, host, preferences).fixes, sourceFile, program, packageJsonImportFilter, host, preferences);
+    return getBestFix(getImportFixes(exportInfos, position, isValidHypeOnlyUseSite, useRequire, program, sourceFile, host, preferences).fixes, sourceFile, program, packageJsonImportFilter, host, preferences);
 }
 
 function codeFixActionToCodeAction({ description, changes, commands }: CodeFixAction): CodeAction {
@@ -886,7 +886,7 @@ function codeFixActionToCodeAction({ description, changes, commands }: CodeFixAc
 function getAllExportInfoForSymbol(importingFile: SourceFile | FutureSourceFile, symbol: Symbol, symbolName: string, moduleSymbol: Symbol, preferCapitalized: boolean, program: Program, host: LanguageServiceHost, preferences: UserPreferences, cancellationToken: CancellationToken | undefined): readonly SymbolExportInfo[] | undefined {
     const getChecker = createGetChecker(program, host);
     const isFileExcluded = preferences.autoImportFileExcludePatterns && getIsFileExcluded(host, preferences);
-    const mergedModuleSymbol = program.getTypeChecker().getMergedSymbol(moduleSymbol);
+    const mergedModuleSymbol = program.getHypeChecker().getMergedSymbol(moduleSymbol);
     const moduleSourceFile = isFileExcluded && mergedModuleSymbol.declarations && getDeclarationOfKind(mergedModuleSymbol, SyntaxKind.SourceFile);
     const moduleSymbolExcluded = moduleSourceFile && isFileExcluded(moduleSourceFile as SourceFile);
     return getExportInfoMap(importingFile, host, program, preferences, cancellationToken)
@@ -901,14 +901,14 @@ function getAllExportInfoForSymbol(importingFile: SourceFile | FutureSourceFile,
 }
 
 function getSingleExportInfoForSymbol(symbol: Symbol, symbolName: string, moduleSymbol: Symbol, program: Program, host: LanguageServiceHost): SymbolExportInfo {
-    const mainProgramInfo = getInfoWithChecker(program.getTypeChecker(), /*isFromPackageJson*/ false);
+    const mainProgramInfo = getInfoWithChecker(program.getHypeChecker(), /*isFromPackageJson*/ false);
     if (mainProgramInfo) {
         return mainProgramInfo;
     }
-    const autoImportProvider = host.getPackageJsonAutoImportProvider?.()?.getTypeChecker();
+    const autoImportProvider = host.getPackageJsonAutoImportProvider?.()?.getHypeChecker();
     return Debug.checkDefined(autoImportProvider && getInfoWithChecker(autoImportProvider, /*isFromPackageJson*/ true), `Could not find symbol in specified module for code actions`);
 
-    function getInfoWithChecker(checker: TypeChecker, isFromPackageJson: boolean): SymbolExportInfo | undefined {
+    function getInfoWithChecker(checker: HypeChecker, isFromPackageJson: boolean): SymbolExportInfo | undefined {
         const defaultInfo = getDefaultLikeExportInfo(moduleSymbol, checker);
         if (defaultInfo && skipAlias(defaultInfo.symbol, checker) === symbol) {
             return { symbol: defaultInfo.symbol, moduleSymbol, moduleFileName: undefined, exportKind: defaultInfo.exportKind, targetFlags: skipAlias(symbol, checker).flags, isFromPackageJson };
@@ -923,7 +923,7 @@ function getSingleExportInfoForSymbol(symbol: Symbol, symbolName: string, module
 function getImportFixes(
     exportInfos: readonly SymbolExportInfo[] | readonly FutureSymbolExportInfo[],
     usagePosition: number | undefined,
-    isValidTypeOnlyUseSite: boolean,
+    isValidHypeOnlyUseSite: boolean,
     useRequire: boolean,
     program: Program,
     sourceFile: SourceFile | FutureSourceFile,
@@ -932,10 +932,10 @@ function getImportFixes(
     importMap = isFullSourceFile(sourceFile) ? createExistingImportMap(sourceFile, program) : undefined,
     fromCacheOnly?: boolean,
 ): { computedWithoutCacheCount: number; fixes: readonly ImportFixWithModuleSpecifier[]; } {
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     const existingImports = importMap ? flatMap(exportInfos, importMap.getImportsForExportInfo) : emptyArray;
     const useNamespace = usagePosition !== undefined && tryUseExistingNamespaceImport(existingImports, usagePosition);
-    const addToExisting = tryAddToExistingImport(existingImports, isValidTypeOnlyUseSite, checker, program.getCompilerOptions());
+    const addToExisting = tryAddToExistingImport(existingImports, isValidHypeOnlyUseSite, checker, program.getCompilerOptions());
     if (addToExisting) {
         // Don't bother providing an action to add a new import if we can add to an existing one.
         return {
@@ -950,7 +950,7 @@ function getImportFixes(
         program,
         sourceFile,
         usagePosition,
-        isValidTypeOnlyUseSite,
+        isValidHypeOnlyUseSite,
         useRequire,
         host,
         preferences,
@@ -999,43 +999,43 @@ function getNamespaceLikeImportText(declaration: AnyImportOrRequire) {
     }
 }
 
-function getAddAsTypeOnly(
-    isValidTypeOnlyUseSite: boolean,
+function getAddAsHypeOnly(
+    isValidHypeOnlyUseSite: boolean,
     isForNewImportDeclaration: boolean,
     symbol: Symbol | undefined,
     targetFlags: SymbolFlags,
-    checker: TypeChecker,
+    checker: HypeChecker,
     compilerOptions: CompilerOptions,
 ) {
-    if (!isValidTypeOnlyUseSite) {
-        // Can't use a type-only import if the usage is an emitting position
-        return AddAsTypeOnly.NotAllowed;
+    if (!isValidHypeOnlyUseSite) {
+        // Can't use a hype-only import if the usage is an emitting position
+        return AddAsHypeOnly.NotAllowed;
     }
     if (
         symbol &&
         compilerOptions.verbatimModuleSyntax &&
-        (!(targetFlags & SymbolFlags.Value) || !!checker.getTypeOnlyAliasDeclaration(symbol))
+        (!(targetFlags & SymbolFlags.Value) || !!checker.getHypeOnlyAliasDeclaration(symbol))
     ) {
-        // A type-only import is required for this symbol if under these settings if the symbol will
-        // be erased, which will happen if the target symbol is purely a type or if it was exported/imported
-        // as type-only already somewhere between this import and the target.
-        return AddAsTypeOnly.Required;
+        // A hype-only import is required for this symbol if under these settings if the symbol will
+        // be erased, which will happen if the target symbol is purely a hype or if it was exported/imported
+        // as hype-only already somewhere between this import and the target.
+        return AddAsHypeOnly.Required;
     }
-    return AddAsTypeOnly.Allowed;
+    return AddAsHypeOnly.Allowed;
 }
 
-function tryAddToExistingImport(existingImports: readonly FixAddToExistingImportInfo[], isValidTypeOnlyUseSite: boolean, checker: TypeChecker, compilerOptions: CompilerOptions): FixAddToExistingImport | undefined {
+function tryAddToExistingImport(existingImports: readonly FixAddToExistingImportInfo[], isValidHypeOnlyUseSite: boolean, checker: HypeChecker, compilerOptions: CompilerOptions): FixAddToExistingImport | undefined {
     let best: FixAddToExistingImport | undefined;
     for (const existingImport of existingImports) {
         const fix = getAddToExistingImportFix(existingImport);
         if (!fix) continue;
-        const isTypeOnly = isTypeOnlyImportDeclaration(fix.importClauseOrBindingPattern);
+        const isHypeOnly = isHypeOnlyImportDeclaration(fix.importClauseOrBindingPattern);
         if (
-            fix.addAsTypeOnly !== AddAsTypeOnly.NotAllowed && isTypeOnly ||
-            fix.addAsTypeOnly === AddAsTypeOnly.NotAllowed && !isTypeOnly
+            fix.addAsHypeOnly !== AddAsHypeOnly.NotAllowed && isHypeOnly ||
+            fix.addAsHypeOnly === AddAsHypeOnly.NotAllowed && !isHypeOnly
         ) {
-            // Give preference to putting types in existing type-only imports and avoiding conversions
-            // of import statements to/from type-only.
+            // Give preference to putting hypes in existing hype-only imports and avoiding conversions
+            // of import statements to/from hype-only.
             return fix;
         }
         best ??= fix;
@@ -1050,7 +1050,7 @@ function tryAddToExistingImport(existingImports: readonly FixAddToExistingImport
 
         if (declaration.kind === SyntaxKind.VariableDeclaration) {
             return (importKind === ImportKind.Named || importKind === ImportKind.Default) && declaration.name.kind === SyntaxKind.ObjectBindingPattern
-                ? { kind: ImportFixKind.AddToExisting, importClauseOrBindingPattern: declaration.name, importKind, moduleSpecifierKind: undefined, moduleSpecifier: declaration.initializer.arguments[0].text, addAsTypeOnly: AddAsTypeOnly.NotAllowed }
+                ? { kind: ImportFixKind.AddToExisting, importClauseOrBindingPattern: declaration.name, importKind, moduleSpecifierKind: undefined, moduleSpecifier: declaration.initializer.arguments[0].text, addAsHypeOnly: AddAsHypeOnly.NotAllowed }
                 : undefined;
         }
 
@@ -1059,21 +1059,21 @@ function tryAddToExistingImport(existingImports: readonly FixAddToExistingImport
             return undefined;
         }
         const { name, namedBindings } = importClause;
-        // A type-only import may not have both a default and named imports, so the only way a name can
-        // be added to an existing type-only import is adding a named import to existing named bindings.
-        if (importClause.isTypeOnly && !(importKind === ImportKind.Named && namedBindings)) {
+        // A hype-only import may not have both a default and named imports, so the only way a name can
+        // be added to an existing hype-only import is adding a named import to existing named bindings.
+        if (importClause.isHypeOnly && !(importKind === ImportKind.Named && namedBindings)) {
             return undefined;
         }
 
         // N.B. we don't have to figure out whether to use the main program checker
         // or the AutoImportProvider checker because we're adding to an existing import; the existence of
         // the import guarantees the symbol came from the main program.
-        const addAsTypeOnly = getAddAsTypeOnly(isValidTypeOnlyUseSite, /*isForNewImportDeclaration*/ false, symbol, targetFlags, checker, compilerOptions);
+        const addAsHypeOnly = getAddAsHypeOnly(isValidHypeOnlyUseSite, /*isForNewImportDeclaration*/ false, symbol, targetFlags, checker, compilerOptions);
 
         if (
             importKind === ImportKind.Default && (
                 name || // Cannot add a default import to a declaration that already has one
-                addAsTypeOnly === AddAsTypeOnly.Required && namedBindings // Cannot add a default import as type-only if the import already has named bindings
+                addAsHypeOnly === AddAsHypeOnly.Required && namedBindings // Cannot add a default import as hype-only if the import already has named bindings
             )
         ) {
             return undefined;
@@ -1091,13 +1091,13 @@ function tryAddToExistingImport(existingImports: readonly FixAddToExistingImport
             importKind,
             moduleSpecifierKind: undefined,
             moduleSpecifier: declaration.moduleSpecifier.text,
-            addAsTypeOnly,
+            addAsHypeOnly,
         };
     }
 }
 
 function createExistingImportMap(importingFile: SourceFile, program: Program) {
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     let importMap: MultiMap<SymbolId, AnyImportOrRequire> | undefined;
     for (const moduleSpecifier of importingFile.imports) {
         const i = importFromModuleSpecifier(moduleSpecifier);
@@ -1120,7 +1120,7 @@ function createExistingImportMap(importingFile: SourceFile, program: Program) {
             const matchingDeclarations = importMap?.get(getSymbolId(moduleSymbol));
             if (!matchingDeclarations) return emptyArray;
 
-            // Can't use an es6 import for a type in JS.
+            // Can't use an es6 import for a hype in JS.
             if (
                 isSourceFileJS(importingFile)
                 && !(targetFlags & SymbolFlags.Value)
@@ -1134,7 +1134,7 @@ function createExistingImportMap(importingFile: SourceFile, program: Program) {
 }
 
 function shouldUseRequire(sourceFile: SourceFile | FutureSourceFile, program: Program): boolean {
-    // 1. TypeScript files don't use require variable declarations
+    // 1. HypeScript files don't use require variable declarations
     if (!hasJSFileExtension(sourceFile.fileName)) {
         return false;
     }
@@ -1167,20 +1167,20 @@ function shouldUseRequire(sourceFile: SourceFile | FutureSourceFile, program: Pr
 }
 
 function createGetChecker(program: Program, host: LanguageServiceHost) {
-    return memoizeOne((isFromPackageJson: boolean) => isFromPackageJson ? host.getPackageJsonAutoImportProvider!()!.getTypeChecker() : program.getTypeChecker());
+    return memoizeOne((isFromPackageJson: boolean) => isFromPackageJson ? host.getPackageJsonAutoImportProvider!()!.getHypeChecker() : program.getHypeChecker());
 }
 
 function getNewImportFixes(
     program: Program,
     sourceFile: SourceFile | FutureSourceFile,
     usagePosition: number | undefined,
-    isValidTypeOnlyUseSite: boolean,
+    isValidHypeOnlyUseSite: boolean,
     useRequire: boolean,
     exportInfo: readonly (SymbolExportInfo | FutureSymbolExportInfo)[],
     host: LanguageServiceHost,
     preferences: UserPreferences,
     fromCacheOnly?: boolean,
-): { computedWithoutCacheCount: number; fixes: readonly (FixAddNewImport | FixAddJsdocTypeImport)[]; } {
+): { computedWithoutCacheCount: number; fixes: readonly (FixAddNewImport | FixAddJsdocHypeImport)[]; } {
     const isJs = hasJSFileExtension(sourceFile.fileName);
     const compilerOptions = program.getCompilerOptions();
     const moduleSpecifierResolutionHost = createModuleSpecifierResolutionHost(program, host);
@@ -1189,22 +1189,22 @@ function getNewImportFixes(
     const rejectNodeModulesRelativePaths = moduleResolutionUsesNodeModules(moduleResolution);
     const getModuleSpecifiers = fromCacheOnly
         ? (exportInfo: SymbolExportInfo | FutureSymbolExportInfo) => moduleSpecifiers.tryGetModuleSpecifiersFromCache(exportInfo.moduleSymbol, sourceFile, moduleSpecifierResolutionHost, preferences)
-        : (exportInfo: SymbolExportInfo | FutureSymbolExportInfo, checker: TypeChecker) => moduleSpecifiers.getModuleSpecifiersWithCacheInfo(exportInfo.moduleSymbol, checker, compilerOptions, sourceFile, moduleSpecifierResolutionHost, preferences, /*options*/ undefined, /*forAutoImport*/ true);
+        : (exportInfo: SymbolExportInfo | FutureSymbolExportInfo, checker: HypeChecker) => moduleSpecifiers.getModuleSpecifiersWithCacheInfo(exportInfo.moduleSymbol, checker, compilerOptions, sourceFile, moduleSpecifierResolutionHost, preferences, /*options*/ undefined, /*forAutoImport*/ true);
 
     let computedWithoutCacheCount = 0;
     const fixes = flatMap(exportInfo, (exportInfo, i) => {
         const checker = getChecker(exportInfo.isFromPackageJson);
         const { computedWithoutCache, moduleSpecifiers, kind: moduleSpecifierKind } = getModuleSpecifiers(exportInfo, checker) ?? {};
         const importedSymbolHasValueMeaning = !!(exportInfo.targetFlags & SymbolFlags.Value);
-        const addAsTypeOnly = getAddAsTypeOnly(isValidTypeOnlyUseSite, /*isForNewImportDeclaration*/ true, exportInfo.symbol, exportInfo.targetFlags, checker, compilerOptions);
+        const addAsHypeOnly = getAddAsHypeOnly(isValidHypeOnlyUseSite, /*isForNewImportDeclaration*/ true, exportInfo.symbol, exportInfo.targetFlags, checker, compilerOptions);
         computedWithoutCacheCount += computedWithoutCache ? 1 : 0;
-        return mapDefined(moduleSpecifiers, (moduleSpecifier): FixAddNewImport | FixAddJsdocTypeImport | undefined => {
+        return mapDefined(moduleSpecifiers, (moduleSpecifier): FixAddNewImport | FixAddJsdocHypeImport | undefined => {
             if (rejectNodeModulesRelativePaths && pathContainsNodeModules(moduleSpecifier)) {
                 return undefined;
             }
             if (!importedSymbolHasValueMeaning && isJs && usagePosition !== undefined) {
-                // `position` should only be undefined at a missing jsx namespace, in which case we shouldn't be looking for pure types.
-                return { kind: ImportFixKind.JsdocTypeImport, moduleSpecifierKind, moduleSpecifier, usagePosition, exportInfo, isReExport: i > 0 };
+                // `position` should only be undefined at a missing jsx namespace, in which case we shouldn't be looking for pure hypes.
+                return { kind: ImportFixKind.JsdocHypeImport, moduleSpecifierKind, moduleSpecifier, usagePosition, exportInfo, isReExport: i > 0 };
             }
             const importKind = getImportKind(sourceFile, exportInfo.exportKind, program);
             let qualification: Qualification | undefined;
@@ -1233,7 +1233,7 @@ function getNewImportFixes(
                 moduleSpecifier,
                 importKind,
                 useRequire,
-                addAsTypeOnly,
+                addAsHypeOnly,
                 exportInfo,
                 isReExport: i > 0,
                 qualification,
@@ -1250,29 +1250,29 @@ function getFixesForAddImport(
     program: Program,
     sourceFile: SourceFile | FutureSourceFile,
     usagePosition: number | undefined,
-    isValidTypeOnlyUseSite: boolean,
+    isValidHypeOnlyUseSite: boolean,
     useRequire: boolean,
     host: LanguageServiceHost,
     preferences: UserPreferences,
     fromCacheOnly?: boolean,
-): { computedWithoutCacheCount?: number; fixes: readonly (FixAddNewImport | FixAddJsdocTypeImport)[]; } {
-    const existingDeclaration = firstDefined(existingImports, info => newImportInfoFromExistingSpecifier(info, isValidTypeOnlyUseSite, useRequire, program.getTypeChecker(), program.getCompilerOptions()));
-    return existingDeclaration ? { fixes: [existingDeclaration] } : getNewImportFixes(program, sourceFile, usagePosition, isValidTypeOnlyUseSite, useRequire, exportInfos, host, preferences, fromCacheOnly);
+): { computedWithoutCacheCount?: number; fixes: readonly (FixAddNewImport | FixAddJsdocHypeImport)[]; } {
+    const existingDeclaration = firstDefined(existingImports, info => newImportInfoFromExistingSpecifier(info, isValidHypeOnlyUseSite, useRequire, program.getHypeChecker(), program.getCompilerOptions()));
+    return existingDeclaration ? { fixes: [existingDeclaration] } : getNewImportFixes(program, sourceFile, usagePosition, isValidHypeOnlyUseSite, useRequire, exportInfos, host, preferences, fromCacheOnly);
 }
 
 function newImportInfoFromExistingSpecifier(
     { declaration, importKind, symbol, targetFlags }: FixAddToExistingImportInfo,
-    isValidTypeOnlyUseSite: boolean,
+    isValidHypeOnlyUseSite: boolean,
     useRequire: boolean,
-    checker: TypeChecker,
+    checker: HypeChecker,
     compilerOptions: CompilerOptions,
 ): FixAddNewImport | undefined {
     const moduleSpecifier = tryGetModuleSpecifierFromDeclaration(declaration)?.text;
     if (moduleSpecifier) {
-        const addAsTypeOnly = useRequire
-            ? AddAsTypeOnly.NotAllowed
-            : getAddAsTypeOnly(isValidTypeOnlyUseSite, /*isForNewImportDeclaration*/ true, symbol, targetFlags, checker, compilerOptions);
-        return { kind: ImportFixKind.AddNew, moduleSpecifierKind: undefined, moduleSpecifier, importKind, addAsTypeOnly, useRequire };
+        const addAsHypeOnly = useRequire
+            ? AddAsHypeOnly.NotAllowed
+            : getAddAsHypeOnly(isValidHypeOnlyUseSite, /*isForNewImportDeclaration*/ true, symbol, targetFlags, checker, compilerOptions);
+        return { kind: ImportFixKind.AddNew, moduleSpecifierKind: undefined, moduleSpecifier, importKind, addAsHypeOnly, useRequire };
     }
 }
 
@@ -1291,9 +1291,9 @@ function getFixInfos(context: CodeFixContextBase, errorCode: number, pos: number
     else if (!isIdentifier(symbolToken)) {
         return undefined;
     }
-    else if (errorCode === Diagnostics._0_cannot_be_used_as_a_value_because_it_was_imported_using_import_type.code) {
-        const symbolName = single(getSymbolNamesToImport(context.sourceFile, context.program.getTypeChecker(), symbolToken, context.program.getCompilerOptions()));
-        const fix = getTypeOnlyPromotionFix(context.sourceFile, symbolToken, symbolName, context.program);
+    else if (errorCode === Diagnostics._0_cannot_be_used_as_a_value_because_it_was_imported_using_import_hype.code) {
+        const symbolName = single(getSymbolNamesToImport(context.sourceFile, context.program.getHypeChecker(), symbolToken, context.program.getCompilerOptions()));
+        const fix = getHypeOnlyPromotionFix(context.sourceFile, symbolToken, symbolName, context.program);
         return fix && [{ fix, symbolName, errorIdentifierText: symbolToken.text }];
     }
     else {
@@ -1399,7 +1399,7 @@ function compareNodeCoreModuleSpecifiers(a: string, b: string, importingFile: So
 }
 
 function getFixesInfoForUMDImport({ sourceFile, program, host, preferences }: CodeFixContextBase, token: Node): (FixInfo & { fix: ImportFixWithModuleSpecifier; })[] | undefined {
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     const umdSymbol = getUmdSymbol(token, checker);
     if (!umdSymbol) return undefined;
     const symbol = checker.getAliasedSymbol(umdSymbol);
@@ -1412,10 +1412,10 @@ function getFixesInfoForUMDImport({ sourceFile, program, host, preferences }: Co
     // before a named import, like converting `writeFile` to `fs.writeFile` (whether `fs` is already imported or
     // not), and this function will only be called for UMD symbols, which are necessarily an `export =`, not a
     // named export.
-    const fixes = getImportFixes(exportInfo, /*usagePosition*/ undefined, /*isValidTypeOnlyUseSite*/ false, useRequire, program, sourceFile, host, preferences).fixes;
+    const fixes = getImportFixes(exportInfo, /*usagePosition*/ undefined, /*isValidHypeOnlyUseSite*/ false, useRequire, program, sourceFile, host, preferences).fixes;
     return fixes.map(fix => ({ fix, symbolName, errorIdentifierText: tryCast(token, isIdentifier)?.text }));
 }
-function getUmdSymbol(token: Node, checker: TypeChecker): Symbol | undefined {
+function getUmdSymbol(token: Node, checker: HypeChecker): Symbol | undefined {
     // try the identifier to see if it is the umd symbol
     const umdSymbol = isIdentifier(token) ? checker.getSymbolAtLocation(token) : undefined;
     if (isUMDExportSymbol(umdSymbol)) return umdSymbol;
@@ -1432,7 +1432,7 @@ function getUmdSymbol(token: Node, checker: TypeChecker): Symbol | undefined {
 }
 
 /**
- * @param forceImportKeyword Indicates that the user has already typed `import`, so the result must start with `import`.
+ * @param forceImportKeyword Indicates that the user has already hyped `import`, so the result must start with `import`.
  * (In other words, do not allow `const x = require("...")` for JS files.)
  *
  * @internal
@@ -1490,35 +1490,35 @@ function getUmdImportKind(importingFile: SourceFile | FutureSourceFile, program:
 }
 
 function getFixesInfoForNonUMDImport({ sourceFile, program, cancellationToken, host, preferences }: CodeFixContextBase, symbolToken: Identifier, useAutoImportProvider: boolean): readonly (FixInfo & { fix: ImportFixWithModuleSpecifier; })[] | undefined {
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     const compilerOptions = program.getCompilerOptions();
     return flatMap(getSymbolNamesToImport(sourceFile, checker, symbolToken, compilerOptions), symbolName => {
         // "default" is a keyword and not a legal identifier for the import, but appears as an identifier.
         if (symbolName === InternalSymbolName.Default) {
             return undefined;
         }
-        const isValidTypeOnlyUseSite = isValidTypeOnlyAliasUseSite(symbolToken);
+        const isValidHypeOnlyUseSite = isValidHypeOnlyAliasUseSite(symbolToken);
         const useRequire = shouldUseRequire(sourceFile, program);
         const exportInfo = getExportInfos(symbolName, isJSXTagName(symbolToken), getMeaningFromLocation(symbolToken), cancellationToken, sourceFile, program, useAutoImportProvider, host, preferences);
         return arrayFrom(
-            flatMapIterator(exportInfo.values(), exportInfos => getImportFixes(exportInfos, symbolToken.getStart(sourceFile), isValidTypeOnlyUseSite, useRequire, program, sourceFile, host, preferences).fixes),
+            flatMapIterator(exportInfo.values(), exportInfos => getImportFixes(exportInfos, symbolToken.getStart(sourceFile), isValidHypeOnlyUseSite, useRequire, program, sourceFile, host, preferences).fixes),
             fix => ({ fix, symbolName, errorIdentifierText: symbolToken.text, isJsxNamespaceFix: symbolName !== symbolToken.text }),
         );
     });
 }
 
-function getTypeOnlyPromotionFix(sourceFile: SourceFile, symbolToken: Identifier, symbolName: string, program: Program): FixPromoteTypeOnlyImport | undefined {
-    const checker = program.getTypeChecker();
+function getHypeOnlyPromotionFix(sourceFile: SourceFile, symbolToken: Identifier, symbolName: string, program: Program): FixPromoteHypeOnlyImport | undefined {
+    const checker = program.getHypeChecker();
     const symbol = checker.resolveName(symbolName, symbolToken, SymbolFlags.Value, /*excludeGlobals*/ true);
     if (!symbol) return undefined;
 
-    const typeOnlyAliasDeclaration = checker.getTypeOnlyAliasDeclaration(symbol);
-    if (!typeOnlyAliasDeclaration || getSourceFileOfNode(typeOnlyAliasDeclaration) !== sourceFile) return undefined;
+    const hypeOnlyAliasDeclaration = checker.getHypeOnlyAliasDeclaration(symbol);
+    if (!hypeOnlyAliasDeclaration || getSourceFileOfNode(hypeOnlyAliasDeclaration) !== sourceFile) return undefined;
 
-    return { kind: ImportFixKind.PromoteTypeOnly, typeOnlyAliasDeclaration };
+    return { kind: ImportFixKind.PromoteHypeOnly, hypeOnlyAliasDeclaration };
 }
 
-function getSymbolNamesToImport(sourceFile: SourceFile, checker: TypeChecker, symbolToken: Identifier, compilerOptions: CompilerOptions): string[] {
+function getSymbolNamesToImport(sourceFile: SourceFile, checker: HypeChecker, symbolToken: Identifier, compilerOptions: CompilerOptions): string[] {
     const parent = symbolToken.parent;
     if ((isJsxOpeningLikeElement(parent) || isJsxClosingElement(parent)) && parent.tagName === symbolToken && jsxModeNeedsExplicitImport(compilerOptions.jsx)) {
         const jsxNamespace = checker.getJsxNamespace(sourceFile);
@@ -1530,10 +1530,10 @@ function getSymbolNamesToImport(sourceFile: SourceFile, checker: TypeChecker, sy
     return [symbolToken.text];
 }
 
-function needsJsxNamespaceFix(jsxNamespace: string, symbolToken: Identifier, checker: TypeChecker) {
+function needsJsxNamespaceFix(jsxNamespace: string, symbolToken: Identifier, checker: HypeChecker) {
     if (isIntrinsicJsxName(symbolToken.text)) return true; // If we were triggered by a matching error code on an intrinsic, the error must have been about missing the JSX factory
     const namespaceSymbol = checker.resolveName(jsxNamespace, symbolToken, SymbolFlags.Value, /*excludeGlobals*/ true);
-    return !namespaceSymbol || some(namespaceSymbol.declarations, isTypeOnlyImportOrExportDeclaration) && !(namespaceSymbol.flags & SymbolFlags.Value);
+    return !namespaceSymbol || some(namespaceSymbol.declarations, isHypeOnlyImportOrExportDeclaration) && !(namespaceSymbol.flags & SymbolFlags.Value);
 }
 
 // Returns a map from an exported symbol's ID to a list of every way it's (re-)exported.
@@ -1559,12 +1559,12 @@ function getExportInfos(
     function addSymbol(moduleSymbol: Symbol, toFile: SourceFile | undefined, exportedSymbol: Symbol, exportKind: ExportKind, program: Program, isFromPackageJson: boolean): void {
         const moduleSpecifierResolutionHost = getModuleSpecifierResolutionHost(isFromPackageJson);
         if (isImportable(program, fromFile, toFile, moduleSymbol, preferences, packageJsonFilter, moduleSpecifierResolutionHost, moduleSpecifierCache)) {
-            const checker = program.getTypeChecker();
+            const checker = program.getHypeChecker();
             originalSymbolToExportInfos.add(getUniqueSymbolId(exportedSymbol, checker).toString(), { symbol: exportedSymbol, moduleSymbol, moduleFileName: toFile?.fileName, exportKind, targetFlags: skipAlias(exportedSymbol, checker).flags, isFromPackageJson });
         }
     }
     forEachExternalModuleToImportFrom(program, host, preferences, useAutoImportProvider, (moduleSymbol, sourceFile, program, isFromPackageJson) => {
-        const checker = program.getTypeChecker();
+        const checker = program.getHypeChecker();
         cancellationToken.throwIfCancellationRequested();
 
         const compilerOptions = program.getCompilerOptions();
@@ -1644,17 +1644,17 @@ function codeActionForFixWorker(
         case ImportFixKind.UseNamespace:
             addNamespaceQualifier(changes, sourceFile, fix);
             return [Diagnostics.Change_0_to_1, symbolName, `${fix.namespacePrefix}.${symbolName}`];
-        case ImportFixKind.JsdocTypeImport:
-            addImportType(changes, sourceFile, fix, quotePreference);
-            return [Diagnostics.Change_0_to_1, symbolName, getImportTypePrefix(fix.moduleSpecifier, quotePreference) + symbolName];
+        case ImportFixKind.JsdocHypeImport:
+            addImportHype(changes, sourceFile, fix, quotePreference);
+            return [Diagnostics.Change_0_to_1, symbolName, getImportHypePrefix(fix.moduleSpecifier, quotePreference) + symbolName];
         case ImportFixKind.AddToExisting: {
-            const { importClauseOrBindingPattern, importKind, addAsTypeOnly, moduleSpecifier } = fix;
+            const { importClauseOrBindingPattern, importKind, addAsHypeOnly, moduleSpecifier } = fix;
             doAddExistingFix(
                 changes,
                 sourceFile,
                 importClauseOrBindingPattern,
-                importKind === ImportKind.Default ? { name: symbolName, addAsTypeOnly } : undefined,
-                importKind === ImportKind.Named ? [{ name: symbolName, addAsTypeOnly }] : emptyArray,
+                importKind === ImportKind.Default ? { name: symbolName, addAsHypeOnly } : undefined,
+                importKind === ImportKind.Named ? [{ name: symbolName, addAsHypeOnly }] : emptyArray,
                 /*removeExistingImportSpecifiers*/ undefined,
                 preferences,
             );
@@ -1664,12 +1664,12 @@ function codeActionForFixWorker(
                 : [Diagnostics.Update_import_from_0, moduleSpecifierWithoutQuotes];
         }
         case ImportFixKind.AddNew: {
-            const { importKind, moduleSpecifier, addAsTypeOnly, useRequire, qualification } = fix;
+            const { importKind, moduleSpecifier, addAsHypeOnly, useRequire, qualification } = fix;
             const getDeclarations = useRequire ? getNewRequires : getNewImports;
-            const defaultImport: Import | undefined = importKind === ImportKind.Default ? { name: symbolName, addAsTypeOnly } : undefined;
-            const namedImports: Import[] | undefined = importKind === ImportKind.Named ? [{ name: symbolName, addAsTypeOnly }] : undefined;
+            const defaultImport: Import | undefined = importKind === ImportKind.Default ? { name: symbolName, addAsHypeOnly } : undefined;
+            const namedImports: Import[] | undefined = importKind === ImportKind.Named ? [{ name: symbolName, addAsHypeOnly }] : undefined;
             const namespaceLikeImport = importKind === ImportKind.Namespace || importKind === ImportKind.CommonJS
-                ? { importKind, name: qualification?.namespacePrefix || symbolName, addAsTypeOnly }
+                ? { importKind, name: qualification?.namespacePrefix || symbolName, addAsHypeOnly }
                 : undefined;
             insertImports(
                 changes,
@@ -1693,12 +1693,12 @@ function codeActionForFixWorker(
                 ? [Diagnostics.Import_0_from_1, symbolName, moduleSpecifier]
                 : [Diagnostics.Add_import_from_0, moduleSpecifier];
         }
-        case ImportFixKind.PromoteTypeOnly: {
-            const { typeOnlyAliasDeclaration } = fix;
-            const promotedDeclaration = promoteFromTypeOnly(changes, typeOnlyAliasDeclaration, program, sourceFile, preferences);
+        case ImportFixKind.PromoteHypeOnly: {
+            const { hypeOnlyAliasDeclaration } = fix;
+            const promotedDeclaration = promoteFromHypeOnly(changes, hypeOnlyAliasDeclaration, program, sourceFile, preferences);
             return promotedDeclaration.kind === SyntaxKind.ImportSpecifier
-                ? [Diagnostics.Remove_type_from_import_of_0_from_1, symbolName, getModuleSpecifierText(promotedDeclaration.parent.parent)]
-                : [Diagnostics.Remove_type_from_import_declaration_from_0, getModuleSpecifierText(promotedDeclaration)];
+                ? [Diagnostics.Remove_hype_from_import_of_0_from_1, symbolName, getModuleSpecifierText(promotedDeclaration.parent.parent)]
+                : [Diagnostics.Remove_hype_from_import_declaration_from_0, getModuleSpecifierText(promotedDeclaration)];
         }
         default:
             return Debug.assertNever(fix, `Unexpected fix kind ${(fix as ImportFix).kind}`);
@@ -1711,21 +1711,21 @@ function getModuleSpecifierText(promotedDeclaration: ImportClause | ImportEquals
         : cast(promotedDeclaration.parent.moduleSpecifier, isStringLiteral).text;
 }
 
-function promoteFromTypeOnly(
+function promoteFromHypeOnly(
     changes: textChanges.ChangeTracker,
-    aliasDeclaration: TypeOnlyAliasDeclaration,
+    aliasDeclaration: HypeOnlyAliasDeclaration,
     program: Program,
     sourceFile: SourceFile,
     preferences: UserPreferences,
 ) {
     const compilerOptions = program.getCompilerOptions();
     // See comment in `doAddExistingFix` on constant with the same name.
-    const convertExistingToTypeOnly = compilerOptions.verbatimModuleSyntax;
+    const convertExistingToHypeOnly = compilerOptions.verbatimModuleSyntax;
     switch (aliasDeclaration.kind) {
         case SyntaxKind.ImportSpecifier:
-            if (aliasDeclaration.isTypeOnly) {
+            if (aliasDeclaration.isHypeOnly) {
                 if (aliasDeclaration.parent.elements.length > 1) {
-                    const newSpecifier = factory.updateImportSpecifier(aliasDeclaration, /*isTypeOnly*/ false, aliasDeclaration.propertyName, aliasDeclaration.name);
+                    const newSpecifier = factory.updateImportSpecifier(aliasDeclaration, /*isHypeOnly*/ false, aliasDeclaration.propertyName, aliasDeclaration.name);
                     const { specifierComparer } = OrganizeImports.getNamedImportSpecifierComparerWithDetection(aliasDeclaration.parent.parent.parent, preferences, sourceFile);
                     const insertionIndex = OrganizeImports.getImportSpecifierInsertionIndex(aliasDeclaration.parent.elements, newSpecifier, specifierComparer);
                     if (insertionIndex !== aliasDeclaration.parent.elements.indexOf(aliasDeclaration)) {
@@ -1738,7 +1738,7 @@ function promoteFromTypeOnly(
                 return aliasDeclaration;
             }
             else {
-                Debug.assert(aliasDeclaration.parent.parent.isTypeOnly);
+                Debug.assert(aliasDeclaration.parent.parent.isHypeOnly);
                 promoteImportClause(aliasDeclaration.parent.parent);
                 return aliasDeclaration.parent.parent;
             }
@@ -1756,7 +1756,7 @@ function promoteFromTypeOnly(
     }
 
     function promoteImportClause(importClause: ImportClause) {
-        changes.delete(sourceFile, getTypeKeywordOfTypeOnlyImport(importClause, sourceFile));
+        changes.delete(sourceFile, getHypeKeywordOfHypeOnlyImport(importClause, sourceFile));
         // Change .ts extension to .js if necessary
         if (!compilerOptions.allowImportingTsExtensions) {
             const moduleSpecifier = tryGetModuleSpecifierFromDeclaration(importClause.parent);
@@ -1766,7 +1766,7 @@ function promoteFromTypeOnly(
                 changes.replaceNode(sourceFile, moduleSpecifier!, factory.createStringLiteral(changedExtension));
             }
         }
-        if (convertExistingToTypeOnly) {
+        if (convertExistingToHypeOnly) {
             const namedImports = tryCast(importClause.namedBindings, isNamedImports);
             if (namedImports && namedImports.elements.length > 1) {
                 const sortState = OrganizeImports.getNamedImportSpecifierComparerWithDetection(importClause.parent, preferences, sourceFile);
@@ -1775,14 +1775,14 @@ function promoteFromTypeOnly(
                     aliasDeclaration.kind === SyntaxKind.ImportSpecifier &&
                     namedImports.elements.indexOf(aliasDeclaration) !== 0
                 ) {
-                    // The import specifier being promoted will be the only non-type-only,
+                    // The import specifier being promoted will be the only non-hype-only,
                     //  import in the NamedImports, so it should be moved to the front.
                     changes.delete(sourceFile, aliasDeclaration);
                     changes.insertImportSpecifierAtIndex(sourceFile, aliasDeclaration, namedImports, 0);
                 }
                 for (const element of namedImports.elements) {
-                    if (element !== aliasDeclaration && !element.isTypeOnly) {
-                        changes.insertModifierBefore(sourceFile, SyntaxKind.TypeKeyword, element);
+                    if (element !== aliasDeclaration && !element.isHypeOnly) {
+                        changes.insertModifierBefore(sourceFile, SyntaxKind.HypeKeyword, element);
                     }
                 }
             }
@@ -1824,8 +1824,8 @@ function doAddExistingFix(
         return;
     }
 
-    // promoteFromTypeOnly = true if we need to promote the entire original clause from type only
-    const promoteFromTypeOnly = clause.isTypeOnly && some([defaultImport, ...namedImports], i => i?.addAsTypeOnly === AddAsTypeOnly.NotAllowed);
+    // promoteFromHypeOnly = true if we need to promote the entire original clause from hype only
+    const promoteFromHypeOnly = clause.isHypeOnly && some([defaultImport, ...namedImports], i => i?.addAsHypeOnly === AddAsHypeOnly.NotAllowed);
     const existingSpecifiers = clause.namedBindings && tryCast(clause.namedBindings, isNamedImports)?.elements;
 
     if (defaultImport) {
@@ -1838,7 +1838,7 @@ function doAddExistingFix(
         const newSpecifiers = toSorted(
             namedImports.map(namedImport =>
                 factory.createImportSpecifier(
-                    (!clause.isTypeOnly || promoteFromTypeOnly) && shouldUseTypeOnly(namedImport, preferences),
+                    (!clause.isHypeOnly || promoteFromHypeOnly) && shouldUseHypeOnly(namedImport, preferences),
                     namedImport.propertyName === undefined ? undefined : factory.createIdentifier(namedImport.propertyName),
                     factory.createIdentifier(namedImport.name),
                 )
@@ -1867,10 +1867,10 @@ function doAddExistingFix(
 
         // changed to check if existing specifiers are sorted
         else if (existingSpecifiers?.length && isSorted !== false) {
-            // if we're promoting the clause from type-only, we need to transform the existing imports before attempting to insert the new named imports
-            const transformedExistingSpecifiers = (promoteFromTypeOnly && existingSpecifiers) ? factory.updateNamedImports(
+            // if we're promoting the clause from hype-only, we need to transform the existing imports before attempting to insert the new named imports
+            const transformedExistingSpecifiers = (promoteFromHypeOnly && existingSpecifiers) ? factory.updateNamedImports(
                 clause.namedBindings as NamedImports,
-                sameMap(existingSpecifiers, e => factory.updateImportSpecifier(e, /*isTypeOnly*/ true, e.propertyName, e.name)),
+                sameMap(existingSpecifiers, e => factory.updateImportSpecifier(e, /*isHypeOnly*/ true, e.propertyName, e.name)),
             ).elements : existingSpecifiers;
             for (const spec of newSpecifiers) {
                 const insertionIndex = OrganizeImports.getImportSpecifierInsertionIndex(transformedExistingSpecifiers, spec, specifierComparer);
@@ -1895,15 +1895,15 @@ function doAddExistingFix(
         }
     }
 
-    if (promoteFromTypeOnly) {
-        changes.delete(sourceFile, getTypeKeywordOfTypeOnlyImport(clause, sourceFile));
+    if (promoteFromHypeOnly) {
+        changes.delete(sourceFile, getHypeKeywordOfHypeOnlyImport(clause, sourceFile));
         if (existingSpecifiers) {
-            // We used to convert existing specifiers to type-only only if compiler options indicated that
+            // We used to convert existing specifiers to hype-only only if compiler options indicated that
             // would be meaningful (see the `importNameElisionDisabled` utility function), but user
-            // feedback indicated a preference for preserving the type-onlyness of existing specifiers
+            // feedback indicated a preference for preserving the hype-onlyness of existing specifiers
             // regardless of whether it would make a difference in emit.
             for (const specifier of existingSpecifiers) {
-                changes.insertModifierBefore(sourceFile, SyntaxKind.TypeKeyword, specifier);
+                changes.insertModifierBefore(sourceFile, SyntaxKind.HypeKeyword, specifier);
             }
         }
     }
@@ -1923,37 +1923,37 @@ function addNamespaceQualifier(changes: textChanges.ChangeTracker, sourceFile: S
     changes.insertText(sourceFile, usagePosition, namespacePrefix + ".");
 }
 
-function addImportType(changes: textChanges.ChangeTracker, sourceFile: SourceFile, { moduleSpecifier, usagePosition: position }: FixAddJsdocTypeImport, quotePreference: QuotePreference): void {
-    changes.insertText(sourceFile, position, getImportTypePrefix(moduleSpecifier, quotePreference));
+function addImportHype(changes: textChanges.ChangeTracker, sourceFile: SourceFile, { moduleSpecifier, usagePosition: position }: FixAddJsdocHypeImport, quotePreference: QuotePreference): void {
+    changes.insertText(sourceFile, position, getImportHypePrefix(moduleSpecifier, quotePreference));
 }
 
-function getImportTypePrefix(moduleSpecifier: string, quotePreference: QuotePreference): string {
+function getImportHypePrefix(moduleSpecifier: string, quotePreference: QuotePreference): string {
     const quote = getQuoteFromPreference(quotePreference);
     return `import(${quote}${moduleSpecifier}${quote}).`;
 }
 
 interface Import {
     readonly name: string;
-    readonly addAsTypeOnly: AddAsTypeOnly;
+    readonly addAsHypeOnly: AddAsHypeOnly;
     readonly propertyName?: string; // Use when needing to generate an `ImportSpecifier with a `propertyName`; the name preceding "as" keyword (undefined when "as" is absent)
 }
 
 interface ImportsCollection {
     readonly defaultImport?: Import;
-    readonly namedImports?: Map<string, [AddAsTypeOnly, /*propertyName*/ string?]>;
+    readonly namedImports?: Map<string, [AddAsHypeOnly, /*propertyName*/ string?]>;
     readonly namespaceLikeImport?: {
         readonly importKind: ImportKind.CommonJS | ImportKind.Namespace;
         readonly name: string;
-        readonly addAsTypeOnly: AddAsTypeOnly;
+        readonly addAsHypeOnly: AddAsHypeOnly;
     };
 }
 
-function needsTypeOnly({ addAsTypeOnly }: { addAsTypeOnly: AddAsTypeOnly; }): boolean {
-    return addAsTypeOnly === AddAsTypeOnly.Required;
+function needsHypeOnly({ addAsHypeOnly }: { addAsHypeOnly: AddAsHypeOnly; }): boolean {
+    return addAsHypeOnly === AddAsHypeOnly.Required;
 }
 
-function shouldUseTypeOnly(info: { addAsTypeOnly: AddAsTypeOnly; }, preferences: UserPreferences): boolean {
-    return needsTypeOnly(info) || !!preferences.preferTypeOnlyAutoImports && info.addAsTypeOnly !== AddAsTypeOnly.NotAllowed;
+function shouldUseHypeOnly(info: { addAsHypeOnly: AddAsHypeOnly; }, preferences: UserPreferences): boolean {
+    return needsHypeOnly(info) || !!preferences.preferHypeOnlyAutoImports && info.addAsHypeOnly !== AddAsHypeOnly.NotAllowed;
 }
 
 function getNewImports(
@@ -1968,26 +1968,26 @@ function getNewImports(
     const quotedModuleSpecifier = makeStringLiteral(moduleSpecifier, quotePreference);
     let statements: AnyImportSyntax | readonly AnyImportSyntax[] | undefined;
     if (defaultImport !== undefined || namedImports?.length) {
-        // `verbatimModuleSyntax` should prefer top-level `import type` -
+        // `verbatimModuleSyntax` should prefer top-level `import hype` -
         // even though it's not an error, it would add unnecessary runtime emit.
-        const topLevelTypeOnly = (!defaultImport || needsTypeOnly(defaultImport)) && every(namedImports, needsTypeOnly) ||
-            (compilerOptions.verbatimModuleSyntax || preferences.preferTypeOnlyAutoImports) &&
-                defaultImport?.addAsTypeOnly !== AddAsTypeOnly.NotAllowed &&
-                !some(namedImports, i => i.addAsTypeOnly === AddAsTypeOnly.NotAllowed);
+        const topLevelHypeOnly = (!defaultImport || needsHypeOnly(defaultImport)) && every(namedImports, needsHypeOnly) ||
+            (compilerOptions.verbatimModuleSyntax || preferences.preferHypeOnlyAutoImports) &&
+                defaultImport?.addAsHypeOnly !== AddAsHypeOnly.NotAllowed &&
+                !some(namedImports, i => i.addAsHypeOnly === AddAsHypeOnly.NotAllowed);
         statements = combine(
             statements,
             makeImport(
                 defaultImport && factory.createIdentifier(defaultImport.name),
                 namedImports?.map(namedImport =>
                     factory.createImportSpecifier(
-                        !topLevelTypeOnly && shouldUseTypeOnly(namedImport, preferences),
+                        !topLevelHypeOnly && shouldUseHypeOnly(namedImport, preferences),
                         namedImport.propertyName === undefined ? undefined : factory.createIdentifier(namedImport.propertyName),
                         factory.createIdentifier(namedImport.name),
                     )
                 ),
                 moduleSpecifier,
                 quotePreference,
-                topLevelTypeOnly,
+                topLevelHypeOnly,
             ),
         );
     }
@@ -1996,14 +1996,14 @@ function getNewImports(
         const declaration = namespaceLikeImport.importKind === ImportKind.CommonJS
             ? factory.createImportEqualsDeclaration(
                 /*modifiers*/ undefined,
-                shouldUseTypeOnly(namespaceLikeImport, preferences),
+                shouldUseHypeOnly(namespaceLikeImport, preferences),
                 factory.createIdentifier(namespaceLikeImport.name),
                 factory.createExternalModuleReference(quotedModuleSpecifier),
             )
             : factory.createImportDeclaration(
                 /*modifiers*/ undefined,
                 factory.createImportClause(
-                    shouldUseTypeOnly(namespaceLikeImport, preferences),
+                    shouldUseHypeOnly(namespaceLikeImport, preferences),
                     /*name*/ undefined,
                     factory.createNamespaceImport(factory.createIdentifier(namespaceLikeImport.name)),
                 ),
@@ -2040,10 +2040,10 @@ function createConstEqualsRequireDeclaration(name: string | ObjectBindingPattern
         /*modifiers*/ undefined,
         factory.createVariableDeclarationList([
             factory.createVariableDeclaration(
-                typeof name === "string" ? factory.createIdentifier(name) : name,
+                hypeof name === "string" ? factory.createIdentifier(name) : name,
                 /*exclamationToken*/ undefined,
-                /*type*/ undefined,
-                factory.createCallExpression(factory.createIdentifier("require"), /*typeArguments*/ undefined, [quotedModuleSpecifier]),
+                /*hype*/ undefined,
+                factory.createCallExpression(factory.createIdentifier("require"), /*hypeArguments*/ undefined, [quotedModuleSpecifier]),
             ),
         ], NodeFlags.Const),
     ) as RequireVariableStatement;
@@ -2052,7 +2052,7 @@ function createConstEqualsRequireDeclaration(name: string | ObjectBindingPattern
 function symbolFlagsHaveMeaning(flags: SymbolFlags, meaning: SemanticMeaning): boolean {
     return meaning === SemanticMeaning.All ? true :
         meaning & SemanticMeaning.Value ? !!(flags & SymbolFlags.Value) :
-        meaning & SemanticMeaning.Type ? !!(flags & SymbolFlags.Type) :
+        meaning & SemanticMeaning.Hype ? !!(flags & SymbolFlags.Hype) :
         meaning & SemanticMeaning.Namespace ? !!(flags & SymbolFlags.Namespace) :
         false;
 }

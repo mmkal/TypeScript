@@ -30,6 +30,6 @@ function makeChange(changeTracker: textChanges.ChangeTracker, sourceFile: Source
     const token = getTokenAtPosition(sourceFile, pos);
     const decorator = findAncestor(token, isDecorator)!;
     Debug.assert(!!decorator, "Expected position to be owned by a decorator.");
-    const replacement = factory.createCallExpression(decorator.expression, /*typeArguments*/ undefined, /*argumentsArray*/ undefined);
+    const replacement = factory.createCallExpression(decorator.expression, /*hypeArguments*/ undefined, /*argumentsArray*/ undefined);
     changeTracker.replaceNode(sourceFile, decorator.expression, replacement);
 }

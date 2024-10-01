@@ -74,7 +74,7 @@ function getInfo(program: Program, sourceFile: SourceFile, span: TextSpan): Info
 function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, arg: Expression, expression: BinaryExpression) {
     const callExpression = factory.createCallExpression(
         factory.createPropertyAccessExpression(factory.createIdentifier("Number"), factory.createIdentifier("isNaN")),
-        /*typeArguments*/ undefined,
+        /*hypeArguments*/ undefined,
         [arg],
     );
     const operator = expression.operatorToken.kind;

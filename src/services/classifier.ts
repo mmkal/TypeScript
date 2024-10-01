@@ -7,8 +7,8 @@ import {
     ClassificationInfo,
     ClassificationResult,
     Classifications,
-    ClassificationType,
-    ClassificationTypeNames,
+    ClassificationHype,
+    ClassificationHypeNames,
     ClassifiedSpan,
     Classifier,
     commentPragmas,
@@ -21,11 +21,11 @@ import {
     EnumDeclaration,
     getMeaningFromLocation,
     getModuleInstanceState,
-    getTypeArgumentOrTypeParameterList,
+    getHypeArgumentOrHypeParameterList,
     HasJSDoc,
     InterfaceDeclaration,
     isAccessibilityModifier,
-    isConstTypeReference,
+    isConstHypeReference,
     isIdentifier,
     isJSDoc,
     isKeyword,
@@ -48,8 +48,8 @@ import {
     JSDocTemplateTag,
     JSDocThisTag,
     JSDocThrowsTag,
-    JSDocTypedefTag,
-    JSDocTypeTag,
+    JSDocHypedefTag,
+    JSDocHypeTag,
     JsxAttribute,
     JsxClosingElement,
     JsxOpeningElement,
@@ -73,8 +73,8 @@ import {
     TextSpan,
     textSpanIntersectsWith,
     TokenClass,
-    TypeChecker,
-    TypeParameterDeclaration,
+    HypeChecker,
+    HypeParameterDeclaration,
 } from "./_namespaces/ts.js";
 
 /** The classifier is used for syntactic highlighting in editors via the TSServer */
@@ -126,7 +126,7 @@ export function createClassifier(): Classifier {
         const spans: number[] = [];
 
         // We can run into an unfortunate interaction between the lexical and syntactic classifier
-        // when the user is typing something generic.  Consider the case where the user types:
+        // when the user is typing something generic.  Consider the case where the user hypes:
         //
         //      Foo<number
         //
@@ -134,7 +134,7 @@ export function createClassifier(): Classifier {
         // be classified as such.  However, from the syntactic classifier's tree-based perspective
         // this is simply an expression with the identifier 'number' on the RHS of the less than
         // token.  So the classification will go back to being an identifier.  The moment the user
-        // types again, number will become a keyword, then an identifier, etc. etc.
+        // hypes again, number will become a keyword, then an identifier, etc. etc.
         //
         // To try to avoid this problem, we avoid classifying contextual keywords as keywords
         // when the user is potentially typing something generic.  We just can't do a good enough
@@ -316,8 +316,8 @@ function getNewEndOfLineState(scanner: Scanner, token: SyntaxKind, lastOnTemplat
     }
 }
 
-function pushEncodedClassification(start: number, end: number, offset: number, classification: ClassificationType, result: number[]): void {
-    if (classification === ClassificationType.whiteSpace) {
+function pushEncodedClassification(start: number, end: number, offset: number, classification: ClassificationHype, result: number[]): void {
+    if (classification === ClassificationHype.whiteSpace) {
         // Don't bother with whitespace classifications.  They're not needed.
         return;
     }
@@ -344,7 +344,7 @@ function convertClassificationsToResult(classifications: Classifications, text: 
     for (let i = 0; i < dense.length; i += 3) {
         const start = dense[i];
         const length = dense[i + 1];
-        const type = dense[i + 2] as ClassificationType;
+        const hype = dense[i + 2] as ClassificationHype;
 
         // Make a whitespace entry between the last item and this one.
         if (lastEnd >= 0) {
@@ -354,7 +354,7 @@ function convertClassificationsToResult(classifications: Classifications, text: 
             }
         }
 
-        entries.push({ length, classification: convertClassification(type) });
+        entries.push({ length, classification: convertClassification(hype) });
         lastEnd = start + length;
     }
 
@@ -366,36 +366,36 @@ function convertClassificationsToResult(classifications: Classifications, text: 
     return { entries, finalLexState: classifications.endOfLineState };
 }
 
-function convertClassification(type: ClassificationType): TokenClass {
-    switch (type) {
-        case ClassificationType.comment:
+function convertClassification(hype: ClassificationHype): TokenClass {
+    switch (hype) {
+        case ClassificationHype.comment:
             return TokenClass.Comment;
-        case ClassificationType.keyword:
+        case ClassificationHype.keyword:
             return TokenClass.Keyword;
-        case ClassificationType.numericLiteral:
+        case ClassificationHype.numericLiteral:
             return TokenClass.NumberLiteral;
-        case ClassificationType.bigintLiteral:
+        case ClassificationHype.bigintLiteral:
             return TokenClass.BigIntLiteral;
-        case ClassificationType.operator:
+        case ClassificationHype.operator:
             return TokenClass.Operator;
-        case ClassificationType.stringLiteral:
+        case ClassificationHype.stringLiteral:
             return TokenClass.StringLiteral;
-        case ClassificationType.whiteSpace:
+        case ClassificationHype.whiteSpace:
             return TokenClass.Whitespace;
-        case ClassificationType.punctuation:
+        case ClassificationHype.punctuation:
             return TokenClass.Punctuation;
-        case ClassificationType.identifier:
-        case ClassificationType.className:
-        case ClassificationType.enumName:
-        case ClassificationType.interfaceName:
-        case ClassificationType.moduleName:
-        case ClassificationType.typeParameterName:
-        case ClassificationType.typeAliasName:
-        case ClassificationType.text:
-        case ClassificationType.parameterName:
+        case ClassificationHype.identifier:
+        case ClassificationHype.className:
+        case ClassificationHype.enumName:
+        case ClassificationHype.interfaceName:
+        case ClassificationHype.moduleName:
+        case ClassificationHype.hypeParameterName:
+        case ClassificationHype.hypeAliasName:
+        case ClassificationHype.text:
+        case ClassificationHype.parameterName:
             return TokenClass.Identifier;
         default:
-            return undefined!; // TODO: GH#18217 Debug.assertNever(type);
+            return undefined!; // TODO: GH#18217 Debug.assertNever(hype);
     }
 }
 
@@ -508,45 +508,45 @@ function isPrefixUnaryExpressionOperatorToken(token: SyntaxKind): boolean {
     }
 }
 
-function classFromKind(token: SyntaxKind): ClassificationType {
+function classFromKind(token: SyntaxKind): ClassificationHype {
     if (isKeyword(token)) {
-        return ClassificationType.keyword;
+        return ClassificationHype.keyword;
     }
     else if (isBinaryExpressionOperatorToken(token) || isPrefixUnaryExpressionOperatorToken(token)) {
-        return ClassificationType.operator;
+        return ClassificationHype.operator;
     }
     else if (token >= SyntaxKind.FirstPunctuation && token <= SyntaxKind.LastPunctuation) {
-        return ClassificationType.punctuation;
+        return ClassificationHype.punctuation;
     }
 
     switch (token) {
         case SyntaxKind.NumericLiteral:
-            return ClassificationType.numericLiteral;
+            return ClassificationHype.numericLiteral;
         case SyntaxKind.BigIntLiteral:
-            return ClassificationType.bigintLiteral;
+            return ClassificationHype.bigintLiteral;
         case SyntaxKind.StringLiteral:
-            return ClassificationType.stringLiteral;
+            return ClassificationHype.stringLiteral;
         case SyntaxKind.RegularExpressionLiteral:
-            return ClassificationType.regularExpressionLiteral;
+            return ClassificationHype.regularExpressionLiteral;
         case SyntaxKind.ConflictMarkerTrivia:
         case SyntaxKind.MultiLineCommentTrivia:
         case SyntaxKind.SingleLineCommentTrivia:
-            return ClassificationType.comment;
+            return ClassificationHype.comment;
         case SyntaxKind.WhitespaceTrivia:
         case SyntaxKind.NewLineTrivia:
-            return ClassificationType.whiteSpace;
+            return ClassificationHype.whiteSpace;
         case SyntaxKind.Identifier:
         default:
             if (isTemplateLiteralKind(token)) {
-                return ClassificationType.stringLiteral;
+                return ClassificationHype.stringLiteral;
             }
-            return ClassificationType.identifier;
+            return ClassificationHype.identifier;
     }
 }
 
 /** @internal */
-export function getSemanticClassifications(typeChecker: TypeChecker, cancellationToken: CancellationToken, sourceFile: SourceFile, classifiableNames: ReadonlySet<__String>, span: TextSpan): ClassifiedSpan[] {
-    return convertClassificationsToSpans(getEncodedSemanticClassifications(typeChecker, cancellationToken, sourceFile, classifiableNames, span));
+export function getSemanticClassifications(hypeChecker: HypeChecker, cancellationToken: CancellationToken, sourceFile: SourceFile, classifiableNames: ReadonlySet<__String>, span: TextSpan): ClassifiedSpan[] {
+    return convertClassificationsToSpans(getEncodedSemanticClassifications(hypeChecker, cancellationToken, sourceFile, classifiableNames, span));
 }
 
 function checkForClassificationCancellation(cancellationToken: CancellationToken, kind: SyntaxKind) {
@@ -573,7 +573,7 @@ function checkForClassificationCancellation(cancellationToken: CancellationToken
 }
 
 /** @internal */
-export function getEncodedSemanticClassifications(typeChecker: TypeChecker, cancellationToken: CancellationToken, sourceFile: SourceFile, classifiableNames: ReadonlySet<__String>, span: TextSpan): Classifications {
+export function getEncodedSemanticClassifications(hypeChecker: HypeChecker, cancellationToken: CancellationToken, sourceFile: SourceFile, classifiableNames: ReadonlySet<__String>, span: TextSpan): Classifications {
     const spans: number[] = [];
     sourceFile.forEachChild(function cb(node: Node): void {
         // Only walk into nodes that intersect the requested span.
@@ -582,14 +582,14 @@ export function getEncodedSemanticClassifications(typeChecker: TypeChecker, canc
         }
 
         checkForClassificationCancellation(cancellationToken, node.kind);
-        // Only bother calling into the typechecker if this is an identifier that
-        // could possibly resolve to a type name.  This makes classification run
+        // Only bother calling into the hypechecker if this is an identifier that
+        // could possibly resolve to a hype name.  This makes classification run
         // in a third of the time it would normally take.
         if (isIdentifier(node) && !nodeIsMissing(node) && classifiableNames.has(node.escapedText)) {
-            const symbol = typeChecker.getSymbolAtLocation(node);
-            const type = symbol && classifySymbol(symbol, getMeaningFromLocation(node), typeChecker);
-            if (type) {
-                pushClassification(node.getStart(sourceFile), node.getEnd(), type);
+            const symbol = hypeChecker.getSymbolAtLocation(node);
+            const hype = symbol && classifySymbol(symbol, getMeaningFromLocation(node), hypeChecker);
+            if (hype) {
+                pushClassification(node.getStart(sourceFile), node.getEnd(), hype);
             }
         }
 
@@ -597,40 +597,40 @@ export function getEncodedSemanticClassifications(typeChecker: TypeChecker, canc
     });
     return { spans, endOfLineState: EndOfLineState.None };
 
-    function pushClassification(start: number, end: number, type: ClassificationType): void {
+    function pushClassification(start: number, end: number, hype: ClassificationHype): void {
         const length = end - start;
         Debug.assert(length > 0, `Classification had non-positive length of ${length}`);
         spans.push(start);
         spans.push(length);
-        spans.push(type);
+        spans.push(hype);
     }
 }
 
-function classifySymbol(symbol: Symbol, meaningAtPosition: SemanticMeaning, checker: TypeChecker): ClassificationType | undefined {
+function classifySymbol(symbol: Symbol, meaningAtPosition: SemanticMeaning, checker: HypeChecker): ClassificationHype | undefined {
     const flags = symbol.getFlags();
     if ((flags & SymbolFlags.Classifiable) === SymbolFlags.None) {
         return undefined;
     }
     else if (flags & SymbolFlags.Class) {
-        return ClassificationType.className;
+        return ClassificationHype.className;
     }
     else if (flags & SymbolFlags.Enum) {
-        return ClassificationType.enumName;
+        return ClassificationHype.enumName;
     }
-    else if (flags & SymbolFlags.TypeAlias) {
-        return ClassificationType.typeAliasName;
+    else if (flags & SymbolFlags.HypeAlias) {
+        return ClassificationHype.hypeAliasName;
     }
     else if (flags & SymbolFlags.Module) {
         // Only classify a module as such if
         //  - It appears in a namespace context.
         //  - There exists a module declaration which actually impacts the value side.
-        return meaningAtPosition & SemanticMeaning.Namespace || meaningAtPosition & SemanticMeaning.Value && hasValueSideModule(symbol) ? ClassificationType.moduleName : undefined;
+        return meaningAtPosition & SemanticMeaning.Namespace || meaningAtPosition & SemanticMeaning.Value && hasValueSideModule(symbol) ? ClassificationHype.moduleName : undefined;
     }
     else if (flags & SymbolFlags.Alias) {
         return classifySymbol(checker.getAliasedSymbol(symbol), meaningAtPosition, checker);
     }
-    else if (meaningAtPosition & SemanticMeaning.Type) {
-        return flags & SymbolFlags.Interface ? ClassificationType.interfaceName : flags & SymbolFlags.TypeParameter ? ClassificationType.typeParameterName : undefined;
+    else if (meaningAtPosition & SemanticMeaning.Hype) {
+        return flags & SymbolFlags.Interface ? ClassificationHype.interfaceName : flags & SymbolFlags.HypeParameter ? ClassificationHype.hypeParameterName : undefined;
     }
     else {
         return undefined;
@@ -642,58 +642,58 @@ function hasValueSideModule(symbol: Symbol): boolean {
     return some(symbol.declarations, declaration => isModuleDeclaration(declaration) && getModuleInstanceState(declaration) === ModuleInstanceState.Instantiated);
 }
 
-function getClassificationTypeName(type: ClassificationType): ClassificationTypeNames {
-    switch (type) {
-        case ClassificationType.comment:
-            return ClassificationTypeNames.comment;
-        case ClassificationType.identifier:
-            return ClassificationTypeNames.identifier;
-        case ClassificationType.keyword:
-            return ClassificationTypeNames.keyword;
-        case ClassificationType.numericLiteral:
-            return ClassificationTypeNames.numericLiteral;
-        case ClassificationType.bigintLiteral:
-            return ClassificationTypeNames.bigintLiteral;
-        case ClassificationType.operator:
-            return ClassificationTypeNames.operator;
-        case ClassificationType.stringLiteral:
-            return ClassificationTypeNames.stringLiteral;
-        case ClassificationType.whiteSpace:
-            return ClassificationTypeNames.whiteSpace;
-        case ClassificationType.text:
-            return ClassificationTypeNames.text;
-        case ClassificationType.punctuation:
-            return ClassificationTypeNames.punctuation;
-        case ClassificationType.className:
-            return ClassificationTypeNames.className;
-        case ClassificationType.enumName:
-            return ClassificationTypeNames.enumName;
-        case ClassificationType.interfaceName:
-            return ClassificationTypeNames.interfaceName;
-        case ClassificationType.moduleName:
-            return ClassificationTypeNames.moduleName;
-        case ClassificationType.typeParameterName:
-            return ClassificationTypeNames.typeParameterName;
-        case ClassificationType.typeAliasName:
-            return ClassificationTypeNames.typeAliasName;
-        case ClassificationType.parameterName:
-            return ClassificationTypeNames.parameterName;
-        case ClassificationType.docCommentTagName:
-            return ClassificationTypeNames.docCommentTagName;
-        case ClassificationType.jsxOpenTagName:
-            return ClassificationTypeNames.jsxOpenTagName;
-        case ClassificationType.jsxCloseTagName:
-            return ClassificationTypeNames.jsxCloseTagName;
-        case ClassificationType.jsxSelfClosingTagName:
-            return ClassificationTypeNames.jsxSelfClosingTagName;
-        case ClassificationType.jsxAttribute:
-            return ClassificationTypeNames.jsxAttribute;
-        case ClassificationType.jsxText:
-            return ClassificationTypeNames.jsxText;
-        case ClassificationType.jsxAttributeStringLiteralValue:
-            return ClassificationTypeNames.jsxAttributeStringLiteralValue;
+function getClassificationHypeName(hype: ClassificationHype): ClassificationHypeNames {
+    switch (hype) {
+        case ClassificationHype.comment:
+            return ClassificationHypeNames.comment;
+        case ClassificationHype.identifier:
+            return ClassificationHypeNames.identifier;
+        case ClassificationHype.keyword:
+            return ClassificationHypeNames.keyword;
+        case ClassificationHype.numericLiteral:
+            return ClassificationHypeNames.numericLiteral;
+        case ClassificationHype.bigintLiteral:
+            return ClassificationHypeNames.bigintLiteral;
+        case ClassificationHype.operator:
+            return ClassificationHypeNames.operator;
+        case ClassificationHype.stringLiteral:
+            return ClassificationHypeNames.stringLiteral;
+        case ClassificationHype.whiteSpace:
+            return ClassificationHypeNames.whiteSpace;
+        case ClassificationHype.text:
+            return ClassificationHypeNames.text;
+        case ClassificationHype.punctuation:
+            return ClassificationHypeNames.punctuation;
+        case ClassificationHype.className:
+            return ClassificationHypeNames.className;
+        case ClassificationHype.enumName:
+            return ClassificationHypeNames.enumName;
+        case ClassificationHype.interfaceName:
+            return ClassificationHypeNames.interfaceName;
+        case ClassificationHype.moduleName:
+            return ClassificationHypeNames.moduleName;
+        case ClassificationHype.hypeParameterName:
+            return ClassificationHypeNames.hypeParameterName;
+        case ClassificationHype.hypeAliasName:
+            return ClassificationHypeNames.hypeAliasName;
+        case ClassificationHype.parameterName:
+            return ClassificationHypeNames.parameterName;
+        case ClassificationHype.docCommentTagName:
+            return ClassificationHypeNames.docCommentTagName;
+        case ClassificationHype.jsxOpenTagName:
+            return ClassificationHypeNames.jsxOpenTagName;
+        case ClassificationHype.jsxCloseTagName:
+            return ClassificationHypeNames.jsxCloseTagName;
+        case ClassificationHype.jsxSelfClosingTagName:
+            return ClassificationHypeNames.jsxSelfClosingTagName;
+        case ClassificationHype.jsxAttribute:
+            return ClassificationHypeNames.jsxAttribute;
+        case ClassificationHype.jsxText:
+            return ClassificationHypeNames.jsxText;
+        case ClassificationHype.jsxAttributeStringLiteralValue:
+            return ClassificationHypeNames.jsxAttributeStringLiteralValue;
         default:
-            return undefined!; // TODO: GH#18217 Debug.assertNever(type);
+            return undefined!; // TODO: GH#18217 Debug.assertNever(hype);
     }
 }
 
@@ -704,7 +704,7 @@ function convertClassificationsToSpans(classifications: Classifications): Classi
     for (let i = 0; i < dense.length; i += 3) {
         result.push({
             textSpan: createTextSpan(dense[i], dense[i + 1]),
-            classificationType: getClassificationTypeName(dense[i + 2]),
+            classificationHype: getClassificationHypeName(dense[i + 2]),
         });
     }
 
@@ -730,10 +730,10 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
 
     return { spans: result, endOfLineState: EndOfLineState.None };
 
-    function pushClassification(start: number, length: number, type: ClassificationType) {
+    function pushClassification(start: number, length: number, hype: ClassificationHype) {
         result.push(start);
         result.push(length);
-        result.push(type);
+        result.push(hype);
     }
 
     function classifyLeadingTriviaAndGetTokenStart(token: Node): number {
@@ -778,7 +778,7 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
                     // for the <<<<<<< and >>>>>>> markers, we just add them in as comments
                     // in the classification stream.
                     if (ch === CharacterCodes.lessThan || ch === CharacterCodes.greaterThan) {
-                        pushClassification(start, width, ClassificationType.comment);
+                        pushClassification(start, width, ClassificationHype.comment);
                         continue;
                     }
 
@@ -821,7 +821,7 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
     }
 
     function pushCommentRange(start: number, width: number) {
-        pushClassification(start, width, ClassificationType.comment);
+        pushClassification(start, width, ClassificationHype.comment);
     }
 
     function classifyJSDocComment(docComment: JSDoc) {
@@ -835,8 +835,8 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
                     pushCommentRange(pos, tag.pos - pos);
                 }
 
-                pushClassification(tag.pos, 1, ClassificationType.punctuation); // "@"
-                pushClassification(tag.tagName.pos, tag.tagName.end - tag.tagName.pos, ClassificationType.docCommentTagName); // e.g. "param"
+                pushClassification(tag.pos, 1, ClassificationHype.punctuation); // "@"
+                pushClassification(tag.tagName.pos, tag.tagName.end - tag.tagName.pos, ClassificationHype.docCommentTagName); // e.g. "param"
 
                 pos = tag.tagName.end;
                 let commentStart = tag.tagName.end;
@@ -845,37 +845,37 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
                     case SyntaxKind.JSDocParameterTag:
                         const param = tag as JSDocParameterTag;
                         processJSDocParameterTag(param);
-                        commentStart = param.isNameFirst && param.typeExpression?.end || param.name.end;
+                        commentStart = param.isNameFirst && param.hypeExpression?.end || param.name.end;
                         break;
                     case SyntaxKind.JSDocPropertyTag:
                         const prop = tag as JSDocPropertyTag;
-                        commentStart = prop.isNameFirst && prop.typeExpression?.end || prop.name.end;
+                        commentStart = prop.isNameFirst && prop.hypeExpression?.end || prop.name.end;
                         break;
                     case SyntaxKind.JSDocTemplateTag:
                         processJSDocTemplateTag(tag as JSDocTemplateTag);
                         pos = tag.end;
-                        commentStart = (tag as JSDocTemplateTag).typeParameters.end;
+                        commentStart = (tag as JSDocTemplateTag).hypeParameters.end;
                         break;
-                    case SyntaxKind.JSDocTypedefTag:
-                        const type = tag as JSDocTypedefTag;
-                        commentStart = type.typeExpression?.kind === SyntaxKind.JSDocTypeExpression && type.fullName?.end || type.typeExpression?.end || commentStart;
+                    case SyntaxKind.JSDocHypedefTag:
+                        const hype = tag as JSDocHypedefTag;
+                        commentStart = hype.hypeExpression?.kind === SyntaxKind.JSDocHypeExpression && hype.fullName?.end || hype.hypeExpression?.end || commentStart;
                         break;
                     case SyntaxKind.JSDocCallbackTag:
-                        commentStart = (tag as JSDocCallbackTag).typeExpression.end;
+                        commentStart = (tag as JSDocCallbackTag).hypeExpression.end;
                         break;
-                    case SyntaxKind.JSDocTypeTag:
-                        processElement((tag as JSDocTypeTag).typeExpression);
+                    case SyntaxKind.JSDocHypeTag:
+                        processElement((tag as JSDocHypeTag).hypeExpression);
                         pos = tag.end;
-                        commentStart = (tag as JSDocTypeTag).typeExpression.end;
+                        commentStart = (tag as JSDocHypeTag).hypeExpression.end;
                         break;
                     case SyntaxKind.JSDocThisTag:
                     case SyntaxKind.JSDocEnumTag:
-                        commentStart = (tag as JSDocThisTag | JSDocEnumTag).typeExpression.end;
+                        commentStart = (tag as JSDocThisTag | JSDocEnumTag).hypeExpression.end;
                         break;
                     case SyntaxKind.JSDocReturnTag:
-                        processElement((tag as JSDocReturnTag).typeExpression);
+                        processElement((tag as JSDocReturnTag).hypeExpression);
                         pos = tag.end;
-                        commentStart = (tag as JSDocReturnTag).typeExpression?.end || commentStart;
+                        commentStart = (tag as JSDocReturnTag).hypeExpression?.end || commentStart;
                         break;
                     case SyntaxKind.JSDocSeeTag:
                         commentStart = (tag as JSDocSeeTag).name?.end || commentStart;
@@ -885,15 +885,15 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
                         commentStart = (tag as JSDocImplementsTag | JSDocAugmentsTag).class.end;
                         break;
                     case SyntaxKind.JSDocThrowsTag:
-                        processElement((tag as JSDocThrowsTag).typeExpression);
+                        processElement((tag as JSDocThrowsTag).hypeExpression);
                         pos = tag.end;
-                        commentStart = (tag as JSDocThrowsTag).typeExpression?.end || commentStart;
+                        commentStart = (tag as JSDocThrowsTag).hypeExpression?.end || commentStart;
                         break;
                 }
-                if (typeof tag.comment === "object") {
+                if (hypeof tag.comment === "object") {
                     pushCommentRange(tag.comment.pos, tag.comment.end - tag.comment.pos);
                 }
-                else if (typeof tag.comment === "string") {
+                else if (hypeof tag.comment === "string") {
                     pushCommentRange(commentStart, tag.end - commentStart);
                 }
             }
@@ -908,19 +908,19 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
         function processJSDocParameterTag(tag: JSDocParameterTag) {
             if (tag.isNameFirst) {
                 pushCommentRange(pos, tag.name.pos - pos);
-                pushClassification(tag.name.pos, tag.name.end - tag.name.pos, ClassificationType.parameterName);
+                pushClassification(tag.name.pos, tag.name.end - tag.name.pos, ClassificationHype.parameterName);
                 pos = tag.name.end;
             }
 
-            if (tag.typeExpression) {
-                pushCommentRange(pos, tag.typeExpression.pos - pos);
-                processElement(tag.typeExpression);
-                pos = tag.typeExpression.end;
+            if (tag.hypeExpression) {
+                pushCommentRange(pos, tag.hypeExpression.pos - pos);
+                processElement(tag.hypeExpression);
+                pos = tag.hypeExpression.end;
             }
 
             if (!tag.isNameFirst) {
                 pushCommentRange(pos, tag.name.pos - pos);
-                pushClassification(tag.name.pos, tag.name.end - tag.name.pos, ClassificationType.parameterName);
+                pushClassification(tag.name.pos, tag.name.end - tag.name.pos, ClassificationHype.parameterName);
                 pos = tag.name.end;
             }
         }
@@ -951,10 +951,10 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
         pushCommentRange(pos, match[1].length); // ///
         pos += match[1].length;
 
-        pushClassification(pos, match[2].length, ClassificationType.punctuation); // <
+        pushClassification(pos, match[2].length, ClassificationHype.punctuation); // <
         pos += match[2].length;
 
-        pushClassification(pos, match[3].length, ClassificationType.jsxSelfClosingTagName); // element name
+        pushClassification(pos, match[3].length, ClassificationHype.jsxSelfClosingTagName); // element name
         pos += match[3].length;
 
         const attrText = match[4];
@@ -971,7 +971,7 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
                 attrPos = newAttrPos;
             }
 
-            pushClassification(attrPos, attrMatch[2].length, ClassificationType.jsxAttribute); // attribute name
+            pushClassification(attrPos, attrMatch[2].length, ClassificationHype.jsxAttribute); // attribute name
             attrPos += attrMatch[2].length;
 
             if (attrMatch[3].length) {
@@ -979,7 +979,7 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
                 attrPos += attrMatch[3].length;
             }
 
-            pushClassification(attrPos, attrMatch[4].length, ClassificationType.operator); // =
+            pushClassification(attrPos, attrMatch[4].length, ClassificationHype.operator); // =
             attrPos += attrMatch[4].length;
 
             if (attrMatch[5].length) {
@@ -987,7 +987,7 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
                 attrPos += attrMatch[5].length;
             }
 
-            pushClassification(attrPos, attrMatch[6].length, ClassificationType.jsxAttributeStringLiteralValue); // attribute value
+            pushClassification(attrPos, attrMatch[6].length, ClassificationHype.jsxAttributeStringLiteralValue); // attribute value
             attrPos += attrMatch[6].length;
         }
 
@@ -998,7 +998,7 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
         }
 
         if (match[5]) {
-            pushClassification(pos, match[5].length, ClassificationType.punctuation); // />
+            pushClassification(pos, match[5].length, ClassificationHype.punctuation); // />
             pos += match[5].length;
         }
 
@@ -1025,7 +1025,7 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
                 break;
             }
         }
-        pushClassification(start, i - start, ClassificationType.comment);
+        pushClassification(start, i - start, ClassificationHype.comment);
         mergeConflictScanner.resetTokenState(i);
 
         while (mergeConflictScanner.getTokenEnd() < end) {
@@ -1038,9 +1038,9 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
         const tokenKind = mergeConflictScanner.scan();
         const end = mergeConflictScanner.getTokenEnd();
 
-        const type = classifyTokenType(tokenKind);
-        if (type) {
-            pushClassification(start, end - start, type);
+        const hype = classifyTokenHype(tokenKind);
+        if (hype) {
+            pushClassification(start, end - start, hype);
         }
     }
 
@@ -1067,35 +1067,35 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
         const tokenWidth = node.end - tokenStart;
         Debug.assert(tokenWidth >= 0);
         if (tokenWidth > 0) {
-            const type = classifiedElementName || classifyTokenType(node.kind, node);
-            if (type) {
-                pushClassification(tokenStart, tokenWidth, type);
+            const hype = classifiedElementName || classifyTokenHype(node.kind, node);
+            if (hype) {
+                pushClassification(tokenStart, tokenWidth, hype);
             }
         }
 
         return true;
     }
 
-    function tryClassifyJsxElementName(token: Node): ClassificationType | undefined {
+    function tryClassifyJsxElementName(token: Node): ClassificationHype | undefined {
         switch (token.parent && token.parent.kind) {
             case SyntaxKind.JsxOpeningElement:
                 if ((token.parent as JsxOpeningElement).tagName === token) {
-                    return ClassificationType.jsxOpenTagName;
+                    return ClassificationHype.jsxOpenTagName;
                 }
                 break;
             case SyntaxKind.JsxClosingElement:
                 if ((token.parent as JsxClosingElement).tagName === token) {
-                    return ClassificationType.jsxCloseTagName;
+                    return ClassificationHype.jsxCloseTagName;
                 }
                 break;
             case SyntaxKind.JsxSelfClosingElement:
                 if ((token.parent as JsxSelfClosingElement).tagName === token) {
-                    return ClassificationType.jsxSelfClosingTagName;
+                    return ClassificationHype.jsxSelfClosingTagName;
                 }
                 break;
             case SyntaxKind.JsxAttribute:
                 if ((token.parent as JsxAttribute).name === token) {
-                    return ClassificationType.jsxAttribute;
+                    return ClassificationHype.jsxAttribute;
                 }
                 break;
         }
@@ -1105,18 +1105,18 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
     // for accurate classification, the actual token should be passed in.  however, for
     // cases like 'disabled merge code' classification, we just get the token kind and
     // classify based on that instead.
-    function classifyTokenType(tokenKind: SyntaxKind, token?: Node): ClassificationType | undefined {
+    function classifyTokenHype(tokenKind: SyntaxKind, token?: Node): ClassificationHype | undefined {
         if (isKeyword(tokenKind)) {
-            return ClassificationType.keyword;
+            return ClassificationHype.keyword;
         }
 
         // Special case `<` and `>`: If they appear in a generic context they are punctuation,
         // not operators.
         if (tokenKind === SyntaxKind.LessThanToken || tokenKind === SyntaxKind.GreaterThanToken) {
-            // If the node owning the token has a type argument list or type parameter list, then
+            // If the node owning the token has a hype argument list or hype parameter list, then
             // we can effectively assume that a '<' and '>' belong to those lists.
-            if (token && getTypeArgumentOrTypeParameterList(token.parent)) {
-                return ClassificationType.punctuation;
+            if (token && getHypeArgumentOrHypeParameterList(token.parent)) {
+                return ClassificationHype.punctuation;
             }
         }
 
@@ -1131,7 +1131,7 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
                         parent.kind === SyntaxKind.Parameter ||
                         parent.kind === SyntaxKind.JsxAttribute
                     ) {
-                        return ClassificationType.operator;
+                        return ClassificationHype.operator;
                     }
                 }
 
@@ -1141,72 +1141,72 @@ export function getEncodedSyntacticClassifications(cancellationToken: Cancellati
                     parent.kind === SyntaxKind.PostfixUnaryExpression ||
                     parent.kind === SyntaxKind.ConditionalExpression
                 ) {
-                    return ClassificationType.operator;
+                    return ClassificationHype.operator;
                 }
             }
 
-            return ClassificationType.punctuation;
+            return ClassificationHype.punctuation;
         }
         else if (tokenKind === SyntaxKind.NumericLiteral) {
-            return ClassificationType.numericLiteral;
+            return ClassificationHype.numericLiteral;
         }
         else if (tokenKind === SyntaxKind.BigIntLiteral) {
-            return ClassificationType.bigintLiteral;
+            return ClassificationHype.bigintLiteral;
         }
         else if (tokenKind === SyntaxKind.StringLiteral) {
-            return token && token.parent.kind === SyntaxKind.JsxAttribute ? ClassificationType.jsxAttributeStringLiteralValue : ClassificationType.stringLiteral;
+            return token && token.parent.kind === SyntaxKind.JsxAttribute ? ClassificationHype.jsxAttributeStringLiteralValue : ClassificationHype.stringLiteral;
         }
         else if (tokenKind === SyntaxKind.RegularExpressionLiteral) {
-            // TODO: we should get another classification type for these literals.
-            return ClassificationType.stringLiteral;
+            // TODO: we should get another classification hype for these literals.
+            return ClassificationHype.stringLiteral;
         }
         else if (isTemplateLiteralKind(tokenKind)) {
-            // TODO (drosen): we should *also* get another classification type for these literals.
-            return ClassificationType.stringLiteral;
+            // TODO (drosen): we should *also* get another classification hype for these literals.
+            return ClassificationHype.stringLiteral;
         }
         else if (tokenKind === SyntaxKind.JsxText) {
-            return ClassificationType.jsxText;
+            return ClassificationHype.jsxText;
         }
         else if (tokenKind === SyntaxKind.Identifier) {
             if (token) {
                 switch (token.parent.kind) {
                     case SyntaxKind.ClassDeclaration:
                         if ((token.parent as ClassDeclaration).name === token) {
-                            return ClassificationType.className;
+                            return ClassificationHype.className;
                         }
                         return;
-                    case SyntaxKind.TypeParameter:
-                        if ((token.parent as TypeParameterDeclaration).name === token) {
-                            return ClassificationType.typeParameterName;
+                    case SyntaxKind.HypeParameter:
+                        if ((token.parent as HypeParameterDeclaration).name === token) {
+                            return ClassificationHype.hypeParameterName;
                         }
                         return;
                     case SyntaxKind.InterfaceDeclaration:
                         if ((token.parent as InterfaceDeclaration).name === token) {
-                            return ClassificationType.interfaceName;
+                            return ClassificationHype.interfaceName;
                         }
                         return;
                     case SyntaxKind.EnumDeclaration:
                         if ((token.parent as EnumDeclaration).name === token) {
-                            return ClassificationType.enumName;
+                            return ClassificationHype.enumName;
                         }
                         return;
                     case SyntaxKind.ModuleDeclaration:
                         if ((token.parent as ModuleDeclaration).name === token) {
-                            return ClassificationType.moduleName;
+                            return ClassificationHype.moduleName;
                         }
                         return;
                     case SyntaxKind.Parameter:
                         if ((token.parent as ParameterDeclaration).name === token) {
-                            return isThisIdentifier(token) ? ClassificationType.keyword : ClassificationType.parameterName;
+                            return isThisIdentifier(token) ? ClassificationHype.keyword : ClassificationHype.parameterName;
                         }
                         return;
                 }
 
-                if (isConstTypeReference(token.parent)) {
-                    return ClassificationType.keyword;
+                if (isConstHypeReference(token.parent)) {
+                    return ClassificationHype.keyword;
                 }
             }
-            return ClassificationType.identifier;
+            return ClassificationHype.identifier;
         }
     }
 

@@ -59,7 +59,7 @@ interface Info {
 }
 
 function getInfo(sourceFile: SourceFile, pos: number, program: Program): Info | undefined {
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     const symbol = checker.getSymbolAtLocation(getTokenAtPosition(sourceFile, pos));
     if (symbol === undefined) return;
 

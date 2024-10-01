@@ -103,7 +103,7 @@ function getRenameAction(context: CodeFixContext, { name, jsDocHost, signature, 
         jsDocParameterTag.tagName,
         factory.createIdentifier(parameterName),
         jsDocParameterTag.isBracketed,
-        jsDocParameterTag.typeExpression,
+        jsDocParameterTag.hypeExpression,
         jsDocParameterTag.isNameFirst,
         jsDocParameterTag.comment,
     );

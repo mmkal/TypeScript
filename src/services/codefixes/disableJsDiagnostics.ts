@@ -24,7 +24,7 @@ import {
 
 const fixName = "disableJsDiagnostics";
 const fixId = "disableJsDiagnostics";
-const errorCodes = mapDefined(Object.keys(Diagnostics) as readonly (keyof typeof Diagnostics)[], key => {
+const errorCodes = mapDefined(Object.keys(Diagnostics) as readonly (keyof hypeof Diagnostics)[], key => {
     const diag = Diagnostics[key];
     return diag.category === DiagnosticCategory.Error ? diag.code : undefined;
 });

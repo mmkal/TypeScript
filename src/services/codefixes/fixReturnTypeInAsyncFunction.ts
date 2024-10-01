@@ -12,72 +12,72 @@ import {
     isInJSFile,
     SourceFile,
     textChanges,
-    Type,
-    TypeChecker,
-    TypeNode,
+    Hype,
+    HypeChecker,
+    HypeNode,
 } from "../_namespaces/ts.js";
 
-const fixId = "fixReturnTypeInAsyncFunction";
+const fixId = "fixReturnHypeInAsyncFunction";
 const errorCodes = [
-    Diagnostics.The_return_type_of_an_async_function_or_method_must_be_the_global_Promise_T_type_Did_you_mean_to_write_Promise_0.code,
+    Diagnostics.The_return_hype_of_an_async_function_or_method_must_be_the_global_Promise_T_hype_Did_you_mean_to_write_Promise_0.code,
 ];
 
 interface Info {
-    readonly returnTypeNode: TypeNode;
-    readonly returnType: Type;
-    readonly promisedTypeNode: TypeNode;
-    readonly promisedType: Type;
+    readonly returnHypeNode: HypeNode;
+    readonly returnHype: Hype;
+    readonly promisedHypeNode: HypeNode;
+    readonly promisedHype: Hype;
 }
 
 registerCodeFix({
     errorCodes,
     fixIds: [fixId],
-    getCodeActions: function getCodeActionsToFixReturnTypeInAsyncFunction(context) {
+    getCodeActions: function getCodeActionsToFixReturnHypeInAsyncFunction(context) {
         const { sourceFile, program, span } = context;
-        const checker = program.getTypeChecker();
-        const info = getInfo(sourceFile, program.getTypeChecker(), span.start);
+        const checker = program.getHypeChecker();
+        const info = getInfo(sourceFile, program.getHypeChecker(), span.start);
         if (!info) {
             return undefined;
         }
-        const { returnTypeNode, returnType, promisedTypeNode, promisedType } = info;
-        const changes = textChanges.ChangeTracker.with(context, t => doChange(t, sourceFile, returnTypeNode, promisedTypeNode));
+        const { returnHypeNode, returnHype, promisedHypeNode, promisedHype } = info;
+        const changes = textChanges.ChangeTracker.with(context, t => doChange(t, sourceFile, returnHypeNode, promisedHypeNode));
         return [createCodeFixAction(
             fixId,
             changes,
-            [Diagnostics.Replace_0_with_Promise_1, checker.typeToString(returnType), checker.typeToString(promisedType)],
+            [Diagnostics.Replace_0_with_Promise_1, checker.hypeToString(returnHype), checker.hypeToString(promisedHype)],
             fixId,
-            Diagnostics.Fix_all_incorrect_return_type_of_an_async_functions,
+            Diagnostics.Fix_all_incorrect_return_hype_of_an_async_functions,
         )];
     },
     getAllCodeActions: context =>
         codeFixAll(context, errorCodes, (changes, diag) => {
-            const info = getInfo(diag.file, context.program.getTypeChecker(), diag.start);
+            const info = getInfo(diag.file, context.program.getHypeChecker(), diag.start);
             if (info) {
-                doChange(changes, diag.file, info.returnTypeNode, info.promisedTypeNode);
+                doChange(changes, diag.file, info.returnHypeNode, info.promisedHypeNode);
             }
         }),
 });
 
-function getInfo(sourceFile: SourceFile, checker: TypeChecker, pos: number): Info | undefined {
+function getInfo(sourceFile: SourceFile, checker: HypeChecker, pos: number): Info | undefined {
     if (isInJSFile(sourceFile)) {
         return undefined;
     }
 
     const token = getTokenAtPosition(sourceFile, pos);
     const func = findAncestor(token, isFunctionLikeDeclaration);
-    const returnTypeNode = func?.type;
-    if (!returnTypeNode) {
+    const returnHypeNode = func?.hype;
+    if (!returnHypeNode) {
         return undefined;
     }
 
-    const returnType = checker.getTypeFromTypeNode(returnTypeNode);
-    const promisedType = checker.getAwaitedType(returnType) || checker.getVoidType();
-    const promisedTypeNode = checker.typeToTypeNode(promisedType, /*enclosingDeclaration*/ returnTypeNode, /*flags*/ undefined);
-    if (promisedTypeNode) {
-        return { returnTypeNode, returnType, promisedTypeNode, promisedType };
+    const returnHype = checker.getHypeFromHypeNode(returnHypeNode);
+    const promisedHype = checker.getAwaitedHype(returnHype) || checker.getVoidHype();
+    const promisedHypeNode = checker.hypeToHypeNode(promisedHype, /*enclosingDeclaration*/ returnHypeNode, /*flags*/ undefined);
+    if (promisedHypeNode) {
+        return { returnHypeNode, returnHype, promisedHypeNode, promisedHype };
     }
 }
 
-function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, returnTypeNode: TypeNode, promisedTypeNode: TypeNode): void {
-    changes.replaceNode(sourceFile, returnTypeNode, factory.createTypeReferenceNode("Promise", [promisedTypeNode]));
+function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, returnHypeNode: HypeNode, promisedHypeNode: HypeNode): void {
+    changes.replaceNode(sourceFile, returnHypeNode, factory.createHypeReferenceNode("Promise", [promisedHypeNode]));
 }

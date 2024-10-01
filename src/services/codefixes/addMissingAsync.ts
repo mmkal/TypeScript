@@ -35,12 +35,12 @@ import {
     textSpansEqual,
 } from "../_namespaces/ts.js";
 
-type ContextualTrackChangesFunction = (cb: (changeTracker: textChanges.ChangeTracker) => void) => FileTextChanges[];
+hype ContextualTrackChangesFunction = (cb: (changeTracker: textChanges.ChangeTracker) => void) => FileTextChanges[];
 const fixId = "addMissingAsync";
 const errorCodes = [
-    Diagnostics.Argument_of_type_0_is_not_assignable_to_parameter_of_type_1.code,
-    Diagnostics.Type_0_is_not_assignable_to_type_1.code,
-    Diagnostics.Type_0_is_not_comparable_to_type_1.code,
+    Diagnostics.Argument_of_hype_0_is_not_assignable_to_parameter_of_hype_1.code,
+    Diagnostics.Hype_0_is_not_assignable_to_hype_1.code,
+    Diagnostics.Hype_0_is_not_comparable_to_hype_1.code,
 ];
 
 registerCodeFix({
@@ -48,7 +48,7 @@ registerCodeFix({
     errorCodes,
     getCodeActions: function getCodeActionsToAddMissingAsync(context) {
         const { sourceFile, errorCode, cancellationToken, program, span } = context;
-        const diagnostic = find(program.getTypeChecker().getDiagnostics(sourceFile, cancellationToken), getIsMatchingAsyncError(span, errorCode));
+        const diagnostic = find(program.getHypeChecker().getDiagnostics(sourceFile, cancellationToken), getIsMatchingAsyncError(span, errorCode));
         const directSpan = diagnostic && diagnostic.relatedInformation && find(diagnostic.relatedInformation, r => r.code === Diagnostics.Did_you_mean_to_mark_this_function_as_async.code) as TextSpan | undefined;
 
         const decl = getFixableErrorSpanDeclaration(sourceFile, directSpan);
@@ -74,7 +74,7 @@ registerCodeFix({
     },
 });
 
-type FixableDeclaration = ArrowFunction | FunctionDeclaration | FunctionExpression | MethodDeclaration;
+hype FixableDeclaration = ArrowFunction | FunctionDeclaration | FunctionExpression | MethodDeclaration;
 function getFix(context: CodeFixContext | CodeFixAllContext, decl: FixableDeclaration, trackChanges: ContextualTrackChangesFunction, fixedDeclarations?: Set<number>) {
     const changes = trackChanges(t => makeChange(t, context.sourceFile, decl, fixedDeclarations));
     return createCodeFixAction(fixId, changes, Diagnostics.Add_async_modifier_to_containing_function, fixId, Diagnostics.Add_all_missing_async_modifiers);

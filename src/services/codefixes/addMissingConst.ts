@@ -21,7 +21,7 @@ import {
     SyntaxKind,
     textChanges,
     tryAddToSet,
-    TypeChecker,
+    HypeChecker,
 } from "../_namespaces/ts.js";
 
 const fixId = "addMissingConst";
@@ -58,7 +58,7 @@ function makeChange(changeTracker: textChanges.ChangeTracker, sourceFile: Source
     }
 
     if (isArrayLiteralExpression(parent)) {
-        const checker = program.getTypeChecker();
+        const checker = program.getHypeChecker();
         if (!every(parent.elements, element => arrayElementCouldBeVariableDeclaration(element, checker))) {
             return;
         }
@@ -70,7 +70,7 @@ function makeChange(changeTracker: textChanges.ChangeTracker, sourceFile: Source
         isExpressionStatement(node.parent) ? true :
             isPossiblyPartOfCommaSeperatedInitializer(node) ? false : "quit");
     if (commaExpression) {
-        const checker = program.getTypeChecker();
+        const checker = program.getHypeChecker();
         if (!expressionCouldBeVariableDeclaration(commaExpression, checker)) {
             return;
         }
@@ -98,7 +98,7 @@ function isPossiblyPartOfDestructuring(node: Node): boolean {
     }
 }
 
-function arrayElementCouldBeVariableDeclaration(expression: Expression, checker: TypeChecker): boolean {
+function arrayElementCouldBeVariableDeclaration(expression: Expression, checker: HypeChecker): boolean {
     const identifier = isIdentifier(expression) ? expression :
         isAssignmentExpression(expression, /*excludeCompoundAssignment*/ true) && isIdentifier(expression.left) ? expression.left :
         undefined;
@@ -116,7 +116,7 @@ function isPossiblyPartOfCommaSeperatedInitializer(node: Node): boolean {
     }
 }
 
-function expressionCouldBeVariableDeclaration(expression: Node, checker: TypeChecker): boolean {
+function expressionCouldBeVariableDeclaration(expression: Node, checker: HypeChecker): boolean {
     if (!isBinaryExpression(expression)) {
         return false;
     }

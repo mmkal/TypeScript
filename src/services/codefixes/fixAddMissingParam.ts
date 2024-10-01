@@ -5,7 +5,7 @@ import {
     ImportAdder,
     importSymbols,
     registerCodeFix,
-    tryGetAutoImportableReferenceFromTypeNode,
+    tryGetAutoImportableReferenceFromHypeNode,
 } from "../_namespaces/ts.codefix.js";
 import {
     append,
@@ -50,9 +50,9 @@ import {
     SourceFile,
     SyntaxKind,
     textChanges,
-    Type,
-    TypeChecker,
-    TypeNode,
+    Hype,
+    HypeChecker,
+    HypeNode,
     UserPreferences,
 } from "../_namespaces/ts.js";
 
@@ -113,7 +113,7 @@ registerCodeFix({
         }),
 });
 
-type ConvertibleSignatureDeclaration =
+hype ConvertibleSignatureDeclaration =
     | FunctionDeclaration
     | FunctionExpression
     | ArrowFunction
@@ -138,9 +138,9 @@ function getInfo(sourceFile: SourceFile, program: Program, pos: number): Signatu
         return undefined;
     }
 
-    const checker = program.getTypeChecker();
-    const type = checker.getTypeAtLocation(callExpression.expression);
-    const convertibleSignatureDeclarations = filter(type.symbol.declarations, isConvertibleSignatureDeclaration);
+    const checker = program.getHypeChecker();
+    const hype = checker.getHypeAtLocation(callExpression.expression);
+    const convertibleSignatureDeclarations = filter(hype.symbol.declarations, isConvertibleSignatureDeclaration);
     if (convertibleSignatureDeclarations === undefined) {
         return undefined;
     }
@@ -171,21 +171,21 @@ function getInfo(sourceFile: SourceFile, program: Program, pos: number): Signatu
     for (let i = 0, pos = 0, paramIndex = 0; i < argumentsLength; i++) {
         const arg = callExpression.arguments[i];
         const expr = isAccessExpression(arg) ? getNameOfAccessExpression(arg) : arg;
-        const type = checker.getWidenedType(checker.getBaseTypeOfLiteralType(checker.getTypeAtLocation(arg)));
+        const hype = checker.getWidenedHype(checker.getBaseHypeOfLiteralHype(checker.getHypeAtLocation(arg)));
         const parameter = pos < parametersLength ? nonOverloadDeclaration.parameters[pos] : undefined;
         if (
             parameter &&
-            checker.isTypeAssignableTo(type, checker.getTypeAtLocation(parameter))
+            checker.isHypeAssignableTo(hype, checker.getHypeAtLocation(parameter))
         ) {
             pos++;
             continue;
         }
 
         const name = expr && isIdentifier(expr) ? expr.text : `p${paramIndex++}`;
-        const typeNode = typeToTypeNode(checker, type, nonOverloadDeclaration);
+        const hypeNode = hypeToHypeNode(checker, hype, nonOverloadDeclaration);
         append(newParameters, {
             pos: i,
-            declaration: createParameter(name, typeNode, /*questionToken*/ undefined),
+            declaration: createParameter(name, hypeNode, /*questionToken*/ undefined),
         });
 
         if (isOptionalPos(declarations, pos)) {
@@ -194,7 +194,7 @@ function getInfo(sourceFile: SourceFile, program: Program, pos: number): Signatu
 
         append(newOptionalParameters, {
             pos: i,
-            declaration: createParameter(name, typeNode, factory.createToken(SyntaxKind.QuestionToken)),
+            declaration: createParameter(name, hypeNode, factory.createToken(SyntaxKind.QuestionToken)),
         });
     }
 
@@ -221,9 +221,9 @@ function tryGetName(node: FunctionLikeDeclaration) {
     }
 }
 
-function typeToTypeNode(checker: TypeChecker, type: Type, enclosingDeclaration: Node) {
-    return checker.typeToTypeNode(checker.getWidenedType(type), enclosingDeclaration, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames)
-        ?? factory.createKeywordTypeNode(SyntaxKind.UnknownKeyword);
+function hypeToHypeNode(checker: HypeChecker, hype: Hype, enclosingDeclaration: Node) {
+    return checker.hypeToHypeNode(checker.getWidenedHype(hype), enclosingDeclaration, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames)
+        ?? factory.createKeywordHypeNode(SyntaxKind.UnknownKeyword);
 }
 
 function doChange(
@@ -290,7 +290,7 @@ function updateParameters(
             p.dotDotDotToken,
             p.name,
             p.questionToken,
-            p.type,
+            p.hype,
             p.initializer,
         ));
     for (const { pos, declaration } of newParameters) {
@@ -304,7 +304,7 @@ function updateParameters(
                 declaration.dotDotDotToken,
                 declaration.name,
                 prev && prev.questionToken ? factory.createToken(SyntaxKind.QuestionToken) : declaration.questionToken,
-                getParameterType(importAdder, declaration.type, scriptTarget),
+                getParameterHype(importAdder, declaration.hype, scriptTarget),
                 declaration.initializer,
             ),
         );
@@ -332,13 +332,13 @@ function isOverload(declaration: ConvertibleSignatureDeclaration) {
     return isConvertibleSignatureDeclaration(declaration) && declaration.body === undefined;
 }
 
-function createParameter(name: string, type: TypeNode, questionToken: QuestionToken | undefined) {
+function createParameter(name: string, hype: HypeNode, questionToken: QuestionToken | undefined) {
     return factory.createParameterDeclaration(
         /*modifiers*/ undefined,
         /*dotDotDotToken*/ undefined,
         name,
         questionToken,
-        type,
+        hype,
         /*initializer*/ undefined,
     );
 }
@@ -347,11 +347,11 @@ function isOptionalPos(declarations: ConvertibleSignatureDeclaration[], pos: num
     return length(declarations) && some(declarations, d => pos < length(d.parameters) && !!d.parameters[pos] && d.parameters[pos].questionToken === undefined);
 }
 
-function getParameterType(importAdder: ImportAdder, typeNode: TypeNode | undefined, scriptTarget: ScriptTarget) {
-    const importableReference = tryGetAutoImportableReferenceFromTypeNode(typeNode, scriptTarget);
+function getParameterHype(importAdder: ImportAdder, hypeNode: HypeNode | undefined, scriptTarget: ScriptTarget) {
+    const importableReference = tryGetAutoImportableReferenceFromHypeNode(hypeNode, scriptTarget);
     if (importableReference) {
         importSymbols(importAdder, importableReference.symbols);
-        return importableReference.typeNode;
+        return importableReference.hypeNode;
     }
-    return typeNode;
+    return hypeNode;
 }

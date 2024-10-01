@@ -1,3 +1,3 @@
-/* Generated file to emulate the ts.refactor.inferFunctionReturnType namespace. */
+/* Generated file to emulate the ts.refactor.inferFunctionReturnHype namespace. */
 
-export * from "../refactors/inferFunctionReturnType.js";
+export * from "../refactors/inferFunctionReturnHype.js";

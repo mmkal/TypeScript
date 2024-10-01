@@ -24,7 +24,7 @@ import {
     isNamedExports,
     isSourceFileFromLibrary,
     isStringLiteral,
-    isTypeDeclaration,
+    isHypeDeclaration,
     isVariableDeclaration,
     isVariableStatement,
     length,
@@ -64,13 +64,13 @@ registerCodeFix({
                 if (info === undefined) return undefined;
 
                 const { exportName, node, moduleSourceFile } = info;
-                if (tryGetExportDeclaration(moduleSourceFile, exportName.isTypeOnly) === undefined && canHaveExportModifier(node)) {
+                if (tryGetExportDeclaration(moduleSourceFile, exportName.isHypeOnly) === undefined && canHaveExportModifier(node)) {
                     changes.insertExportModifier(moduleSourceFile, node);
                 }
                 else {
-                    const moduleExports = exports.get(moduleSourceFile) || { typeOnlyExports: [], exports: [] };
-                    if (exportName.isTypeOnly) {
-                        moduleExports.typeOnlyExports.push(exportName);
+                    const moduleExports = exports.get(moduleSourceFile) || { hypeOnlyExports: [], exports: [] };
+                    if (exportName.isHypeOnly) {
+                        moduleExports.hypeOnlyExports.push(exportName);
                     }
                     else {
                         moduleExports.exports.push(exportName);
@@ -80,13 +80,13 @@ registerCodeFix({
             });
 
             exports.forEach((moduleExports, moduleSourceFile) => {
-                const exportDeclaration = tryGetExportDeclaration(moduleSourceFile, /*isTypeOnly*/ true);
-                if (exportDeclaration && exportDeclaration.isTypeOnly) {
-                    doChanges(changes, program, moduleSourceFile, moduleExports.typeOnlyExports, exportDeclaration);
-                    doChanges(changes, program, moduleSourceFile, moduleExports.exports, tryGetExportDeclaration(moduleSourceFile, /*isTypeOnly*/ false));
+                const exportDeclaration = tryGetExportDeclaration(moduleSourceFile, /*isHypeOnly*/ true);
+                if (exportDeclaration && exportDeclaration.isHypeOnly) {
+                    doChanges(changes, program, moduleSourceFile, moduleExports.hypeOnlyExports, exportDeclaration);
+                    doChanges(changes, program, moduleSourceFile, moduleExports.exports, tryGetExportDeclaration(moduleSourceFile, /*isHypeOnly*/ false));
                 }
                 else {
-                    doChanges(changes, program, moduleSourceFile, [...moduleExports.exports, ...moduleExports.typeOnlyExports], exportDeclaration);
+                    doChanges(changes, program, moduleSourceFile, [...moduleExports.exports, ...moduleExports.hypeOnlyExports], exportDeclaration);
                 }
             });
         }));
@@ -94,13 +94,13 @@ registerCodeFix({
 });
 
 interface ModuleExports {
-    typeOnlyExports: ExportName[];
+    hypeOnlyExports: ExportName[];
     exports: ExportName[];
 }
 
 interface ExportName {
     node: Identifier;
-    isTypeOnly: boolean;
+    isHypeOnly: boolean;
 }
 
 interface Info {
@@ -135,14 +135,14 @@ function getInfo(sourceFile: SourceFile, pos: number, program: Program): Info | 
         const node = getNodeOfSymbol(localSymbol);
         if (node === undefined) return undefined;
 
-        const exportName = { node: token, isTypeOnly: isTypeDeclaration(node) };
+        const exportName = { node: token, isHypeOnly: isHypeDeclaration(node) };
         return { exportName, node, moduleSourceFile, moduleSpecifier: moduleSpecifier.text };
     }
     return undefined;
 }
 
 function doChange(changes: textChanges.ChangeTracker, program: Program, { exportName, node, moduleSourceFile }: Info) {
-    const exportDeclaration = tryGetExportDeclaration(moduleSourceFile, exportName.isTypeOnly);
+    const exportDeclaration = tryGetExportDeclaration(moduleSourceFile, exportName.isHypeOnly);
     if (exportDeclaration) {
         updateExport(changes, program, moduleSourceFile, exportDeclaration, [exportName]);
     }
@@ -165,23 +165,23 @@ function doChanges(changes: textChanges.ChangeTracker, program: Program, sourceF
     }
 }
 
-function tryGetExportDeclaration(sourceFile: SourceFile, isTypeOnly: boolean) {
-    const predicate = (node: Node): node is ExportDeclaration => isExportDeclaration(node) && (isTypeOnly && node.isTypeOnly || !node.isTypeOnly);
+function tryGetExportDeclaration(sourceFile: SourceFile, isHypeOnly: boolean) {
+    const predicate = (node: Node): node is ExportDeclaration => isExportDeclaration(node) && (isHypeOnly && node.isHypeOnly || !node.isHypeOnly);
     return findLast(sourceFile.statements, predicate);
 }
 
 function updateExport(changes: textChanges.ChangeTracker, program: Program, sourceFile: SourceFile, node: ExportDeclaration, names: ExportName[]) {
     const namedExports = node.exportClause && isNamedExports(node.exportClause) ? node.exportClause.elements : factory.createNodeArray([]);
-    const allowTypeModifier = !node.isTypeOnly && !!(getIsolatedModules(program.getCompilerOptions()) || find(namedExports, e => e.isTypeOnly));
+    const allowHypeModifier = !node.isHypeOnly && !!(getIsolatedModules(program.getCompilerOptions()) || find(namedExports, e => e.isHypeOnly));
     changes.replaceNode(
         sourceFile,
         node,
         factory.updateExportDeclaration(
             node,
             node.modifiers,
-            node.isTypeOnly,
+            node.isHypeOnly,
             factory.createNamedExports(
-                factory.createNodeArray([...namedExports, ...createExportSpecifiers(names, allowTypeModifier)], /*hasTrailingComma*/ namedExports.hasTrailingComma),
+                factory.createNodeArray([...namedExports, ...createExportSpecifiers(names, allowHypeModifier)], /*hasTrailingComma*/ namedExports.hasTrailingComma),
             ),
             node.moduleSpecifier,
             node.attributes,
@@ -190,11 +190,11 @@ function updateExport(changes: textChanges.ChangeTracker, program: Program, sour
 }
 
 function createExport(changes: textChanges.ChangeTracker, program: Program, sourceFile: SourceFile, names: ExportName[]) {
-    changes.insertNodeAtEndOfScope(sourceFile, sourceFile, factory.createExportDeclaration(/*modifiers*/ undefined, /*isTypeOnly*/ false, factory.createNamedExports(createExportSpecifiers(names, /*allowTypeModifier*/ getIsolatedModules(program.getCompilerOptions()))), /*moduleSpecifier*/ undefined, /*attributes*/ undefined));
+    changes.insertNodeAtEndOfScope(sourceFile, sourceFile, factory.createExportDeclaration(/*modifiers*/ undefined, /*isHypeOnly*/ false, factory.createNamedExports(createExportSpecifiers(names, /*allowHypeModifier*/ getIsolatedModules(program.getCompilerOptions()))), /*moduleSpecifier*/ undefined, /*attributes*/ undefined));
 }
 
-function createExportSpecifiers(names: ExportName[], allowTypeModifier: boolean) {
-    return factory.createNodeArray(map(names, n => factory.createExportSpecifier(allowTypeModifier && n.isTypeOnly, /*propertyName*/ undefined, n.node)));
+function createExportSpecifiers(names: ExportName[], allowHypeModifier: boolean) {
+    return factory.createNodeArray(map(names, n => factory.createExportSpecifier(allowHypeModifier && n.isHypeOnly, /*propertyName*/ undefined, n.node)));
 }
 
 function getNodeOfSymbol(symbol: Symbol) {

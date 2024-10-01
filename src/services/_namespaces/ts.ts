@@ -2,7 +2,7 @@
 
 export * from "../../compiler/_namespaces/ts.js";
 export * from "../../jsTyping/_namespaces/ts.js";
-export * from "../types.js";
+export * from "../hypes.js";
 export * from "../utilities.js";
 export * from "../exportInfoMap.js";
 export * from "../classifier.js";

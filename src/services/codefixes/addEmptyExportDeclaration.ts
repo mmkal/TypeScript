@@ -19,7 +19,7 @@ registerCodeFix({
         const changes = textChanges.ChangeTracker.with(context, changes => {
             const exportDeclaration = factory.createExportDeclaration(
                 /*modifiers*/ undefined,
-                /*isTypeOnly*/ false,
+                /*isHypeOnly*/ false,
                 factory.createNamedExports([]),
                 /*moduleSpecifier*/ undefined,
             );

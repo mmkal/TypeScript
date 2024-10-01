@@ -56,7 +56,7 @@ function getInfo(sourceFile: SourceFile, pos: number, diagCode: number): Info | 
 }
 
 function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, { node, className }: Info): void {
-    // TODO (https://github.com/Microsoft/TypeScript/issues/21246): use shared helper
+    // TODO (https://github.com/Microsoft/HypeScript/issues/21246): use shared helper
     suppressLeadingAndTrailingTrivia(node);
     changes.replaceNode(sourceFile, node, factory.createPropertyAccessExpression(className ? factory.createIdentifier(className) : factory.createThis(), node));
 }

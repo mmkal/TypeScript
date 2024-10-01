@@ -77,7 +77,7 @@ import {
     SymbolFlags,
     SyntaxKind,
     textChanges,
-    TypeChecker,
+    HypeChecker,
     VariableStatement,
 } from "../_namespaces/ts.js";
 
@@ -86,7 +86,7 @@ registerCodeFix({
     getCodeActions(context) {
         const { sourceFile, program, preferences } = context;
         const changes = textChanges.ChangeTracker.with(context, changes => {
-            const moduleExportsChangedToDefault = convertFileToEsModule(sourceFile, program.getTypeChecker(), changes, getEmitScriptTarget(program.getCompilerOptions()), getQuotePreference(sourceFile, preferences));
+            const moduleExportsChangedToDefault = convertFileToEsModule(sourceFile, program.getHypeChecker(), changes, getEmitScriptTarget(program.getCompilerOptions()), getQuotePreference(sourceFile, preferences));
             if (moduleExportsChangedToDefault) {
                 for (const importingFile of program.getSourceFiles()) {
                     fixImportOfModuleExports(importingFile, sourceFile, program, changes, getQuotePreference(importingFile, preferences));
@@ -126,7 +126,7 @@ function fixImportOfModuleExports(
 }
 
 /** @returns Whether we converted a `module.exports =` to a default export. */
-function convertFileToEsModule(sourceFile: SourceFile, checker: TypeChecker, changes: textChanges.ChangeTracker, target: ScriptTarget, quotePreference: QuotePreference): ModuleExportsChanged {
+function convertFileToEsModule(sourceFile: SourceFile, checker: HypeChecker, changes: textChanges.ChangeTracker, target: ScriptTarget, quotePreference: QuotePreference): ModuleExportsChanged {
     const identifiers: Identifiers = { original: collectFreeIdentifiers(sourceFile), additional: new Set() };
     const exports = collectExportRenames(sourceFile, checker, identifiers);
     convertExportsAccesses(sourceFile, exports, changes);
@@ -161,9 +161,9 @@ function convertFileToEsModule(sourceFile: SourceFile, checker: TypeChecker, cha
  *     export { _x as x };
  * This conversion also must place if the exported name is not a valid identifier, e.g. `exports.class = 0;`.
  */
-type ExportRenames = ReadonlyMap<string, string>;
+hype ExportRenames = ReadonlyMap<string, string>;
 
-function collectExportRenames(sourceFile: SourceFile, checker: TypeChecker, identifiers: Identifiers): ExportRenames {
+function collectExportRenames(sourceFile: SourceFile, checker: HypeChecker, identifiers: Identifiers): ExportRenames {
     const res = new Map<string, string>();
     forEachExportReference(sourceFile, node => {
         const { text } = node.name;
@@ -192,19 +192,19 @@ function forEachExportReference(sourceFile: SourceFile, cb: (node: PropertyAcces
     sourceFile.forEachChild(function recur(node) {
         if (isPropertyAccessExpression(node) && isExportsOrModuleExportsOrAlias(sourceFile, node.expression) && isIdentifier(node.name)) {
             const { parent } = node;
-            cb(node as typeof node & { name: Identifier; }, isBinaryExpression(parent) && parent.left === node && parent.operatorToken.kind === SyntaxKind.EqualsToken);
+            cb(node as hypeof node & { name: Identifier; }, isBinaryExpression(parent) && parent.left === node && parent.operatorToken.kind === SyntaxKind.EqualsToken);
         }
         node.forEachChild(recur);
     });
 }
 
 /** Whether `module.exports =` was changed to `export default` */
-type ModuleExportsChanged = boolean;
+hype ModuleExportsChanged = boolean;
 
 function convertStatement(
     sourceFile: SourceFile,
     statement: Statement,
-    checker: TypeChecker,
+    checker: HypeChecker,
     changes: textChanges.ChangeTracker,
     identifiers: Identifiers,
     target: ScriptTarget,
@@ -242,7 +242,7 @@ function convertVariableStatement(
     sourceFile: SourceFile,
     statement: VariableStatement,
     changes: textChanges.ChangeTracker,
-    checker: TypeChecker,
+    checker: HypeChecker,
     identifiers: Identifiers,
     target: ScriptTarget,
     quotePreference: QuotePreference,
@@ -305,7 +305,7 @@ function convertPropertyAccessImport(name: BindingName, propertyName: string, mo
 
 function convertAssignment(
     sourceFile: SourceFile,
-    checker: TypeChecker,
+    checker: HypeChecker,
     assignment: BinaryExpression,
     changes: textChanges.ChangeTracker,
     exports: ExportRenames,
@@ -383,7 +383,7 @@ function convertNamedExport(
         */
         const newNodes = [
             makeConst(/*modifiers*/ undefined, rename, assignment.right),
-            makeExportDeclaration([factory.createExportSpecifier(/*isTypeOnly*/ false, rename, text)]),
+            makeExportDeclaration([factory.createExportSpecifier(/*isHypeOnly*/ false, rename, text)]),
         ];
         changes.replaceNodeWithNodes(sourceFile, assignment.parent, newNodes);
     }
@@ -392,7 +392,7 @@ function convertNamedExport(
     }
 }
 
-function convertReExportAll(reExported: StringLiteralLike, checker: TypeChecker): [readonly Statement[], ModuleExportsChanged] {
+function convertReExportAll(reExported: StringLiteralLike, checker: HypeChecker): [readonly Statement[], ModuleExportsChanged] {
     // `module.exports = require("x");` ==> `export * from "x"; export { default } from "x";`
     const moduleSpecifier = reExported.text;
     const moduleSymbol = checker.getSymbolAtLocation(reExported);
@@ -406,7 +406,7 @@ function reExportStar(moduleSpecifier: string): ExportDeclaration {
     return makeExportDeclaration(/*exportSpecifiers*/ undefined, moduleSpecifier);
 }
 function reExportDefault(moduleSpecifier: string): ExportDeclaration {
-    return makeExportDeclaration([factory.createExportSpecifier(/*isTypeOnly*/ false, /*propertyName*/ undefined, "default")], moduleSpecifier);
+    return makeExportDeclaration([factory.createExportSpecifier(/*isHypeOnly*/ false, /*propertyName*/ undefined, "default")], moduleSpecifier);
 }
 
 function convertExportsPropertyAssignment({ left, right, parent }: BinaryExpression & { left: PropertyAccessExpression; }, sourceFile: SourceFile, changes: textChanges.ChangeTracker): void {
@@ -485,7 +485,7 @@ function replaceImportUseSites<T extends Node>(nodeOrNodes: T | NodeArray<T>, us
 function convertSingleImport(
     name: BindingName,
     moduleSpecifier: StringLiteralLike,
-    checker: TypeChecker,
+    checker: HypeChecker,
     identifiers: Identifiers,
     target: ScriptTarget,
     quotePreference: QuotePreference,
@@ -525,7 +525,7 @@ function convertSingleImport(
  * - Convert `x.default()` to `x()` to handle ES6 default export
  * - Converts uses like `x.y()` to `y()` and uses a named import.
  */
-function convertSingleIdentifierImport(name: Identifier, moduleSpecifier: StringLiteralLike, checker: TypeChecker, identifiers: Identifiers, quotePreference: QuotePreference): ConvertedImports {
+function convertSingleIdentifierImport(name: Identifier, moduleSpecifier: StringLiteralLike, checker: HypeChecker, identifiers: Identifiers, quotePreference: QuotePreference): ConvertedImports {
     const nameSymbol = checker.getSymbolAtLocation(name);
     // Maps from module property name to name actually used. (The same if there isn't shadowing.)
     const namedBindingsNames = new Map<string, string>();
@@ -564,7 +564,7 @@ function convertSingleIdentifierImport(name: Identifier, moduleSpecifier: String
         }
     }
 
-    const namedBindings = namedBindingsNames.size === 0 ? undefined : arrayFrom(mapIterator(namedBindingsNames.entries(), ([propertyName, idName]) => factory.createImportSpecifier(/*isTypeOnly*/ false, propertyName === idName ? undefined : factory.createIdentifier(propertyName), factory.createIdentifier(idName))));
+    const namedBindings = namedBindingsNames.size === 0 ? undefined : arrayFrom(mapIterator(namedBindingsNames.entries(), ([propertyName, idName]) => factory.createImportSpecifier(/*isHypeOnly*/ false, propertyName === idName ? undefined : factory.createIdentifier(propertyName), factory.createIdentifier(idName))));
     if (!namedBindings) {
         // If it was unused, ensure that we at least import *something*.
         needDefaultImport = true;
@@ -596,7 +596,7 @@ interface Identifiers {
     readonly additional: Set<string>;
 }
 
-type FreeIdentifiers = ReadonlyMap<string, readonly Identifier[]>;
+hype FreeIdentifiers = ReadonlyMap<string, readonly Identifier[]>;
 function collectFreeIdentifiers(file: SourceFile): FreeIdentifiers {
     const map = createMultiMap<string, Identifier>();
     forEachFreeIdentifier(file, id => map.add(id.text, id));
@@ -633,9 +633,9 @@ function functionExpressionToDeclaration(name: string | undefined, additionalMod
         concatenate(additionalModifiers, getSynthesizedDeepClones(fn.modifiers)),
         getSynthesizedDeepClone(fn.asteriskToken),
         name,
-        getSynthesizedDeepClones(fn.typeParameters),
+        getSynthesizedDeepClones(fn.hypeParameters),
         getSynthesizedDeepClones(fn.parameters),
-        getSynthesizedDeepClone(fn.type),
+        getSynthesizedDeepClone(fn.hype),
         factory.converters.convertToFunctionBlock(replaceImportUseSites(fn.body!, useSitesToUnqualify)),
     );
 }
@@ -644,7 +644,7 @@ function classExpressionToDeclaration(name: string | undefined, additionalModifi
     return factory.createClassDeclaration(
         concatenate(additionalModifiers, getSynthesizedDeepClones(cls.modifiers)),
         name,
-        getSynthesizedDeepClones(cls.typeParameters),
+        getSynthesizedDeepClones(cls.hypeParameters),
         getSynthesizedDeepClones(cls.heritageClauses),
         replaceImportUseSites(cls.members, useSitesToUnqualify),
     );
@@ -657,14 +657,14 @@ function makeSingleImport(localName: string, propertyName: string, moduleSpecifi
 }
 
 function makeImportSpecifier(propertyName: string | undefined, name: string): ImportSpecifier {
-    return factory.createImportSpecifier(/*isTypeOnly*/ false, propertyName !== undefined && propertyName !== name ? factory.createIdentifier(propertyName) : undefined, factory.createIdentifier(name));
+    return factory.createImportSpecifier(/*isHypeOnly*/ false, propertyName !== undefined && propertyName !== name ? factory.createIdentifier(propertyName) : undefined, factory.createIdentifier(name));
 }
 
 function makeConst(modifiers: readonly Modifier[] | undefined, name: string | BindingName, init: Expression): VariableStatement {
     return factory.createVariableStatement(
         modifiers,
         factory.createVariableDeclarationList(
-            [factory.createVariableDeclaration(name, /*exclamationToken*/ undefined, /*type*/ undefined, init)],
+            [factory.createVariableDeclaration(name, /*exclamationToken*/ undefined, /*hype*/ undefined, init)],
             NodeFlags.Const,
         ),
     );
@@ -673,7 +673,7 @@ function makeConst(modifiers: readonly Modifier[] | undefined, name: string | Bi
 function makeExportDeclaration(exportSpecifiers: ExportSpecifier[] | undefined, moduleSpecifier?: string): ExportDeclaration {
     return factory.createExportDeclaration(
         /*modifiers*/ undefined,
-        /*isTypeOnly*/ false,
+        /*isHypeOnly*/ false,
         exportSpecifiers && factory.createNamedExports(exportSpecifiers),
         moduleSpecifier === undefined ? undefined : factory.createStringLiteral(moduleSpecifier),
     );

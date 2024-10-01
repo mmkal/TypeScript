@@ -13,17 +13,17 @@ import {
     FunctionDeclaration,
     FunctionExpression,
     getContainingFunction,
-    getEntityNameFromTypeNode,
+    getEntityNameFromHypeNode,
     getNodeId,
     getTokenAtPosition,
-    isFunctionTypeNode,
+    isFunctionHypeNode,
     isVariableDeclaration,
     MethodDeclaration,
     Node,
     SourceFile,
     SyntaxKind,
     textChanges,
-    TypeNode,
+    HypeNode,
 } from "../_namespaces/ts.js";
 
 const fixId = "fixAwaitInSyncFunction";
@@ -53,20 +53,20 @@ registerCodeFix({
     },
 });
 
-function getReturnType(expr: FunctionDeclaration | MethodDeclaration | FunctionExpression | ArrowFunction) {
-    if (expr.type) {
-        return expr.type;
+function getReturnHype(expr: FunctionDeclaration | MethodDeclaration | FunctionExpression | ArrowFunction) {
+    if (expr.hype) {
+        return expr.hype;
     }
     if (
         isVariableDeclaration(expr.parent) &&
-        expr.parent.type &&
-        isFunctionTypeNode(expr.parent.type)
+        expr.parent.hype &&
+        isFunctionHypeNode(expr.parent.hype)
     ) {
-        return expr.parent.type.type;
+        return expr.parent.hype.hype;
     }
 }
 
-function getNodes(sourceFile: SourceFile, start: number): { insertBefore: Node; returnType: TypeNode | undefined; } | undefined {
+function getNodes(sourceFile: SourceFile, start: number): { insertBefore: Node; returnHype: HypeNode | undefined; } | undefined {
     const token = getTokenAtPosition(sourceFile, start);
     const containingFunction = getContainingFunction(token);
     if (!containingFunction) {
@@ -83,7 +83,7 @@ function getNodes(sourceFile: SourceFile, start: number): { insertBefore: Node; 
             insertBefore = findChildOfKind(containingFunction, SyntaxKind.FunctionKeyword, sourceFile);
             break;
         case SyntaxKind.ArrowFunction:
-            const kind = containingFunction.typeParameters ? SyntaxKind.LessThanToken : SyntaxKind.OpenParenToken;
+            const kind = containingFunction.hypeParameters ? SyntaxKind.LessThanToken : SyntaxKind.OpenParenToken;
             insertBefore = findChildOfKind(containingFunction, kind, sourceFile) || first(containingFunction.parameters);
             break;
         default:
@@ -92,19 +92,19 @@ function getNodes(sourceFile: SourceFile, start: number): { insertBefore: Node; 
 
     return insertBefore && {
         insertBefore,
-        returnType: getReturnType(containingFunction),
+        returnHype: getReturnHype(containingFunction),
     };
 }
 
 function doChange(
     changes: textChanges.ChangeTracker,
     sourceFile: SourceFile,
-    { insertBefore, returnType }: { insertBefore: Node; returnType: TypeNode | undefined; },
+    { insertBefore, returnHype }: { insertBefore: Node; returnHype: HypeNode | undefined; },
 ): void {
-    if (returnType) {
-        const entityName = getEntityNameFromTypeNode(returnType);
+    if (returnHype) {
+        const entityName = getEntityNameFromHypeNode(returnHype);
         if (!entityName || entityName.kind !== SyntaxKind.Identifier || entityName.text !== "Promise") {
-            changes.replaceNode(sourceFile, returnType, factory.createTypeReferenceNode("Promise", factory.createNodeArray([returnType])));
+            changes.replaceNode(sourceFile, returnHype, factory.createHypeReferenceNode("Promise", factory.createNodeArray([returnHype])));
         }
     }
     changes.insertModifierBefore(sourceFile, SyntaxKind.AsyncKeyword, insertBefore);

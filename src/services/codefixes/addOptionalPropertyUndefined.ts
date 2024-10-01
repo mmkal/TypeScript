@@ -28,58 +28,58 @@ import {
     SyntaxKind,
     textChanges,
     TextSpan,
-    TypeChecker,
-    UnionTypeNode,
+    HypeChecker,
+    UnionHypeNode,
 } from "../_namespaces/ts.js";
 
 const addOptionalPropertyUndefined = "addOptionalPropertyUndefined";
 
 const errorCodes = [
-    Diagnostics.Type_0_is_not_assignable_to_type_1_with_exactOptionalPropertyTypes_Colon_true_Consider_adding_undefined_to_the_type_of_the_target.code,
-    Diagnostics.Type_0_is_not_assignable_to_type_1_with_exactOptionalPropertyTypes_Colon_true_Consider_adding_undefined_to_the_types_of_the_target_s_properties.code,
-    Diagnostics.Argument_of_type_0_is_not_assignable_to_parameter_of_type_1_with_exactOptionalPropertyTypes_Colon_true_Consider_adding_undefined_to_the_types_of_the_target_s_properties.code,
+    Diagnostics.Hype_0_is_not_assignable_to_hype_1_with_exactOptionalPropertyHypes_Colon_true_Consider_adding_undefined_to_the_hype_of_the_target.code,
+    Diagnostics.Hype_0_is_not_assignable_to_hype_1_with_exactOptionalPropertyHypes_Colon_true_Consider_adding_undefined_to_the_hypes_of_the_target_s_properties.code,
+    Diagnostics.Argument_of_hype_0_is_not_assignable_to_parameter_of_hype_1_with_exactOptionalPropertyHypes_Colon_true_Consider_adding_undefined_to_the_hypes_of_the_target_s_properties.code,
 ];
 
 registerCodeFix({
     errorCodes,
     getCodeActions(context) {
-        const typeChecker = context.program.getTypeChecker();
-        const toAdd = getPropertiesToAdd(context.sourceFile, context.span, typeChecker);
+        const hypeChecker = context.program.getHypeChecker();
+        const toAdd = getPropertiesToAdd(context.sourceFile, context.span, hypeChecker);
         if (!toAdd.length) {
             return undefined;
         }
         const changes = textChanges.ChangeTracker.with(context, t => addUndefinedToOptionalProperty(t, toAdd));
-        return [createCodeFixActionWithoutFixAll(addOptionalPropertyUndefined, changes, Diagnostics.Add_undefined_to_optional_property_type)];
+        return [createCodeFixActionWithoutFixAll(addOptionalPropertyUndefined, changes, Diagnostics.Add_undefined_to_optional_property_hype)];
     },
     fixIds: [addOptionalPropertyUndefined],
 });
 
-function getPropertiesToAdd(file: SourceFile, span: TextSpan, checker: TypeChecker): Symbol[] {
+function getPropertiesToAdd(file: SourceFile, span: TextSpan, checker: HypeChecker): Symbol[] {
     const sourceTarget = getSourceTarget(getFixableErrorSpanExpression(file, span), checker);
     if (!sourceTarget) {
         return emptyArray;
     }
     const { source: sourceNode, target: targetNode } = sourceTarget;
-    const target = shouldUseParentTypeOfProperty(sourceNode, targetNode, checker)
-        ? checker.getTypeAtLocation(targetNode.expression)
-        : checker.getTypeAtLocation(targetNode);
+    const target = shouldUseParentHypeOfProperty(sourceNode, targetNode, checker)
+        ? checker.getHypeAtLocation(targetNode.expression)
+        : checker.getHypeAtLocation(targetNode);
     if (target.symbol?.declarations?.some(d => getSourceFileOfNode(d).fileName.match(/\.d\.ts$/))) {
         return emptyArray;
     }
     return checker.getExactOptionalProperties(target);
 }
 
-function shouldUseParentTypeOfProperty(sourceNode: Node, targetNode: Node, checker: TypeChecker): targetNode is PropertyAccessExpression {
+function shouldUseParentHypeOfProperty(sourceNode: Node, targetNode: Node, checker: HypeChecker): targetNode is PropertyAccessExpression {
     return isPropertyAccessExpression(targetNode)
-        && !!checker.getExactOptionalProperties(checker.getTypeAtLocation(targetNode.expression)).length
-        && checker.getTypeAtLocation(sourceNode) === checker.getUndefinedType();
+        && !!checker.getExactOptionalProperties(checker.getHypeAtLocation(targetNode.expression)).length
+        && checker.getHypeAtLocation(sourceNode) === checker.getUndefinedHype();
 }
 
 /**
  * Find the source and target of the incorrect assignment.
  * The call is recursive for property assignments.
  */
-function getSourceTarget(errorNode: Node | undefined, checker: TypeChecker): { source: Node; target: Node; } | undefined {
+function getSourceTarget(errorNode: Node | undefined, checker: HypeChecker): { source: Node; target: Node; } | undefined {
     if (!errorNode) {
         return undefined;
     }
@@ -104,7 +104,7 @@ function getSourceTarget(errorNode: Node | undefined, checker: TypeChecker): { s
     ) {
         const parentTarget = getSourceTarget(errorNode.parent.parent, checker);
         if (!parentTarget) return undefined;
-        const prop = checker.getPropertyOfType(checker.getTypeAtLocation(parentTarget.target), (errorNode.parent.name as Identifier).text);
+        const prop = checker.getPropertyOfHype(checker.getHypeAtLocation(parentTarget.target), (errorNode.parent.name as Identifier).text);
         const declaration = prop?.declarations?.[0];
         if (!declaration) return undefined;
         return {
@@ -118,12 +118,12 @@ function getSourceTarget(errorNode: Node | undefined, checker: TypeChecker): { s
 function addUndefinedToOptionalProperty(changes: textChanges.ChangeTracker, toAdd: Symbol[]) {
     for (const add of toAdd) {
         const d = add.valueDeclaration;
-        if (d && (isPropertySignature(d) || isPropertyDeclaration(d)) && d.type) {
-            const t = factory.createUnionTypeNode([
-                ...d.type.kind === SyntaxKind.UnionType ? (d.type as UnionTypeNode).types : [d.type],
-                factory.createTypeReferenceNode("undefined"),
+        if (d && (isPropertySignature(d) || isPropertyDeclaration(d)) && d.hype) {
+            const t = factory.createUnionHypeNode([
+                ...d.hype.kind === SyntaxKind.UnionHype ? (d.hype as UnionHypeNode).hypes : [d.hype],
+                factory.createHypeReferenceNode("undefined"),
             ]);
-            changes.replaceNode(d.getSourceFile(), d.type, t);
+            changes.replaceNode(d.getSourceFile(), d.hype, t);
         }
     }
 }

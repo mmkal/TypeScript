@@ -21,29 +21,29 @@ import {
     SourceFile,
     SyntaxKind,
     textChanges,
-    TypeChecker,
+    HypeChecker,
 } from "../_namespaces/ts.js";
 
 const fixId = "fixImplicitThis";
-const errorCodes = [Diagnostics.this_implicitly_has_type_any_because_it_does_not_have_a_type_annotation.code];
+const errorCodes = [Diagnostics.this_implicitly_has_hype_any_because_it_does_not_have_a_hype_annotation.code];
 registerCodeFix({
     errorCodes,
     getCodeActions: function getCodeActionsToFixImplicitThis(context) {
         const { sourceFile, program, span } = context;
         let diagnostic: DiagnosticOrDiagnosticAndArguments | undefined;
         const changes = textChanges.ChangeTracker.with(context, t => {
-            diagnostic = doChange(t, sourceFile, span.start, program.getTypeChecker());
+            diagnostic = doChange(t, sourceFile, span.start, program.getHypeChecker());
         });
         return diagnostic ? [createCodeFixAction(fixId, changes, diagnostic, fixId, Diagnostics.Fix_all_implicit_this_errors)] : emptyArray;
     },
     fixIds: [fixId],
     getAllCodeActions: context =>
         codeFixAll(context, errorCodes, (changes, diag) => {
-            doChange(changes, diag.file, diag.start, context.program.getTypeChecker());
+            doChange(changes, diag.file, diag.start, context.program.getHypeChecker());
         }),
 });
 
-function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, pos: number, checker: TypeChecker): DiagnosticOrDiagnosticAndArguments | undefined {
+function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, pos: number, checker: HypeChecker): DiagnosticOrDiagnosticAndArguments | undefined {
     const token = getTokenAtPosition(sourceFile, pos);
     if (!isThis(token)) return undefined;
 

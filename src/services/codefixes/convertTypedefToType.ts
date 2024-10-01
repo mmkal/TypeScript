@@ -12,14 +12,14 @@ import {
     getTokenAtPosition,
     hasJSDocNodes,
     InterfaceDeclaration,
-    isJSDocTypedefTag,
-    isJSDocTypeLiteral,
+    isJSDocHypedefTag,
+    isJSDocHypeLiteral,
     JSDoc,
     JSDocPropertyLikeTag,
     JSDocTag,
-    JSDocTypedefTag,
-    JSDocTypeExpression,
-    JSDocTypeLiteral,
+    JSDocHypedefTag,
+    JSDocHypeExpression,
+    JSDocHypeLiteral,
     mapDefined,
     Node,
     PropertySignature,
@@ -27,11 +27,11 @@ import {
     SourceFile,
     SyntaxKind,
     textChanges,
-    TypeAliasDeclaration,
+    HypeAliasDeclaration,
 } from "../_namespaces/ts.js";
 
-const fixId = "convertTypedefToType";
-const errorCodes = [Diagnostics.JSDoc_typedef_may_be_converted_to_TypeScript_type.code];
+const fixId = "convertHypedefToHype";
+const errorCodes = [Diagnostics.JSDoc_hypedef_may_be_converted_to_HypeScript_hype.code];
 registerCodeFix({
     fixIds: [fixId],
     errorCodes,
@@ -50,9 +50,9 @@ registerCodeFix({
                 createCodeFixAction(
                     fixId,
                     changes,
-                    Diagnostics.Convert_typedef_to_TypeScript_type,
+                    Diagnostics.Convert_hypedef_to_HypeScript_hype,
                     fixId,
-                    Diagnostics.Convert_all_typedef_to_TypeScript_types,
+                    Diagnostics.Convert_all_hypedef_to_HypeScript_hypes,
                 ),
             ];
         }
@@ -77,7 +77,7 @@ function doChange(
     newLine: string,
     fixAll = false,
 ) {
-    if (!isJSDocTypedefTag(node)) return;
+    if (!isJSDocHypedefTag(node)) return;
 
     const declaration = createDeclaration(node);
     if (!declaration) return;
@@ -89,14 +89,14 @@ function doChange(
     let pos = commentNode.getStart();
     let prefix = "";
 
-    // the first @typedef is the comment block with a text comment above
+    // the first @hypedef is the comment block with a text comment above
     if (!leftSibling && commentNode.comment) {
         pos = findEndOfTextBetween(commentNode, commentNode.getStart(), node.getStart());
         prefix = `${newLine} */${newLine}`;
     }
 
     if (leftSibling) {
-        if (fixAll && isJSDocTypedefTag(leftSibling)) {
+        if (fixAll && isJSDocHypedefTag(leftSibling)) {
             // Don't need to keep empty comment clock between created interfaces
             pos = node.getStart();
             prefix = "";
@@ -111,7 +111,7 @@ function doChange(
     let suffix = "";
 
     if (rightSibling) {
-        if (fixAll && isJSDocTypedefTag(rightSibling)) {
+        if (fixAll && isJSDocHypedefTag(rightSibling)) {
             // Don't need to keep empty comment clock between created interfaces
             end = rightSibling.getStart();
             suffix = `${newLine}${newLine}`;
@@ -125,12 +125,12 @@ function doChange(
     changes.replaceRange(sourceFile, { pos, end }, declaration, { prefix, suffix });
 }
 
-function getLeftAndRightSiblings(typedefNode: JSDocTypedefTag): { leftSibling?: Node; rightSibling?: Node; } {
-    const commentNode = typedefNode.parent;
+function getLeftAndRightSiblings(hypedefNode: JSDocHypedefTag): { leftSibling?: Node; rightSibling?: Node; } {
+    const commentNode = hypedefNode.parent;
     const maxChildIndex = commentNode.getChildCount() - 1;
 
     const currentNodeIndex = commentNode.getChildren().findIndex(
-        n => n.getStart() === typedefNode.getStart() && n.getEnd() === typedefNode.getEnd(),
+        n => n.getStart() === hypedefNode.getStart() && n.getEnd() === hypedefNode.getEnd(),
     );
 
     const leftSibling = currentNodeIndex > 0 ? commentNode.getChildAt(currentNodeIndex - 1) : undefined;
@@ -155,83 +155,83 @@ function findEndOfTextBetween(jsDocComment: JSDoc, from: number, to: number): nu
     return to;
 }
 
-function createDeclaration(tag: JSDocTypedefTag): InterfaceDeclaration | TypeAliasDeclaration | undefined {
-    const { typeExpression } = tag;
-    if (!typeExpression) return;
-    const typeName = tag.name?.getText();
-    if (!typeName) return;
+function createDeclaration(tag: JSDocHypedefTag): InterfaceDeclaration | HypeAliasDeclaration | undefined {
+    const { hypeExpression } = tag;
+    if (!hypeExpression) return;
+    const hypeName = tag.name?.getText();
+    if (!hypeName) return;
 
-    // For use case @typedef {object}Foo @property{bar}number
-    // But object type can be nested, meaning the value in the k/v pair can be the object itself
-    if (typeExpression.kind === SyntaxKind.JSDocTypeLiteral) {
-        return createInterfaceForTypeLiteral(typeName, typeExpression);
+    // For use case @hypedef {object}Foo @property{bar}number
+    // But object hype can be nested, meaning the value in the k/v pair can be the object itself
+    if (hypeExpression.kind === SyntaxKind.JSDocHypeLiteral) {
+        return createInterfaceForHypeLiteral(hypeName, hypeExpression);
     }
-    // for use case @typedef {(number|string|undefined)} Foo or @typedef {number|string|undefined} Foo
+    // for use case @hypedef {(number|string|undefined)} Foo or @hypedef {number|string|undefined} Foo
     // In this case, we reach the leaf node of AST.
-    if (typeExpression.kind === SyntaxKind.JSDocTypeExpression) {
-        return createTypeAliasForTypeExpression(typeName, typeExpression);
+    if (hypeExpression.kind === SyntaxKind.JSDocHypeExpression) {
+        return createHypeAliasForHypeExpression(hypeName, hypeExpression);
     }
 }
 
-function createInterfaceForTypeLiteral(
-    typeName: string,
-    typeLiteral: JSDocTypeLiteral,
+function createInterfaceForHypeLiteral(
+    hypeName: string,
+    hypeLiteral: JSDocHypeLiteral,
 ): InterfaceDeclaration | undefined {
-    const propertySignatures = createSignatureFromTypeLiteral(typeLiteral);
+    const propertySignatures = createSignatureFromHypeLiteral(hypeLiteral);
     if (!some(propertySignatures)) return;
 
     return factory.createInterfaceDeclaration(
         /*modifiers*/ undefined,
-        typeName,
-        /*typeParameters*/ undefined,
+        hypeName,
+        /*hypeParameters*/ undefined,
         /*heritageClauses*/ undefined,
         propertySignatures,
     );
 }
 
-function createTypeAliasForTypeExpression(
-    typeName: string,
-    typeExpression: JSDocTypeExpression,
-): TypeAliasDeclaration | undefined {
-    const typeReference = getSynthesizedDeepClone(typeExpression.type);
-    if (!typeReference) return;
+function createHypeAliasForHypeExpression(
+    hypeName: string,
+    hypeExpression: JSDocHypeExpression,
+): HypeAliasDeclaration | undefined {
+    const hypeReference = getSynthesizedDeepClone(hypeExpression.hype);
+    if (!hypeReference) return;
 
-    return factory.createTypeAliasDeclaration(
+    return factory.createHypeAliasDeclaration(
         /*modifiers*/ undefined,
-        factory.createIdentifier(typeName),
-        /*typeParameters*/ undefined,
-        typeReference,
+        factory.createIdentifier(hypeName),
+        /*hypeParameters*/ undefined,
+        hypeReference,
     );
 }
 
-function createSignatureFromTypeLiteral(typeLiteral: JSDocTypeLiteral): PropertySignature[] | undefined {
-    const propertyTags = typeLiteral.jsDocPropertyTags;
+function createSignatureFromHypeLiteral(hypeLiteral: JSDocHypeLiteral): PropertySignature[] | undefined {
+    const propertyTags = hypeLiteral.jsDocPropertyTags;
     if (!some(propertyTags)) return;
 
     const getSignature = (tag: JSDocPropertyLikeTag) => {
         const name = getPropertyName(tag);
-        const type = tag.typeExpression?.type;
+        const hype = tag.hypeExpression?.hype;
         const isOptional = tag.isBracketed;
-        let typeReference;
+        let hypeReference;
 
-        // Recursively handle nested object type
-        if (type && isJSDocTypeLiteral(type)) {
-            const signatures = createSignatureFromTypeLiteral(type);
-            typeReference = factory.createTypeLiteralNode(signatures);
+        // Recursively handle nested object hype
+        if (hype && isJSDocHypeLiteral(hype)) {
+            const signatures = createSignatureFromHypeLiteral(hype);
+            hypeReference = factory.createHypeLiteralNode(signatures);
         }
-        // Leaf node, where type.kind === SyntaxKind.JSDocTypeExpression
-        else if (type) {
-            typeReference = getSynthesizedDeepClone(type);
+        // Leaf node, where hype.kind === SyntaxKind.JSDocHypeExpression
+        else if (hype) {
+            hypeReference = getSynthesizedDeepClone(hype);
         }
 
-        if (typeReference && name) {
+        if (hypeReference && name) {
             const questionToken = isOptional ? factory.createToken(SyntaxKind.QuestionToken) : undefined;
 
             return factory.createPropertySignature(
                 /*modifiers*/ undefined,
                 name,
                 questionToken,
-                typeReference,
+                hypeReference,
             );
         }
     };
@@ -244,9 +244,9 @@ function getPropertyName(tag: JSDocPropertyLikeTag): string | undefined {
 }
 
 /** @internal */
-export function getJSDocTypedefNodes(node: Node): readonly JSDocTag[] {
+export function getJSDocHypedefNodes(node: Node): readonly JSDocTag[] {
     if (hasJSDocNodes(node)) {
-        return flatMap(node.jsDoc, doc => doc.tags?.filter(tag => isJSDocTypedefTag(tag)));
+        return flatMap(node.jsDoc, doc => doc.tags?.filter(tag => isJSDocHypedefTag(tag)));
     }
 
     return [];

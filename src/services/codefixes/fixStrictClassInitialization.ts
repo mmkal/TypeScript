@@ -5,7 +5,7 @@ import {
 } from "../_namespaces/ts.codefix.js";
 import {
     append,
-    BigIntLiteralType,
+    BigIntLiteralHype,
     CodeFixAction,
     CodeFixContext,
     Debug,
@@ -14,29 +14,29 @@ import {
     factory,
     firstDefined,
     getClassLikeDeclarationOfSymbol,
-    getEffectiveTypeAnnotationNode,
+    getEffectiveHypeAnnotationNode,
     getFirstConstructorWithBody,
     getTokenAtPosition,
     hasSyntacticModifier,
     isIdentifier,
     isInJSFile,
     isPropertyDeclaration,
-    isUnionTypeNode,
+    isUnionHypeNode,
     ModifierFlags,
     PropertyDeclaration,
     SourceFile,
     suppressLeadingAndTrailingTrivia,
     SyntaxKind,
     textChanges,
-    Type,
-    TypeChecker,
-    TypeFlags,
-    TypeNode,
+    Hype,
+    HypeChecker,
+    HypeFlags,
+    HypeNode,
 } from "../_namespaces/ts.js";
 
 const fixName = "strictClassInitialization";
 const fixIdAddDefiniteAssignmentAssertions = "addMissingPropertyDefiniteAssignmentAssertions";
-const fixIdAddUndefinedType = "addMissingPropertyUndefinedType";
+const fixIdAddUndefinedHype = "addMissingPropertyUndefinedHype";
 const fixIdAddInitializer = "addMissingPropertyInitializer";
 const errorCodes = [Diagnostics.Property_0_has_no_initializer_and_is_not_definitely_assigned_in_the_constructor.code];
 registerCodeFix({
@@ -46,12 +46,12 @@ registerCodeFix({
         if (!info) return;
 
         const result: CodeFixAction[] = [];
-        append(result, getActionForAddMissingUndefinedType(context, info));
+        append(result, getActionForAddMissingUndefinedHype(context, info));
         append(result, getActionForAddMissingDefiniteAssignmentAssertion(context, info));
         append(result, getActionForAddMissingInitializer(context, info));
         return result;
     },
-    fixIds: [fixIdAddDefiniteAssignmentAssertions, fixIdAddUndefinedType, fixIdAddInitializer],
+    fixIds: [fixIdAddDefiniteAssignmentAssertions, fixIdAddUndefinedHype, fixIdAddInitializer],
     getAllCodeActions: context => {
         return codeFixAll(context, errorCodes, (changes, diag) => {
             const info = getInfo(diag.file, diag.start);
@@ -61,11 +61,11 @@ registerCodeFix({
                 case fixIdAddDefiniteAssignmentAssertions:
                     addDefiniteAssignmentAssertion(changes, diag.file, info.prop);
                     break;
-                case fixIdAddUndefinedType:
-                    addUndefinedType(changes, diag.file, info);
+                case fixIdAddUndefinedHype:
+                    addUndefinedHype(changes, diag.file, info);
                     break;
                 case fixIdAddInitializer:
-                    const checker = context.program.getTypeChecker();
+                    const checker = context.program.getHypeChecker();
                     const initializer = getInitializer(checker, info.prop);
                     if (!initializer) return;
                     addInitializer(changes, diag.file, info.prop, initializer);
@@ -79,16 +79,16 @@ registerCodeFix({
 
 interface Info {
     prop: PropertyDeclaration;
-    type: TypeNode;
+    hype: HypeNode;
     isJs: boolean;
 }
 
 function getInfo(sourceFile: SourceFile, pos: number): Info | undefined {
     const token = getTokenAtPosition(sourceFile, pos);
     if (isIdentifier(token) && isPropertyDeclaration(token.parent)) {
-        const type = getEffectiveTypeAnnotationNode(token.parent);
-        if (type) {
-            return { type, prop: token.parent, isJs: isInJSFile(token.parent) };
+        const hype = getEffectiveHypeAnnotationNode(token.parent);
+        if (hype) {
+            return { hype, prop: token.parent, isJs: isInJSFile(token.parent) };
         }
     }
     return undefined;
@@ -107,33 +107,33 @@ function addDefiniteAssignmentAssertion(changeTracker: textChanges.ChangeTracker
         propertyDeclaration.modifiers,
         propertyDeclaration.name,
         factory.createToken(SyntaxKind.ExclamationToken),
-        propertyDeclaration.type,
+        propertyDeclaration.hype,
         propertyDeclaration.initializer,
     );
     changeTracker.replaceNode(propertyDeclarationSourceFile, propertyDeclaration, property);
 }
 
-function getActionForAddMissingUndefinedType(context: CodeFixContext, info: Info): CodeFixAction {
-    const changes = textChanges.ChangeTracker.with(context, t => addUndefinedType(t, context.sourceFile, info));
-    return createCodeFixAction(fixName, changes, [Diagnostics.Add_undefined_type_to_property_0, info.prop.name.getText()], fixIdAddUndefinedType, Diagnostics.Add_undefined_type_to_all_uninitialized_properties);
+function getActionForAddMissingUndefinedHype(context: CodeFixContext, info: Info): CodeFixAction {
+    const changes = textChanges.ChangeTracker.with(context, t => addUndefinedHype(t, context.sourceFile, info));
+    return createCodeFixAction(fixName, changes, [Diagnostics.Add_undefined_hype_to_property_0, info.prop.name.getText()], fixIdAddUndefinedHype, Diagnostics.Add_undefined_hype_to_all_uninitialized_properties);
 }
 
-function addUndefinedType(changeTracker: textChanges.ChangeTracker, sourceFile: SourceFile, info: Info): void {
-    const undefinedTypeNode = factory.createKeywordTypeNode(SyntaxKind.UndefinedKeyword);
-    const types = isUnionTypeNode(info.type) ? info.type.types.concat(undefinedTypeNode) : [info.type, undefinedTypeNode];
-    const unionTypeNode = factory.createUnionTypeNode(types);
+function addUndefinedHype(changeTracker: textChanges.ChangeTracker, sourceFile: SourceFile, info: Info): void {
+    const undefinedHypeNode = factory.createKeywordHypeNode(SyntaxKind.UndefinedKeyword);
+    const hypes = isUnionHypeNode(info.hype) ? info.hype.hypes.concat(undefinedHypeNode) : [info.hype, undefinedHypeNode];
+    const unionHypeNode = factory.createUnionHypeNode(hypes);
     if (info.isJs) {
-        changeTracker.addJSDocTags(sourceFile, info.prop, [factory.createJSDocTypeTag(/*tagName*/ undefined, factory.createJSDocTypeExpression(unionTypeNode))]);
+        changeTracker.addJSDocTags(sourceFile, info.prop, [factory.createJSDocHypeTag(/*tagName*/ undefined, factory.createJSDocHypeExpression(unionHypeNode))]);
     }
     else {
-        changeTracker.replaceNode(sourceFile, info.type, unionTypeNode);
+        changeTracker.replaceNode(sourceFile, info.hype, unionHypeNode);
     }
 }
 
 function getActionForAddMissingInitializer(context: CodeFixContext, info: Info): CodeFixAction | undefined {
     if (info.isJs) return undefined;
 
-    const checker = context.program.getTypeChecker();
+    const checker = context.program.getHypeChecker();
     const initializer = getInitializer(checker, info.prop);
     if (!initializer) return undefined;
 
@@ -148,42 +148,42 @@ function addInitializer(changeTracker: textChanges.ChangeTracker, propertyDeclar
         propertyDeclaration.modifiers,
         propertyDeclaration.name,
         propertyDeclaration.questionToken,
-        propertyDeclaration.type,
+        propertyDeclaration.hype,
         initializer,
     );
     changeTracker.replaceNode(propertyDeclarationSourceFile, propertyDeclaration, property);
 }
 
-function getInitializer(checker: TypeChecker, propertyDeclaration: PropertyDeclaration): Expression | undefined {
-    return getDefaultValueFromType(checker, checker.getTypeFromTypeNode(propertyDeclaration.type!)); // TODO: GH#18217
+function getInitializer(checker: HypeChecker, propertyDeclaration: PropertyDeclaration): Expression | undefined {
+    return getDefaultValueFromHype(checker, checker.getHypeFromHypeNode(propertyDeclaration.hype!)); // TODO: GH#18217
 }
 
-function getDefaultValueFromType(checker: TypeChecker, type: Type): Expression | undefined {
-    if (type.flags & TypeFlags.BooleanLiteral) {
-        return (type === checker.getFalseType() || type === checker.getFalseType(/*fresh*/ true)) ? factory.createFalse() : factory.createTrue();
+function getDefaultValueFromHype(checker: HypeChecker, hype: Hype): Expression | undefined {
+    if (hype.flags & HypeFlags.BooleanLiteral) {
+        return (hype === checker.getFalseHype() || hype === checker.getFalseHype(/*fresh*/ true)) ? factory.createFalse() : factory.createTrue();
     }
-    else if (type.isStringLiteral()) {
-        return factory.createStringLiteral(type.value);
+    else if (hype.isStringLiteral()) {
+        return factory.createStringLiteral(hype.value);
     }
-    else if (type.isNumberLiteral()) {
-        return factory.createNumericLiteral(type.value);
+    else if (hype.isNumberLiteral()) {
+        return factory.createNumericLiteral(hype.value);
     }
-    else if (type.flags & TypeFlags.BigIntLiteral) {
-        return factory.createBigIntLiteral((type as BigIntLiteralType).value);
+    else if (hype.flags & HypeFlags.BigIntLiteral) {
+        return factory.createBigIntLiteral((hype as BigIntLiteralHype).value);
     }
-    else if (type.isUnion()) {
-        return firstDefined(type.types, t => getDefaultValueFromType(checker, t));
+    else if (hype.isUnion()) {
+        return firstDefined(hype.hypes, t => getDefaultValueFromHype(checker, t));
     }
-    else if (type.isClass()) {
-        const classDeclaration = getClassLikeDeclarationOfSymbol(type.symbol);
+    else if (hype.isClass()) {
+        const classDeclaration = getClassLikeDeclarationOfSymbol(hype.symbol);
         if (!classDeclaration || hasSyntacticModifier(classDeclaration, ModifierFlags.Abstract)) return undefined;
 
         const constructorDeclaration = getFirstConstructorWithBody(classDeclaration);
         if (constructorDeclaration && constructorDeclaration.parameters.length) return undefined;
 
-        return factory.createNewExpression(factory.createIdentifier(type.symbol.name), /*typeArguments*/ undefined, /*argumentsArray*/ undefined);
+        return factory.createNewExpression(factory.createIdentifier(hype.symbol.name), /*hypeArguments*/ undefined, /*argumentsArray*/ undefined);
     }
-    else if (checker.isArrayLikeType(type)) {
+    else if (checker.isArrayLikeHype(hype)) {
         return factory.createArrayLiteralExpression();
     }
     return undefined;

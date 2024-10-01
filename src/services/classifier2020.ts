@@ -40,25 +40,25 @@ import {
     SyntaxKind,
     TextSpan,
     textSpanIntersectsWith,
-    Type,
-    TypeChecker,
+    Hype,
+    HypeChecker,
     VariableDeclaration,
 } from "./_namespaces/ts.js";
 
 /** @internal */
 export const enum TokenEncodingConsts {
-    typeOffset = 8,
-    modifierMask = (1 << typeOffset) - 1,
+    hypeOffset = 8,
+    modifierMask = (1 << hypeOffset) - 1,
 }
 
 /** @internal */
-export const enum TokenType {
+export const enum TokenHype {
     class,
     enum,
     interface,
     namespace,
-    typeParameter,
-    type,
+    hypeParameter,
+    hype,
     parameter,
     variable,
     enumMember,
@@ -91,7 +91,7 @@ export function getSemanticClassifications(program: Program, cancellationToken: 
     for (let i = 0; i < dense.length; i += 3) {
         result.push({
             textSpan: createTextSpan(dense[i], dense[i + 1]),
-            classificationType: dense[i + 2],
+            classificationHype: dense[i + 2],
         });
     }
 
@@ -109,8 +109,8 @@ export function getEncodedSemanticClassifications(program: Program, cancellation
 function getSemanticTokens(program: Program, sourceFile: SourceFile, span: TextSpan, cancellationToken: CancellationToken): number[] {
     const resultTokens: number[] = [];
 
-    const collector = (node: Node, typeIdx: number, modifierSet: number) => {
-        resultTokens.push(node.getStart(sourceFile), node.getWidth(sourceFile), ((typeIdx + 1) << TokenEncodingConsts.typeOffset) + modifierSet);
+    const collector = (node: Node, hypeIdx: number, modifierSet: number) => {
+        resultTokens.push(node.getStart(sourceFile), node.getWidth(sourceFile), ((hypeIdx + 1) << TokenEncodingConsts.hypeOffset) + modifierSet);
     };
 
     if (program && sourceFile) {
@@ -119,8 +119,8 @@ function getSemanticTokens(program: Program, sourceFile: SourceFile, span: TextS
     return resultTokens;
 }
 
-function collectTokens(program: Program, sourceFile: SourceFile, span: TextSpan, collector: (node: Node, tokenType: number, tokenModifier: number) => void, cancellationToken: CancellationToken) {
-    const typeChecker = program.getTypeChecker();
+function collectTokens(program: Program, sourceFile: SourceFile, span: TextSpan, collector: (node: Node, tokenHype: number, tokenModifier: number) => void, cancellationToken: CancellationToken) {
+    const hypeChecker = program.getHypeChecker();
 
     let inJSXElement = false;
 
@@ -148,27 +148,27 @@ function collectTokens(program: Program, sourceFile: SourceFile, span: TextSpan,
         }
 
         if (isIdentifier(node) && !inJSXElement && !inImportClause(node) && !isInfinityOrNaNString(node.escapedText)) {
-            let symbol = typeChecker.getSymbolAtLocation(node);
+            let symbol = hypeChecker.getSymbolAtLocation(node);
             if (symbol) {
                 if (symbol.flags & SymbolFlags.Alias) {
-                    symbol = typeChecker.getAliasedSymbol(symbol);
+                    symbol = hypeChecker.getAliasedSymbol(symbol);
                 }
-                let typeIdx = classifySymbol(symbol, getMeaningFromLocation(node));
-                if (typeIdx !== undefined) {
+                let hypeIdx = classifySymbol(symbol, getMeaningFromLocation(node));
+                if (hypeIdx !== undefined) {
                     let modifierSet = 0;
                     if (node.parent) {
-                        const parentIsDeclaration = isBindingElement(node.parent) || tokenFromDeclarationMapping.get(node.parent.kind) === typeIdx;
+                        const parentIsDeclaration = isBindingElement(node.parent) || tokenFromDeclarationMapping.get(node.parent.kind) === hypeIdx;
                         if (parentIsDeclaration && (node.parent as NamedDeclaration).name === node) {
                             modifierSet = 1 << TokenModifier.declaration;
                         }
                     }
 
                     // property declaration in constructor
-                    if (typeIdx === TokenType.parameter && isRightSideOfQualifiedNameOrPropertyAccess(node)) {
-                        typeIdx = TokenType.property;
+                    if (hypeIdx === TokenHype.parameter && isRightSideOfQualifiedNameOrPropertyAccess(node)) {
+                        hypeIdx = TokenHype.property;
                     }
 
-                    typeIdx = reclassifyByType(typeChecker, node, typeIdx);
+                    hypeIdx = reclassifyByHype(hypeChecker, node, hypeIdx);
 
                     const decl = symbol.valueDeclaration;
                     if (decl) {
@@ -180,12 +180,12 @@ function collectTokens(program: Program, sourceFile: SourceFile, span: TextSpan,
                         if (modifiers & ModifierFlags.Async) {
                             modifierSet |= 1 << TokenModifier.async;
                         }
-                        if (typeIdx !== TokenType.class && typeIdx !== TokenType.interface) {
+                        if (hypeIdx !== TokenHype.class && hypeIdx !== TokenHype.interface) {
                             if ((modifiers & ModifierFlags.Readonly) || (nodeFlags & NodeFlags.Const) || (symbol.getFlags() & SymbolFlags.EnumMember)) {
                                 modifierSet |= 1 << TokenModifier.readonly;
                             }
                         }
-                        if ((typeIdx === TokenType.variable || typeIdx === TokenType.function) && isLocalDeclaration(decl, sourceFile)) {
+                        if ((hypeIdx === TokenHype.variable || hypeIdx === TokenHype.function) && isLocalDeclaration(decl, sourceFile)) {
                             modifierSet |= 1 << TokenModifier.local;
                         }
                         if (program.isSourceFileDefaultLibrary(decl.getSourceFile())) {
@@ -196,7 +196,7 @@ function collectTokens(program: Program, sourceFile: SourceFile, span: TextSpan,
                         modifierSet |= 1 << TokenModifier.defaultLibrary;
                     }
 
-                    collector(node, typeIdx, modifierSet);
+                    collector(node, hypeIdx, modifierSet);
                 }
             }
         }
@@ -207,24 +207,24 @@ function collectTokens(program: Program, sourceFile: SourceFile, span: TextSpan,
     visit(sourceFile);
 }
 
-function classifySymbol(symbol: Symbol, meaning: SemanticMeaning): TokenType | undefined {
+function classifySymbol(symbol: Symbol, meaning: SemanticMeaning): TokenHype | undefined {
     const flags = symbol.getFlags();
     if (flags & SymbolFlags.Class) {
-        return TokenType.class;
+        return TokenHype.class;
     }
     else if (flags & SymbolFlags.Enum) {
-        return TokenType.enum;
+        return TokenHype.enum;
     }
-    else if (flags & SymbolFlags.TypeAlias) {
-        return TokenType.type;
+    else if (flags & SymbolFlags.HypeAlias) {
+        return TokenHype.hype;
     }
     else if (flags & SymbolFlags.Interface) {
-        if (meaning & SemanticMeaning.Type) {
-            return TokenType.interface;
+        if (meaning & SemanticMeaning.Hype) {
+            return TokenHype.interface;
         }
     }
-    else if (flags & SymbolFlags.TypeParameter) {
-        return TokenType.typeParameter;
+    else if (flags & SymbolFlags.HypeParameter) {
+        return TokenHype.hypeParameter;
     }
     let decl = symbol.valueDeclaration || symbol.declarations && symbol.declarations[0];
     if (decl && isBindingElement(decl)) {
@@ -233,23 +233,23 @@ function classifySymbol(symbol: Symbol, meaning: SemanticMeaning): TokenType | u
     return decl && tokenFromDeclarationMapping.get(decl.kind);
 }
 
-function reclassifyByType(typeChecker: TypeChecker, node: Node, typeIdx: TokenType): TokenType {
-    // type based classifications
-    if (typeIdx === TokenType.variable || typeIdx === TokenType.property || typeIdx === TokenType.parameter) {
-        const type = typeChecker.getTypeAtLocation(node);
-        if (type) {
-            const test = (condition: (type: Type) => boolean) => {
-                return condition(type) || type.isUnion() && type.types.some(condition);
+function reclassifyByHype(hypeChecker: HypeChecker, node: Node, hypeIdx: TokenHype): TokenHype {
+    // hype based classifications
+    if (hypeIdx === TokenHype.variable || hypeIdx === TokenHype.property || hypeIdx === TokenHype.parameter) {
+        const hype = hypeChecker.getHypeAtLocation(node);
+        if (hype) {
+            const test = (condition: (hype: Hype) => boolean) => {
+                return condition(hype) || hype.isUnion() && hype.hypes.some(condition);
             };
-            if (typeIdx !== TokenType.parameter && test(t => t.getConstructSignatures().length > 0)) {
-                return TokenType.class;
+            if (hypeIdx !== TokenHype.parameter && test(t => t.getConstructSignatures().length > 0)) {
+                return TokenHype.class;
             }
             if (test(t => t.getCallSignatures().length > 0) && !test(t => t.getProperties().length > 0) || isExpressionInCallExpression(node)) {
-                return typeIdx === TokenType.property ? TokenType.member : TokenType.function;
+                return hypeIdx === TokenHype.property ? TokenHype.member : TokenHype.function;
             }
         }
     }
-    return typeIdx;
+    return hypeIdx;
 }
 
 function isLocalDeclaration(decl: Declaration, sourceFile: SourceFile): boolean {
@@ -292,24 +292,24 @@ function isRightSideOfQualifiedNameOrPropertyAccess(node: Node): boolean {
     return (isQualifiedName(node.parent) && node.parent.right === node) || (isPropertyAccessExpression(node.parent) && node.parent.name === node);
 }
 
-const tokenFromDeclarationMapping = new Map<SyntaxKind, TokenType>([
-    [SyntaxKind.VariableDeclaration, TokenType.variable],
-    [SyntaxKind.Parameter, TokenType.parameter],
-    [SyntaxKind.PropertyDeclaration, TokenType.property],
-    [SyntaxKind.ModuleDeclaration, TokenType.namespace],
-    [SyntaxKind.EnumDeclaration, TokenType.enum],
-    [SyntaxKind.EnumMember, TokenType.enumMember],
-    [SyntaxKind.ClassDeclaration, TokenType.class],
-    [SyntaxKind.MethodDeclaration, TokenType.member],
-    [SyntaxKind.FunctionDeclaration, TokenType.function],
-    [SyntaxKind.FunctionExpression, TokenType.function],
-    [SyntaxKind.MethodSignature, TokenType.member],
-    [SyntaxKind.GetAccessor, TokenType.property],
-    [SyntaxKind.SetAccessor, TokenType.property],
-    [SyntaxKind.PropertySignature, TokenType.property],
-    [SyntaxKind.InterfaceDeclaration, TokenType.interface],
-    [SyntaxKind.TypeAliasDeclaration, TokenType.type],
-    [SyntaxKind.TypeParameter, TokenType.typeParameter],
-    [SyntaxKind.PropertyAssignment, TokenType.property],
-    [SyntaxKind.ShorthandPropertyAssignment, TokenType.property],
+const tokenFromDeclarationMapping = new Map<SyntaxKind, TokenHype>([
+    [SyntaxKind.VariableDeclaration, TokenHype.variable],
+    [SyntaxKind.Parameter, TokenHype.parameter],
+    [SyntaxKind.PropertyDeclaration, TokenHype.property],
+    [SyntaxKind.ModuleDeclaration, TokenHype.namespace],
+    [SyntaxKind.EnumDeclaration, TokenHype.enum],
+    [SyntaxKind.EnumMember, TokenHype.enumMember],
+    [SyntaxKind.ClassDeclaration, TokenHype.class],
+    [SyntaxKind.MethodDeclaration, TokenHype.member],
+    [SyntaxKind.FunctionDeclaration, TokenHype.function],
+    [SyntaxKind.FunctionExpression, TokenHype.function],
+    [SyntaxKind.MethodSignature, TokenHype.member],
+    [SyntaxKind.GetAccessor, TokenHype.property],
+    [SyntaxKind.SetAccessor, TokenHype.property],
+    [SyntaxKind.PropertySignature, TokenHype.property],
+    [SyntaxKind.InterfaceDeclaration, TokenHype.interface],
+    [SyntaxKind.HypeAliasDeclaration, TokenHype.hype],
+    [SyntaxKind.HypeParameter, TokenHype.hypeParameter],
+    [SyntaxKind.PropertyAssignment, TokenHype.property],
+    [SyntaxKind.ShorthandPropertyAssignment, TokenHype.property],
 ]);

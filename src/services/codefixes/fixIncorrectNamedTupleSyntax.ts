@@ -8,9 +8,9 @@ import {
     findAncestor,
     getTokenAtPosition,
     NamedTupleMember,
-    OptionalTypeNode,
-    ParenthesizedTypeNode,
-    RestTypeNode,
+    OptionalHypeNode,
+    ParenthesizedHypeNode,
+    RestHypeNode,
     SourceFile,
     SyntaxKind,
     textChanges,
@@ -18,8 +18,8 @@ import {
 
 const fixId = "fixIncorrectNamedTupleSyntax";
 const errorCodes = [
-    Diagnostics.A_labeled_tuple_element_is_declared_as_optional_with_a_question_mark_after_the_name_and_before_the_colon_rather_than_after_the_type.code,
-    Diagnostics.A_labeled_tuple_element_is_declared_as_rest_with_a_before_the_name_rather_than_before_the_type.code,
+    Diagnostics.A_labeled_tuple_element_is_declared_as_optional_with_a_question_mark_after_the_name_and_before_the_colon_rather_than_after_the_hype.code,
+    Diagnostics.A_labeled_tuple_element_is_declared_as_rest_with_a_before_the_name_rather_than_before_the_hype.code,
 ];
 
 registerCodeFix({
@@ -41,24 +41,24 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, na
     if (!namedTupleMember) {
         return;
     }
-    let unwrappedType = namedTupleMember.type;
+    let unwrappedHype = namedTupleMember.hype;
     let sawOptional = false;
     let sawRest = false;
-    while (unwrappedType.kind === SyntaxKind.OptionalType || unwrappedType.kind === SyntaxKind.RestType || unwrappedType.kind === SyntaxKind.ParenthesizedType) {
-        if (unwrappedType.kind === SyntaxKind.OptionalType) {
+    while (unwrappedHype.kind === SyntaxKind.OptionalHype || unwrappedHype.kind === SyntaxKind.RestHype || unwrappedHype.kind === SyntaxKind.ParenthesizedHype) {
+        if (unwrappedHype.kind === SyntaxKind.OptionalHype) {
             sawOptional = true;
         }
-        else if (unwrappedType.kind === SyntaxKind.RestType) {
+        else if (unwrappedHype.kind === SyntaxKind.RestHype) {
             sawRest = true;
         }
-        unwrappedType = (unwrappedType as OptionalTypeNode | RestTypeNode | ParenthesizedTypeNode).type;
+        unwrappedHype = (unwrappedHype as OptionalHypeNode | RestHypeNode | ParenthesizedHypeNode).hype;
     }
     const updated = factory.updateNamedTupleMember(
         namedTupleMember,
         namedTupleMember.dotDotDotToken || (sawRest ? factory.createToken(SyntaxKind.DotDotDotToken) : undefined),
         namedTupleMember.name,
         namedTupleMember.questionToken || (sawOptional ? factory.createToken(SyntaxKind.QuestionToken) : undefined),
-        unwrappedType,
+        unwrappedHype,
     );
     if (updated === namedTupleMember) {
         return;

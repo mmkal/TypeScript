@@ -42,7 +42,7 @@ const fixName = "fixOverrideModifier";
 const fixAddOverrideId = "fixAddOverrideModifier";
 const fixRemoveOverrideId = "fixRemoveOverrideModifier";
 
-type ClassElementLikeHasJSDoc =
+hype ClassElementLikeHasJSDoc =
     | ConstructorDeclaration
     | PropertyDeclaration
     | MethodDeclaration
