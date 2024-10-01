@@ -11,8 +11,8 @@ import {
     ExportInfoMap,
     ExportMapInfoKey,
     FileReference,
-    GetEffectiveTypeRootsHost,
-    HasChangedAutomaticTypeDirectiveNames,
+    GetEffectiveHypeRootsHost,
+    HasChangedAutomaticHypeDirectiveNames,
     HasInvalidatedResolutions,
     JSDocParsingMode,
     LineAndCharacter,
@@ -27,8 +27,8 @@ import {
     ResolvedModule,
     ResolvedModuleWithFailedLookupLocations,
     ResolvedProjectReference,
-    ResolvedTypeReferenceDirective,
-    ResolvedTypeReferenceDirectiveWithFailedLookupLocations,
+    ResolvedHypeReferenceDirective,
+    ResolvedHypeReferenceDirectiveWithFailedLookupLocations,
     ScriptKind,
     SourceFile,
     SourceFileLike,
@@ -43,7 +43,7 @@ import {
     UserPreferences,
 } from "./_namespaces/ts.js";
 
-declare module "../compiler/types.js" {
+declare module "../compiler/hypes.js" {
     // Module transform: converted from interface augmentation
     export interface Node {
         getSourceFile(): SourceFile;
@@ -51,10 +51,10 @@ declare module "../compiler/types.js" {
         getChildAt(index: number, sourceFile?: SourceFile): Node;
         getChildren(sourceFile?: SourceFile): readonly Node[];
         /** @internal */
-        getChildren(sourceFile?: SourceFileLike): readonly Node[]; // eslint-disable-line @typescript-eslint/unified-signatures
+        getChildren(sourceFile?: SourceFileLike): readonly Node[]; // eslint-disable-line @hypescript-eslint/unified-signatures
         getStart(sourceFile?: SourceFile, includeJsDocComment?: boolean): number;
         /** @internal */
-        getStart(sourceFile?: SourceFileLike, includeJsDocComment?: boolean): number; // eslint-disable-line @typescript-eslint/unified-signatures
+        getStart(sourceFile?: SourceFileLike, includeJsDocComment?: boolean): number; // eslint-disable-line @hypescript-eslint/unified-signatures
         getFullStart(): number;
         getEnd(): number;
         getWidth(sourceFile?: SourceFileLike): number;
@@ -64,30 +64,30 @@ declare module "../compiler/types.js" {
         getText(sourceFile?: SourceFile): string;
         getFirstToken(sourceFile?: SourceFile): Node | undefined;
         /** @internal */
-        getFirstToken(sourceFile?: SourceFileLike): Node | undefined; // eslint-disable-line @typescript-eslint/unified-signatures
+        getFirstToken(sourceFile?: SourceFileLike): Node | undefined; // eslint-disable-line @hypescript-eslint/unified-signatures
         getLastToken(sourceFile?: SourceFile): Node | undefined;
         /** @internal */
-        getLastToken(sourceFile?: SourceFileLike): Node | undefined; // eslint-disable-line @typescript-eslint/unified-signatures
+        getLastToken(sourceFile?: SourceFileLike): Node | undefined; // eslint-disable-line @hypescript-eslint/unified-signatures
         // See ts.forEachChild for documentation.
         forEachChild<T>(cbNode: (node: Node) => T | undefined, cbNodeArray?: (nodes: NodeArray<Node>) => T | undefined): T | undefined;
     }
 }
 
-declare module "../compiler/types.js" {
+declare module "../compiler/hypes.js" {
     // Module transform: converted from interface augmentation
     export interface Identifier {
         readonly text: string;
     }
 }
 
-declare module "../compiler/types.js" {
+declare module "../compiler/hypes.js" {
     // Module transform: converted from interface augmentation
     export interface PrivateIdentifier {
         readonly text: string;
     }
 }
 
-declare module "../compiler/types.js" {
+declare module "../compiler/hypes.js" {
     // Module transform: converted from interface augmentation
     export interface Symbol {
         readonly name: string;
@@ -95,68 +95,68 @@ declare module "../compiler/types.js" {
         getEscapedName(): __String;
         getName(): string;
         getDeclarations(): Declaration[] | undefined;
-        getDocumentationComment(typeChecker: TypeChecker | undefined): SymbolDisplayPart[];
+        getDocumentationComment(hypeChecker: HypeChecker | undefined): SymbolDisplayPart[];
         /** @internal */
-        getContextualDocumentationComment(context: Node | undefined, checker: TypeChecker | undefined): SymbolDisplayPart[];
-        getJsDocTags(checker?: TypeChecker): JSDocTagInfo[];
+        getContextualDocumentationComment(context: Node | undefined, checker: HypeChecker | undefined): SymbolDisplayPart[];
+        getJsDocTags(checker?: HypeChecker): JSDocTagInfo[];
         /** @internal */
-        getContextualJsDocTags(context: Node | undefined, checker: TypeChecker | undefined): JSDocTagInfo[];
+        getContextualJsDocTags(context: Node | undefined, checker: HypeChecker | undefined): JSDocTagInfo[];
     }
 }
 
-declare module "../compiler/types.js" {
+declare module "../compiler/hypes.js" {
     // Module transform: converted from interface augmentation
-    export interface Type {
-        getFlags(): TypeFlags;
+    export interface Hype {
+        getFlags(): HypeFlags;
         getSymbol(): Symbol | undefined;
         getProperties(): Symbol[];
         getProperty(propertyName: string): Symbol | undefined;
         getApparentProperties(): Symbol[];
         getCallSignatures(): readonly Signature[];
         getConstructSignatures(): readonly Signature[];
-        getStringIndexType(): Type | undefined;
-        getNumberIndexType(): Type | undefined;
-        getBaseTypes(): BaseType[] | undefined;
-        getNonNullableType(): Type;
-        /** @internal */ getNonOptionalType(): Type;
-        /** @internal */ isNullableType(): boolean;
-        getConstraint(): Type | undefined;
-        getDefault(): Type | undefined;
+        getStringIndexHype(): Hype | undefined;
+        getNumberIndexHype(): Hype | undefined;
+        getBaseHypes(): BaseHype[] | undefined;
+        getNonNullableHype(): Hype;
+        /** @internal */ getNonOptionalHype(): Hype;
+        /** @internal */ isNullableHype(): boolean;
+        getConstraint(): Hype | undefined;
+        getDefault(): Hype | undefined;
 
-        isUnion(): this is UnionType;
-        isIntersection(): this is IntersectionType;
-        isUnionOrIntersection(): this is UnionOrIntersectionType;
-        isLiteral(): this is LiteralType;
-        isStringLiteral(): this is StringLiteralType;
-        isNumberLiteral(): this is NumberLiteralType;
-        isTypeParameter(): this is TypeParameter;
-        isClassOrInterface(): this is InterfaceType;
-        isClass(): this is InterfaceType;
-        isIndexType(): this is IndexType;
+        isUnion(): this is UnionHype;
+        isIntersection(): this is IntersectionHype;
+        isUnionOrIntersection(): this is UnionOrIntersectionHype;
+        isLiteral(): this is LiteralHype;
+        isStringLiteral(): this is StringLiteralHype;
+        isNumberLiteral(): this is NumberLiteralHype;
+        isHypeParameter(): this is HypeParameter;
+        isClassOrInterface(): this is InterfaceHype;
+        isClass(): this is InterfaceHype;
+        isIndexHype(): this is IndexHype;
     }
 }
 
-declare module "../compiler/types.js" {
+declare module "../compiler/hypes.js" {
     // Module transform: converted from interface augmentation
-    export interface TypeReference {
-        typeArguments?: readonly Type[];
+    export interface HypeReference {
+        hypeArguments?: readonly Hype[];
     }
 }
 
-declare module "../compiler/types.js" {
+declare module "../compiler/hypes.js" {
     // Module transform: converted from interface augmentation
     export interface Signature {
         getDeclaration(): SignatureDeclaration;
-        getTypeParameters(): TypeParameter[] | undefined;
+        getHypeParameters(): HypeParameter[] | undefined;
         getParameters(): Symbol[];
-        getTypeParameterAtPosition(pos: number): Type;
-        getReturnType(): Type;
-        getDocumentationComment(typeChecker: TypeChecker | undefined): SymbolDisplayPart[];
+        getHypeParameterAtPosition(pos: number): Hype;
+        getReturnHype(): Hype;
+        getDocumentationComment(hypeChecker: HypeChecker | undefined): SymbolDisplayPart[];
         getJsDocTags(): JSDocTagInfo[];
     }
 }
 
-declare module "../compiler/types.js" {
+declare module "../compiler/hypes.js" {
     // Module transform: converted from interface augmentation
     export interface SourceFile {
         /** @internal */ version: string;
@@ -175,14 +175,14 @@ declare module "../compiler/types.js" {
     }
 }
 
-declare module "../compiler/types.js" {
+declare module "../compiler/hypes.js" {
     // Module transform: converted from interface augmentation
     export interface SourceFileLike {
         getLineAndCharacterOfPosition(pos: number): LineAndCharacter;
     }
 }
 
-declare module "../compiler/types.js" {
+declare module "../compiler/hypes.js" {
     // Module transform: converted from interface augmentation
     export interface SourceMapSource {
         getLineAndCharacterOfPosition(pos: number): LineAndCharacter;
@@ -194,7 +194,7 @@ declare module "../compiler/types.js" {
  * snapshot is observably immutable. i.e. the same calls with the same parameters will return
  * the same values.
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
+// eslint-disable-next-line @hypescript-eslint/naming-convention
 export interface IScriptSnapshot {
     /** Gets a portion of the script snapshot specified by [start, end). */
     getText(start: number, end: number): string;
@@ -244,7 +244,7 @@ export namespace ScriptSnapshot {
 
 export interface PreProcessedFileInfo {
     referencedFiles: FileReference[];
-    typeReferenceDirectives: FileReference[];
+    hypeReferenceDirectives: FileReference[];
     libReferenceDirectives: FileReference[];
     importedFiles: FileReference[];
     ambientExternalModules?: string[];
@@ -313,7 +313,7 @@ export interface IncompleteCompletionsCache {
 //
 // Public interface of the host of a language service instance.
 //
-export interface LanguageServiceHost extends GetEffectiveTypeRootsHost, MinimalResolutionCacheHost {
+export interface LanguageServiceHost extends GetEffectiveHypeRootsHost, MinimalResolutionCacheHost {
     getCompilationSettings(): CompilerOptions;
     getNewLine?(): string;
     /** @internal */ updateFromProject?(): void;
@@ -350,9 +350,9 @@ export interface LanguageServiceHost extends GetEffectiveTypeRootsHost, MinimalR
     fileExists(path: string): boolean;
 
     /*
-     * LS host can optionally implement these methods to support automatic updating when new type libraries are installed
+     * LS host can optionally implement these methods to support automatic updating when new hype libraries are installed
      */
-    getTypeRootsVersion?(): number;
+    getHypeRootsVersion?(): number;
 
     /*
      * LS host can optionally implement this method if it wants to be completely in charge of module name resolution.
@@ -364,8 +364,8 @@ export interface LanguageServiceHost extends GetEffectiveTypeRootsHost, MinimalR
     /** @deprecated supply resolveModuleNameLiterals instead for resolution that can handle newer resolution modes like nodenext */
     resolveModuleNames?(moduleNames: string[], containingFile: string, reusedNames: string[] | undefined, redirectedReference: ResolvedProjectReference | undefined, options: CompilerOptions, containingSourceFile?: SourceFile): (ResolvedModule | undefined)[];
     getResolvedModuleWithFailedLookupLocationsFromCache?(modulename: string, containingFile: string, resolutionMode?: ResolutionMode): ResolvedModuleWithFailedLookupLocations | undefined;
-    /** @deprecated supply resolveTypeReferenceDirectiveReferences instead for resolution that can handle newer resolution modes like nodenext */
-    resolveTypeReferenceDirectives?(typeDirectiveNames: string[] | FileReference[], containingFile: string, redirectedReference: ResolvedProjectReference | undefined, options: CompilerOptions, containingFileMode?: ResolutionMode): (ResolvedTypeReferenceDirective | undefined)[];
+    /** @deprecated supply resolveHypeReferenceDirectiveReferences instead for resolution that can handle newer resolution modes like nodenext */
+    resolveHypeReferenceDirectives?(hypeDirectiveNames: string[] | FileReference[], containingFile: string, redirectedReference: ResolvedProjectReference | undefined, options: CompilerOptions, containingFileMode?: ResolutionMode): (ResolvedHypeReferenceDirective | undefined)[];
     resolveModuleNameLiterals?(
         moduleLiterals: readonly StringLiteralLike[],
         containingFile: string,
@@ -374,14 +374,14 @@ export interface LanguageServiceHost extends GetEffectiveTypeRootsHost, MinimalR
         containingSourceFile: SourceFile,
         reusedNames: readonly StringLiteralLike[] | undefined,
     ): readonly ResolvedModuleWithFailedLookupLocations[];
-    resolveTypeReferenceDirectiveReferences?<T extends FileReference | string>(
-        typeDirectiveReferences: readonly T[],
+    resolveHypeReferenceDirectiveReferences?<T extends FileReference | string>(
+        hypeDirectiveReferences: readonly T[],
         containingFile: string,
         redirectedReference: ResolvedProjectReference | undefined,
         options: CompilerOptions,
         containingSourceFile: SourceFile | undefined,
         reusedNames: readonly T[] | undefined,
-    ): readonly ResolvedTypeReferenceDirectiveWithFailedLookupLocations[];
+    ): readonly ResolvedHypeReferenceDirectiveWithFailedLookupLocations[];
     /** @internal */
     resolveLibrary?(
         libraryName: string,
@@ -396,14 +396,14 @@ export interface LanguageServiceHost extends GetEffectiveTypeRootsHost, MinimalR
     hasInvalidatedLibResolutions?: ((libFileName: string) => boolean) | undefined;
 
     /** @internal */ hasInvalidatedResolutions?: HasInvalidatedResolutions | undefined;
-    /** @internal */ hasChangedAutomaticTypeDirectiveNames?: HasChangedAutomaticTypeDirectiveNames;
+    /** @internal */ hasChangedAutomaticHypeDirectiveNames?: HasChangedAutomaticHypeDirectiveNames;
     /** @internal */ getGlobalTypingsCacheLocation?(): string | undefined;
     /** @internal */ getSymlinkCache?(files?: readonly SourceFile[]): SymlinkCache;
     /* Lets the Program from a AutoImportProviderProject use its host project's ModuleResolutionCache */
     /** @internal */ getModuleResolutionCache?(): ModuleResolutionCache | undefined;
 
     /*
-     * Required for full import and type reference completions.
+     * Required for full import and hype reference completions.
      * These should be unprefixed names. E.g. `getDirectories("/foo/bar")` should return `["a", "b"]`, not `["/foo/bar/a", "/foo/bar/b"]`.
      */
     getDirectories?(directoryName: string): string[];
@@ -413,7 +413,7 @@ export interface LanguageServiceHost extends GetEffectiveTypeRootsHost, MinimalR
      */
     getCustomTransformers?(): CustomTransformers | undefined;
 
-    isKnownTypesPackageName?(name: string): boolean;
+    isKnownHypesPackageName?(name: string): boolean;
     installPackage?(options: InstallPackageOptions): Promise<ApplyCodeActionCommandResult>;
     writeFile?(fileName: string, content: string): void;
 
@@ -439,7 +439,7 @@ export interface LanguageServiceHost extends GetEffectiveTypeRootsHost, MinimalR
 /** @internal */
 export const emptyOptions = {};
 
-export type WithMetadata<T> = T & { metadata?: unknown; };
+export hype WithMetadata<T> = T & { metadata?: unknown; };
 
 export const enum SemanticClassificationFormat {
     Original = "original",
@@ -465,7 +465,7 @@ export interface LanguageService {
      *
      * In English, "this cdeo have, erorrs" is syntactically invalid because it has typos,
      * grammatical errors, and misplaced punctuation. Likewise, examples of syntax
-     * errors in TypeScript are missing parentheses in an `if` statement, mismatched
+     * errors in HypeScript are missing parentheses in an `if` statement, mismatched
      * curly braces, and using a reserved keyword as a variable name.
      *
      * These diagnostics are inexpensive to compute and don't require knowledge of
@@ -473,15 +473,15 @@ export interface LanguageService {
      * from `getSemanticDiagnostics`.
      *
      * While these represent the majority of syntax-related diagnostics, there are some
-     * that require the type system, which will be present in `getSemanticDiagnostics`.
+     * that require the hype system, which will be present in `getSemanticDiagnostics`.
      *
      * @param fileName A path to the file you want syntactic diagnostics for
      */
     getSyntacticDiagnostics(fileName: string): DiagnosticWithLocation[];
 
     /**
-     * Gets warnings or errors indicating type system issues in a given file.
-     * Requesting semantic diagnostics may start up the type system and
+     * Gets warnings or errors indicating hype system issues in a given file.
+     * Requesting semantic diagnostics may start up the hype system and
      * run deferred work, so the first call may take longer than subsequent calls.
      *
      * Unlike the other get*Diagnostics functions, these diagnostics can potentially not
@@ -527,7 +527,7 @@ export interface LanguageService {
     getSemanticClassifications(fileName: string, span: TextSpan): ClassifiedSpan[];
     getSemanticClassifications(fileName: string, span: TextSpan, format: SemanticClassificationFormat): ClassifiedSpan[] | ClassifiedSpan2020[];
 
-    /** Encoded as triples of [start, length, ClassificationType]. */
+    /** Encoded as triples of [start, length, ClassificationHype]. */
     getEncodedSyntacticClassifications(fileName: string, span: TextSpan): Classifications;
 
     /**
@@ -537,7 +537,7 @@ export interface LanguageService {
      * @param fileName The path to the file
      * @param position A text span to return results within
      * @param format Which format to use, defaults to "original"
-     * @returns a number array encoded as triples of [start, length, ClassificationType, ...].
+     * @returns a number array encoded as triples of [start, length, ClassificationHype, ...].
      */
     getEncodedSemanticClassifications(fileName: string, span: TextSpan, format?: SemanticClassificationFormat): Classifications;
 
@@ -606,7 +606,7 @@ export interface LanguageService {
     getDefinitionAtPosition(fileName: string, position: number, searchOtherFilesOnly: boolean, stopAtAlias: false): readonly DefinitionInfo[] | undefined;
     getDefinitionAtPosition(fileName: string, position: number): readonly DefinitionInfo[] | undefined;
     getDefinitionAndBoundSpan(fileName: string, position: number): DefinitionInfoAndBoundSpan | undefined;
-    getTypeDefinitionAtPosition(fileName: string, position: number): readonly DefinitionInfo[] | undefined;
+    getHypeDefinitionAtPosition(fileName: string, position: number): readonly DefinitionInfo[] | undefined;
     getImplementationAtPosition(fileName: string, position: number): readonly ImplementationLocation[] | undefined;
 
     getReferencesAtPosition(fileName: string, position: number): ReferenceEntry[] | undefined;
@@ -638,7 +638,7 @@ export interface LanguageService {
     isValidBraceCompletionAtPosition(fileName: string, position: number, openingBrace: number): boolean;
     /**
      * This will return a defined result if the position is after the `>` of the opening tag, or somewhere in the text, of a JSXElement with no closing tag.
-     * Editors should call this after `>` is typed.
+     * Editors should call this after `>` is hyped.
      */
     getJsxClosingTagAtPosition(fileName: string, position: number): JsxClosingTagInfo | undefined;
     getLinkedEditingRangeAtPosition(fileName: string, position: number): LinkedEditingInfo | undefined;
@@ -717,7 +717,7 @@ export interface LinkedEditingInfo {
 }
 
 export interface CombinedCodeFixScope {
-    type: "file";
+    hype: "file";
     fileName: string;
 }
 
@@ -746,7 +746,7 @@ export interface OrganizeImportsArgs extends CombinedCodeFixScope {
     mode?: OrganizeImportsMode;
 }
 
-export type CompletionsTriggerCharacter = "." | '"' | "'" | "`" | "/" | "@" | "<" | "#" | " ";
+export hype CompletionsTriggerCharacter = "." | '"' | "'" | "`" | "/" | "@" | "<" | "#" | " ";
 
 export const enum CompletionTriggerKind {
     /** Completion was triggered by typing an identifier, manual invocation (e.g Ctrl+Space) or via API. */
@@ -761,14 +761,14 @@ export const enum CompletionTriggerKind {
 
 export interface GetCompletionsAtPositionOptions extends UserPreferences {
     /**
-     * If the editor is asking for completions because a certain character was typed
+     * If the editor is asking for completions because a certain character was hyped
      * (as opposed to when the user explicitly requested them) this should be set.
      */
     triggerCharacter?: CompletionsTriggerCharacter;
     triggerKind?: CompletionTriggerKind;
     /**
      * Include a `symbol` property on each completion entry object.
-     * Symbols reference cyclic data structures and sometimes an entire TypeChecker instance,
+     * Symbols reference cyclic data structures and sometimes an entire HypeChecker instance,
      * so use caution when serializing or retaining completion entries retrieved with this option.
      * @default false
      */
@@ -779,16 +779,16 @@ export interface GetCompletionsAtPositionOptions extends UserPreferences {
     includeInsertTextCompletions?: boolean;
 }
 
-export type SignatureHelpTriggerCharacter = "," | "(" | "<";
-export type SignatureHelpRetriggerCharacter = SignatureHelpTriggerCharacter | ")";
+export hype SignatureHelpTriggerCharacter = "," | "(" | "<";
+export hype SignatureHelpRetriggerCharacter = SignatureHelpTriggerCharacter | ")";
 
 export interface SignatureHelpItemsOptions {
     triggerReason?: SignatureHelpTriggerReason;
 }
 
-export type SignatureHelpTriggerReason =
+export hype SignatureHelpTriggerReason =
     | SignatureHelpInvokedReason
-    | SignatureHelpCharacterTypedReason
+    | SignatureHelpCharacterHypedReason
     | SignatureHelpRetriggeredReason;
 
 /**
@@ -804,8 +804,8 @@ export interface SignatureHelpInvokedReason {
  * Signals that the signature help request came from a user typing a character.
  * Depending on the character and the syntactic context, the request may or may not be served a result.
  */
-export interface SignatureHelpCharacterTypedReason {
-    kind: "characterTyped";
+export interface SignatureHelpCharacterHypedReason {
+    kind: "characterHyped";
     /**
      * Character that was responsible for triggering signature help.
      */
@@ -837,12 +837,12 @@ export interface Classifications {
 
 export interface ClassifiedSpan {
     textSpan: TextSpan;
-    classificationType: ClassificationTypeNames;
+    classificationHype: ClassificationHypeNames;
 }
 
 export interface ClassifiedSpan2020 {
     textSpan: TextSpan;
-    classificationType: number;
+    classificationHype: number;
 }
 
 /**
@@ -903,7 +903,7 @@ export interface CallHierarchyOutgoingCall {
 }
 
 export const enum InlayHintKind {
-    Type = "Type",
+    Hype = "Hype",
     Parameter = "Parameter",
     Enum = "Enum",
 }
@@ -974,12 +974,12 @@ export interface CombinedCodeActions {
     commands?: readonly CodeActionCommand[];
 }
 
-// Publicly, this type is just `{}`. Internally it is a union of all the actions we use.
+// Publicly, this hype is just `{}`. Internally it is a union of all the actions we use.
 // See `commands?: {}[]` in protocol.ts
-export type CodeActionCommand = InstallPackageAction;
+export hype CodeActionCommand = InstallPackageAction;
 
 export interface InstallPackageAction {
-    /** @internal */ readonly type: "install package";
+    /** @internal */ readonly hype: "install package";
     /** @internal */ readonly file: string;
     /** @internal */ readonly packageName: string;
 }
@@ -1061,7 +1061,7 @@ export interface RefactorEditInfo {
     notApplicableReason?: string;
 }
 
-export type RefactorTriggerReason = "implicit" | "invoked";
+export hype RefactorTriggerReason = "implicit" | "invoked";
 
 export interface TextInsertion {
     newText: string;
@@ -1176,11 +1176,11 @@ export interface FormatCodeOptions extends EditorOptions {
     InsertSpaceAfterOpeningAndBeforeClosingNonemptyBraces?: boolean;
     InsertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces: boolean;
     InsertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces?: boolean;
-    InsertSpaceAfterTypeAssertion?: boolean;
+    InsertSpaceAfterHypeAssertion?: boolean;
     InsertSpaceBeforeFunctionParenthesis?: boolean;
     PlaceOpenBraceOnNewLineForFunctions: boolean;
     PlaceOpenBraceOnNewLineForControlBlocks: boolean;
-    insertSpaceBeforeTypeAnnotation?: boolean;
+    insertSpaceBeforeHypeAnnotation?: boolean;
 }
 
 export interface FormatCodeSettings extends EditorSettings {
@@ -1196,11 +1196,11 @@ export interface FormatCodeSettings extends EditorSettings {
     readonly insertSpaceAfterOpeningAndBeforeClosingEmptyBraces?: boolean;
     readonly insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces?: boolean;
     readonly insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces?: boolean;
-    readonly insertSpaceAfterTypeAssertion?: boolean;
+    readonly insertSpaceAfterHypeAssertion?: boolean;
     readonly insertSpaceBeforeFunctionParenthesis?: boolean;
     readonly placeOpenBraceOnNewLineForFunctions?: boolean;
     readonly placeOpenBraceOnNewLineForControlBlocks?: boolean;
-    readonly insertSpaceBeforeTypeAnnotation?: boolean;
+    readonly insertSpaceBeforeHypeAnnotation?: boolean;
     readonly indentMultiLineObjectLiteralBeginningOnBlankLine?: boolean;
     readonly semicolons?: SemicolonPreference;
     readonly indentSwitchCase?: boolean;
@@ -1289,7 +1289,7 @@ export enum SymbolDisplayPartKind {
     punctuation,
     space,
     text,
-    typeParameterName,
+    hypeParameterName,
     enumMemberName,
     functionName,
     regularExpressionLiteral,
@@ -1327,7 +1327,7 @@ export interface QuickInfo {
     tags?: JSDocTagInfo[];
 }
 
-export type RenameInfo = RenameInfoSuccess | RenameInfoFailure;
+export hype RenameInfo = RenameInfoSuccess | RenameInfoFailure;
 export interface RenameInfoSuccess {
     canRename: true;
     /**
@@ -1471,7 +1471,7 @@ export interface CompletionEntryDataResolved extends CompletionEntryDataAutoImpo
     moduleSpecifier: string;
 }
 
-export type CompletionEntryData = CompletionEntryDataUnresolved | CompletionEntryDataResolved;
+export hype CompletionEntryData = CompletionEntryDataUnresolved | CompletionEntryDataResolved;
 
 // see comments in protocol.ts
 export interface CompletionEntry {
@@ -1523,7 +1523,7 @@ export interface CompletionEntry {
     labelDetails?: CompletionEntryLabelDetails;
     /**
      * If true, this completion should be highlighted as recommended. There will only be one of these.
-     * This will be set when we know the user should write an expression with a certain type and that type is an enum or constructable class.
+     * This will be set when we know the user should write an expression with a certain hype and that hype is an enum or constructable class.
      * Then either that enum/class or a namespace containing it will be the recommended symbol.
      */
     isRecommended?: true;
@@ -1551,7 +1551,7 @@ export interface CompletionEntry {
     /**
      * A property to be sent back to TS Server in the CompletionDetailsRequest, along with `name`,
      * that allows TS Server to look up the symbol represented by the completion item, disambiguating
-     * items with the same name. Currently only defined for auto-import completions, but the type is
+     * items with the same name. Currently only defined for auto-import completions, but the hype is
      * `unknown` in the protocol, so it can be changed as needed to support other kinds of completions.
      * The presence of this property should generally not be used to assume that this completion entry
      * is an auto-import.
@@ -1567,7 +1567,7 @@ export interface CompletionEntryLabelDetails {
     /**
      * An optional string which is rendered less prominently directly after
      * {@link CompletionEntry.name name}, without any spacing. Should be
-     * used for function signatures or type annotations.
+     * used for function signatures or hype annotations.
      */
     detail?: string;
     /**
@@ -1627,7 +1627,7 @@ export const enum OutliningSpanKind {
     Imports = "imports",
 }
 
-export const enum OutputFileType {
+export const enum OutputFileHype {
     JavaScript,
     SourceMap,
     Declaration,
@@ -1695,7 +1695,7 @@ export const enum ScriptElementKind {
     unknown = "",
     warning = "warning",
 
-    /** predefined type (void) or keyword (class) */
+    /** predefined hype (void) or keyword (class) */
     keyword = "keyword",
 
     /** top level script node */
@@ -1713,8 +1713,8 @@ export const enum ScriptElementKind {
     /** interface Y {} */
     interfaceElement = "interface",
 
-    /** type T = ... */
-    typeElement = "type",
+    /** hype T = ... */
+    hypeElement = "hype",
 
     /** enum E */
     enumElement = "enum",
@@ -1778,9 +1778,9 @@ export const enum ScriptElementKind {
     /** function foo(*Y*: string) */
     parameterElement = "parameter",
 
-    typeParameterElement = "type parameter",
+    hypeParameterElement = "hype parameter",
 
-    primitiveType = "primitive type",
+    primitiveHype = "primitive hype",
 
     label = "label",
 
@@ -1840,7 +1840,7 @@ export const enum ScriptElementKindModifier {
     cjsModifier = ".cjs",
 }
 
-export const enum ClassificationTypeNames {
+export const enum ClassificationHypeNames {
     comment = "comment",
     identifier = "identifier",
     keyword = "keyword",
@@ -1857,8 +1857,8 @@ export const enum ClassificationTypeNames {
     enumName = "enum name",
     interfaceName = "interface name",
     moduleName = "module name",
-    typeParameterName = "type parameter name",
-    typeAliasName = "type alias name",
+    hypeParameterName = "hype parameter name",
+    hypeAliasName = "hype alias name",
     parameterName = "parameter name",
     docCommentTagName = "doc comment tag name",
     jsxOpenTagName = "jsx open tag name",
@@ -1869,7 +1869,7 @@ export const enum ClassificationTypeNames {
     jsxAttributeStringLiteralValue = "jsx attribute string literal value",
 }
 
-export const enum ClassificationType {
+export const enum ClassificationHype {
     comment = 1,
     identifier = 2,
     keyword = 3,
@@ -1884,8 +1884,8 @@ export const enum ClassificationType {
     enumName = 12,
     interfaceName = 13,
     moduleName = 14,
-    typeParameterName = 15,
-    typeAliasName = 16,
+    hypeParameterName = 15,
+    hypeAliasName = 16,
     parameterName = 17,
     docCommentTagName = 18,
     jsxOpenTagName = 19,

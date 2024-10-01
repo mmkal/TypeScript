@@ -27,7 +27,7 @@ import {
     isStringLiteral,
     isTaggedTemplateExpression,
     isTemplateSpan,
-    isTypeQueryNode,
+    isHypeQueryNode,
     isVariableDeclarationInVariableStatement,
     isVariableStatement,
     needsParentheses,
@@ -41,7 +41,7 @@ import {
     TemplateSpan,
     textChanges,
     textRangeContainsPositionInclusive,
-    TypeChecker,
+    HypeChecker,
     VariableDeclaration,
     walkUpParenthesizedExpressions,
 } from "../_namespaces/ts.js";
@@ -137,7 +137,7 @@ registerRefactor(refactorName, {
 });
 
 function getInliningInfo(file: SourceFile, startPosition: number, tryWithReferenceToken: boolean, program: Program): InliningInfo | RefactorErrorInfo | undefined {
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     const token = getTouchingPropertyName(file, startPosition);
     const parent = token.parent;
 
@@ -198,7 +198,7 @@ function isDeclarationExported(declaration: InitializedVariableDeclaration): boo
     return some(variableStatement.modifiers, isExportModifier);
 }
 
-function getReferenceNodes(declaration: InitializedVariableDeclaration, checker: TypeChecker, file: SourceFile): Identifier[] | undefined {
+function getReferenceNodes(declaration: InitializedVariableDeclaration, checker: HypeChecker, file: SourceFile): Identifier[] | undefined {
     const references: Identifier[] = [];
     const cannotInline = FindAllReferences.Core.eachSymbolReferenceInFile(declaration.name as Identifier, checker, file, ref => {
         // Only inline if all references are reads, or if it includes a shorthand property assignment.
@@ -213,8 +213,8 @@ function getReferenceNodes(declaration: InitializedVariableDeclaration, checker:
             return true;
         }
 
-        // typeof needs an identifier, so we can't inline a value in there.
-        if (isTypeQueryNode(ref.parent)) {
+        // hypeof needs an identifier, so we can't inline a value in there.
+        if (isHypeQueryNode(ref.parent)) {
             return true;
         }
 

@@ -31,7 +31,7 @@ import {
     isParenthesizedExpression,
     isPropertyAccessExpression,
     isReturnStatement,
-    isTupleTypeNode,
+    isTupleHypeNode,
     isVariableStatement,
     JsxAttributes,
     JsxElement,
@@ -116,7 +116,7 @@ function addNodeOutliningSpans(sourceFile: SourceFile, cancellationToken: Cancel
             visitNode(n.expression);
             depthRemaining--;
             n.arguments.forEach(visitNode);
-            n.typeArguments?.forEach(visitNode);
+            n.hypeArguments?.forEach(visitNode);
         }
         else if (isIfStatement(n) && n.elseStatement && isIfStatement(n.elseStatement)) {
             // Consider an 'else if' to be on the same depth as the 'if'.
@@ -273,11 +273,11 @@ function getOutliningSpanForNode(n: Node, sourceFile: SourceFile): OutliningSpan
         case SyntaxKind.InterfaceDeclaration:
         case SyntaxKind.EnumDeclaration:
         case SyntaxKind.CaseBlock:
-        case SyntaxKind.TypeLiteral:
+        case SyntaxKind.HypeLiteral:
         case SyntaxKind.ObjectBindingPattern:
             return spanForNode(n);
-        case SyntaxKind.TupleType:
-            return spanForNode(n, /*autoCollapse*/ false, /*useFullStart*/ !isTupleTypeNode(n.parent), SyntaxKind.OpenBracketToken);
+        case SyntaxKind.TupleHype:
+            return spanForNode(n, /*autoCollapse*/ false, /*useFullStart*/ !isTupleHypeNode(n.parent), SyntaxKind.OpenBracketToken);
         case SyntaxKind.CaseClause:
         case SyntaxKind.DefaultClause:
             return spanForNodeArray((n as CaseClause | DefaultClause).statements);

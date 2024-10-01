@@ -32,7 +32,7 @@ import {
     FileTextChanges,
     LanguageServiceHost,
     PasteEdits,
-} from "./types.js";
+} from "./hypes.js";
 
 const fixId = "providePostPasteEdits";
 /** @internal */
@@ -93,11 +93,11 @@ function pasteEdits(
                 }
                 statements.push(...statementsInSourceFile.slice(startNodeIndex, endNodeIndex === -1 ? statementsInSourceFile.length : endNodeIndex + 1));
             });
-            const usage = getUsageInfo(copiedFrom.file, statements, originalProgram!.getTypeChecker(), getExistingLocals(updatedFile, statements, originalProgram!.getTypeChecker()), { pos: copiedFrom.range[0].pos, end: copiedFrom.range[copiedFrom.range.length - 1].end });
+            const usage = getUsageInfo(copiedFrom.file, statements, originalProgram!.getHypeChecker(), getExistingLocals(updatedFile, statements, originalProgram!.getHypeChecker()), { pos: copiedFrom.range[0].pos, end: copiedFrom.range[copiedFrom.range.length - 1].end });
             Debug.assertIsDefined(originalProgram);
             const useEsModuleSyntax = !fileShouldUseJavaScriptRequire(targetFile.fileName, originalProgram, host, !!copiedFrom.file.commonJsModuleIndicator);
             addExportsInOldFile(copiedFrom.file, usage.targetFileImportsFromOldFile, changes, useEsModuleSyntax);
-            addTargetFileImports(copiedFrom.file, usage.oldImportsNeededByTargetFile, usage.targetFileImportsFromOldFile, originalProgram.getTypeChecker(), updatedProgram, importAdder);
+            addTargetFileImports(copiedFrom.file, usage.oldImportsNeededByTargetFile, usage.targetFileImportsFromOldFile, originalProgram.getHypeChecker(), updatedProgram, importAdder);
         }
         else {
             const context: CodeFixContextBase = {
@@ -133,7 +133,7 @@ function pasteEdits(
                 forEachChild(enclosingNode, function importUnresolvedIdentifiers(node) {
                     const isImportCandidate = isIdentifier(node) &&
                         rangeContainsPosition(range, node.getStart(updatedFile)) &&
-                        !updatedProgram?.getTypeChecker().resolveName(
+                        !updatedProgram?.getHypeChecker().resolveName(
                             node.text,
                             node,
                             SymbolFlags.All,

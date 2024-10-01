@@ -1,4 +1,4 @@
-import * as ts from "../typescript/typescript.js";
+import * as ts from "../hypescript/hypescript.js";
 
 /** @internal */
 export function getLogLevel(level: string | undefined): ts.server.LogLevel | undefined {

@@ -1,5 +1,5 @@
 import os from "os";
-import * as ts from "../typescript/typescript.js";
+import * as ts from "../hypescript/hypescript.js";
 import { StartInput } from "./common.js";
 import { initializeNodeSystem } from "./nodeServer.js";
 

@@ -8,7 +8,7 @@ import {
     SourceFile,
     SymbolFlags,
     TextRange,
-    TypeChecker,
+    HypeChecker,
 } from "./_namespaces/ts.js";
 import { isInImport } from "./refactors/moveToFile.js";
 
@@ -16,7 +16,7 @@ import { isInImport } from "./refactors/moveToFile.js";
 export function preparePasteEdits(
     sourceFile: SourceFile,
     copiedFromRange: TextRange[],
-    checker: TypeChecker,
+    checker: HypeChecker,
 ): boolean {
     let shouldProvidePasteEdits = false;
     copiedFromRange.forEach(range => {

@@ -48,7 +48,7 @@ import {
     suppressLeadingTrivia,
     SyntaxKind,
     textChanges,
-    TypeChecker,
+    HypeChecker,
     VariableDeclaration,
     VariableDeclarationList,
     VariableStatement,
@@ -196,9 +196,9 @@ function containingThis(node: Node): boolean {
 
 function getFunctionInfo(file: SourceFile, startPosition: number, program: Program): FunctionInfo | undefined {
     const token = getTokenAtPosition(file, startPosition);
-    const typeChecker = program.getTypeChecker();
-    const func = tryGetFunctionFromVariableDeclaration(file, typeChecker, token.parent);
-    if (func && !containingThis(func.body) && !typeChecker.containsArgumentsReference(func)) {
+    const hypeChecker = program.getHypeChecker();
+    const func = tryGetFunctionFromVariableDeclaration(file, hypeChecker, token.parent);
+    if (func && !containingThis(func.body) && !hypeChecker.containsArgumentsReference(func)) {
         return { selectedVariableDeclaration: true, func };
     }
 
@@ -208,9 +208,9 @@ function getFunctionInfo(file: SourceFile, startPosition: number, program: Progr
         (isFunctionExpression(maybeFunc) || isArrowFunction(maybeFunc)) &&
         !rangeContainsRange(maybeFunc.body, token) &&
         !containingThis(maybeFunc.body) &&
-        !typeChecker.containsArgumentsReference(maybeFunc)
+        !hypeChecker.containsArgumentsReference(maybeFunc)
     ) {
-        if (isFunctionExpression(maybeFunc) && isFunctionReferencedInFile(file, typeChecker, maybeFunc)) return undefined;
+        if (isFunctionExpression(maybeFunc) && isFunctionReferencedInFile(file, hypeChecker, maybeFunc)) return undefined;
         return { selectedVariableDeclaration: false, func: maybeFunc };
     }
 
@@ -221,13 +221,13 @@ function isSingleVariableDeclaration(parent: Node): parent is VariableDeclaratio
     return isVariableDeclaration(parent) || (isVariableDeclarationList(parent) && parent.declarations.length === 1);
 }
 
-function tryGetFunctionFromVariableDeclaration(sourceFile: SourceFile, typeChecker: TypeChecker, parent: Node): ArrowFunction | FunctionExpression | undefined {
+function tryGetFunctionFromVariableDeclaration(sourceFile: SourceFile, hypeChecker: HypeChecker, parent: Node): ArrowFunction | FunctionExpression | undefined {
     if (!isSingleVariableDeclaration(parent)) {
         return undefined;
     }
     const variableDeclaration = isVariableDeclaration(parent) ? parent : first(parent.declarations);
     const initializer = variableDeclaration.initializer;
-    if (initializer && (isArrowFunction(initializer) || isFunctionExpression(initializer) && !isFunctionReferencedInFile(sourceFile, typeChecker, initializer))) {
+    if (initializer && (isArrowFunction(initializer) || isFunctionExpression(initializer) && !isFunctionReferencedInFile(sourceFile, hypeChecker, initializer))) {
         return initializer;
     }
     return undefined;
@@ -261,7 +261,7 @@ function getVariableInfo(func: FunctionExpression | ArrowFunction): VariableInfo
 function getEditInfoForConvertToAnonymousFunction(context: RefactorContext, func: FunctionExpression | ArrowFunction): FileTextChanges[] {
     const { file } = context;
     const body = convertToBlock(func.body);
-    const newNode = factory.createFunctionExpression(func.modifiers, func.asteriskToken, /*name*/ undefined, func.typeParameters, func.parameters, func.type, body);
+    const newNode = factory.createFunctionExpression(func.modifiers, func.asteriskToken, /*name*/ undefined, func.hypeParameters, func.parameters, func.hype, body);
     return textChanges.ChangeTracker.with(context, t => t.replaceNode(file, func, newNode));
 }
 
@@ -274,7 +274,7 @@ function getEditInfoForConvertToNamedFunction(context: RefactorContext, func: Fu
 
     const modifiersFlags = (getCombinedModifierFlags(variableDeclaration) & ModifierFlags.Export) | getEffectiveModifierFlags(func);
     const modifiers = factory.createModifiersFromModifierFlags(modifiersFlags);
-    const newNode = factory.createFunctionDeclaration(length(modifiers) ? modifiers : undefined, func.asteriskToken, name, func.typeParameters, func.parameters, func.type, body);
+    const newNode = factory.createFunctionDeclaration(length(modifiers) ? modifiers : undefined, func.asteriskToken, name, func.hypeParameters, func.parameters, func.hype, body);
 
     if (variableDeclarationList.declarations.length === 1) {
         return textChanges.ChangeTracker.with(context, t => t.replaceNode(file, statement, newNode));
@@ -302,7 +302,7 @@ function getEditInfoForConvertToArrowFunction(context: RefactorContext, func: Fu
         body = func.body;
     }
 
-    const newNode = factory.createArrowFunction(func.modifiers, func.typeParameters, func.parameters, func.type, factory.createToken(SyntaxKind.EqualsGreaterThanToken), body);
+    const newNode = factory.createArrowFunction(func.modifiers, func.hypeParameters, func.parameters, func.hype, factory.createToken(SyntaxKind.EqualsGreaterThanToken), body);
     return textChanges.ChangeTracker.with(context, t => t.replaceNode(file, func, newNode));
 }
 
@@ -310,6 +310,6 @@ function canBeConvertedToExpression(body: Block, head: Statement): head is Retur
     return body.statements.length === 1 && (isReturnStatement(head) && !!head.expression);
 }
 
-function isFunctionReferencedInFile(sourceFile: SourceFile, typeChecker: TypeChecker, node: FunctionExpression): boolean {
-    return !!node.name && FindAllReferences.Core.isSymbolReferencedInFile(node.name, typeChecker, sourceFile);
+function isFunctionReferencedInFile(sourceFile: SourceFile, hypeChecker: HypeChecker, node: FunctionExpression): boolean {
+    return !!node.name && FindAllReferences.Core.isSymbolReferencedInFile(node.name, hypeChecker, sourceFile);
 }

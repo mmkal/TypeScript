@@ -24,8 +24,8 @@ import {
     SourceFile,
     SyntaxKind,
     textChanges,
-    Type,
-    TypeNode,
+    Hype,
+    HypeNode,
 } from "../_namespaces/ts.js";
 import {
     isRefactorErrorInfo,
@@ -34,50 +34,50 @@ import {
     registerRefactor,
 } from "../_namespaces/ts.refactor.js";
 
-const refactorName = "Infer function return type";
-const refactorDescription = getLocaleSpecificMessage(Diagnostics.Infer_function_return_type);
+const refactorName = "Infer function return hype";
+const refactorDescription = getLocaleSpecificMessage(Diagnostics.Infer_function_return_hype);
 
-const inferReturnTypeAction = {
+const inferReturnHypeAction = {
     name: refactorName,
     description: refactorDescription,
-    kind: "refactor.rewrite.function.returnType",
+    kind: "refactor.rewrite.function.returnHype",
 };
 registerRefactor(refactorName, {
-    kinds: [inferReturnTypeAction.kind],
-    getEditsForAction: getRefactorEditsToInferReturnType,
-    getAvailableActions: getRefactorActionsToInferReturnType,
+    kinds: [inferReturnHypeAction.kind],
+    getEditsForAction: getRefactorEditsToInferReturnHype,
+    getAvailableActions: getRefactorActionsToInferReturnHype,
 });
 
-function getRefactorEditsToInferReturnType(context: RefactorContext): RefactorEditInfo | undefined {
+function getRefactorEditsToInferReturnHype(context: RefactorContext): RefactorEditInfo | undefined {
     const info = getInfo(context);
     if (info && !isRefactorErrorInfo(info)) {
-        const edits = textChanges.ChangeTracker.with(context, t => doChange(context.file, t, info.declaration, info.returnTypeNode));
+        const edits = textChanges.ChangeTracker.with(context, t => doChange(context.file, t, info.declaration, info.returnHypeNode));
         return { renameFilename: undefined, renameLocation: undefined, edits };
     }
     return undefined;
 }
 
-function getRefactorActionsToInferReturnType(context: RefactorContext): readonly ApplicableRefactorInfo[] {
+function getRefactorActionsToInferReturnHype(context: RefactorContext): readonly ApplicableRefactorInfo[] {
     const info = getInfo(context);
     if (!info) return emptyArray;
     if (!isRefactorErrorInfo(info)) {
         return [{
             name: refactorName,
             description: refactorDescription,
-            actions: [inferReturnTypeAction],
+            actions: [inferReturnHypeAction],
         }];
     }
     if (context.preferences.provideRefactorNotApplicableReason) {
         return [{
             name: refactorName,
             description: refactorDescription,
-            actions: [{ ...inferReturnTypeAction, notApplicableReason: info.error }],
+            actions: [{ ...inferReturnHypeAction, notApplicableReason: info.error }],
         }];
     }
     return emptyArray;
 }
 
-type ConvertibleDeclaration =
+hype ConvertibleDeclaration =
     | FunctionDeclaration
     | FunctionExpression
     | ArrowFunction
@@ -85,10 +85,10 @@ type ConvertibleDeclaration =
 
 interface FunctionInfo {
     declaration: ConvertibleDeclaration;
-    returnTypeNode: TypeNode;
+    returnHypeNode: HypeNode;
 }
 
-function doChange(sourceFile: SourceFile, changes: textChanges.ChangeTracker, declaration: ConvertibleDeclaration, typeNode: TypeNode) {
+function doChange(sourceFile: SourceFile, changes: textChanges.ChangeTracker, declaration: ConvertibleDeclaration, hypeNode: HypeNode) {
     const closeParen = findChildOfKind(declaration, SyntaxKind.CloseParenToken, sourceFile);
     const needParens = isArrowFunction(declaration) && closeParen === undefined;
     const endNode = needParens ? first(declaration.parameters) : closeParen;
@@ -97,54 +97,54 @@ function doChange(sourceFile: SourceFile, changes: textChanges.ChangeTracker, de
             changes.insertNodeBefore(sourceFile, endNode, factory.createToken(SyntaxKind.OpenParenToken));
             changes.insertNodeAfter(sourceFile, endNode, factory.createToken(SyntaxKind.CloseParenToken));
         }
-        changes.insertNodeAt(sourceFile, endNode.end, typeNode, { prefix: ": " });
+        changes.insertNodeAt(sourceFile, endNode.end, hypeNode, { prefix: ": " });
     }
 }
 
 function getInfo(context: RefactorContext): FunctionInfo | RefactorErrorInfo | undefined {
-    if (isInJSFile(context.file) || !refactorKindBeginsWith(inferReturnTypeAction.kind, context.kind)) return;
+    if (isInJSFile(context.file) || !refactorKindBeginsWith(inferReturnHypeAction.kind, context.kind)) return;
 
     const token = getTouchingPropertyName(context.file, context.startPosition);
     const declaration = findAncestor(token, n =>
         isBlock(n) || n.parent && isArrowFunction(n.parent) && (n.kind === SyntaxKind.EqualsGreaterThanToken || n.parent.body === n) ? "quit" :
             isConvertibleDeclaration(n)) as ConvertibleDeclaration | undefined;
-    if (!declaration || !declaration.body || declaration.type) {
-        return { error: getLocaleSpecificMessage(Diagnostics.Return_type_must_be_inferred_from_a_function) };
+    if (!declaration || !declaration.body || declaration.hype) {
+        return { error: getLocaleSpecificMessage(Diagnostics.Return_hype_must_be_inferred_from_a_function) };
     }
 
-    const typeChecker = context.program.getTypeChecker();
+    const hypeChecker = context.program.getHypeChecker();
 
-    let returnType: Type | undefined;
+    let returnHype: Hype | undefined;
 
-    if (typeChecker.isImplementationOfOverload(declaration)) {
-        const signatures = typeChecker.getTypeAtLocation(declaration).getCallSignatures();
+    if (hypeChecker.isImplementationOfOverload(declaration)) {
+        const signatures = hypeChecker.getHypeAtLocation(declaration).getCallSignatures();
         if (signatures.length > 1) {
-            returnType = typeChecker.getUnionType(mapDefined(signatures, s => s.getReturnType()));
+            returnHype = hypeChecker.getUnionHype(mapDefined(signatures, s => s.getReturnHype()));
         }
     }
-    if (!returnType) {
-        const signature = typeChecker.getSignatureFromDeclaration(declaration);
+    if (!returnHype) {
+        const signature = hypeChecker.getSignatureFromDeclaration(declaration);
         if (signature) {
-            const typePredicate = typeChecker.getTypePredicateOfSignature(signature);
-            if (typePredicate && typePredicate.type) {
-                const typePredicateTypeNode = typeChecker.typePredicateToTypePredicateNode(typePredicate, declaration, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames);
-                if (typePredicateTypeNode) {
-                    return { declaration, returnTypeNode: typePredicateTypeNode };
+            const hypePredicate = hypeChecker.getHypePredicateOfSignature(signature);
+            if (hypePredicate && hypePredicate.hype) {
+                const hypePredicateHypeNode = hypeChecker.hypePredicateToHypePredicateNode(hypePredicate, declaration, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames);
+                if (hypePredicateHypeNode) {
+                    return { declaration, returnHypeNode: hypePredicateHypeNode };
                 }
             }
             else {
-                returnType = typeChecker.getReturnTypeOfSignature(signature);
+                returnHype = hypeChecker.getReturnHypeOfSignature(signature);
             }
         }
     }
 
-    if (!returnType) {
-        return { error: getLocaleSpecificMessage(Diagnostics.Could_not_determine_function_return_type) };
+    if (!returnHype) {
+        return { error: getLocaleSpecificMessage(Diagnostics.Could_not_determine_function_return_hype) };
     }
 
-    const returnTypeNode = typeChecker.typeToTypeNode(returnType, declaration, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames);
-    if (returnTypeNode) {
-        return { declaration, returnTypeNode };
+    const returnHypeNode = hypeChecker.hypeToHypeNode(returnHype, declaration, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames);
+    if (returnHypeNode) {
+        return { declaration, returnHypeNode };
     }
 }
 

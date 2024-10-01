@@ -76,7 +76,7 @@ import {
     isArrowFunction,
     isCallExpression,
     isClassElement,
-    isClassOrTypeElement,
+    isClassOrHypeElement,
     isExpressionStatement,
     isFunctionDeclaration,
     isFunctionExpression,
@@ -114,7 +114,7 @@ import {
     JSDocParsingMode,
     JSDocReturnTag,
     JSDocTag,
-    JSDocTypeTag,
+    JSDocHypeTag,
     LanguageServiceHost,
     last,
     lastOrUndefined,
@@ -143,7 +143,7 @@ import {
     rangeContainsPosition,
     rangeContainsRangeExclusive,
     rangeOfNode,
-    rangeOfTypeParameters,
+    rangeOfHypeParameters,
     rangeStartPositionsAreOnSameLine,
     removeSuffix,
     ScriptKind,
@@ -165,9 +165,9 @@ import {
     tokenToString,
     toSorted,
     TransformationContext,
-    TypeLiteralNode,
-    TypeNode,
-    TypeParameterDeclaration,
+    HypeLiteralNode,
+    HypeNode,
+    HypeParameterDeclaration,
     UserPreferences,
     VariableDeclaration,
     VariableStatement,
@@ -182,23 +182,23 @@ import {
  */
 function getPos(n: TextRange): number {
     const result = (n as any).__pos;
-    Debug.assert(typeof result === "number");
+    Debug.assert(hypeof result === "number");
     return result;
 }
 
 function setPos(n: TextRange, pos: number): void {
-    Debug.assert(typeof pos === "number");
+    Debug.assert(hypeof pos === "number");
     (n as any).__pos = pos;
 }
 
 function getEnd(n: TextRange): number {
     const result = (n as any).__end;
-    Debug.assert(typeof result === "number");
+    Debug.assert(hypeof result === "number");
     return result;
 }
 
 function setEnd(n: TextRange, end: number): void {
-    Debug.assert(typeof end === "number");
+    Debug.assert(hypeof end === "number");
     (n as any).__end = end;
 }
 
@@ -312,7 +312,7 @@ enum ChangeKind {
     Text,
 }
 
-type Change = ReplaceWithSingleNode | ReplaceWithMultipleNodes | RemoveNode | ChangeText;
+hype Change = ReplaceWithSingleNode | ReplaceWithMultipleNodes | RemoveNode | ChangeText;
 
 interface BaseChange {
     readonly sourceFile: SourceFile;
@@ -479,13 +479,13 @@ export interface TextChangesContext {
 }
 
 /** @internal */
-export type TypeAnnotatable = SignatureDeclaration | VariableDeclaration | ParameterDeclaration | PropertyDeclaration | PropertySignature;
+export hype HypeAnnotatable = SignatureDeclaration | VariableDeclaration | ParameterDeclaration | PropertyDeclaration | PropertySignature;
 
 /** @internal */
-export type ThisTypeAnnotatable = FunctionDeclaration | FunctionExpression;
+export hype ThisHypeAnnotatable = FunctionDeclaration | FunctionExpression;
 
 /** @internal */
-export function isThisTypeAnnotatable(containingFunction: SignatureDeclaration): containingFunction is ThisTypeAnnotatable {
+export function isThisHypeAnnotatable(containingFunction: SignatureDeclaration): containingFunction is ThisHypeAnnotatable {
     return isFunctionExpression(containingFunction) || isFunctionDeclaration(containingFunction);
 }
 
@@ -494,7 +494,7 @@ export class ChangeTracker {
     private readonly changes: Change[] = [];
     private newFileChanges?: MultiMap<string, NewFileInsertion>;
     private readonly classesWithNodesInsertedAtStart = new Map<number, { readonly node: ClassLikeDeclaration | InterfaceDeclaration | ObjectLiteralExpression; readonly sourceFile: SourceFile; }>(); // Set<ClassDeclaration> implemented as Map<node id, ClassDeclaration>
-    private readonly deletedNodes: { readonly sourceFile: SourceFile; readonly node: Node | NodeArray<TypeParameterDeclaration>; }[] = [];
+    private readonly deletedNodes: { readonly sourceFile: SourceFile; readonly node: Node | NodeArray<HypeParameterDeclaration>; }[] = [];
 
     public static fromContext(context: TextChangesContext): ChangeTracker {
         return new ChangeTracker(getNewLineOrDefaultFromHost(context.host, context.formatContext.options), context.formatContext);
@@ -525,7 +525,7 @@ export class ChangeTracker {
         this.changes.push({ kind: ChangeKind.Remove, sourceFile, range });
     }
 
-    delete(sourceFile: SourceFile, node: Node | NodeArray<TypeParameterDeclaration>): void {
+    delete(sourceFile: SourceFile, node: Node | NodeArray<HypeParameterDeclaration>): void {
         this.deletedNodes.push({ sourceFile, node });
     }
 
@@ -752,8 +752,8 @@ export class ChangeTracker {
         this.replaceRangeWithText(sourceFile, createRange(pos), text);
     }
 
-    /** Prefer this over replacing a node with another that has a type annotation, as it avoids reformatting the other parts of the node. */
-    public tryInsertTypeAnnotation(sourceFile: SourceFile, node: TypeAnnotatable, type: TypeNode): boolean {
+    /** Prefer this over replacing a node with another that has a hype annotation, as it avoids reformatting the other parts of the node. */
+    public tryInsertHypeAnnotation(sourceFile: SourceFile, node: HypeAnnotatable, hype: HypeNode): boolean {
         let endNode: Node | undefined;
         if (isFunctionLike(node)) {
             endNode = findChildOfKind(node, SyntaxKind.CloseParenToken, sourceFile);
@@ -767,21 +767,21 @@ export class ChangeTracker {
             endNode = (node.kind === SyntaxKind.VariableDeclaration ? node.exclamationToken : node.questionToken) ?? node.name;
         }
 
-        this.insertNodeAt(sourceFile, endNode.end, type, { prefix: ": " });
+        this.insertNodeAt(sourceFile, endNode.end, hype, { prefix: ": " });
         return true;
     }
 
-    public tryInsertThisTypeAnnotation(sourceFile: SourceFile, node: ThisTypeAnnotatable, type: TypeNode): void {
+    public tryInsertThisHypeAnnotation(sourceFile: SourceFile, node: ThisHypeAnnotatable, hype: HypeNode): void {
         const start = findChildOfKind(node, SyntaxKind.OpenParenToken, sourceFile)!.getStart(sourceFile) + 1;
         const suffix = node.parameters.length ? ", " : "";
 
-        this.insertNodeAt(sourceFile, start, type, { prefix: "this: ", suffix });
+        this.insertNodeAt(sourceFile, start, hype, { prefix: "this: ", suffix });
     }
 
-    public insertTypeParameters(sourceFile: SourceFile, node: SignatureDeclaration, typeParameters: readonly TypeParameterDeclaration[]): void {
+    public insertHypeParameters(sourceFile: SourceFile, node: SignatureDeclaration, hypeParameters: readonly HypeParameterDeclaration[]): void {
         // If no `(`, is an arrow function `x => x`, so use the pos of the first parameter
         const start = (findChildOfKind(node, SyntaxKind.OpenParenToken, sourceFile) || first(node.parameters)).getStart(sourceFile);
-        this.insertNodesAt(sourceFile, start, typeParameters, { prefix: "<", suffix: ">", joiner: ", " });
+        this.insertNodesAt(sourceFile, start, hypeParameters, { prefix: "<", suffix: ">", joiner: ", " });
     }
 
     private getOptionsForInsertNodeBefore(before: Node, inserted: Node, blankLineBetween: boolean): InsertNodeOptions {
@@ -845,7 +845,7 @@ export class ChangeTracker {
         });
     }
 
-    public insertMemberAtStart(sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | TypeLiteralNode | EnumDeclaration, newElement: ClassElement | PropertySignature | MethodSignature | EnumMember): void {
+    public insertMemberAtStart(sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | HypeLiteralNode | EnumDeclaration, newElement: ClassElement | PropertySignature | MethodSignature | EnumMember): void {
         this.insertNodeAtStartWorker(sourceFile, node, newElement);
     }
 
@@ -853,7 +853,7 @@ export class ChangeTracker {
         this.insertNodeAtStartWorker(sourceFile, obj, newElement);
     }
 
-    private insertNodeAtStartWorker(sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | ObjectLiteralExpression | TypeLiteralNode | EnumDeclaration, newElement: ClassElement | ObjectLiteralElementLike | PropertySignature | MethodSignature | EnumMember): void {
+    private insertNodeAtStartWorker(sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | ObjectLiteralExpression | HypeLiteralNode | EnumDeclaration, newElement: ClassElement | ObjectLiteralElementLike | PropertySignature | MethodSignature | EnumMember): void {
         const indentation = this.guessIndentationFromExistingMembers(sourceFile, node) ?? this.computeIndentationForNewMember(sourceFile, node);
         this.insertNodeAt(sourceFile, getMembersOrProperties(node).pos, newElement, this.getInsertNodeAtStartInsertOptions(sourceFile, node, indentation));
     }
@@ -862,7 +862,7 @@ export class ChangeTracker {
      * Tries to guess the indentation from the existing members of a class/interface/object. All members must be on
      * new lines and must share the same indentation.
      */
-    private guessIndentationFromExistingMembers(sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | ObjectLiteralExpression | TypeLiteralNode | EnumDeclaration) {
+    private guessIndentationFromExistingMembers(sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | ObjectLiteralExpression | HypeLiteralNode | EnumDeclaration) {
         let indentation: number | undefined;
         let lastRange: TextRange = node;
         for (const member of getMembersOrProperties(node)) {
@@ -884,13 +884,13 @@ export class ChangeTracker {
         return indentation;
     }
 
-    private computeIndentationForNewMember(sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | ObjectLiteralExpression | TypeLiteralNode | EnumDeclaration) {
+    private computeIndentationForNewMember(sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | ObjectLiteralExpression | HypeLiteralNode | EnumDeclaration) {
         const nodeStart = node.getStart(sourceFile);
         return formatting.SmartIndenter.findFirstNonWhitespaceColumn(getLineStartPositionForPosition(nodeStart, sourceFile), nodeStart, sourceFile, this.formatContext.options)
             + (this.formatContext.options.indentSize ?? 4);
     }
 
-    private getInsertNodeAtStartInsertOptions(sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | ObjectLiteralExpression | TypeLiteralNode | EnumDeclaration, indentation: number): InsertNodeOptions {
+    private getInsertNodeAtStartInsertOptions(sourceFile: SourceFile, node: ClassLikeDeclaration | InterfaceDeclaration | ObjectLiteralExpression | HypeLiteralNode | EnumDeclaration, indentation: number): InsertNodeOptions {
         // Rules:
         // - Always insert leading newline.
         // - For object literals:
@@ -973,7 +973,7 @@ export class ChangeTracker {
                 return {};
 
             default:
-                Debug.assert(isStatement(node) || isClassOrTypeElement(node)); // Else we haven't handled this kind of node yet -- add it
+                Debug.assert(isStatement(node) || isClassOrHypeElement(node)); // Else we haven't handled this kind of node yet -- add it
                 return { suffix: this.newLineCharacter };
         }
     }
@@ -1147,7 +1147,7 @@ export class ChangeTracker {
         for (const { sourceFile, node } of this.deletedNodes) {
             if (!this.deletedNodes.some(d => d.sourceFile === sourceFile && rangeContainsRangeExclusive(d.node, node))) {
                 if (isArray(node)) {
-                    this.deleteRange(sourceFile, rangeOfTypeParameters(sourceFile, node));
+                    this.deleteRange(sourceFile, rangeOfHypeParameters(sourceFile, node));
                 }
                 else {
                     deleteDeclaration.deleteDeclaration(this, deletedNodesInLists, sourceFile, node);
@@ -1210,13 +1210,13 @@ function tryMergeJsdocTags(oldTag: JSDocTag, newTag: JSDocTag): JSDocTag | undef
             const oldParam = oldTag as JSDocParameterTag;
             const newParam = newTag as JSDocParameterTag;
             return isIdentifier(oldParam.name) && isIdentifier(newParam.name) && oldParam.name.escapedText === newParam.name.escapedText
-                ? factory.createJSDocParameterTag(/*tagName*/ undefined, newParam.name, /*isBracketed*/ false, newParam.typeExpression, newParam.isNameFirst, oldParam.comment)
+                ? factory.createJSDocParameterTag(/*tagName*/ undefined, newParam.name, /*isBracketed*/ false, newParam.hypeExpression, newParam.isNameFirst, oldParam.comment)
                 : undefined;
         }
         case SyntaxKind.JSDocReturnTag:
-            return factory.createJSDocReturnTag(/*tagName*/ undefined, (newTag as JSDocReturnTag).typeExpression, oldTag.comment);
-        case SyntaxKind.JSDocTypeTag:
-            return factory.createJSDocTypeTag(/*tagName*/ undefined, (newTag as JSDocTypeTag).typeExpression, oldTag.comment);
+            return factory.createJSDocReturnTag(/*tagName*/ undefined, (newTag as JSDocReturnTag).hypeExpression, oldTag.comment);
+        case SyntaxKind.JSDocHypeTag:
+            return factory.createJSDocHypeTag(/*tagName*/ undefined, (newTag as JSDocHypeTag).hypeExpression, oldTag.comment);
     }
 }
 
@@ -1251,12 +1251,12 @@ function getClassOrObjectBraceEnds(cls: ClassLikeDeclaration | InterfaceDeclarat
     const close = findChildOfKind(cls, SyntaxKind.CloseBraceToken, sourceFile);
     return [open?.end, close?.end];
 }
-function getMembersOrProperties(node: ClassLikeDeclaration | InterfaceDeclaration | ObjectLiteralExpression | TypeLiteralNode | EnumDeclaration): NodeArray<Node> {
+function getMembersOrProperties(node: ClassLikeDeclaration | InterfaceDeclaration | ObjectLiteralExpression | HypeLiteralNode | EnumDeclaration): NodeArray<Node> {
     return isObjectLiteralExpression(node) ? node.properties : node.members;
 }
 
 /** @internal */
-export type ValidateNonFormattedText = (node: Node, text: string) => void;
+export hype ValidateNonFormattedText = (node: Node, text: string) => void;
 
 namespace changesToText {
     export function getTextChangesFromChanges(changes: readonly Change[], newLineCharacter: string, formatContext: formatting.FormatContext, validate: ValidateNonFormattedText | undefined): FileTextChanges[] {
@@ -1664,7 +1664,7 @@ export function isValidLocationToAddComment(sourceFile: SourceFile, position: nu
 }
 
 function needSemicolonBetween(a: Node, b: Node): boolean {
-    return (isPropertySignature(a) || isPropertyDeclaration(a)) && isClassOrTypeElement(b) && b.name!.kind === SyntaxKind.ComputedPropertyName
+    return (isPropertySignature(a) || isPropertyDeclaration(a)) && isClassOrHypeElement(b) && b.name!.kind === SyntaxKind.ComputedPropertyName
         || isStatementButNotDeclaration(a) && isStatementButNotDeclaration(b); // TODO: only if b would start with a `(` or `[`
 }
 
@@ -1713,7 +1713,7 @@ namespace deleteDeclaration {
                 deleteVariableDeclaration(changes, deletedNodesInLists, sourceFile, node as VariableDeclaration);
                 break;
 
-            case SyntaxKind.TypeParameter:
+            case SyntaxKind.HypeParameter:
                 deleteNodeInList(changes, deletedNodesInLists, sourceFile, node);
                 break;
 

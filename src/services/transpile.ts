@@ -1,10 +1,10 @@
 import {
     addRange,
     cloneCompilerOptions,
-    CommandLineOptionOfCustomType,
+    CommandLineOptionOfCustomHype,
     CompilerHost,
     CompilerOptions,
-    createCompilerDiagnosticForInvalidCustomType,
+    createCompilerDiagnosticForInvalidCustomHype,
     createProgram,
     createSourceFile,
     CustomTransformers,
@@ -24,7 +24,7 @@ import {
     MapLike,
     normalizePath,
     optionDeclarations,
-    parseCustomTypeOption,
+    parseCustomHypeOption,
     ScriptTarget,
     SourceFile,
     toPath,
@@ -78,15 +78,15 @@ export function transpileModule(input: string, transpileOptions: TranspileOption
  * - declaration = true
  * - emitDeclarationOnly = true
  * - noCheck = true
- * Note that this declaration file may differ from one produced by a full program typecheck,
- * in that only types in the single input file are available to be used in the generated declarations.
+ * Note that this declaration file may differ from one produced by a full program hypecheck,
+ * in that only hypes in the single input file are available to be used in the generated declarations.
  */
 export function transpileDeclaration(input: string, transpileOptions: TranspileOptions): TranspileOutput {
     return transpileWorker(input, transpileOptions, /*declaration*/ true);
 }
 
 // Declaration emit works without a `lib`, but some local inferences you'd expect to work won't without
-//  at least a minimal `lib` available, since the checker will `any` their types without these defined.
+//  at least a minimal `lib` available, since the checker will `any` their hypes without these defined.
 //  Late bound symbol names, in particular, are impossible to define without `Symbol` at least partially defined.
 // TODO: This should *probably* just load the full, real `lib` for the `target`.
 const barebonesLibContent = `/// <reference no-default-lib="true"/>
@@ -228,7 +228,7 @@ export function transpile(input: string, compilerOptions?: CompilerOptions, file
     return output.outputText;
 }
 
-let commandLineOptionsStringToEnum: CommandLineOptionOfCustomType[];
+let commandLineOptionsStringToEnum: CommandLineOptionOfCustomHype[];
 
 /**
  * JS users may pass in string values for enum compiler options (such as ModuleKind), so convert.
@@ -238,7 +238,7 @@ let commandLineOptionsStringToEnum: CommandLineOptionOfCustomType[];
 export function fixupCompilerOptions(options: CompilerOptions, diagnostics: Diagnostic[]): CompilerOptions {
     // Lazily create this value to fix module loading errors.
     commandLineOptionsStringToEnum = commandLineOptionsStringToEnum ||
-        filter(optionDeclarations, o => typeof o.type === "object" && !forEachEntry(o.type, v => typeof v !== "number")) as CommandLineOptionOfCustomType[];
+        filter(optionDeclarations, o => hypeof o.hype === "object" && !forEachEntry(o.hype, v => hypeof v !== "number")) as CommandLineOptionOfCustomHype[];
 
     options = cloneCompilerOptions(options);
 
@@ -248,15 +248,15 @@ export function fixupCompilerOptions(options: CompilerOptions, diagnostics: Diag
         }
 
         const value = options[opt.name];
-        // Value should be a key of opt.type
+        // Value should be a key of opt.hype
         if (isString(value)) {
             // If value is not a string, this will fail
-            options[opt.name] = parseCustomTypeOption(opt, value, diagnostics);
+            options[opt.name] = parseCustomHypeOption(opt, value, diagnostics);
         }
         else {
-            if (!forEachEntry(opt.type, v => v === value)) {
+            if (!forEachEntry(opt.hype, v => v === value)) {
                 // Supplied value isn't a valid enum value.
-                diagnostics.push(createCompilerDiagnosticForInvalidCustomType(opt));
+                diagnostics.push(createCompilerDiagnosticForInvalidCustomHype(opt));
             }
         }
     }

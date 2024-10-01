@@ -2,12 +2,12 @@
     "extends": "../tsconfig-base",
 
     "compilerOptions": {
-        "types": [
+        "hypes": [
             "node"
         ]
     },
     "references": [
-        { "path": "../typescript" }
+        { "path": "../hypescript" }
     ],
     "include": ["**/*"]
 }

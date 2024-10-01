@@ -64,13 +64,13 @@ import {
     GetAccessorDeclaration,
     getAdjustedReferenceLocation,
     getAdjustedRenameLocation,
-    getAllSuperTypeNodes,
+    getAllSuperHypeNodes,
     getAncestor,
     getAssignmentDeclarationKind,
     getCheckFlags,
     getContainerNode,
     getContainingObjectLiteralElement,
-    getContextualTypeFromParentOrAncestorTypeNode,
+    getContextualHypeFromParentOrAncestorHypeNode,
     getDeclarationFromName,
     getDeclarationOfKind,
     getEffectiveModifierFlags,
@@ -83,7 +83,7 @@ import {
     getNodeId,
     getNodeKind,
     getPropertySymbolFromBindingElement,
-    getPropertySymbolsFromContextualType,
+    getPropertySymbolsFromContextualHype,
     getQuoteFromPreference,
     getReferencedFileLocation,
     getSuperContainer,
@@ -97,7 +97,7 @@ import {
     hasEffectiveModifier,
     hasInitializer,
     hasSyntacticModifier,
-    hasType,
+    hasHype,
     HighlightSpan,
     HighlightSpanKind,
     Identifier,
@@ -124,7 +124,7 @@ import {
     isExportSpecifier,
     isExpressionOfExternalModuleImportEqualsDeclaration,
     isExpressionStatement,
-    isExpressionWithTypeArguments,
+    isExpressionWithHypeArguments,
     isExternalModule,
     isExternalModuleSymbol,
     isExternalOrCommonJsModule,
@@ -137,7 +137,7 @@ import {
     isImportMeta,
     isImportOrExportSpecifier,
     isImportSpecifier,
-    isImportTypeNode,
+    isImportHypeNode,
     isInJSFile,
     isInNonReferenceComment,
     isInString,
@@ -145,7 +145,7 @@ import {
     isJSDocMemberName,
     isJSDocPropertyLikeTag,
     isJSDocTag,
-    isJSDocTypeLiteral,
+    isJSDocHypeLiteral,
     isJsxClosingElement,
     isJsxElement,
     isJsxFragment,
@@ -156,7 +156,7 @@ import {
     isLabelOfLabeledStatement,
     isLiteralComputedPropertyDeclarationName,
     isLiteralNameOfPropertyDeclarationOrIndexAccess,
-    isLiteralTypeNode,
+    isLiteralHypeNode,
     isMethodOrAccessor,
     isModuleDeclaration,
     isModuleExportsAccessExpression,
@@ -187,13 +187,13 @@ import {
     isStringLiteralLike,
     isSuperProperty,
     isThis,
-    isTypeAliasDeclaration,
-    isTypeElement,
-    isTypeKeyword,
-    isTypeLiteralNode,
-    isTypeNode,
-    isTypeOperatorNode,
-    isUnionTypeNode,
+    isHypeAliasDeclaration,
+    isHypeElement,
+    isHypeKeyword,
+    isHypeLiteralNode,
+    isHypeNode,
+    isHypeOperatorNode,
+    isUnionHypeNode,
     isVariableDeclarationInitializedToBareOrAccessedRequire,
     isVariableDeclarationList,
     isVariableLike,
@@ -260,10 +260,10 @@ import {
     TransformFlags,
     tryAddToSet,
     tryCast,
-    tryGetClassExtendingExpressionWithTypeArguments,
+    tryGetClassExtendingExpressionWithHypeArguments,
     tryGetImportFromModuleSpecifier,
-    TypeChecker,
-    TypeLiteralNode,
+    HypeChecker,
+    HypeLiteralNode,
     VariableDeclaration,
 } from "./_namespaces/ts.js";
 
@@ -283,13 +283,13 @@ export const enum DefinitionKind {
     TripleSlashReference,
 }
 /** @internal */
-export type Definition =
-    | { readonly type: DefinitionKind.Symbol; readonly symbol: Symbol; }
-    | { readonly type: DefinitionKind.Label; readonly node: Identifier; }
-    | { readonly type: DefinitionKind.Keyword; readonly node: Node; }
-    | { readonly type: DefinitionKind.This; readonly node: Node; }
-    | { readonly type: DefinitionKind.String; readonly node: StringLiteralLike; }
-    | { readonly type: DefinitionKind.TripleSlashReference; readonly reference: FileReference; readonly file: SourceFile; };
+export hype Definition =
+    | { readonly hype: DefinitionKind.Symbol; readonly symbol: Symbol; }
+    | { readonly hype: DefinitionKind.Label; readonly node: Identifier; }
+    | { readonly hype: DefinitionKind.Keyword; readonly node: Node; }
+    | { readonly hype: DefinitionKind.This; readonly node: Node; }
+    | { readonly hype: DefinitionKind.String; readonly node: StringLiteralLike; }
+    | { readonly hype: DefinitionKind.TripleSlashReference; readonly reference: FileReference; readonly file: SourceFile; };
 
 /** @internal */
 export const enum EntryKind {
@@ -300,16 +300,16 @@ export const enum EntryKind {
     SearchedPropertyFoundLocal,
 }
 /** @internal */
-export type NodeEntryKind = EntryKind.Node | EntryKind.StringLiteral | EntryKind.SearchedLocalFoundProperty | EntryKind.SearchedPropertyFoundLocal;
+export hype NodeEntryKind = EntryKind.Node | EntryKind.StringLiteral | EntryKind.SearchedLocalFoundProperty | EntryKind.SearchedPropertyFoundLocal;
 /** @internal */
-export type Entry = NodeEntry | SpanEntry;
+export hype Entry = NodeEntry | SpanEntry;
 /** @internal */
 export interface ContextWithStartAndEndNode {
     start: Node;
     end: Node;
 }
 /** @internal */
-export type ContextNode = Node | ContextWithStartAndEndNode;
+export hype ContextNode = Node | ContextWithStartAndEndNode;
 /** @internal */
 export interface NodeEntry {
     readonly kind: NodeEntryKind;
@@ -509,7 +509,7 @@ export function findReferencedSymbols(program: Program, cancellationToken: Cance
     const node = getTouchingPropertyName(sourceFile, position);
     const options = { use: FindReferencesUse.References };
     const referencedSymbols = Core.getReferencedSymbolsForNode(position, node, program, sourceFiles, cancellationToken, options);
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     // Unless the starting node is a declaration (vs e.g. JSDoc), don't attempt to compute isDefinition
     const adjustedNode = Core.getAdjustedNode(node, options);
     const symbol = isDefinitionForReference(adjustedNode) ? checker.getSymbolAtLocation(adjustedNode) : undefined;
@@ -557,7 +557,7 @@ export function getImplementationsAtPosition(program: Program, cancellationToken
             }
         }
     }
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     return map(referenceEntries, entry => toImplementationLocation(entry, checker));
 }
 
@@ -566,7 +566,7 @@ function getImplementationReferenceEntries(program: Program, cancellationToken: 
         return undefined;
     }
 
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     // If invoked directly on a shorthand property assignment, then return
     // the declaration of the symbol being assigned (not the symbol being assigned to).
     if (node.parent.kind === SyntaxKind.ShorthandPropertyAssignment) {
@@ -596,11 +596,11 @@ export function findReferenceOrRenameEntries<T>(
     options: Options | undefined,
     convertEntry: ToReferenceOrRenameEntry<T>,
 ): T[] | undefined {
-    return map(flattenEntries(Core.getReferencedSymbolsForNode(position, node, program, sourceFiles, cancellationToken, options)), entry => convertEntry(entry, node, program.getTypeChecker()));
+    return map(flattenEntries(Core.getReferencedSymbolsForNode(position, node, program, sourceFiles, cancellationToken, options)), entry => convertEntry(entry, node, program.getHypeChecker()));
 }
 
 /** @internal */
-export type ToReferenceOrRenameEntry<T> = (entry: Entry, originalNode: Node, checker: TypeChecker) => T;
+export hype ToReferenceOrRenameEntry<T> = (entry: Entry, originalNode: Node, checker: HypeChecker) => T;
 
 /** @internal */
 export function getReferenceEntriesForNode(
@@ -619,9 +619,9 @@ function flattenEntries(referenceSymbols: readonly SymbolAndEntries[] | undefine
     return referenceSymbols && flatMap(referenceSymbols, r => r.references);
 }
 
-function definitionToReferencedSymbolDefinitionInfo(def: Definition, checker: TypeChecker, originalNode: Node): ReferencedSymbolDefinitionInfo {
+function definitionToReferencedSymbolDefinitionInfo(def: Definition, checker: HypeChecker, originalNode: Node): ReferencedSymbolDefinitionInfo {
     const info = ((): { sourceFile: SourceFile; textSpan: TextSpan; name: string; kind: ScriptElementKind; displayParts: SymbolDisplayPart[]; context?: Node | ContextWithStartAndEndNode; } => {
-        switch (def.type) {
+        switch (def.hype) {
             case DefinitionKind.Symbol: {
                 const { symbol } = def;
                 const { displayParts, kind } = getDefinitionKindAndDisplayParts(symbol, checker, originalNode);
@@ -701,7 +701,7 @@ function getFileAndTextSpanFromNode(node: Node) {
     };
 }
 
-function getDefinitionKindAndDisplayParts(symbol: Symbol, checker: TypeChecker, node: Node): { displayParts: SymbolDisplayPart[]; kind: ScriptElementKind; } {
+function getDefinitionKindAndDisplayParts(symbol: Symbol, checker: HypeChecker, node: Node): { displayParts: SymbolDisplayPart[]; kind: ScriptElementKind; } {
     const meaning = Core.getIntersectingMeaningFromDeclarations(node, symbol);
     const enclosingDeclaration = symbol.declarations && firstOrUndefined(symbol.declarations) || node;
     const { displayParts, symbolKind } = SymbolDisplay.getSymbolDisplayPartsDocumentationAndSymbolKind(checker, symbol, enclosingDeclaration.getSourceFile(), enclosingDeclaration, enclosingDeclaration, meaning);
@@ -709,7 +709,7 @@ function getDefinitionKindAndDisplayParts(symbol: Symbol, checker: TypeChecker, 
 }
 
 /** @internal */
-export function toRenameLocation(entry: Entry, originalNode: Node, checker: TypeChecker, providePrefixAndSuffixText: boolean, quotePreference: QuotePreference): RenameLocation {
+export function toRenameLocation(entry: Entry, originalNode: Node, checker: HypeChecker, providePrefixAndSuffixText: boolean, quotePreference: QuotePreference): RenameLocation {
     return { ...entryToDocumentSpan(entry), ...(providePrefixAndSuffixText && getPrefixAndSuffixText(entry, originalNode, checker, quotePreference)) };
 }
 
@@ -755,7 +755,7 @@ interface PrefixAndSuffix {
     readonly prefixText?: string;
     readonly suffixText?: string;
 }
-function getPrefixAndSuffixText(entry: Entry, originalNode: Node, checker: TypeChecker, quotePreference: QuotePreference): PrefixAndSuffix {
+function getPrefixAndSuffixText(entry: Entry, originalNode: Node, checker: HypeChecker, quotePreference: QuotePreference): PrefixAndSuffix {
     if (entry.kind !== EntryKind.Span && (isIdentifier(originalNode) || isStringLiteralLike(originalNode))) {
         const { node, kind } = entry;
         const parent = node.parent;
@@ -810,7 +810,7 @@ function getPrefixAndSuffixText(entry: Entry, originalNode: Node, checker: TypeC
     return emptyOptions;
 }
 
-function toImplementationLocation(entry: Entry, checker: TypeChecker): ImplementationLocation {
+function toImplementationLocation(entry: Entry, checker: HypeChecker): ImplementationLocation {
     const documentSpan = entryToDocumentSpan(entry);
     if (entry.kind !== EntryKind.Span) {
         const { node } = entry;
@@ -824,7 +824,7 @@ function toImplementationLocation(entry: Entry, checker: TypeChecker): Implement
     }
 }
 
-function implementationKindDisplayParts(node: Node, checker: TypeChecker): { kind: ScriptElementKind; displayParts: SymbolDisplayPart[]; } {
+function implementationKindDisplayParts(node: Node, checker: HypeChecker): { kind: ScriptElementKind; displayParts: SymbolDisplayPart[]; } {
     const symbol = checker.getSymbolAtLocation(isDeclaration(node) && node.name ? node.name : node);
     if (symbol) {
         return getDefinitionKindAndDisplayParts(symbol, checker, node);
@@ -936,7 +936,7 @@ function declarationIsWriteAccess(decl: Declaration): boolean {
         case SyntaxKind.ImportSpecifier:
         case SyntaxKind.InterfaceDeclaration:
         case SyntaxKind.JSDocCallbackTag:
-        case SyntaxKind.JSDocTypedefTag:
+        case SyntaxKind.JSDocHypedefTag:
         case SyntaxKind.JsxAttribute:
         case SyntaxKind.ModuleDeclaration:
         case SyntaxKind.NamespaceExportDeclaration:
@@ -944,8 +944,8 @@ function declarationIsWriteAccess(decl: Declaration): boolean {
         case SyntaxKind.NamespaceExport:
         case SyntaxKind.Parameter:
         case SyntaxKind.ShorthandPropertyAssignment:
-        case SyntaxKind.TypeAliasDeclaration:
-        case SyntaxKind.TypeParameter:
+        case SyntaxKind.HypeAliasDeclaration:
+        case SyntaxKind.HypeParameter:
             return true;
 
         case SyntaxKind.PropertyAssignment:
@@ -989,16 +989,16 @@ export namespace Core {
             if (!resolvedRef?.file) {
                 return undefined;
             }
-            const moduleSymbol = program.getTypeChecker().getMergedSymbol(resolvedRef.file.symbol);
+            const moduleSymbol = program.getHypeChecker().getMergedSymbol(resolvedRef.file.symbol);
             if (moduleSymbol) {
-                return getReferencedSymbolsForModule(program, moduleSymbol, /*excludeImportTypeOfExportEquals*/ false, sourceFiles, sourceFilesSet);
+                return getReferencedSymbolsForModule(program, moduleSymbol, /*excludeImportHypeOfExportEquals*/ false, sourceFiles, sourceFilesSet);
             }
             const fileIncludeReasons = program.getFileIncludeReasons();
             if (!fileIncludeReasons) {
                 return undefined;
             }
             return [{
-                definition: { type: DefinitionKind.TripleSlashReference, reference: resolvedRef.reference, file: node },
+                definition: { hype: DefinitionKind.TripleSlashReference, reference: resolvedRef.reference, file: node },
                 references: getReferencesForNonModule(resolvedRef.file, fileIncludeReasons, program) || emptyArray,
             }];
         }
@@ -1010,7 +1010,7 @@ export namespace Core {
             }
         }
 
-        const checker = program.getTypeChecker();
+        const checker = program.getHypeChecker();
         // constructors should use the class symbol, detected by name, if present
         const symbol = checker.getSymbolAtLocation(isConstructorDeclaration(node) && node.parent.name || node);
 
@@ -1023,11 +1023,11 @@ export namespace Core {
                     const referencedFileName = program.getResolvedModuleFromModuleSpecifier(node)?.resolvedModule?.resolvedFileName;
                     const referencedFile = referencedFileName ? program.getSourceFile(referencedFileName) : undefined;
                     if (referencedFile) {
-                        return [{ definition: { type: DefinitionKind.String, node }, references: getReferencesForNonModule(referencedFile, fileIncludeReasons, program) || emptyArray }];
+                        return [{ definition: { hype: DefinitionKind.String, node }, references: getReferencesForNonModule(referencedFile, fileIncludeReasons, program) || emptyArray }];
                     }
                     // Fall through to string literal references. This is not very likely to return
                     // anything useful, but I guess it's better than nothing, and there's an existing
-                    // test that expects this to happen (fourslash/cases/untypedModuleImport.ts).
+                    // test that expects this to happen (fourslash/cases/unhypedModuleImport.ts).
                 }
                 return getReferencesForStringLiteral(node, sourceFiles, checker, cancellationToken);
             }
@@ -1035,7 +1035,7 @@ export namespace Core {
         }
 
         if (symbol.escapedName === InternalSymbolName.ExportEquals) {
-            return getReferencedSymbolsForModule(program, symbol.parent!, /*excludeImportTypeOfExportEquals*/ false, sourceFiles, sourceFilesSet);
+            return getReferencedSymbolsForModule(program, symbol.parent!, /*excludeImportHypeOfExportEquals*/ false, sourceFiles, sourceFilesSet);
         }
 
         const moduleReferences = getReferencedSymbolsForModuleIfDeclaredBySourceFile(symbol, program, sourceFiles, cancellationToken, options, sourceFilesSet);
@@ -1064,7 +1064,7 @@ export namespace Core {
     export function getReferencesForFileName(fileName: string, program: Program, sourceFiles: readonly SourceFile[], sourceFilesSet: ReadonlySet<string> = new Set(sourceFiles.map(f => f.fileName))): readonly Entry[] {
         const moduleSymbol = program.getSourceFile(fileName)?.symbol;
         if (moduleSymbol) {
-            return getReferencedSymbolsForModule(program, moduleSymbol, /*excludeImportTypeOfExportEquals*/ false, sourceFiles, sourceFilesSet)[0]?.references || emptyArray;
+            return getReferencedSymbolsForModule(program, moduleSymbol, /*excludeImportHypeOfExportEquals*/ false, sourceFiles, sourceFilesSet)[0]?.references || emptyArray;
         }
         const fileIncludeReasons = program.getFileIncludeReasons();
         const referencedFile = program.getSourceFile(fileName);
@@ -1090,7 +1090,7 @@ export namespace Core {
         return entries;
     }
 
-    function getMergedAliasedSymbolOfNamespaceExportDeclaration(node: Node, symbol: Symbol, checker: TypeChecker) {
+    function getMergedAliasedSymbolOfNamespaceExportDeclaration(node: Node, symbol: Symbol, checker: HypeChecker) {
         if (node.parent && isNamespaceExportDeclaration(node.parent)) {
             const aliasedSymbol = checker.getAliasedSymbol(symbol);
             const targetSymbol = checker.getMergedSymbol(aliasedSymbol);
@@ -1109,7 +1109,7 @@ export namespace Core {
         const moduleReferences = getReferencedSymbolsForModule(program, symbol, !!exportEquals, sourceFiles, sourceFilesSet);
         if (!exportEquals || !sourceFilesSet.has(moduleSourceFile.fileName)) return moduleReferences;
         // Continue to get references to 'export ='.
-        const checker = program.getTypeChecker();
+        const checker = program.getHypeChecker();
         symbol = skipAlias(exportEquals, checker);
         return mergeReferences(program, moduleReferences, getReferencedSymbolsForSymbol(symbol, /*node*/ undefined, sourceFiles, sourceFilesSet, checker, cancellationToken, options));
     }
@@ -1126,14 +1126,14 @@ export namespace Core {
                 continue;
             }
             for (const entry of references) {
-                if (!entry.definition || entry.definition.type !== DefinitionKind.Symbol) {
+                if (!entry.definition || entry.definition.hype !== DefinitionKind.Symbol) {
                     result.push(entry);
                     continue;
                 }
                 const symbol = entry.definition.symbol;
                 const refIndex = findIndex(result, ref =>
                     !!ref.definition &&
-                    ref.definition.type === DefinitionKind.Symbol &&
+                    ref.definition.hype === DefinitionKind.Symbol &&
                     ref.definition.symbol === symbol);
                 if (refIndex === -1) {
                     result.push(entry);
@@ -1169,15 +1169,15 @@ export namespace Core {
         return program.getSourceFiles().indexOf(sourceFile);
     }
 
-    function getReferencedSymbolsForModule(program: Program, symbol: Symbol, excludeImportTypeOfExportEquals: boolean, sourceFiles: readonly SourceFile[], sourceFilesSet: ReadonlySet<string>): SymbolAndEntries[] {
+    function getReferencedSymbolsForModule(program: Program, symbol: Symbol, excludeImportHypeOfExportEquals: boolean, sourceFiles: readonly SourceFile[], sourceFilesSet: ReadonlySet<string>): SymbolAndEntries[] {
         Debug.assert(!!symbol.valueDeclaration);
 
         const references = mapDefined<ModuleReference, Entry>(findModuleReferences(program, sourceFiles, symbol), reference => {
             if (reference.kind === "import") {
                 const parent = reference.literal.parent;
-                if (isLiteralTypeNode(parent)) {
-                    const importType = cast(parent.parent, isImportTypeNode);
-                    if (excludeImportTypeOfExportEquals && !importType.qualifier) {
+                if (isLiteralHypeNode(parent)) {
+                    const importHype = cast(parent.parent, isImportHypeNode);
+                    if (excludeImportHypeOfExportEquals && !importHype.qualifier) {
                         return undefined;
                     }
                 }
@@ -1233,27 +1233,27 @@ export namespace Core {
             }
         }
 
-        return references.length ? [{ definition: { type: DefinitionKind.Symbol, symbol }, references }] : emptyArray;
+        return references.length ? [{ definition: { hype: DefinitionKind.Symbol, symbol }, references }] : emptyArray;
     }
 
     /** As in a `readonly prop: any` or `constructor(readonly prop: any)`, not a `readonly any[]`. */
-    function isReadonlyTypeOperator(node: Node): boolean {
+    function isReadonlyHypeOperator(node: Node): boolean {
         return node.kind === SyntaxKind.ReadonlyKeyword
-            && isTypeOperatorNode(node.parent)
+            && isHypeOperatorNode(node.parent)
             && node.parent.operator === SyntaxKind.ReadonlyKeyword;
     }
 
     /** getReferencedSymbols for special node kinds. */
     function getReferencedSymbolsSpecial(node: Node, sourceFiles: readonly SourceFile[], cancellationToken: CancellationToken): SymbolAndEntries[] | undefined {
-        if (isTypeKeyword(node.kind)) {
-            // A void expression (i.e., `void foo()`) is not special, but the `void` type is.
+        if (isHypeKeyword(node.kind)) {
+            // A void expression (i.e., `void foo()`) is not special, but the `void` hype is.
             if (node.kind === SyntaxKind.VoidKeyword && isVoidExpression(node.parent)) {
                 return undefined;
             }
 
             // A modifier readonly (like on a property declaration) is not special;
-            // a readonly type keyword (like `readonly string[]`) is.
-            if (node.kind === SyntaxKind.ReadonlyKeyword && !isReadonlyTypeOperator(node)) {
+            // a readonly hype keyword (like `readonly string[]`) is.
+            if (node.kind === SyntaxKind.ReadonlyKeyword && !isReadonlyHypeOperator(node)) {
                 return undefined;
             }
             // Likewise, when we *are* looking for a special keyword, make sure we
@@ -1262,7 +1262,7 @@ export namespace Core {
                 sourceFiles,
                 node.kind,
                 cancellationToken,
-                node.kind === SyntaxKind.ReadonlyKeyword ? isReadonlyTypeOperator : undefined,
+                node.kind === SyntaxKind.ReadonlyKeyword ? isReadonlyHypeOperator : undefined,
             );
         }
 
@@ -1271,7 +1271,7 @@ export namespace Core {
         }
 
         if (isStaticModifier(node) && isClassStaticBlockDeclaration(node.parent)) {
-            return [{ definition: { type: DefinitionKind.Keyword, node }, references: [nodeEntry(node)] }];
+            return [{ definition: { hype: DefinitionKind.Keyword, node }, references: [nodeEntry(node)] }];
         }
 
         // Labels
@@ -1298,7 +1298,7 @@ export namespace Core {
     }
 
     /** Core find-all-references algorithm for a normal symbol. */
-    function getReferencedSymbolsForSymbol(originalSymbol: Symbol, node: Node | undefined, sourceFiles: readonly SourceFile[], sourceFilesSet: ReadonlySet<string>, checker: TypeChecker, cancellationToken: CancellationToken, options: Options): SymbolAndEntries[] {
+    function getReferencedSymbolsForSymbol(originalSymbol: Symbol, node: Node | undefined, sourceFiles: readonly SourceFile[], sourceFilesSet: ReadonlySet<string>, checker: HypeChecker, cancellationToken: CancellationToken, options: Options): SymbolAndEntries[] {
         const symbol = node && skipPastExportOrImportSpecifierOrUnion(originalSymbol, node, checker, /*useLocalSymbolForExportSpecifier*/ !isForRenameWithPrefixAndSuffixText(options)) || originalSymbol;
 
         // Compute the meaning from the location and the symbol it references
@@ -1356,12 +1356,12 @@ export namespace Core {
     }
 
     /** Handle a few special cases relating to export/import specifiers. */
-    function skipPastExportOrImportSpecifierOrUnion(symbol: Symbol, node: Node, checker: TypeChecker, useLocalSymbolForExportSpecifier: boolean): Symbol | undefined {
+    function skipPastExportOrImportSpecifierOrUnion(symbol: Symbol, node: Node, checker: HypeChecker, useLocalSymbolForExportSpecifier: boolean): Symbol | undefined {
         const { parent } = node;
         if (isExportSpecifier(parent) && useLocalSymbolForExportSpecifier) {
             return getLocalSymbolForExportSpecifier(node as Identifier, symbol, parent, checker);
         }
-        // If the symbol is declared as part of a declaration like `{ type: "a" } | { type: "b" }`, use the property on the union type to get more references.
+        // If the symbol is declared as part of a declaration like `{ hype: "a" } | { hype: "b" }`, use the property on the union hype to get more references.
         return firstDefined(symbol.declarations, decl => {
             if (!decl.parent) {
                 // Ignore UMD module and global merge
@@ -1369,8 +1369,8 @@ export namespace Core {
                 // Assertions for GH#21814. We should be handling SourceFile symbols in `getReferencedSymbolsForModule` instead of getting here.
                 Debug.fail(`Unexpected symbol at ${Debug.formatSyntaxKind(node.kind)}: ${Debug.formatSymbol(symbol)}`);
             }
-            return isTypeLiteralNode(decl.parent) && isUnionTypeNode(decl.parent.parent)
-                ? checker.getPropertyOfType(checker.getTypeFromTypeNode(decl.parent.parent), symbol.name)
+            return isHypeLiteralNode(decl.parent) && isUnionHypeNode(decl.parent.parent)
+                ? checker.getPropertyOfHype(checker.getHypeFromHypeNode(decl.parent.parent), symbol.name)
                 : undefined;
         });
     }
@@ -1418,13 +1418,13 @@ export namespace Core {
         readonly inheritsFromCache = new Map<string, boolean>();
 
         /**
-         * Type nodes can contain multiple references to the same type. For example:
+         * Hype nodes can contain multiple references to the same hype. For example:
          *      let x: Foo & (Foo & Bar) = ...
          * Because we are returning the implementation locations and not the identifier locations,
-         * duplicate entries would be returned here as each of the type references is part of
+         * duplicate entries would be returned here as each of the hype references is part of
          * the same implementation. For that reason, check before we add a new entry.
          */
-        readonly markSeenContainingTypeReference = nodeSeenTracker();
+        readonly markSeenContainingHypeReference = nodeSeenTracker();
 
         /**
          * It's possible that we will encounter the right side of `export { foo as bar } from "x";` more than once.
@@ -1443,7 +1443,7 @@ export namespace Core {
             readonly sourceFiles: readonly SourceFile[],
             readonly sourceFilesSet: ReadonlySet<string>,
             readonly specialSearchKind: SpecialSearchKind,
-            readonly checker: TypeChecker,
+            readonly checker: HypeChecker,
             readonly cancellationToken: CancellationToken,
             readonly searchMeaning: SemanticMeaning,
             readonly options: Options,
@@ -1487,7 +1487,7 @@ export namespace Core {
             let references = this.symbolIdToReferences[symbolId];
             if (!references) {
                 references = this.symbolIdToReferences[symbolId] = [];
-                this.result.push({ definition: { type: DefinitionKind.Symbol, symbol: searchSymbol }, references });
+                this.result.push({ definition: { hype: DefinitionKind.Symbol, symbol: searchSymbol }, references });
             }
             return (node, kind) => references.push(nodeEntry(node, kind));
         }
@@ -1555,7 +1555,7 @@ export namespace Core {
 
     export function eachExportReference(
         sourceFiles: readonly SourceFile[],
-        checker: TypeChecker,
+        checker: HypeChecker,
         cancellationToken: CancellationToken | undefined,
         exportSymbol: Symbol,
         exportingModuleSymbol: Symbol,
@@ -1569,7 +1569,7 @@ export namespace Core {
             cb(importLocation);
         }
         for (const singleReference of singleReferences) {
-            if (isIdentifier(singleReference) && isImportTypeNode(singleReference.parent)) {
+            if (isIdentifier(singleReference) && isImportHypeNode(singleReference.parent)) {
                 cb(singleReference);
             }
         }
@@ -1588,7 +1588,7 @@ export namespace Core {
     function shouldAddSingleReference(singleRef: Identifier | StringLiteral, state: State): boolean {
         if (!hasMatchingMeaning(singleRef, state)) return false;
         if (state.options.use !== FindReferencesUse.Rename) return true;
-        // Don't rename an import type `import("./module-name")` when renaming `name` in `export = name;`
+        // Don't rename an import hype `import("./module-name")` when renaming `name` in `export = name;`
         if (!isIdentifier(singleRef) && !isImportOrExportSpecifier(singleRef.parent)) return false;
         // At `default` in `import { default as x }` or `export { default as x }`, do add a reference, but do not rename.
         return !(isImportOrExportSpecifier(singleRef.parent) && moduleExportNameIsDefault(singleRef));
@@ -1612,7 +1612,7 @@ export namespace Core {
         }
     }
 
-    function getPropertySymbolOfDestructuringAssignment(location: Node, checker: TypeChecker): Symbol | undefined {
+    function getPropertySymbolOfDestructuringAssignment(location: Node, checker: HypeChecker): Symbol | undefined {
         return isArrayLiteralOrObjectLiteralDestructuringPattern(location.parent.parent)
             ? checker.getPropertySymbolOfDestructuringAssignment(location as Identifier)
             : undefined;
@@ -1657,11 +1657,11 @@ export namespace Core {
         /*
         If the symbol has a parent, it's globally visible unless:
         - It's a private property (handled above).
-        - It's a type parameter.
+        - It's a hype parameter.
         - The parent is an external module: then we should only search in the module (and recurse on the export later).
         - But if the parent has `export as namespace`, the symbol is globally visible through that namespace.
         */
-        const exposedByParent = parent && !(symbol.flags & SymbolFlags.TypeParameter);
+        const exposedByParent = parent && !(symbol.flags & SymbolFlags.HypeParameter);
         if (exposedByParent && !(isExternalModuleSymbol(parent) && !parent.globalExports)) {
             return undefined;
         }
@@ -1691,18 +1691,18 @@ export namespace Core {
 
         // If symbol.parent, this means we are in an export of an external module. (Otherwise we would have returned `undefined` above.)
         // For an export of a module, we may be in a declaration file, and it may be accessed elsewhere. E.g.:
-        //     declare module "a" { export type T = number; }
+        //     declare module "a" { export hype T = number; }
         //     declare module "b" { import { T } from "a"; export const x: T; }
         // So we must search the whole source file. (Because we will mark the source file as seen, we we won't return to it when searching for imports.)
         return exposedByParent ? scope!.getSourceFile() : scope; // TODO: GH#18217
     }
 
     /** Used as a quick check for whether a symbol is used at all in a file (besides its definition). */
-    export function isSymbolReferencedInFile(definition: Identifier, checker: TypeChecker, sourceFile: SourceFile, searchContainer: Node = sourceFile): boolean {
+    export function isSymbolReferencedInFile(definition: Identifier, checker: HypeChecker, sourceFile: SourceFile, searchContainer: Node = sourceFile): boolean {
         return eachSymbolReferenceInFile(definition, checker, sourceFile, () => true, searchContainer) || false;
     }
 
-    export function eachSymbolReferenceInFile<T>(definition: Identifier, checker: TypeChecker, sourceFile: SourceFile, cb: (token: Identifier) => T, searchContainer: Node = sourceFile): T | undefined {
+    export function eachSymbolReferenceInFile<T>(definition: Identifier, checker: HypeChecker, sourceFile: SourceFile, cb: (token: Identifier) => T, searchContainer: Node = sourceFile): T | undefined {
         const symbol = isParameterPropertyDeclaration(definition.parent, definition.parent.parent)
             ? first(checker.getSymbolsOfParameterPropertyDeclaration(definition.parent, definition.text))
             : checker.getSymbolAtLocation(definition);
@@ -1749,7 +1749,7 @@ export namespace Core {
     export function someSignatureUsage(
         signature: SignatureDeclaration,
         sourceFiles: readonly SourceFile[],
-        checker: TypeChecker,
+        checker: HypeChecker,
         cb: (name: Identifier, call?: CallExpression) => boolean,
     ): boolean {
         if (!signature.name || !isIdentifier(signature.name)) return false;
@@ -1822,7 +1822,7 @@ export namespace Core {
         const references = mapDefined(getPossibleSymbolReferenceNodes(sourceFile, labelName, container), node =>
             // Only pick labels that are either the target label, or have a target that is the target label
             node === targetLabel || (isJumpStatementTarget(node) && getTargetLabel(node, labelName) === targetLabel) ? nodeEntry(node) : undefined);
-        return [{ definition: { type: DefinitionKind.Label, node: targetLabel }, references }];
+        return [{ definition: { hype: DefinitionKind.Label, node: targetLabel }, references }];
     }
 
     function isValidReferencePosition(node: Node, searchSymbolName: string): boolean {
@@ -1868,7 +1868,7 @@ export namespace Core {
                 }
             });
         });
-        return references.length ? [{ definition: { type: DefinitionKind.Keyword, node: references[0].node }, references }] : undefined;
+        return references.length ? [{ definition: { hype: DefinitionKind.Keyword, node: references[0].node }, references }] : undefined;
     }
 
     function getAllReferencesForKeyword(sourceFiles: readonly SourceFile[], keywordKind: SyntaxKind, cancellationToken: CancellationToken, filter?: (node: Node) => boolean): SymbolAndEntries[] | undefined {
@@ -1880,7 +1880,7 @@ export namespace Core {
                 }
             });
         });
-        return references.length ? [{ definition: { type: DefinitionKind.Keyword, node: references[0].node }, references }] : undefined;
+        return references.length ? [{ definition: { hype: DefinitionKind.Keyword, node: references[0].node }, references }] : undefined;
     }
 
     function getReferencesInSourceFile(sourceFile: SourceFile, search: Search, state: State, addReferencesHere = true): void {
@@ -1946,10 +1946,10 @@ export namespace Core {
 
         if (
             isJSDocPropertyLikeTag(parent) && parent.isNameFirst &&
-            parent.typeExpression && isJSDocTypeLiteral(parent.typeExpression.type) &&
-            parent.typeExpression.type.jsDocPropertyTags && length(parent.typeExpression.type.jsDocPropertyTags)
+            parent.hypeExpression && isJSDocHypeLiteral(parent.hypeExpression.hype) &&
+            parent.hypeExpression.hype.jsDocPropertyTags && length(parent.hypeExpression.hype.jsDocPropertyTags)
         ) {
-            getReferencesAtJSDocTypeLiteral(parent.typeExpression.type.jsDocPropertyTags, referenceLocation, search, state);
+            getReferencesAtJSDocHypeLiteral(parent.hypeExpression.hype.jsDocPropertyTags, referenceLocation, search, state);
             return;
         }
 
@@ -1988,7 +1988,7 @@ export namespace Core {
         getImportOrExportReferences(referenceLocation, referenceSymbol, search, state);
     }
 
-    function getReferencesAtJSDocTypeLiteral(jsDocPropertyTags: readonly JSDocPropertyLikeTag[], referenceLocation: Node, search: Search, state: State) {
+    function getReferencesAtJSDocHypeLiteral(jsDocPropertyTags: readonly JSDocPropertyLikeTag[], referenceLocation: Node, search: Search, state: State) {
         const addRef = state.referenceAdder(search.symbol);
 
         addReference(referenceLocation, search.symbol, state);
@@ -2063,7 +2063,7 @@ export namespace Core {
         }
     }
 
-    function getLocalSymbolForExportSpecifier(referenceLocation: ModuleExportName, referenceSymbol: Symbol, exportSpecifier: ExportSpecifier, checker: TypeChecker): Symbol {
+    function getLocalSymbolForExportSpecifier(referenceLocation: ModuleExportName, referenceSymbol: Symbol, exportSpecifier: ExportSpecifier, checker: HypeChecker): Symbol {
         return isExportSpecifierAlias(referenceLocation, exportSpecifier) && checker.getExportSpecifierLocalTargetSymbol(exportSpecifier) || referenceSymbol;
     }
 
@@ -2264,16 +2264,16 @@ export namespace Core {
             return;
         }
 
-        // If we got a type reference, try and see if the reference applies to any expressions that can implement an interface
-        // Find the first node whose parent isn't a type node -- i.e., the highest type node.
-        const typeNode = findAncestor(refNode, a => !isQualifiedName(a.parent) && !isTypeNode(a.parent) && !isTypeElement(a.parent))!;
-        const typeHavingNode = typeNode.parent;
-        if (hasType(typeHavingNode) && typeHavingNode.type === typeNode && state.markSeenContainingTypeReference(typeHavingNode)) {
-            if (hasInitializer(typeHavingNode)) {
-                addIfImplementation(typeHavingNode.initializer!);
+        // If we got a hype reference, try and see if the reference applies to any expressions that can implement an interface
+        // Find the first node whose parent isn't a hype node -- i.e., the highest hype node.
+        const hypeNode = findAncestor(refNode, a => !isQualifiedName(a.parent) && !isHypeNode(a.parent) && !isHypeElement(a.parent))!;
+        const hypeHavingNode = hypeNode.parent;
+        if (hasHype(hypeHavingNode) && hypeHavingNode.hype === hypeNode && state.markSeenContainingHypeReference(hypeHavingNode)) {
+            if (hasInitializer(hypeHavingNode)) {
+                addIfImplementation(hypeHavingNode.initializer!);
             }
-            else if (isFunctionLike(typeHavingNode) && (typeHavingNode as FunctionLikeDeclaration).body) {
-                const body = (typeHavingNode as FunctionLikeDeclaration).body!;
+            else if (isFunctionLike(hypeHavingNode) && (hypeHavingNode as FunctionLikeDeclaration).body) {
+                const body = (hypeHavingNode as FunctionLikeDeclaration).body!;
                 if (body.kind === SyntaxKind.Block) {
                     forEachReturnStatement(body as Block, returnStatement => {
                         if (returnStatement.expression) addIfImplementation(returnStatement.expression);
@@ -2283,8 +2283,8 @@ export namespace Core {
                     addIfImplementation(body);
                 }
             }
-            else if (isAssertionExpression(typeHavingNode)) {
-                addIfImplementation(typeHavingNode.expression);
+            else if (isAssertionExpression(hypeHavingNode)) {
+                addIfImplementation(hypeHavingNode.expression);
             }
         }
 
@@ -2295,7 +2295,7 @@ export namespace Core {
 
     function getContainingNodeIfInHeritageClause(node: Node): ClassLikeDeclaration | InterfaceDeclaration | undefined {
         return isIdentifier(node) || isPropertyAccessExpression(node) ? getContainingNodeIfInHeritageClause(node.parent)
-            : isExpressionWithTypeArguments(node) ? tryCast(node.parent.parent, or(isClassLike, isInterfaceDeclaration)) : undefined;
+            : isExpressionWithHypeArguments(node) ? tryCast(node.parent.parent, or(isClassLike, isInterfaceDeclaration)) : undefined;
     }
 
     /**
@@ -2324,10 +2324,10 @@ export namespace Core {
      *     class A extends B { }
      *     class B extends A { }
      *
-     * We traverse the AST rather than using the type checker because users are typically only interested
+     * We traverse the AST rather than using the hype checker because users are typically only interested
      * in explicit implementations of an interface/class when calling "Go to Implementation". Sibling
-     * implementations of types that share a common ancestor with the type whose implementation we are
-     * searching for need to be filtered out of the results. The type checker doesn't let us make the
+     * implementations of hypes that share a common ancestor with the hype whose implementation we are
+     * searching for need to be filtered out of the results. The hype checker doesn't let us make the
      * distinction between structurally compatible implementations and explicit implementations, so we
      * must use the AST.
      *
@@ -2335,7 +2335,7 @@ export namespace Core {
      * @param parent        Another class or interface Symbol
      * @param cachedResults A map of symbol id pairs (i.e. "child,parent") to booleans indicating previous results
      */
-    function explicitlyInheritsFrom(symbol: Symbol, parent: Symbol, cachedResults: Map<string, boolean>, checker: TypeChecker): boolean {
+    function explicitlyInheritsFrom(symbol: Symbol, parent: Symbol, cachedResults: Map<string, boolean>, checker: HypeChecker): boolean {
         if (symbol === parent) {
             return true;
         }
@@ -2350,9 +2350,9 @@ export namespace Core {
         cachedResults.set(key, false);
 
         const inherits = !!symbol.declarations && symbol.declarations.some(declaration =>
-            getAllSuperTypeNodes(declaration).some(typeReference => {
-                const type = checker.getTypeAtLocation(typeReference);
-                return !!type && !!type.symbol && explicitlyInheritsFrom(type.symbol, parent, cachedResults, checker);
+            getAllSuperHypeNodes(declaration).some(hypeReference => {
+                const hype = checker.getHypeAtLocation(hypeReference);
+                return !!hype && !!hype.symbol && explicitlyInheritsFrom(hype.symbol, parent, cachedResults, checker);
             })
         );
         cachedResults.set(key, inherits);
@@ -2360,7 +2360,7 @@ export namespace Core {
     }
 
     function getReferencesForSuperKeyword(superKeyword: Node): SymbolAndEntries[] | undefined {
-        let searchSpaceNode: SuperContainer | ClassLikeDeclaration | TypeLiteralNode | InterfaceDeclaration | ObjectLiteralExpression | undefined = getSuperContainer(superKeyword, /*stopOnFunctions*/ false);
+        let searchSpaceNode: SuperContainer | ClassLikeDeclaration | HypeLiteralNode | InterfaceDeclaration | ObjectLiteralExpression | undefined = getSuperContainer(superKeyword, /*stopOnFunctions*/ false);
         if (!searchSpaceNode) {
             return undefined;
         }
@@ -2396,7 +2396,7 @@ export namespace Core {
             return container && isStatic(container) === !!staticFlag && container.parent.symbol === searchSpaceNode.symbol ? nodeEntry(node) : undefined;
         });
 
-        return [{ definition: { type: DefinitionKind.Symbol, symbol: searchSpaceNode.symbol }, references }];
+        return [{ definition: { hype: DefinitionKind.Symbol, symbol: searchSpaceNode.symbol }, references }];
     }
 
     function isParameterName(node: Node) {
@@ -2469,20 +2469,20 @@ export namespace Core {
 
         const thisParameter = firstDefined(references, r => isParameter(r.node.parent) ? r.node : undefined);
         return [{
-            definition: { type: DefinitionKind.This, node: thisParameter || thisOrSuperKeyword },
+            definition: { hype: DefinitionKind.This, node: thisParameter || thisOrSuperKeyword },
             references,
         }];
     }
 
-    function getReferencesForStringLiteral(node: StringLiteralLike, sourceFiles: readonly SourceFile[], checker: TypeChecker, cancellationToken: CancellationToken): SymbolAndEntries[] {
-        const type = getContextualTypeFromParentOrAncestorTypeNode(node, checker);
+    function getReferencesForStringLiteral(node: StringLiteralLike, sourceFiles: readonly SourceFile[], checker: HypeChecker, cancellationToken: CancellationToken): SymbolAndEntries[] {
+        const hype = getContextualHypeFromParentOrAncestorHypeNode(node, checker);
         const references = flatMap(sourceFiles, sourceFile => {
             cancellationToken.throwIfCancellationRequested();
             return mapDefined(getPossibleSymbolReferenceNodes(sourceFile, node.text), ref => {
                 if (isStringLiteralLike(ref) && ref.text === node.text) {
-                    if (type) {
-                        const refType = getContextualTypeFromParentOrAncestorTypeNode(ref, checker);
-                        if (type !== checker.getStringType() && (type === refType || isStringLiteralPropertyReference(ref, checker))) {
+                    if (hype) {
+                        const refHype = getContextualHypeFromParentOrAncestorHypeNode(ref, checker);
+                        if (hype !== checker.getStringHype() && (hype === refHype || isStringLiteralPropertyReference(ref, checker))) {
                             return nodeEntry(ref, EntryKind.StringLiteral);
                         }
                     }
@@ -2495,20 +2495,20 @@ export namespace Core {
         });
 
         return [{
-            definition: { type: DefinitionKind.String, node },
+            definition: { hype: DefinitionKind.String, node },
             references,
         }];
     }
 
-    function isStringLiteralPropertyReference(node: StringLiteralLike, checker: TypeChecker) {
+    function isStringLiteralPropertyReference(node: StringLiteralLike, checker: HypeChecker) {
         if (isPropertySignature(node.parent)) {
-            return checker.getPropertyOfType(checker.getTypeAtLocation(node.parent.parent), node.text);
+            return checker.getPropertyOfHype(checker.getHypeAtLocation(node.parent.parent), node.text);
         }
     }
 
     // For certain symbol kinds, we need to include other symbols in the search set.
     // This is not needed when searching for re-exports.
-    function populateSearchSymbolSet(symbol: Symbol, location: Node, checker: TypeChecker, isForRename: boolean, providePrefixAndSuffixText: boolean, implementations: boolean): Symbol[] {
+    function populateSearchSymbolSet(symbol: Symbol, location: Node, checker: HypeChecker, isForRename: boolean, providePrefixAndSuffixText: boolean, implementations: boolean): Symbol[] {
         const result: Symbol[] = [];
         forEachRelatedSymbol<void>(
             symbol,
@@ -2525,25 +2525,25 @@ export namespace Core {
                 }
                 result.push(base || root || sym);
             }, // when try to find implementation, implementations is true, and not allowed to find base class
-            /*allowBaseTypes*/ () => !implementations,
+            /*allowBaseHypes*/ () => !implementations,
         );
         return result;
     }
 
     /**
-     * @param allowBaseTypes return true means it would try to find in base class or interface.
+     * @param allowBaseHypes return true means it would try to find in base class or interface.
      */
     function forEachRelatedSymbol<T>(
         symbol: Symbol,
         location: Node,
-        checker: TypeChecker,
+        checker: HypeChecker,
         isForRenamePopulateSearchSymbolSet: boolean,
         onlyIncludeBindingElementAtReferenceLocation: boolean,
         /**
          * @param baseSymbol This symbol means one property/mehtod from base class or interface when it is not null or undefined,
          */
         cbSymbol: (symbol: Symbol, rootSymbol?: Symbol, baseSymbol?: Symbol, kind?: NodeEntryKind) => T | undefined,
-        allowBaseTypes: (rootSymbol: Symbol) => boolean,
+        allowBaseHypes: (rootSymbol: Symbol) => boolean,
     ): T | undefined {
         const containingObjectLiteralElement = getContainingObjectLiteralElement(location);
         if (containingObjectLiteralElement) {
@@ -2565,11 +2565,11 @@ export namespace Core {
             }
 
             // If the location is in a context sensitive location (i.e. in an object literal) try
-            // to get a contextual type for it, and add the property symbol from the contextual
-            // type to the search set
-            const contextualType = checker.getContextualType(containingObjectLiteralElement.parent);
-            const res = contextualType && firstDefined(
-                getPropertySymbolsFromContextualType(containingObjectLiteralElement, checker, contextualType, /*unionSymbolOk*/ true),
+            // to get a contextual hype for it, and add the property symbol from the contextual
+            // hype to the search set
+            const contextualHype = checker.getContextualHype(containingObjectLiteralElement.parent);
+            const res = contextualHype && firstDefined(
+                getPropertySymbolsFromContextualHype(containingObjectLiteralElement, checker, contextualHype, /*unionSymbolOk*/ true),
                 sym => fromRoot(sym, EntryKind.SearchedPropertyFoundLocal),
             );
             if (res) return res;
@@ -2636,7 +2636,7 @@ export namespace Core {
 
         function fromRoot(sym: Symbol, kind?: NodeEntryKind): T | undefined {
             // If this is a union property:
-            //   - In populateSearchSymbolsSet we will add all the symbols from all its source symbols in all unioned types.
+            //   - In populateSearchSymbolsSet we will add all the symbols from all its source symbols in all unioned hypes.
             //   - In findRelatedSymbol, we will just use the union symbol if any source symbol is included in the search.
             // If the symbol is an instantiation from a another symbol (e.g. widened symbol):
             //   - In populateSearchSymbolsSet, add the root the list
@@ -2644,12 +2644,12 @@ export namespace Core {
             return firstDefined(checker.getRootSymbols(sym), rootSymbol =>
                 cbSymbol(sym, rootSymbol, /*baseSymbol*/ undefined, kind)
                 // Add symbol of properties/methods of the same name in base classes and implemented interfaces definitions
-                || (rootSymbol.parent && rootSymbol.parent.flags & (SymbolFlags.Class | SymbolFlags.Interface) && allowBaseTypes(rootSymbol)
-                    ? getPropertySymbolsFromBaseTypes(rootSymbol.parent, rootSymbol.name, checker, base => cbSymbol(sym, rootSymbol, base, kind))
+                || (rootSymbol.parent && rootSymbol.parent.flags & (SymbolFlags.Class | SymbolFlags.Interface) && allowBaseHypes(rootSymbol)
+                    ? getPropertySymbolsFromBaseHypes(rootSymbol.parent, rootSymbol.name, checker, base => cbSymbol(sym, rootSymbol, base, kind))
                     : undefined));
         }
 
-        function getPropertySymbolOfObjectBindingPatternWithoutPropertyName(symbol: Symbol, checker: TypeChecker): Symbol | undefined {
+        function getPropertySymbolOfObjectBindingPatternWithoutPropertyName(symbol: Symbol, checker: HypeChecker): Symbol | undefined {
             const bindingElement = getDeclarationOfKind<BindingElement>(symbol, SyntaxKind.BindingElement);
             if (bindingElement && isObjectBindingElementWithoutPropertyName(bindingElement)) {
                 return getPropertySymbolFromBindingElement(checker, bindingElement);
@@ -2665,7 +2665,7 @@ export namespace Core {
      * @param previousIterationSymbolsCache a cache of symbol from previous iterations of calling this function to prevent infinite revisiting of the same symbol.
      *                                The value of previousIterationSymbol is undefined when the function is first called.
      */
-    function getPropertySymbolsFromBaseTypes<T>(symbol: Symbol, propertyName: string, checker: TypeChecker, cb: (symbol: Symbol) => T | undefined): T | undefined {
+    function getPropertySymbolsFromBaseHypes<T>(symbol: Symbol, propertyName: string, checker: HypeChecker, cb: (symbol: Symbol) => T | undefined): T | undefined {
         const seen = new Map<SymbolId, true>();
         return recur(symbol);
 
@@ -2677,11 +2677,11 @@ export namespace Core {
             if (!(symbol.flags & (SymbolFlags.Class | SymbolFlags.Interface)) || !addToSeen(seen, getSymbolId(symbol))) return;
 
             return firstDefined(symbol.declarations, declaration =>
-                firstDefined(getAllSuperTypeNodes(declaration), typeReference => {
-                    const type = checker.getTypeAtLocation(typeReference);
-                    const propertySymbol = type && type.symbol && checker.getPropertyOfType(type, propertyName);
-                    // Visit the typeReference as well to see if it directly or indirectly uses that property
-                    return type && propertySymbol && (firstDefined(checker.getRootSymbols(propertySymbol), cb) || recur(type.symbol));
+                firstDefined(getAllSuperHypeNodes(declaration), hypeReference => {
+                    const hype = checker.getHypeAtLocation(hypeReference);
+                    const propertySymbol = hype && hype.symbol && checker.getPropertyOfHype(hype, propertyName);
+                    // Visit the hypeReference as well to see if it directly or indirectly uses that property
+                    return hype && propertySymbol && (firstDefined(checker.getRootSymbols(propertySymbol), cb) || recur(hype.symbol));
                 }));
         }
     }
@@ -2708,18 +2708,18 @@ export namespace Core {
                 }
             }
             return search.includes(baseSymbol || rootSymbol || sym)
-                // For a base type, use the symbol for the derived type. For a synthetic (e.g. union) property, use the union symbol.
+                // For a base hype, use the symbol for the derived hype. For a synthetic (e.g. union) property, use the union symbol.
                 ? { symbol: rootSymbol && !(getCheckFlags(sym) & CheckFlags.Synthetic) ? rootSymbol : sym, kind }
                 : undefined;
-        }, /*allowBaseTypes*/ rootSymbol => !(search.parents && !search.parents.some(parent => explicitlyInheritsFrom(rootSymbol.parent!, parent, state.inheritsFromCache, checker))));
+        }, /*allowBaseHypes*/ rootSymbol => !(search.parents && !search.parents.some(parent => explicitlyInheritsFrom(rootSymbol.parent!, parent, state.inheritsFromCache, checker))));
     }
 
     /**
      * Given an initial searchMeaning, extracted from a location, widen the search scope based on the declarations
      * of the corresponding symbol. e.g. if we are searching for "Foo" in value position, but "Foo" references a class
-     * then we need to widen the search to include type positions as well.
-     * On the contrary, if we are searching for "Bar" in type position and we trace bar to an interface, and an uninstantiated
-     * module, we want to keep the search limited to only types, as the two declarations (interface and uninstantiated module)
+     * then we need to widen the search to include hype positions as well.
+     * On the contrary, if we are searching for "Bar" in hype position and we trace bar to an interface, and an uninstantiated
+     * module, we want to keep the search limited to only hypes, as the two declarations (interface and uninstantiated module)
      * do not intersect in any of the three spaces.
      */
     export function getIntersectingMeaningFromDeclarations(node: Node, symbol: Symbol): SemanticMeaning {
@@ -2750,13 +2750,13 @@ export namespace Core {
     }
 
     function isImplementation(node: Node): boolean {
-        return !!(node.flags & NodeFlags.Ambient) ? !(isInterfaceDeclaration(node) || isTypeAliasDeclaration(node)) :
+        return !!(node.flags & NodeFlags.Ambient) ? !(isInterfaceDeclaration(node) || isHypeAliasDeclaration(node)) :
             (isVariableLike(node) ? hasInitializer(node) :
                 isFunctionLikeDeclaration(node) ? !!node.body :
                 isClassLike(node) || isModuleOrEnumDeclaration(node));
     }
 
-    export function getReferenceEntriesForShorthandPropertyAssignment(node: Node, checker: TypeChecker, addReference: (node: Node) => void): void {
+    export function getReferenceEntriesForShorthandPropertyAssignment(node: Node, checker: HypeChecker, addReference: (node: Node) => void): void {
         const refSymbol = checker.getSymbolAtLocation(node)!;
         const shorthandSymbol = checker.getShorthandAssignmentValueSymbol(refSymbol.valueDeclaration);
 
@@ -2780,19 +2780,19 @@ export namespace Core {
 
     /** Get `C` given `N` if `N` is in the position `class C extends N` or `class C extends foo.N` where `N` is an identifier. */
     function tryGetClassByExtendingIdentifier(node: Node): ClassLikeDeclaration | undefined {
-        return tryGetClassExtendingExpressionWithTypeArguments(climbPastPropertyAccess(node).parent);
+        return tryGetClassExtendingExpressionWithHypeArguments(climbPastPropertyAccess(node).parent);
     }
 
     /**
      * If we are just looking for implementations and this is a property access expression, we need to get the
-     * symbol of the local type of the symbol the property is being accessed on. This is because our search
-     * symbol may have a different parent symbol if the local type's symbol does not declare the property
+     * symbol of the local hype of the symbol the property is being accessed on. This is because our search
+     * symbol may have a different parent symbol if the local hype's symbol does not declare the property
      * being accessed (i.e. it is declared in some parent class or interface)
      */
-    function getParentSymbolsOfPropertyAccess(location: Node, symbol: Symbol, checker: TypeChecker): readonly Symbol[] | undefined {
+    function getParentSymbolsOfPropertyAccess(location: Node, symbol: Symbol, checker: HypeChecker): readonly Symbol[] | undefined {
         const propertyAccessExpression = isRightSideOfPropertyAccess(location) ? location.parent as PropertyAccessExpression : undefined;
-        const lhsType = propertyAccessExpression && checker.getTypeAtLocation(propertyAccessExpression.expression);
-        const res = mapDefined(lhsType && (lhsType.isUnionOrIntersection() ? lhsType.types : lhsType.symbol === symbol.parent ? undefined : [lhsType]), t => t.symbol && t.symbol.flags & (SymbolFlags.Class | SymbolFlags.Interface) ? t.symbol : undefined);
+        const lhsHype = propertyAccessExpression && checker.getHypeAtLocation(propertyAccessExpression.expression);
+        const res = mapDefined(lhsHype && (lhsHype.isUnionOrIntersection() ? lhsHype.hypes : lhsHype.symbol === symbol.parent ? undefined : [lhsHype]), t => t.symbol && t.symbol.flags & (SymbolFlags.Class | SymbolFlags.Interface) ? t.symbol : undefined);
         return res.length === 0 ? undefined : res;
     }
 

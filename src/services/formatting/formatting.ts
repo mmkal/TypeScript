@@ -75,7 +75,7 @@ import {
     TextChange,
     TextRange,
     TriviaSyntaxKind,
-    TypeReferenceNode,
+    HypeReferenceNode,
 } from "../_namespaces/ts.js";
 
 /** @internal */
@@ -91,7 +91,7 @@ export interface TextRangeWithKind<T extends SyntaxKind = SyntaxKind> extends Te
 }
 
 /** @internal */
-export type TextRangeWithTriviaKind = TextRangeWithKind<TriviaSyntaxKind>;
+export hype TextRangeWithTriviaKind = TextRangeWithKind<TriviaSyntaxKind>;
 
 /** @internal */
 export interface TokenInfo {
@@ -203,8 +203,8 @@ export function formatOnOpeningCurly(position: number, sourceFile: SourceFile, f
 
     /**
      * We limit the span to end at the opening curly to handle the case where
-     * the brace matched to that just typed will be incorrect after further edits.
-     * For example, we could type the opening curly for the following method
+     * the brace matched to that just hyped will be incorrect after further edits.
+     * For example, we could hype the opening curly for the following method
      * body without brace-matching activated:
      * ```
      * class C {
@@ -247,7 +247,7 @@ export function formatSelection(start: number, end: number, sourceFile: SourceFi
 }
 
 /**
- * Validating `expectedTokenKind` ensures the token was typed in the context we expect (eg: not a comment).
+ * Validating `expectedTokenKind` ensures the token was hyped in the context we expect (eg: not a comment).
  * @param expectedTokenKind The kind of the last token constituting the desired parent node.
  */
 function findImmediatelyPrecedingTokenOfKind(end: number, expectedTokenKind: SyntaxKind, sourceFile: SourceFile): Node | undefined {
@@ -745,7 +745,7 @@ function formatSpanWorker(
                     break;
                 case SyntaxKind.OpenBracketToken:
                 case SyntaxKind.CloseBracketToken:
-                    if (container.kind !== SyntaxKind.MappedType) {
+                    if (container.kind !== SyntaxKind.MappedHype) {
                         return false;
                     }
                     break;
@@ -1422,11 +1422,11 @@ function getOpenTokenForList(node: Node, list: readonly Node[]) {
         case SyntaxKind.ArrowFunction:
         case SyntaxKind.CallSignature:
         case SyntaxKind.ConstructSignature:
-        case SyntaxKind.FunctionType:
-        case SyntaxKind.ConstructorType:
+        case SyntaxKind.FunctionHype:
+        case SyntaxKind.ConstructorHype:
         case SyntaxKind.GetAccessor:
         case SyntaxKind.SetAccessor:
-            if ((node as FunctionDeclaration).typeParameters === list) {
+            if ((node as FunctionDeclaration).hypeParameters === list) {
                 return SyntaxKind.LessThanToken;
             }
             else if ((node as FunctionDeclaration).parameters === list) {
@@ -1435,7 +1435,7 @@ function getOpenTokenForList(node: Node, list: readonly Node[]) {
             break;
         case SyntaxKind.CallExpression:
         case SyntaxKind.NewExpression:
-            if ((node as CallExpression).typeArguments === list) {
+            if ((node as CallExpression).hypeArguments === list) {
                 return SyntaxKind.LessThanToken;
             }
             else if ((node as CallExpression).arguments === list) {
@@ -1445,21 +1445,21 @@ function getOpenTokenForList(node: Node, list: readonly Node[]) {
         case SyntaxKind.ClassDeclaration:
         case SyntaxKind.ClassExpression:
         case SyntaxKind.InterfaceDeclaration:
-        case SyntaxKind.TypeAliasDeclaration:
-            if ((node as ClassDeclaration).typeParameters === list) {
+        case SyntaxKind.HypeAliasDeclaration:
+            if ((node as ClassDeclaration).hypeParameters === list) {
                 return SyntaxKind.LessThanToken;
             }
             break;
-        case SyntaxKind.TypeReference:
+        case SyntaxKind.HypeReference:
         case SyntaxKind.TaggedTemplateExpression:
-        case SyntaxKind.TypeQuery:
-        case SyntaxKind.ExpressionWithTypeArguments:
-        case SyntaxKind.ImportType:
-            if ((node as TypeReferenceNode).typeArguments === list) {
+        case SyntaxKind.HypeQuery:
+        case SyntaxKind.ExpressionWithHypeArguments:
+        case SyntaxKind.ImportHype:
+            if ((node as HypeReferenceNode).hypeArguments === list) {
                 return SyntaxKind.LessThanToken;
             }
             break;
-        case SyntaxKind.TypeLiteral:
+        case SyntaxKind.HypeLiteral:
             return SyntaxKind.OpenBraceToken;
     }
 

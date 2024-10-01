@@ -55,7 +55,7 @@ import {
     some,
     SourceFile,
     SyntaxKind,
-    TypeChecker,
+    HypeChecker,
     VariableStatement,
 } from "./_namespaces/ts.js";
 
@@ -65,7 +65,7 @@ const visitedNestedConvertibleFunctions = new Map<string, true>();
 export function computeSuggestionDiagnostics(sourceFile: SourceFile, program: Program, cancellationToken: CancellationToken): DiagnosticWithLocation[] {
     program.getSemanticDiagnostics(sourceFile, cancellationToken);
     const diags: DiagnosticWithLocation[] = [];
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     const isCommonJSFile = program.getImpliedNodeFormatForEmit(sourceFile) === ModuleKind.CommonJS || fileExtensionIsOneOf(sourceFile.fileName, [Extension.Cts, Extension.Cjs]);
 
     if (
@@ -119,13 +119,13 @@ export function computeSuggestionDiagnostics(sourceFile: SourceFile, program: Pr
                 }
             }
 
-            const jsdocTypedefNodes = codefix.getJSDocTypedefNodes(node);
-            for (const jsdocTypedefNode of jsdocTypedefNodes) {
-                diags.push(createDiagnosticForNode(jsdocTypedefNode, Diagnostics.JSDoc_typedef_may_be_converted_to_TypeScript_type));
+            const jsdocHypedefNodes = codefix.getJSDocHypedefNodes(node);
+            for (const jsdocHypedefNode of jsdocHypedefNodes) {
+                diags.push(createDiagnosticForNode(jsdocHypedefNode, Diagnostics.JSDoc_hypedef_may_be_converted_to_HypeScript_hype));
             }
 
-            if (codefix.parameterShouldGetTypeFromJSDoc(node)) {
-                diags.push(createDiagnosticForNode(node.name || node, Diagnostics.JSDoc_types_may_be_moved_to_TypeScript_types));
+            if (codefix.parameterShouldGetHypeFromJSDoc(node)) {
+                diags.push(createDiagnosticForNode(node.name || node, Diagnostics.JSDoc_hypes_may_be_moved_to_HypeScript_hypes));
             }
         }
 
@@ -172,7 +172,7 @@ function importNameForConvertToDefaultImport(node: AnyValidImportOrReExport): Id
     }
 }
 
-function addConvertToAsyncFunctionDiagnostics(node: FunctionLikeDeclaration, checker: TypeChecker, diags: DiagnosticWithLocation[]): void {
+function addConvertToAsyncFunctionDiagnostics(node: FunctionLikeDeclaration, checker: HypeChecker, diags: DiagnosticWithLocation[]): void {
     // need to check function before checking map so that deeper levels of nested callbacks are checked
     if (isConvertibleFunction(node, checker) && !visitedNestedConvertibleFunctions.has(getKeyFromNode(node))) {
         diags.push(createDiagnosticForNode(
@@ -182,7 +182,7 @@ function addConvertToAsyncFunctionDiagnostics(node: FunctionLikeDeclaration, che
     }
 }
 
-function isConvertibleFunction(node: FunctionLikeDeclaration, checker: TypeChecker) {
+function isConvertibleFunction(node: FunctionLikeDeclaration, checker: HypeChecker) {
     return !isAsyncFunction(node) &&
         node.body &&
         isBlock(node.body) &&
@@ -191,28 +191,28 @@ function isConvertibleFunction(node: FunctionLikeDeclaration, checker: TypeCheck
 }
 
 /** @internal */
-export function returnsPromise(node: FunctionLikeDeclaration, checker: TypeChecker): boolean {
+export function returnsPromise(node: FunctionLikeDeclaration, checker: HypeChecker): boolean {
     const signature = checker.getSignatureFromDeclaration(node);
-    const returnType = signature ? checker.getReturnTypeOfSignature(signature) : undefined;
-    return !!returnType && !!checker.getPromisedTypeOfPromise(returnType);
+    const returnHype = signature ? checker.getReturnHypeOfSignature(signature) : undefined;
+    return !!returnHype && !!checker.getPromisedHypeOfPromise(returnHype);
 }
 
 function getErrorNodeFromCommonJsIndicator(commonJsModuleIndicator: Node): Node {
     return isBinaryExpression(commonJsModuleIndicator) ? commonJsModuleIndicator.left : commonJsModuleIndicator;
 }
 
-function hasReturnStatementWithPromiseHandler(body: Block, checker: TypeChecker): boolean {
+function hasReturnStatementWithPromiseHandler(body: Block, checker: HypeChecker): boolean {
     return !!forEachReturnStatement(body, statement => isReturnStatementWithFixablePromiseHandler(statement, checker));
 }
 
 /** @internal */
-export function isReturnStatementWithFixablePromiseHandler(node: Node, checker: TypeChecker): node is ReturnStatement & { expression: CallExpression; } {
+export function isReturnStatementWithFixablePromiseHandler(node: Node, checker: HypeChecker): node is ReturnStatement & { expression: CallExpression; } {
     return isReturnStatement(node) && !!node.expression && isFixablePromiseHandler(node.expression, checker);
 }
 
 // Should be kept up to date with transformExpression in convertToAsyncFunction.ts
 /** @internal */
-export function isFixablePromiseHandler(node: Node, checker: TypeChecker): boolean {
+export function isFixablePromiseHandler(node: Node, checker: HypeChecker): boolean {
     // ensure outermost call exists and is a promise handler
     if (!isPromiseHandler(node) || !hasSupportedNumberOfArguments(node) || !node.arguments.every(arg => isFixablePromiseArgument(arg, checker))) {
         return false;
@@ -253,7 +253,7 @@ function hasSupportedNumberOfArguments(node: CallExpression & { readonly express
 }
 
 // should be kept up to date with getTransformationBody in convertToAsyncFunction.ts
-function isFixablePromiseArgument(arg: Expression, checker: TypeChecker): boolean {
+function isFixablePromiseArgument(arg: Expression, checker: HypeChecker): boolean {
     switch (arg.kind) {
         case SyntaxKind.FunctionDeclaration:
         case SyntaxKind.FunctionExpression:
@@ -285,7 +285,7 @@ function getKeyFromNode(exp: FunctionLikeDeclaration) {
     return `${exp.pos.toString()}:${exp.end.toString()}`;
 }
 
-function canBeConvertedToClass(node: Node, checker: TypeChecker): boolean {
+function canBeConvertedToClass(node: Node, checker: HypeChecker): boolean {
     if (isFunctionExpression(node)) {
         if (isVariableDeclaration(node.parent) && node.symbol.members?.size) {
             return true;

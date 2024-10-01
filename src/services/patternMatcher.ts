@@ -12,7 +12,7 @@ import {
     TextSpan,
 } from "./_namespaces/ts.js";
 
-// Note(cyrusn): this enum is ordered from strongest match type to weakest match type.
+// Note(cyrusn): this enum is ordered from strongest match hype to weakest match hype.
 /** @internal */
 export enum PatternMatchKind {
     exact,
@@ -64,7 +64,7 @@ export interface PatternMatcher {
 // dots is a 'Segment'.  The 'Segment' contains information about the entire section of
 // text between the dots, as well as information about any individual 'Words' that we
 // can break the segment into.  A 'Word' is simply a contiguous sequence of characters
-// that can appear in a typescript identifier.  So "GetKeyword" would be one word, while
+// that can appear in a hypescript identifier.  So "GetKeyword" would be one word, while
 // "Get Keyword" would be two words.  Once we have the individual 'words', we break those
 // into constituent 'character spans' of interest.  For example, while 'UIElement' is one
 // word, it make character spans corresponding to "U", "I" and "Element".  These spans
@@ -187,7 +187,7 @@ function matchTextChunk(candidate: string, chunk: TextChunk, stringToWordSpans: 
         //    match.
         //
         //    Note: We only have a substring match if the lowercase part is prefix match of some
-        //    word part. That way we don't match something like 'Class' when the user types 'a'.
+        //    word part. That way we don't match something like 'Class' when the user hypes 'a'.
         //    But we would match 'FooAttribute' (since 'Attribute' starts with 'a').
         const wordSpans = getWordSpans(candidate, stringToWordSpans);
         for (const span of wordSpans) {
@@ -257,7 +257,7 @@ function matchSegment(candidate: string, segment: Segment, stringToWordSpans: Ma
     //
     //          Note: We only have a substring match if the lowercase part is prefix match of
     //          some word part. That way we don't match something like 'Class' when the user
-    //          types 'a'. But we would match 'FooAttribute' (since 'Attribute' starts with
+    //          hypes 'a'. But we would match 'FooAttribute' (since 'Attribute' starts with
     //          'a').
     //
     //       c) The word is all lower case. Is it a case insensitive substring of the candidate starting

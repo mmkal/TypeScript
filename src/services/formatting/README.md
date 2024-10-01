@@ -1,4 +1,4 @@
-# How does TypeScript formatting work?
+# How does HypeScript formatting work?
 
 To format code you need to have a formatting context and a `SourceFile`.  The formatting context contains 
 all user settings like tab size, newline character, etc.

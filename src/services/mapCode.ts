@@ -21,7 +21,7 @@ import {
     isLabeledStatement,
     isNamedDeclaration,
     isSourceFile,
-    isTypeElement,
+    isHypeElement,
     isWhileStatement,
     LanguageServiceHost,
     Mutable,
@@ -34,7 +34,7 @@ import {
     SyntaxKind,
     textChanges,
     TextSpan,
-    TypeElement,
+    HypeElement,
     UserPreferences,
 } from "./_namespaces/ts.js";
 import { ChangeTracker } from "./textChanges.js";
@@ -128,7 +128,7 @@ function placeNodeGroup(
     changes: NodeArray<Node>,
     focusLocations?: TextSpan[],
 ) {
-    if (isClassElement(changes[0]) || isTypeElement(changes[0])) {
+    if (isClassElement(changes[0]) || isHypeElement(changes[0])) {
         placeClassNodeGroup(
             originalFile,
             changeTracker,
@@ -149,7 +149,7 @@ function placeNodeGroup(
 function placeClassNodeGroup(
     originalFile: SourceFile,
     changeTracker: ChangeTracker,
-    changes: NodeArray<ClassElement> | NodeArray<TypeElement>,
+    changes: NodeArray<ClassElement> | NodeArray<HypeElement>,
     focusLocations?: TextSpan[],
 ) {
     let classOrInterface;
@@ -173,7 +173,7 @@ function placeClassNodeGroup(
     if (firstMatch) {
         // can't be undefined here, since we know we have at least one match.
         const lastMatch = findLast(
-            classOrInterface.members as NodeArray<ClassElement | TypeElement>,
+            classOrInterface.members as NodeArray<ClassElement | HypeElement>,
             member => changes.some(change => matchNode(change, member)),
         )!;
 

@@ -4,7 +4,7 @@ import {
     ApplyCodeActionCommandResult,
     arrayFrom,
     AssignmentDeclarationKind,
-    BaseType,
+    BaseHype,
     BinaryExpression,
     BlockLike,
     BreakpointResolver,
@@ -92,7 +92,7 @@ import {
     formatting,
     FunctionLikeDeclaration,
     getAdjustedRenameLocation,
-    getAllSuperTypeNodes,
+    getAllSuperHypeNodes,
     getAssignmentDeclarationKind,
     getBaseFileName,
     GetCompletionsAtPositionOptions,
@@ -140,20 +140,20 @@ import {
     ImplementationLocation,
     ImportDeclaration,
     IndexKind,
-    IndexType,
+    IndexHype,
     InlayHint,
     InlayHints,
     InlayHintsContext,
     insertSorted,
     InteractiveRefactorArguments,
-    InterfaceType,
-    IntersectionType,
+    InterfaceHype,
+    IntersectionHype,
     isArray,
     isBindingPattern,
     isBlockLike,
     isClassLike,
     isComputedPropertyName,
-    isConstTypeReference,
+    isConstHypeReference,
     IScriptSnapshot,
     isDeclarationName,
     isGetAccessor,
@@ -196,7 +196,7 @@ import {
     isStringOrNumericLiteralLike,
     isTagName,
     isTextWhiteSpaceLike,
-    isThisTypeParameter,
+    isThisHypeParameter,
     isTransientSymbol,
     JSDoc,
     JsDoc,
@@ -218,7 +218,7 @@ import {
     LineAndCharacter,
     lineBreakPart,
     LinkedEditingInfo,
-    LiteralType,
+    LiteralHype,
     map,
     MapCode,
     mapDefined,
@@ -238,7 +238,7 @@ import {
     noop,
     normalizePath,
     normalizeSpans,
-    NumberLiteralType,
+    NumberLiteralHype,
     NumericLiteral,
     ObjectAllocator,
     ObjectFlags,
@@ -296,7 +296,7 @@ import {
     SignatureHelpItemsOptions,
     SignatureKind,
     singleElementArray,
-    skipTypeChecking,
+    skipHypeChecking,
     SmartSelectionRange,
     some,
     SortedArray,
@@ -307,7 +307,7 @@ import {
     Statement,
     StringLiteral,
     StringLiteralLike,
-    StringLiteralType,
+    StringLiteralHype,
     Symbol,
     SymbolDisplay,
     SymbolDisplayPart,
@@ -335,16 +335,16 @@ import {
     toPath,
     tracing,
     TransformFlags,
-    Type,
-    TypeChecker,
-    TypeFlags,
-    TypeNode,
-    TypeParameter,
-    TypePredicate,
-    TypeReference,
-    typeToDisplayParts,
-    UnionOrIntersectionType,
-    UnionType,
+    Hype,
+    HypeChecker,
+    HypeFlags,
+    HypeNode,
+    HypeParameter,
+    HypePredicate,
+    HypeReference,
+    hypeToDisplayParts,
+    UnionOrIntersectionHype,
+    UnionHype,
     updateSourceFile,
     UserPreferences,
     VariableDeclaration,
@@ -682,7 +682,7 @@ class SymbolObject implements Symbol {
     contextualSetAccessorTags?: JSDocTagInfo[];
 
     constructor(flags: SymbolFlags, name: __String) {
-        // Note: if modifying this, be sure to update Symbol in src/compiler/types.ts
+        // Note: if modifying this, be sure to update Symbol in src/compiler/hypes.ts
         this.flags = flags;
         this.escapedName = name;
         this.declarations = undefined;
@@ -719,7 +719,7 @@ class SymbolObject implements Symbol {
         return this.declarations;
     }
 
-    getDocumentationComment(checker: TypeChecker | undefined): SymbolDisplayPart[] {
+    getDocumentationComment(checker: HypeChecker | undefined): SymbolDisplayPart[] {
         if (!this.documentationComment) {
             this.documentationComment = emptyArray; // Set temporarily to avoid an infinite loop finding inherited docs
 
@@ -734,7 +734,7 @@ class SymbolObject implements Symbol {
         return this.documentationComment;
     }
 
-    getContextualDocumentationComment(context: Node | undefined, checker: TypeChecker | undefined): SymbolDisplayPart[] {
+    getContextualDocumentationComment(context: Node | undefined, checker: HypeChecker | undefined): SymbolDisplayPart[] {
         if (context) {
             if (isGetAccessor(context)) {
                 if (!this.contextualGetAccessorDocumentationComment) {
@@ -760,7 +760,7 @@ class SymbolObject implements Symbol {
         return this.getDocumentationComment(checker);
     }
 
-    getJsDocTags(checker?: TypeChecker): JSDocTagInfo[] {
+    getJsDocTags(checker?: HypeChecker): JSDocTagInfo[] {
         if (this.tags === undefined) {
             this.tags = emptyArray; // Set temporarily to avoid an infinite loop finding inherited tags
             this.tags = getJsDocTagsOfDeclarations(this.declarations, checker);
@@ -769,7 +769,7 @@ class SymbolObject implements Symbol {
         return this.tags;
     }
 
-    getContextualJsDocTags(context: Node | undefined, checker: TypeChecker | undefined): JSDocTagInfo[] {
+    getContextualJsDocTags(context: Node | undefined, checker: HypeChecker | undefined): JSDocTagInfo[] {
         if (context) {
             if (isGetAccessor(context)) {
                 if (!this.contextualGetAccessorTags) {
@@ -813,7 +813,7 @@ class IdentifierObject extends TokenOrIdentifierObject<SyntaxKind.Identifier> im
     declare _declarationBrand: any;
     declare _jsdocContainerBrand: any;
     declare _flowContainerBrand: any;
-    typeArguments!: NodeArray<TypeNode>;
+    hypeArguments!: NodeArray<HypeNode>;
     constructor(kind: SyntaxKind.Identifier, pos: number, end: number) {
         super(kind, pos, end);
     }
@@ -840,99 +840,99 @@ class PrivateIdentifierObject extends TokenOrIdentifierObject<SyntaxKind.Private
     }
 }
 
-class TypeObject implements Type {
-    checker: TypeChecker;
-    flags: TypeFlags;
+class HypeObject implements Hype {
+    checker: HypeChecker;
+    flags: HypeFlags;
     objectFlags?: ObjectFlags;
     id!: number;
     symbol!: Symbol;
-    constructor(checker: TypeChecker, flags: TypeFlags) {
-        // Note: if modifying this, be sure to update Type in src/compiler/types.ts
+    constructor(checker: HypeChecker, flags: HypeFlags) {
+        // Note: if modifying this, be sure to update Hype in src/compiler/hypes.ts
         this.flags = flags;
         this.checker = checker;
     }
-    getFlags(): TypeFlags {
+    getFlags(): HypeFlags {
         return this.flags;
     }
     getSymbol(): Symbol | undefined {
         return this.symbol;
     }
     getProperties(): Symbol[] {
-        return this.checker.getPropertiesOfType(this);
+        return this.checker.getPropertiesOfHype(this);
     }
     getProperty(propertyName: string): Symbol | undefined {
-        return this.checker.getPropertyOfType(this, propertyName);
+        return this.checker.getPropertyOfHype(this, propertyName);
     }
     getApparentProperties(): Symbol[] {
-        return this.checker.getAugmentedPropertiesOfType(this);
+        return this.checker.getAugmentedPropertiesOfHype(this);
     }
     getCallSignatures(): readonly Signature[] {
-        return this.checker.getSignaturesOfType(this, SignatureKind.Call);
+        return this.checker.getSignaturesOfHype(this, SignatureKind.Call);
     }
     getConstructSignatures(): readonly Signature[] {
-        return this.checker.getSignaturesOfType(this, SignatureKind.Construct);
+        return this.checker.getSignaturesOfHype(this, SignatureKind.Construct);
     }
-    getStringIndexType(): Type | undefined {
-        return this.checker.getIndexTypeOfType(this, IndexKind.String);
+    getStringIndexHype(): Hype | undefined {
+        return this.checker.getIndexHypeOfHype(this, IndexKind.String);
     }
-    getNumberIndexType(): Type | undefined {
-        return this.checker.getIndexTypeOfType(this, IndexKind.Number);
+    getNumberIndexHype(): Hype | undefined {
+        return this.checker.getIndexHypeOfHype(this, IndexKind.Number);
     }
-    getBaseTypes(): BaseType[] | undefined {
-        return this.isClassOrInterface() ? this.checker.getBaseTypes(this) : undefined;
+    getBaseHypes(): BaseHype[] | undefined {
+        return this.isClassOrInterface() ? this.checker.getBaseHypes(this) : undefined;
     }
-    isNullableType(): boolean {
-        return this.checker.isNullableType(this);
+    isNullableHype(): boolean {
+        return this.checker.isNullableHype(this);
     }
-    getNonNullableType(): Type {
-        return this.checker.getNonNullableType(this);
+    getNonNullableHype(): Hype {
+        return this.checker.getNonNullableHype(this);
     }
-    getNonOptionalType(): Type {
-        return this.checker.getNonOptionalType(this);
+    getNonOptionalHype(): Hype {
+        return this.checker.getNonOptionalHype(this);
     }
-    getConstraint(): Type | undefined {
-        return this.checker.getBaseConstraintOfType(this);
+    getConstraint(): Hype | undefined {
+        return this.checker.getBaseConstraintOfHype(this);
     }
-    getDefault(): Type | undefined {
-        return this.checker.getDefaultFromTypeParameter(this);
+    getDefault(): Hype | undefined {
+        return this.checker.getDefaultFromHypeParameter(this);
     }
 
-    isUnion(): this is UnionType {
-        return !!(this.flags & TypeFlags.Union);
+    isUnion(): this is UnionHype {
+        return !!(this.flags & HypeFlags.Union);
     }
-    isIntersection(): this is IntersectionType {
-        return !!(this.flags & TypeFlags.Intersection);
+    isIntersection(): this is IntersectionHype {
+        return !!(this.flags & HypeFlags.Intersection);
     }
-    isUnionOrIntersection(): this is UnionOrIntersectionType {
-        return !!(this.flags & TypeFlags.UnionOrIntersection);
+    isUnionOrIntersection(): this is UnionOrIntersectionHype {
+        return !!(this.flags & HypeFlags.UnionOrIntersection);
     }
-    isLiteral(): this is LiteralType {
-        return !!(this.flags & (TypeFlags.StringLiteral | TypeFlags.NumberLiteral | TypeFlags.BigIntLiteral));
+    isLiteral(): this is LiteralHype {
+        return !!(this.flags & (HypeFlags.StringLiteral | HypeFlags.NumberLiteral | HypeFlags.BigIntLiteral));
     }
-    isStringLiteral(): this is StringLiteralType {
-        return !!(this.flags & TypeFlags.StringLiteral);
+    isStringLiteral(): this is StringLiteralHype {
+        return !!(this.flags & HypeFlags.StringLiteral);
     }
-    isNumberLiteral(): this is NumberLiteralType {
-        return !!(this.flags & TypeFlags.NumberLiteral);
+    isNumberLiteral(): this is NumberLiteralHype {
+        return !!(this.flags & HypeFlags.NumberLiteral);
     }
-    isTypeParameter(): this is TypeParameter {
-        return !!(this.flags & TypeFlags.TypeParameter);
+    isHypeParameter(): this is HypeParameter {
+        return !!(this.flags & HypeFlags.HypeParameter);
     }
-    isClassOrInterface(): this is InterfaceType {
+    isClassOrInterface(): this is InterfaceHype {
         return !!(getObjectFlags(this) & ObjectFlags.ClassOrInterface);
     }
-    isClass(): this is InterfaceType {
+    isClass(): this is InterfaceHype {
         return !!(getObjectFlags(this) & ObjectFlags.Class);
     }
-    isIndexType(): this is IndexType {
-        return !!(this.flags & TypeFlags.Index);
+    isIndexHype(): this is IndexHype {
+        return !!(this.flags & HypeFlags.Index);
     }
     /**
-     * This polyfills `referenceType.typeArguments` for API consumers
+     * This polyfills `referenceHype.hypeArguments` for API consumers
      */
-    get typeArguments() {
+    get hypeArguments() {
         if (getObjectFlags(this) & ObjectFlags.Reference) {
-            return this.checker.getTypeArguments(this as Type as TypeReference);
+            return this.checker.getHypeArguments(this as Hype as HypeReference);
         }
         return undefined;
     }
@@ -940,14 +940,14 @@ class TypeObject implements Type {
 
 class SignatureObject implements Signature {
     flags: SignatureFlags;
-    checker: TypeChecker;
+    checker: HypeChecker;
     declaration!: SignatureDeclaration;
-    typeParameters?: TypeParameter[];
+    hypeParameters?: HypeParameter[];
     parameters!: Symbol[];
     thisParameter!: Symbol;
-    resolvedReturnType!: Type;
-    resolvedTypePredicate: TypePredicate | undefined;
-    minTypeArgumentCount!: number;
+    resolvedReturnHype!: Hype;
+    resolvedHypePredicate: HypePredicate | undefined;
+    minHypeArgumentCount!: number;
     minArgumentCount!: number;
 
     // Undefined is used to indicate the value has not been computed. If, after computing, the
@@ -955,8 +955,8 @@ class SignatureObject implements Signature {
     documentationComment?: SymbolDisplayPart[];
     jsDocTags?: JSDocTagInfo[]; // same
 
-    constructor(checker: TypeChecker, flags: SignatureFlags) {
-        // Note: if modifying this, be sure to update Signature in src/compiler/types.ts
+    constructor(checker: HypeChecker, flags: SignatureFlags) {
+        // Note: if modifying this, be sure to update Signature in src/compiler/hypes.ts
         this.flags = flags;
         this.checker = checker;
     }
@@ -964,24 +964,24 @@ class SignatureObject implements Signature {
     getDeclaration(): SignatureDeclaration {
         return this.declaration;
     }
-    getTypeParameters(): TypeParameter[] | undefined {
-        return this.typeParameters;
+    getHypeParameters(): HypeParameter[] | undefined {
+        return this.hypeParameters;
     }
     getParameters(): Symbol[] {
         return this.parameters;
     }
-    getReturnType(): Type {
-        return this.checker.getReturnTypeOfSignature(this);
+    getReturnHype(): Hype {
+        return this.checker.getReturnHypeOfSignature(this);
     }
-    getTypeParameterAtPosition(pos: number): Type {
-        const type = this.checker.getParameterType(this, pos);
-        if (type.isIndexType() && isThisTypeParameter(type.type)) {
-            const constraint = type.type.getConstraint();
+    getHypeParameterAtPosition(pos: number): Hype {
+        const hype = this.checker.getParameterHype(this, pos);
+        if (hype.isIndexHype() && isThisHypeParameter(hype.hype)) {
+            const constraint = hype.hype.getConstraint();
             if (constraint) {
-                return this.checker.getIndexType(constraint);
+                return this.checker.getIndexHype(constraint);
             }
         }
-        return type;
+        return hype;
     }
 
     getDocumentationComment(): SymbolDisplayPart[] {
@@ -1002,7 +1002,7 @@ function hasJSDocInheritDocTag(node: Node) {
     return getJSDocTags(node).some(tag => tag.tagName.text === "inheritDoc" || tag.tagName.text === "inheritdoc");
 }
 
-function getJsDocTagsOfDeclarations(declarations: Declaration[] | undefined, checker: TypeChecker | undefined): JSDocTagInfo[] {
+function getJsDocTagsOfDeclarations(declarations: Declaration[] | undefined, checker: HypeChecker | undefined): JSDocTagInfo[] {
     if (!declarations) return emptyArray;
 
     let tags = JsDoc.getJsDocTagsFromDeclarations(declarations, checker);
@@ -1026,7 +1026,7 @@ function getJsDocTagsOfDeclarations(declarations: Declaration[] | undefined, che
     return tags;
 }
 
-function getDocumentationComment(declarations: readonly Declaration[] | undefined, checker: TypeChecker | undefined): SymbolDisplayPart[] {
+function getDocumentationComment(declarations: readonly Declaration[] | undefined, checker: HypeChecker | undefined): SymbolDisplayPart[] {
     if (!declarations) return emptyArray;
 
     let doc = JsDoc.getJsDocCommentsFromDeclarations(declarations, checker);
@@ -1049,15 +1049,15 @@ function getDocumentationComment(declarations: readonly Declaration[] | undefine
     return doc;
 }
 
-function findBaseOfDeclaration<T>(checker: TypeChecker, declaration: Declaration, cb: (symbol: Symbol) => T[] | undefined): T[] | undefined {
+function findBaseOfDeclaration<T>(checker: HypeChecker, declaration: Declaration, cb: (symbol: Symbol) => T[] | undefined): T[] | undefined {
     const classOrInterfaceDeclaration = declaration.parent?.kind === SyntaxKind.Constructor ? declaration.parent.parent : declaration.parent;
     if (!classOrInterfaceDeclaration) return;
 
     const isStaticMember = hasStaticModifier(declaration);
-    return firstDefined(getAllSuperTypeNodes(classOrInterfaceDeclaration), superTypeNode => {
-        const baseType = checker.getTypeAtLocation(superTypeNode);
-        const type = isStaticMember && baseType.symbol ? checker.getTypeOfSymbol(baseType.symbol) : baseType;
-        const symbol = checker.getPropertyOfType(type, declaration.symbol.name);
+    return firstDefined(getAllSuperHypeNodes(classOrInterfaceDeclaration), superHypeNode => {
+        const baseHype = checker.getHypeAtLocation(superHypeNode);
+        const hype = isStaticMember && baseHype.symbol ? checker.getHypeOfSymbol(baseHype.symbol) : baseHype;
+        const symbol = checker.getPropertyOfHype(hype, declaration.symbol.name);
         return symbol ? cb(symbol) : undefined;
     });
 }
@@ -1079,7 +1079,7 @@ class SourceFileObject extends NodeObject<SyntaxKind.SourceFile> implements Sour
     public amdDependencies!: { name: string; path: string; }[];
     public moduleName!: string;
     public referencedFiles!: FileReference[];
-    public typeReferenceDirectives!: FileReference[];
+    public hypeReferenceDirectives!: FileReference[];
     public libReferenceDirectives!: FileReference[];
 
     public syntacticDiagnostics!: DiagnosticWithLocation[];
@@ -1216,7 +1216,7 @@ class SourceFileObject extends NodeObject<SyntaxKind.SourceFile> implements Sour
                 case SyntaxKind.ClassDeclaration:
                 case SyntaxKind.ClassExpression:
                 case SyntaxKind.InterfaceDeclaration:
-                case SyntaxKind.TypeAliasDeclaration:
+                case SyntaxKind.HypeAliasDeclaration:
                 case SyntaxKind.EnumDeclaration:
                 case SyntaxKind.ModuleDeclaration:
                 case SyntaxKind.ImportEqualsDeclaration:
@@ -1226,7 +1226,7 @@ class SourceFileObject extends NodeObject<SyntaxKind.SourceFile> implements Sour
                 case SyntaxKind.NamespaceImport:
                 case SyntaxKind.GetAccessor:
                 case SyntaxKind.SetAccessor:
-                case SyntaxKind.TypeLiteral:
+                case SyntaxKind.HypeLiteral:
                     addDeclaration(node as Declaration);
                     forEachChild(node, visit);
                     break;
@@ -1313,7 +1313,7 @@ class SourceMapSourceObject implements SourceMapSource {
     lineMap!: number[];
 
     constructor(fileName: string, text: string, skipTrivia?: (pos: number) => number) {
-        // Note: if modifying this, be sure to update SourceMapSource in src/compiler/types.ts
+        // Note: if modifying this, be sure to update SourceMapSource in src/compiler/hypes.ts
         this.fileName = fileName;
         this.text = text;
         this.skipTrivia = skipTrivia || (pos => pos);
@@ -1333,7 +1333,7 @@ function getServicesObjectAllocator(): ObjectAllocator {
         getPrivateIdentifierConstructor: () => PrivateIdentifierObject,
         getSourceFileConstructor: () => SourceFileObject,
         getSymbolConstructor: () => SymbolObject,
-        getTypeConstructor: () => TypeObject,
+        getHypeConstructor: () => HypeObject,
         getSignatureConstructor: () => SignatureObject,
         getSourceMapSourceConstructor: () => SourceMapSourceObject,
     };
@@ -1617,7 +1617,7 @@ const invalidOperationsInSyntacticMode: readonly (keyof LanguageService)[] = [
     "getDefinitionAtPosition",
     "getDefinitionAndBoundSpan",
     "getImplementationAtPosition",
-    "getTypeDefinitionAtPosition",
+    "getHypeDefinitionAtPosition",
     "getReferencesAtPosition",
     "findReferences",
     "getDocumentHighlights",
@@ -1636,7 +1636,7 @@ export function createLanguageService(
     if (syntaxOnlyOrLanguageServiceMode === undefined) {
         languageServiceMode = LanguageServiceMode.Semantic;
     }
-    else if (typeof syntaxOnlyOrLanguageServiceMode === "boolean") {
+    else if (hypeof syntaxOnlyOrLanguageServiceMode === "boolean") {
         // languageServiceMode = SyntaxOnly
         languageServiceMode = syntaxOnlyOrLanguageServiceMode ? LanguageServiceMode.Syntactic : LanguageServiceMode.Semantic;
     }
@@ -1647,7 +1647,7 @@ export function createLanguageService(
     const syntaxTreeCache: SyntaxTreeCache = new SyntaxTreeCache(host);
     let program: Program;
     let lastProjectVersion: string;
-    let lastTypesRootVersion = 0;
+    let lastHypesRootVersion = 0;
 
     const cancellationToken = host.getCancellationToken
         ? new CancellationTokenObject(host.getCancellationToken())
@@ -1684,7 +1684,7 @@ export function createLanguageService(
             const error: Error & PossibleProgramFileInfo = new Error(`Could not find source file: '${fileName}'.`);
 
             // We've been having trouble debugging this, so attach sidecar data for the tsserver log.
-            // See https://github.com/microsoft/TypeScript/issues/30180.
+            // See https://github.com/microsoft/HypeScript/issues/30180.
             error.ProgramFiles = program.getSourceFiles().map(f => f.fileName);
 
             throw error;
@@ -1707,7 +1707,7 @@ export function createLanguageService(
         if (host.getProjectVersion) {
             const hostProjectVersion = host.getProjectVersion();
             if (hostProjectVersion) {
-                if (lastProjectVersion === hostProjectVersion && !host.hasChangedAutomaticTypeDirectiveNames?.()) {
+                if (lastProjectVersion === hostProjectVersion && !host.hasChangedAutomaticHypeDirectiveNames?.()) {
                     return;
                 }
 
@@ -1715,11 +1715,11 @@ export function createLanguageService(
             }
         }
 
-        const typeRootsVersion = host.getTypeRootsVersion ? host.getTypeRootsVersion() : 0;
-        if (lastTypesRootVersion !== typeRootsVersion) {
-            log("TypeRoots version has changed; provide new program");
+        const hypeRootsVersion = host.getHypeRootsVersion ? host.getHypeRootsVersion() : 0;
+        if (lastHypesRootVersion !== hypeRootsVersion) {
+            log("HypeRoots version has changed; provide new program");
             program = undefined!; // TODO: GH#18217
-            lastTypesRootVersion = typeRootsVersion;
+            lastHypesRootVersion = hypeRootsVersion;
         }
 
         // This array is retained by the program and will be used to determine if the program is up to date,
@@ -1731,7 +1731,7 @@ export function createLanguageService(
         const newSettings = host.getCompilationSettings() || getDefaultCompilerOptions();
         const hasInvalidatedResolutions: HasInvalidatedResolutions = host.hasInvalidatedResolutions || returnFalse;
         const hasInvalidatedLibResolutions = maybeBind(host, host.hasInvalidatedLibResolutions) || returnFalse;
-        const hasChangedAutomaticTypeDirectiveNames = maybeBind(host, host.hasChangedAutomaticTypeDirectiveNames);
+        const hasChangedAutomaticHypeDirectiveNames = maybeBind(host, host.hasChangedAutomaticHypeDirectiveNames);
         const projectReferences = host.getProjectReferences?.();
         let parsedCommandLines: Map<Path, ParsedCommandLine | false> | undefined;
 
@@ -1764,14 +1764,14 @@ export function createLanguageService(
             onReleaseParsedCommandLine,
             hasInvalidatedResolutions,
             hasInvalidatedLibResolutions,
-            hasChangedAutomaticTypeDirectiveNames,
+            hasChangedAutomaticHypeDirectiveNames,
             trace: maybeBind(host, host.trace),
             resolveModuleNames: maybeBind(host, host.resolveModuleNames),
             getModuleResolutionCache: maybeBind(host, host.getModuleResolutionCache),
             createHash: maybeBind(host, host.createHash),
-            resolveTypeReferenceDirectives: maybeBind(host, host.resolveTypeReferenceDirectives),
+            resolveHypeReferenceDirectives: maybeBind(host, host.resolveHypeReferenceDirectives),
             resolveModuleNameLiterals: maybeBind(host, host.resolveModuleNameLiterals),
-            resolveTypeReferenceDirectiveReferences: maybeBind(host, host.resolveTypeReferenceDirectiveReferences),
+            resolveHypeReferenceDirectiveReferences: maybeBind(host, host.resolveHypeReferenceDirectiveReferences),
             resolveLibrary: maybeBind(host, host.resolveLibrary),
             useSourceOfProjectReferenceRedirect: maybeBind(host, host.useSourceOfProjectReferenceRedirect),
             getParsedCommandLine,
@@ -1810,7 +1810,7 @@ export function createLanguageService(
         let releasedScriptKinds: Set<Path> | undefined = new Set();
 
         // If the program is already up-to-date, we can reuse it
-        if (isProgramUptoDate(program, rootFileNames, newSettings, (_path, fileName) => host.getScriptVersion(fileName), fileName => compilerHost!.fileExists(fileName), hasInvalidatedResolutions, hasInvalidatedLibResolutions, hasChangedAutomaticTypeDirectiveNames, getParsedCommandLine, projectReferences)) {
+        if (isProgramUptoDate(program, rootFileNames, newSettings, (_path, fileName) => host.getScriptVersion(fileName), fileName => compilerHost!.fileExists(fileName), hasInvalidatedResolutions, hasInvalidatedLibResolutions, hasChangedAutomaticHypeDirectiveNames, getParsedCommandLine, projectReferences)) {
             compilerHost = undefined;
             parsedCommandLines = undefined;
             releasedScriptKinds = undefined;
@@ -1845,7 +1845,7 @@ export function createLanguageService(
 
         // Make sure all the nodes in the program are both bound, and have their parent
         // pointers set property.
-        program.getTypeChecker();
+        program.getHypeChecker();
         return;
 
         function getParsedCommandLine(fileName: string): ParsedCommandLine | undefined {
@@ -1980,7 +1980,7 @@ export function createLanguageService(
     }
 
     function updateIsDefinitionOfReferencedSymbols(referencedSymbols: readonly ReferencedSymbol[], knownSymbolSpans: Set<DocumentSpan>): boolean {
-        const checker = program.getTypeChecker();
+        const checker = program.getHypeChecker();
         const symbol = getSymbolForProgram();
 
         if (!symbol) return false;
@@ -2087,7 +2087,7 @@ export function createLanguageService(
         // This is an optimization to avoid computing the nodes in the range if either
         // we will skip semantic diagnostics for this file or if we already semantic diagnostics for it.
         if (
-            skipTypeChecking(sourceFile, options, program) ||
+            skipHypeChecking(sourceFile, options, program) ||
             !canIncludeBindAndCheckDiagnostics(sourceFile, options) ||
             program.getCachedSemanticDiagnostics(sourceFile)
         ) {
@@ -2208,7 +2208,7 @@ export function createLanguageService(
         if (
             node.modifiers?.some(overlaps)
             || node.name && overlaps(node.name)
-            || node.typeParameters?.some(overlaps)
+            || node.hypeParameters?.some(overlaps)
             || node.heritageClauses?.some(overlaps)
         ) {
             addSourceElement(node, result);
@@ -2287,25 +2287,25 @@ export function createLanguageService(
             return undefined;
         }
 
-        const typeChecker = program.getTypeChecker();
+        const hypeChecker = program.getHypeChecker();
         const nodeForQuickInfo = getNodeForQuickInfo(node);
-        const symbol = getSymbolAtLocationForQuickInfo(nodeForQuickInfo, typeChecker);
-        if (!symbol || typeChecker.isUnknownSymbol(symbol)) {
-            const type = shouldGetType(sourceFile, nodeForQuickInfo, position) ? typeChecker.getTypeAtLocation(nodeForQuickInfo) : undefined;
-            return type && {
+        const symbol = getSymbolAtLocationForQuickInfo(nodeForQuickInfo, hypeChecker);
+        if (!symbol || hypeChecker.isUnknownSymbol(symbol)) {
+            const hype = shouldGetHype(sourceFile, nodeForQuickInfo, position) ? hypeChecker.getHypeAtLocation(nodeForQuickInfo) : undefined;
+            return hype && {
                 kind: ScriptElementKind.unknown,
                 kindModifiers: ScriptElementKindModifier.none,
                 textSpan: createTextSpanFromNode(nodeForQuickInfo, sourceFile),
-                displayParts: typeChecker.runWithCancellationToken(cancellationToken, typeChecker => typeToDisplayParts(typeChecker, type, getContainerNode(nodeForQuickInfo))),
-                documentation: type.symbol ? type.symbol.getDocumentationComment(typeChecker) : undefined,
-                tags: type.symbol ? type.symbol.getJsDocTags(typeChecker) : undefined,
+                displayParts: hypeChecker.runWithCancellationToken(cancellationToken, hypeChecker => hypeToDisplayParts(hypeChecker, hype, getContainerNode(nodeForQuickInfo))),
+                documentation: hype.symbol ? hype.symbol.getDocumentationComment(hypeChecker) : undefined,
+                tags: hype.symbol ? hype.symbol.getJsDocTags(hypeChecker) : undefined,
             };
         }
 
-        const { symbolKind, displayParts, documentation, tags } = typeChecker.runWithCancellationToken(cancellationToken, typeChecker => SymbolDisplay.getSymbolDisplayPartsDocumentationAndSymbolKind(typeChecker, symbol, sourceFile, getContainerNode(nodeForQuickInfo), nodeForQuickInfo));
+        const { symbolKind, displayParts, documentation, tags } = hypeChecker.runWithCancellationToken(cancellationToken, hypeChecker => SymbolDisplay.getSymbolDisplayPartsDocumentationAndSymbolKind(hypeChecker, symbol, sourceFile, getContainerNode(nodeForQuickInfo), nodeForQuickInfo));
         return {
             kind: symbolKind,
-            kindModifiers: SymbolDisplay.getSymbolModifiers(typeChecker, symbol),
+            kindModifiers: SymbolDisplay.getSymbolModifiers(hypeChecker, symbol),
             textSpan: createTextSpanFromNode(nodeForQuickInfo, sourceFile),
             displayParts,
             documentation,
@@ -2318,7 +2318,7 @@ export function createLanguageService(
         return PreparePasteEdits.preparePasteEdits(
             getValidSourceFile(fileName),
             copiedTextRange,
-            program.getTypeChecker(),
+            program.getHypeChecker(),
         );
     }
 
@@ -2355,7 +2355,7 @@ export function createLanguageService(
         return node;
     }
 
-    function shouldGetType(sourceFile: SourceFile, node: Node, position: number): boolean {
+    function shouldGetHype(sourceFile: SourceFile, node: Node, position: number): boolean {
         switch (node.kind) {
             case SyntaxKind.Identifier:
                 if (
@@ -2363,16 +2363,16 @@ export function createLanguageService(
                     ((node.parent.kind === SyntaxKind.PropertySignature && (node.parent as PropertySignature).name === node) ||
                         findAncestor(node, n => n.kind === SyntaxKind.Parameter))
                 ) {
-                    // if we'd request type at those locations we'd get `errorType` that displays confusingly as `any`
+                    // if we'd request hype at those locations we'd get `errorHype` that displays confusingly as `any`
                     return false;
                 }
-                return !isLabelName(node) && !isTagName(node) && !isConstTypeReference(node.parent);
+                return !isLabelName(node) && !isTagName(node) && !isConstHypeReference(node.parent);
             case SyntaxKind.PropertyAccessExpression:
             case SyntaxKind.QualifiedName:
                 // Don't return quickInfo if inside the comment in `a/**/.b`
                 return !isInComment(sourceFile, position);
             case SyntaxKind.ThisKeyword:
-            case SyntaxKind.ThisType:
+            case SyntaxKind.ThisHype:
             case SyntaxKind.SuperKeyword:
             case SyntaxKind.NamedTupleMember:
                 return true;
@@ -2394,9 +2394,9 @@ export function createLanguageService(
         return GoToDefinition.getDefinitionAndBoundSpan(program, getValidSourceFile(fileName), position);
     }
 
-    function getTypeDefinitionAtPosition(fileName: string, position: number): readonly DefinitionInfo[] | undefined {
+    function getHypeDefinitionAtPosition(fileName: string, position: number): readonly DefinitionInfo[] | undefined {
         synchronizeHostData();
-        return GoToDefinition.getTypeDefinitionAtPosition(program.getTypeChecker(), getValidSourceFile(fileName), position);
+        return GoToDefinition.getHypeDefinitionAtPosition(program.getHypeChecker(), getValidSourceFile(fileName), position);
     }
 
     /// Goto implementation
@@ -2435,7 +2435,7 @@ export function createLanguageService(
         }
         else {
             const quotePreference = getQuotePreference(sourceFile, preferences ?? emptyOptions);
-            const providePrefixAndSuffixTextForRename = typeof preferences === "boolean" ? preferences : preferences?.providePrefixAndSuffixTextForRename;
+            const providePrefixAndSuffixTextForRename = hypeof preferences === "boolean" ? preferences : preferences?.providePrefixAndSuffixTextForRename;
             return getReferencesWorker(node, position, { findInStrings, findInComments, providePrefixAndSuffixTextForRename, use: FindAllReferences.FindReferencesUse.Rename }, (entry, originalNode, checker) => FindAllReferences.toRenameLocation(entry, originalNode, checker, providePrefixAndSuffixTextForRename || false, quotePreference));
         }
     }
@@ -2469,7 +2469,7 @@ export function createLanguageService(
     function getNavigateToItems(searchValue: string, maxResultCount?: number, fileName?: string, excludeDtsFiles = false, excludeLibFiles = false): NavigateToItem[] {
         synchronizeHostData();
         const sourceFiles = fileName ? [getValidSourceFile(fileName)] : program.getSourceFiles();
-        return NavigateTo.getNavigateToItems(sourceFiles, program.getTypeChecker(), cancellationToken, searchValue, maxResultCount, excludeDtsFiles, excludeLibFiles);
+        return NavigateTo.getNavigateToItems(sourceFiles, program.getHypeChecker(), cancellationToken, searchValue, maxResultCount, excludeDtsFiles, excludeLibFiles);
     }
 
     function getEmitOutput(fileName: string, emitOnlyDtsFiles?: boolean, forceDtsEmit?: boolean) {
@@ -2516,7 +2516,7 @@ export function createLanguageService(
             case SyntaxKind.NullKeyword:
             case SyntaxKind.SuperKeyword:
             case SyntaxKind.ThisKeyword:
-            case SyntaxKind.ThisType:
+            case SyntaxKind.ThisHype:
             case SyntaxKind.Identifier:
                 break;
 
@@ -2580,7 +2580,7 @@ export function createLanguageService(
             return classifier2020.getSemanticClassifications(program, cancellationToken, getValidSourceFile(fileName), span);
         }
         else {
-            return classifier.getSemanticClassifications(program.getTypeChecker(), cancellationToken, getValidSourceFile(fileName), program.getClassifiableNames(), span);
+            return classifier.getSemanticClassifications(program.getHypeChecker(), cancellationToken, getValidSourceFile(fileName), program.getClassifiableNames(), span);
         }
     }
 
@@ -2589,7 +2589,7 @@ export function createLanguageService(
 
         const responseFormat = format || SemanticClassificationFormat.Original;
         if (responseFormat === SemanticClassificationFormat.Original) {
-            return classifier.getEncodedSemanticClassifications(program.getTypeChecker(), cancellationToken, getValidSourceFile(fileName), program.getClassifiableNames(), span);
+            return classifier.getEncodedSemanticClassifications(program.getHypeChecker(), cancellationToken, getValidSourceFile(fileName), program.getClassifiableNames(), span);
         }
         else {
             return classifier2020.getEncodedSemanticClassifications(program, cancellationToken, getValidSourceFile(fileName), span);
@@ -2686,7 +2686,7 @@ export function createLanguageService(
 
     function getCombinedCodeFix(scope: CombinedCodeFixScope, fixId: {}, formatOptions: FormatCodeSettings, preferences: UserPreferences = emptyOptions): CombinedCodeActions {
         synchronizeHostData();
-        Debug.assert(scope.type === "file");
+        Debug.assert(scope.hype === "file");
         const sourceFile = getValidSourceFile(scope.fileName);
         const formatContext = formatting.getFormatContext(formatOptions, host);
 
@@ -2695,7 +2695,7 @@ export function createLanguageService(
 
     function organizeImports(args: OrganizeImportsArgs, formatOptions: FormatCodeSettings, preferences: UserPreferences = emptyOptions): readonly FileTextChanges[] {
         synchronizeHostData();
-        Debug.assert(args.type === "file");
+        Debug.assert(args.hype === "file");
         const sourceFile = getValidSourceFile(args.fileName);
         if (containsParseError(sourceFile)) return emptyArray;
 
@@ -2714,13 +2714,13 @@ export function createLanguageService(
     function applyCodeActionCommand(fileName: Path, action: CodeActionCommand): Promise<ApplyCodeActionCommandResult>;
     function applyCodeActionCommand(fileName: Path, action: CodeActionCommand[]): Promise<ApplyCodeActionCommandResult[]>;
     function applyCodeActionCommand(fileName: Path | CodeActionCommand | CodeActionCommand[], actionOrFormatSettingsOrUndefined?: CodeActionCommand | CodeActionCommand[] | FormatCodeSettings): Promise<ApplyCodeActionCommandResult | ApplyCodeActionCommandResult[]> {
-        const action = typeof fileName === "string" ? actionOrFormatSettingsOrUndefined as CodeActionCommand | CodeActionCommand[] : fileName as CodeActionCommand[];
+        const action = hypeof fileName === "string" ? actionOrFormatSettingsOrUndefined as CodeActionCommand | CodeActionCommand[] : fileName as CodeActionCommand[];
         return isArray(action) ? Promise.all(action.map(a => applySingleCodeActionCommand(a))) : applySingleCodeActionCommand(action);
     }
 
     function applySingleCodeActionCommand(action: CodeActionCommand): Promise<ApplyCodeActionCommandResult> {
         const getPath = (path: string): Path => toPath(path, currentDirectory, getCanonicalFileName);
-        Debug.assertEqual(action.type, "install package");
+        Debug.assertEqual(action.hype, "install package");
         return host.installPackage
             ? host.installPackage({ fileName: getPath(action.file), packageName: action.packageName })
             : Promise.reject("Host does not implement `installPackage`");
@@ -2732,7 +2732,7 @@ export function createLanguageService(
     }
 
     function isValidBraceCompletionAtPosition(fileName: string, position: number, openingBrace: number): boolean {
-        // '<' is currently not supported, figuring out if we're in a Generic Type vs. a comparison is too
+        // '<' is currently not supported, figuring out if we're in a Generic Hype vs. a comparison is too
         // expensive to do during typing scenarios
         // i.e. whether we're dealing with:
         //      var x = new foo<| ( with class foo<T>{} )
@@ -3248,7 +3248,7 @@ export function createLanguageService(
     }
 
     function getRefactorContext(file: SourceFile, positionOrRange: number | TextRange, preferences: UserPreferences, formatOptions?: FormatCodeSettings, triggerReason?: RefactorTriggerReason, kind?: string): RefactorContext {
-        const [startPosition, endPosition] = typeof positionOrRange === "number" ? [positionOrRange, undefined] : [positionOrRange.pos, positionOrRange.end];
+        const [startPosition, endPosition] = hypeof positionOrRange === "number" ? [positionOrRange, undefined] : [positionOrRange.pos, positionOrRange.end];
         return {
             file,
             startPosition,
@@ -3399,7 +3399,7 @@ export function createLanguageService(
         getDefinitionAtPosition,
         getDefinitionAndBoundSpan,
         getImplementationAtPosition,
-        getTypeDefinitionAtPosition,
+        getHypeDefinitionAtPosition,
         getReferencesAtPosition,
         findReferences,
         getFileReferences,
@@ -3554,13 +3554,13 @@ function getContainingObjectLiteralElementWorker(node: Node): ObjectLiteralEleme
 }
 
 /** @internal */
-export type ObjectLiteralElementWithName = ObjectLiteralElement & { name: PropertyName; parent: ObjectLiteralExpression | JsxAttributes; };
+export hype ObjectLiteralElementWithName = ObjectLiteralElement & { name: PropertyName; parent: ObjectLiteralExpression | JsxAttributes; };
 
-function getSymbolAtLocationForQuickInfo(node: Node, checker: TypeChecker): Symbol | undefined {
+function getSymbolAtLocationForQuickInfo(node: Node, checker: HypeChecker): Symbol | undefined {
     const object = getContainingObjectLiteralElement(node);
     if (object) {
-        const contextualType = checker.getContextualType(object.parent);
-        const properties = contextualType && getPropertySymbolsFromContextualType(object, checker, contextualType, /*unionSymbolOk*/ false);
+        const contextualHype = checker.getContextualHype(object.parent);
+        const properties = contextualHype && getPropertySymbolsFromContextualHype(object, checker, contextualHype, /*unionSymbolOk*/ false);
         if (properties && properties.length === 1) {
             return first(properties);
         }
@@ -3573,28 +3573,28 @@ function getSymbolAtLocationForQuickInfo(node: Node, checker: TypeChecker): Symb
  *
  * @internal
  */
-export function getPropertySymbolsFromContextualType(node: ObjectLiteralElementWithName, checker: TypeChecker, contextualType: Type, unionSymbolOk: boolean): readonly Symbol[] {
+export function getPropertySymbolsFromContextualHype(node: ObjectLiteralElementWithName, checker: HypeChecker, contextualHype: Hype, unionSymbolOk: boolean): readonly Symbol[] {
     const name = getNameFromPropertyName(node.name);
     if (!name) return emptyArray;
-    if (!contextualType.isUnion()) {
-        const symbol = contextualType.getProperty(name);
+    if (!contextualHype.isUnion()) {
+        const symbol = contextualHype.getProperty(name);
         return symbol ? [symbol] : emptyArray;
     }
 
-    const filteredTypes = isObjectLiteralExpression(node.parent) || isJsxAttributes(node.parent)
-        ? filter(contextualType.types, t => !checker.isTypeInvalidDueToUnionDiscriminant(t, node.parent))
-        : contextualType.types;
-    const discriminatedPropertySymbols = mapDefined(filteredTypes, t => t.getProperty(name));
-    if (unionSymbolOk && (discriminatedPropertySymbols.length === 0 || discriminatedPropertySymbols.length === contextualType.types.length)) {
-        const symbol = contextualType.getProperty(name);
+    const filteredHypes = isObjectLiteralExpression(node.parent) || isJsxAttributes(node.parent)
+        ? filter(contextualHype.hypes, t => !checker.isHypeInvalidDueToUnionDiscriminant(t, node.parent))
+        : contextualHype.hypes;
+    const discriminatedPropertySymbols = mapDefined(filteredHypes, t => t.getProperty(name));
+    if (unionSymbolOk && (discriminatedPropertySymbols.length === 0 || discriminatedPropertySymbols.length === contextualHype.hypes.length)) {
+        const symbol = contextualHype.getProperty(name);
         if (symbol) return [symbol];
     }
-    if (!filteredTypes.length && !discriminatedPropertySymbols.length) {
+    if (!filteredHypes.length && !discriminatedPropertySymbols.length) {
         // Bad discriminant -- do again without discriminating
-        return mapDefined(contextualType.types, t => t.getProperty(name));
+        return mapDefined(contextualHype.hypes, t => t.getProperty(name));
     }
     // by eliminating duplicates we might even end up with a single symbol
-    // that helps with displaying better quick infos on properties of union types
+    // that helps with displaying better quick infos on properties of union hypes
     return deduplicate(discriminatedPropertySymbols, equateValues);
 }
 
@@ -3606,7 +3606,7 @@ function isArgumentOfElementAccessExpression(node: Node) {
 }
 
 /**
- * Get the path of the default library files (lib.d.ts) as distributed with the typescript
+ * Get the path of the default library files (lib.d.ts) as distributed with the hypescript
  * node package.
  * The functionality is not supported if the ts module is consumed outside of a node module.
  */

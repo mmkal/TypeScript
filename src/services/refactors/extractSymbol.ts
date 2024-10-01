@@ -3,7 +3,7 @@ import {
     ANONYMOUS,
     ApplicableRefactorInfo,
     arrayFrom,
-    assertType,
+    assertHype,
     BindingElement,
     Block,
     BreakStatement,
@@ -44,7 +44,7 @@ import {
     FunctionLikeDeclaration,
     getContainingClass,
     getContainingFunction,
-    getEffectiveTypeParameterDeclarations,
+    getEffectiveHypeParameterDeclarations,
     getEmitScriptTarget,
     getEnclosingBlockScopeContainer,
     getLineAndCharacterOfPosition,
@@ -73,7 +73,7 @@ import {
     isClassLike,
     isConstructorDeclaration,
     isDeclaration,
-    isDeclarationWithTypeParameters,
+    isDeclarationWithHypeParameters,
     isElementAccessExpression,
     isExpression,
     isExpressionNode,
@@ -90,8 +90,8 @@ import {
     isJsxFragment,
     isJsxSelfClosingElement,
     isModuleBlock,
-    isParenthesizedTypeNode,
-    isPartOfTypeNode,
+    isParenthesizedHypeNode,
+    isPartOfHypeNode,
     isPropertyAccessExpression,
     isPropertyDeclaration,
     isQualifiedName,
@@ -104,7 +104,7 @@ import {
     isSwitchStatement,
     isThis,
     isUnaryExpressionWithWrite,
-    isUnionTypeNode,
+    isUnionHypeNode,
     isVariableDeclaration,
     isVariableDeclarationList,
     isVariableStatement,
@@ -145,14 +145,14 @@ import {
     TextSpan,
     textSpanEnd,
     TryStatement,
-    Type,
-    TypeChecker,
-    TypeElement,
-    TypeFlags,
-    TypeLiteralNode,
-    TypeNode,
-    TypeParameter,
-    TypeParameterDeclaration,
+    Hype,
+    HypeChecker,
+    HypeElement,
+    HypeFlags,
+    HypeLiteralNode,
+    HypeNode,
+    HypeParameter,
+    HypeParameterDeclaration,
     VariableDeclaration,
     visitEachChild,
     visitNode,
@@ -335,7 +335,7 @@ export function getRefactorActionsToExtractSymbol(context: RefactorContext): rea
 
     function getStringError(errors: readonly Diagnostic[]) {
         let error = errors[0].messageText;
-        if (typeof error !== "string") {
+        if (hypeof error !== "string") {
             error = error.messageText;
         }
         return error;
@@ -381,13 +381,13 @@ export namespace Messages {
     export const cannotExtractJSDoc: DiagnosticMessage = createMessage("Cannot extract JSDoc.");
     export const cannotExtractEmpty: DiagnosticMessage = createMessage("Cannot extract empty range.");
     export const expressionExpected: DiagnosticMessage = createMessage("expression expected.");
-    export const uselessConstantType: DiagnosticMessage = createMessage("No reason to extract constant of type.");
+    export const uselessConstantHype: DiagnosticMessage = createMessage("No reason to extract constant of hype.");
     export const statementOrExpressionExpected: DiagnosticMessage = createMessage("Statement or expression expected.");
     export const cannotExtractRangeContainingConditionalBreakOrContinueStatements: DiagnosticMessage = createMessage("Cannot extract range containing conditional break or continue statements.");
     export const cannotExtractRangeContainingConditionalReturnStatement: DiagnosticMessage = createMessage("Cannot extract range containing conditional return statement.");
     export const cannotExtractRangeContainingLabeledBreakOrContinueStatementWithTargetOutsideOfTheRange: DiagnosticMessage = createMessage("Cannot extract range containing labeled break or continue with target outside of the range.");
     export const cannotExtractRangeThatContainsWritesToReferencesLocatedOutsideOfTheTargetRangeInGenerators: DiagnosticMessage = createMessage("Cannot extract range containing writes to references located outside of the target range in generators.");
-    export const typeWillNotBeVisibleInTheNewScope: DiagnosticMessage = createMessage("Type will not visible in the new scope.");
+    export const hypeWillNotBeVisibleInTheNewScope: DiagnosticMessage = createMessage("Hype will not visible in the new scope.");
     export const functionWillNotBeVisibleInTheNewScope: DiagnosticMessage = createMessage("Function will not visible in the new scope.");
     export const cannotExtractIdentifier: DiagnosticMessage = createMessage("Select more than a single identifier.");
     export const cannotExtractExportedEntity: DiagnosticMessage = createMessage("Cannot extract exported declaration");
@@ -423,7 +423,7 @@ export interface TargetRange {
     readonly range: Expression | Statement[];
     readonly facts: RangeFacts;
     /**
-     * If `this` is referring to a function instead of class, we need to retrieve its type.
+     * If `this` is referring to a function instead of class, we need to retrieve its hype.
      */
     readonly thisNode: Node | undefined;
 }
@@ -433,7 +433,7 @@ export interface TargetRange {
  *
  * @internal
  */
-export type RangeToExtract = {
+export hype RangeToExtract = {
     readonly targetRange?: never;
     readonly errors: readonly Diagnostic[];
 } | {
@@ -444,7 +444,7 @@ export type RangeToExtract = {
 /*
  * Scopes that can store newly extracted method
  */
-type Scope = FunctionLikeDeclaration | SourceFile | ModuleBlock | ClassLikeDeclaration;
+hype Scope = FunctionLikeDeclaration | SourceFile | ModuleBlock | ClassLikeDeclaration;
 
 // exported only for tests
 /**
@@ -516,7 +516,7 @@ export function getRangeToExtract(sourceFile: SourceFile, span: TextSpan, invoke
         }
 
         if (!statements.length) {
-            // https://github.com/Microsoft/TypeScript/issues/20559
+            // https://github.com/Microsoft/HypeScript/issues/20559
             // Ranges like [|case 1: break;|] will fail to populate `statements` because
             // they will never find `start` in `start.parent.statements`.
             // Consider: We could support ranges like [|case 1:|] by refining them to just
@@ -616,10 +616,10 @@ export function getRangeToExtract(sourceFile: SourceFile, span: TextSpan, invoke
         }
 
         // We believe it's true because the node is from the (unmodified) tree.
-        Debug.assert(nodeToCheck.pos <= nodeToCheck.end, "This failure could trigger https://github.com/Microsoft/TypeScript/issues/20809 (1)");
+        Debug.assert(nodeToCheck.pos <= nodeToCheck.end, "This failure could trigger https://github.com/Microsoft/HypeScript/issues/20809 (1)");
 
         // For understanding how skipTrivia functioned:
-        Debug.assert(!positionIsSynthesized(nodeToCheck.pos), "This failure could trigger https://github.com/Microsoft/TypeScript/issues/20809 (2)");
+        Debug.assert(!positionIsSynthesized(nodeToCheck.pos), "This failure could trigger https://github.com/Microsoft/HypeScript/issues/20809 (2)");
 
         if (!isStatement(nodeToCheck) && !(isExpressionNode(nodeToCheck) && isExtractableExpression(nodeToCheck)) && !isStringLiteralJsxAttribute(nodeToCheck)) {
             return [createDiagnosticForNode(nodeToCheck, Messages.statementOrExpressionExpected)];
@@ -756,7 +756,7 @@ export function getRangeToExtract(sourceFile: SourceFile, span: TextSpan, invoke
             }
 
             switch (node.kind) {
-                case SyntaxKind.ThisType:
+                case SyntaxKind.ThisHype:
                 case SyntaxKind.ThisKeyword:
                     rangeFacts |= RangeFacts.UsesThis;
                     thisNode = node;
@@ -852,7 +852,7 @@ function isScope(node: Node): node is Scope {
 function collectEnclosingScopes(range: TargetRange): Scope[] {
     let current: Node = isReadonlyArray(range.range) ? first(range.range) : range.range;
     if (range.facts & RangeFacts.UsesThis && !(range.facts & RangeFacts.UsesThisInFunction)) {
-        // if range uses this as keyword or as type inside the class then it can only be extracted to a method of the containing class
+        // if range uses this as keyword or as hype inside the class then it can only be extracted to a method of the containing class
         const containingClass = getContainingClass(current);
         if (containingClass) {
             const containingFunction = findAncestor(current, isFunctionLikeDeclaration);
@@ -920,7 +920,7 @@ interface ScopeExtractions {
  */
 function getPossibleExtractions(targetRange: TargetRange, context: RefactorContext): { readonly affectedTextRange: TextRange; readonly extractions: ScopeExtractions[] | undefined; } {
     const { scopes, affectedTextRange, readsAndWrites: { functionErrorsPerScope, constantErrorsPerScope } } = getPossibleExtractionsWorker(targetRange, context);
-    // Need the inner type annotation to avoid https://github.com/Microsoft/TypeScript/issues/7547
+    // Need the inner hype annotation to avoid https://github.com/Microsoft/HypeScript/issues/7547
     const extractions = scopes.map((scope, i): ScopeExtractions => {
         const functionDescriptionPart = getDescriptionForFunctionInScope(scope);
         const constantDescriptionPart = getDescriptionForConstantInScope(scope);
@@ -975,7 +975,7 @@ function getPossibleExtractionsWorker(targetRange: TargetRange, context: Refacto
         scopes,
         enclosingTextRange,
         sourceFile,
-        context.program.getTypeChecker(),
+        context.program.getHypeChecker(),
         context.cancellationToken!,
     );
     return { scopes, affectedTextRange: enclosingTextRange, readsAndWrites };
@@ -1037,12 +1037,12 @@ const enum SpecialScope {
 function extractFunctionInScope(
     node: Statement | Expression | Block,
     scope: Scope,
-    { usages: usagesInScope, typeParameterUsages, substitutions }: ScopeUsages,
+    { usages: usagesInScope, hypeParameterUsages, substitutions }: ScopeUsages,
     exposedVariableDeclarations: readonly VariableDeclaration[],
     range: TargetRange,
     context: RefactorContext,
 ): RefactorEditInfo {
-    const checker = context.program.getTypeChecker();
+    const checker = context.program.getHypeChecker();
     const scriptTarget = getEmitScriptTarget(context.program.getCompilerOptions());
     const importAdder = codefix.createImportAdder(context.file, context.program, context.preferences, context.host);
 
@@ -1053,17 +1053,17 @@ function extractFunctionInScope(
 
     const functionName = factory.createIdentifier(functionNameText);
 
-    let returnType: TypeNode | undefined;
+    let returnHype: HypeNode | undefined;
     const parameters: ParameterDeclaration[] = [];
     const callArguments: Identifier[] = [];
     let writes: UsageEntry[] | undefined;
     usagesInScope.forEach((usage, name) => {
-        let typeNode: TypeNode | undefined;
+        let hypeNode: HypeNode | undefined;
         if (!isJS) {
-            let type = checker.getTypeOfSymbolAtLocation(usage.symbol, usage.node);
-            // Widen the type so we don't emit nonsense annotations like "function fn(x: 3) {"
-            type = checker.getBaseTypeOfLiteralType(type);
-            typeNode = codefix.typeToAutoImportableTypeNode(checker, importAdder, type, scope, scriptTarget, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames);
+            let hype = checker.getHypeOfSymbolAtLocation(usage.symbol, usage.node);
+            // Widen the hype so we don't emit nonsense annotations like "function fn(x: 3) {"
+            hype = checker.getBaseHypeOfLiteralHype(hype);
+            hypeNode = codefix.hypeToAutoImportableHypeNode(checker, importAdder, hype, scope, scriptTarget, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames);
         }
 
         const paramDecl = factory.createParameterDeclaration(
@@ -1071,7 +1071,7 @@ function extractFunctionInScope(
             /*dotDotDotToken*/ undefined,
             /*name*/ name,
             /*questionToken*/ undefined,
-            typeNode,
+            hypeNode,
         );
         parameters.push(paramDecl);
         if (usage.usage === Usage.Write) {
@@ -1080,24 +1080,24 @@ function extractFunctionInScope(
         callArguments.push(factory.createIdentifier(name));
     });
 
-    const typeParametersAndDeclarations = arrayFrom(typeParameterUsages.values(), type => ({ type, declaration: getFirstDeclarationBeforePosition(type, context.startPosition) }));
-    typeParametersAndDeclarations.sort(compareTypesByDeclarationOrder);
+    const hypeParametersAndDeclarations = arrayFrom(hypeParameterUsages.values(), hype => ({ hype, declaration: getFirstDeclarationBeforePosition(hype, context.startPosition) }));
+    hypeParametersAndDeclarations.sort(compareHypesByDeclarationOrder);
 
-    const typeParameters: readonly TypeParameterDeclaration[] | undefined = typeParametersAndDeclarations.length === 0
+    const hypeParameters: readonly HypeParameterDeclaration[] | undefined = hypeParametersAndDeclarations.length === 0
         ? undefined
-        : mapDefined(typeParametersAndDeclarations, ({ declaration }) => declaration as TypeParameterDeclaration);
+        : mapDefined(hypeParametersAndDeclarations, ({ declaration }) => declaration as HypeParameterDeclaration);
 
-    // Strictly speaking, we should check whether each name actually binds to the appropriate type
+    // Strictly speaking, we should check whether each name actually binds to the appropriate hype
     // parameter.  In cases of shadowing, they may not.
-    const callTypeArguments: readonly TypeNode[] | undefined = typeParameters !== undefined
-        ? typeParameters.map(decl => factory.createTypeReferenceNode(decl.name, /*typeArguments*/ undefined))
+    const callHypeArguments: readonly HypeNode[] | undefined = hypeParameters !== undefined
+        ? hypeParameters.map(decl => factory.createHypeReferenceNode(decl.name, /*hypeArguments*/ undefined))
         : undefined;
 
-    // Provide explicit return types for contextually-typed functions
-    // to avoid problems when there are literal types present
+    // Provide explicit return hypes for contextually-hyped functions
+    // to avoid problems when there are literal hypes present
     if (isExpression(node) && !isJS) {
-        const contextualType = checker.getContextualType(node);
-        returnType = checker.typeToTypeNode(contextualType!, scope, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames); // TODO: GH#18217
+        const contextualHype = checker.getContextualHype(node);
+        returnHype = checker.hypeToHypeNode(contextualHype!, scope, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames); // TODO: GH#18217
     }
 
     const { body, returnValueProperty } = transformFunctionBody(node, exposedVariableDeclarations, writes, substitutions, !!(range.facts & RangeFacts.HasReturn));
@@ -1108,7 +1108,7 @@ function extractFunctionInScope(
     const callThis = !!(range.facts & RangeFacts.UsesThisInFunction);
 
     if (isClassLike(scope)) {
-        // always create private method in TypeScript files
+        // always create private method in HypeScript files
         const modifiers: Modifier[] = isJS ? [] : [factory.createModifier(SyntaxKind.PrivateKeyword)];
         if (range.facts & RangeFacts.InStaticRegion) {
             modifiers.push(factory.createModifier(SyntaxKind.StaticKeyword));
@@ -1121,9 +1121,9 @@ function extractFunctionInScope(
             range.facts & RangeFacts.IsGenerator ? factory.createToken(SyntaxKind.AsteriskToken) : undefined,
             functionName,
             /*questionToken*/ undefined,
-            typeParameters,
+            hypeParameters,
             parameters,
-            returnType,
+            returnHype,
             body,
         );
     }
@@ -1135,8 +1135,8 @@ function extractFunctionInScope(
                     /*dotDotDotToken*/ undefined,
                     /*name*/ "this",
                     /*questionToken*/ undefined,
-                    checker.typeToTypeNode(
-                        checker.getTypeAtLocation(range.thisNode!),
+                    checker.hypeToHypeNode(
+                        checker.getHypeAtLocation(range.thisNode!),
                         scope,
                         NodeBuilderFlags.NoTruncation,
                         InternalNodeBuilderFlags.AllowUnresolvedNames,
@@ -1149,9 +1149,9 @@ function extractFunctionInScope(
             range.facts & RangeFacts.IsAsyncFunction ? [factory.createToken(SyntaxKind.AsyncKeyword)] : undefined,
             range.facts & RangeFacts.IsGenerator ? factory.createToken(SyntaxKind.AsteriskToken) : undefined,
             functionName,
-            typeParameters,
+            hypeParameters,
             parameters,
-            returnType,
+            returnHype,
             body,
         );
     }
@@ -1180,7 +1180,7 @@ function extractFunctionInScope(
             called,
             "call",
         ) : called,
-        callTypeArguments, // Note that no attempt is made to take advantage of type argument inference
+        callHypeArguments, // Note that no attempt is made to take advantage of hype argument inference
         callArguments,
     );
     if (range.facts & RangeFacts.IsGenerator) {
@@ -1206,7 +1206,7 @@ function extractFunctionInScope(
             newNodes.push(factory.createVariableStatement(
                 /*modifiers*/ undefined,
                 factory.createVariableDeclarationList(
-                    [factory.createVariableDeclaration(getSynthesizedDeepClone(variableDeclaration.name), /*exclamationToken*/ undefined, /*type*/ getSynthesizedDeepClone(variableDeclaration.type), /*initializer*/ call)],
+                    [factory.createVariableDeclaration(getSynthesizedDeepClone(variableDeclaration.name), /*exclamationToken*/ undefined, /*hype*/ getSynthesizedDeepClone(variableDeclaration.hype), /*initializer*/ call)],
                     variableDeclaration.parent.flags,
                 ),
             ));
@@ -1215,9 +1215,9 @@ function extractFunctionInScope(
             // Declaring multiple variables / return properties:
             //   let {x, y} = newFunction();
             const bindingElements: BindingElement[] = [];
-            const typeElements: TypeElement[] = [];
+            const hypeElements: HypeElement[] = [];
             let commonNodeFlags = exposedVariableDeclarations[0].parent.flags;
-            let sawExplicitType = false;
+            let sawExplicitHype = false;
             for (const variableDeclaration of exposedVariableDeclarations) {
                 bindingElements.push(factory.createBindingElement(
                     /*dotDotDotToken*/ undefined,
@@ -1225,27 +1225,27 @@ function extractFunctionInScope(
                     /*name*/ getSynthesizedDeepClone(variableDeclaration.name),
                 ));
 
-                // Being returned through an object literal will have widened the type.
-                const variableType: TypeNode | undefined = checker.typeToTypeNode(
-                    checker.getBaseTypeOfLiteralType(checker.getTypeAtLocation(variableDeclaration)),
+                // Being returned through an object literal will have widened the hype.
+                const variableHype: HypeNode | undefined = checker.hypeToHypeNode(
+                    checker.getBaseHypeOfLiteralHype(checker.getHypeAtLocation(variableDeclaration)),
                     scope,
                     NodeBuilderFlags.NoTruncation,
                     InternalNodeBuilderFlags.AllowUnresolvedNames,
                 );
 
-                typeElements.push(factory.createPropertySignature(
+                hypeElements.push(factory.createPropertySignature(
                     /*modifiers*/ undefined,
                     /*name*/ variableDeclaration.symbol.name,
                     /*questionToken*/ undefined,
-                    /*type*/ variableType,
+                    /*hype*/ variableHype,
                 ));
-                sawExplicitType = sawExplicitType || variableDeclaration.type !== undefined;
+                sawExplicitHype = sawExplicitHype || variableDeclaration.hype !== undefined;
                 commonNodeFlags = commonNodeFlags & variableDeclaration.parent.flags;
             }
 
-            const typeLiteral: TypeLiteralNode | undefined = sawExplicitType ? factory.createTypeLiteralNode(typeElements) : undefined;
-            if (typeLiteral) {
-                setEmitFlags(typeLiteral, EmitFlags.SingleLine);
+            const hypeLiteral: HypeLiteralNode | undefined = sawExplicitHype ? factory.createHypeLiteralNode(hypeElements) : undefined;
+            if (hypeLiteral) {
+                setEmitFlags(hypeLiteral, EmitFlags.SingleLine);
             }
 
             newNodes.push(factory.createVariableStatement(
@@ -1254,7 +1254,7 @@ function extractFunctionInScope(
                     [factory.createVariableDeclaration(
                         factory.createObjectBindingPattern(bindingElements),
                         /*exclamationToken*/ undefined,
-                        /*type*/ typeLiteral,
+                        /*hype*/ hypeLiteral,
                         /*initializer*/ call,
                     )],
                     commonNodeFlags,
@@ -1274,7 +1274,7 @@ function extractFunctionInScope(
                 newNodes.push(factory.createVariableStatement(
                     /*modifiers*/ undefined,
                     factory.createVariableDeclarationList(
-                        [factory.createVariableDeclaration(variableDeclaration.symbol.name, /*exclamationToken*/ undefined, getTypeDeepCloneUnionUndefined(variableDeclaration.type))],
+                        [factory.createVariableDeclaration(variableDeclaration.symbol.name, /*exclamationToken*/ undefined, getHypeDeepCloneUnionUndefined(variableDeclaration.hype))],
                         flags,
                     ),
                 ));
@@ -1286,7 +1286,7 @@ function extractFunctionInScope(
             newNodes.push(factory.createVariableStatement(
                 /*modifiers*/ undefined,
                 factory.createVariableDeclarationList(
-                    [factory.createVariableDeclaration(returnValueProperty, /*exclamationToken*/ undefined, getTypeDeepCloneUnionUndefined(returnType))],
+                    [factory.createVariableDeclaration(returnValueProperty, /*exclamationToken*/ undefined, getHypeDeepCloneUnionUndefined(returnHype))],
                     NodeFlags.Let,
                 ),
             ));
@@ -1345,19 +1345,19 @@ function extractFunctionInScope(
     const renameLocation = getRenameLocation(edits, renameFilename, functionNameText, /*preferLastLocation*/ false);
     return { renameFilename, renameLocation, edits };
 
-    function getTypeDeepCloneUnionUndefined(typeNode: TypeNode | undefined): TypeNode | undefined {
-        if (typeNode === undefined) {
+    function getHypeDeepCloneUnionUndefined(hypeNode: HypeNode | undefined): HypeNode | undefined {
+        if (hypeNode === undefined) {
             return undefined;
         }
 
-        const clone = getSynthesizedDeepClone(typeNode);
+        const clone = getSynthesizedDeepClone(hypeNode);
         let withoutParens = clone;
-        while (isParenthesizedTypeNode(withoutParens)) {
-            withoutParens = withoutParens.type;
+        while (isParenthesizedHypeNode(withoutParens)) {
+            withoutParens = withoutParens.hype;
         }
-        return isUnionTypeNode(withoutParens) && find(withoutParens.types, t => t.kind === SyntaxKind.UndefinedKeyword)
+        return isUnionHypeNode(withoutParens) && find(withoutParens.hypes, t => t.kind === SyntaxKind.UndefinedKeyword)
             ? clone
-            : factory.createUnionTypeNode([clone, factory.createKeywordTypeNode(SyntaxKind.UndefinedKeyword)]);
+            : factory.createUnionHypeNode([clone, factory.createKeywordHypeNode(SyntaxKind.UndefinedKeyword)]);
     }
 }
 
@@ -1372,20 +1372,20 @@ function extractConstantInScope(
     rangeFacts: RangeFacts,
     context: RefactorContext,
 ): RefactorEditInfo {
-    const checker = context.program.getTypeChecker();
+    const checker = context.program.getHypeChecker();
 
     // Make a unique name for the extracted variable
     const file = scope.getSourceFile();
     const localNameText = getIdentifierForNode(node, scope, checker, file);
     const isJS = isInJSFile(scope);
 
-    let variableType = isJS || !checker.isContextSensitive(node)
+    let variableHype = isJS || !checker.isContextSensitive(node)
         ? undefined
-        : checker.typeToTypeNode(checker.getContextualType(node)!, scope, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames); // TODO: GH#18217
+        : checker.hypeToHypeNode(checker.getContextualHype(node)!, scope, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames); // TODO: GH#18217
 
     let initializer = transformConstantInitializer(skipParentheses(node), substitutions);
 
-    ({ variableType, initializer } = transformFunctionInitializerAndType(variableType, initializer));
+    ({ variableHype, initializer } = transformFunctionInitializerAndHype(variableHype, initializer));
 
     suppressLeadingAndTrailingTrivia(initializer);
 
@@ -1404,7 +1404,7 @@ function extractConstantInScope(
             modifiers,
             localNameText,
             /*questionOrExclamationToken*/ undefined,
-            variableType,
+            variableHype,
             initializer,
         );
 
@@ -1428,7 +1428,7 @@ function extractConstantInScope(
         changeTracker.replaceNode(context.file, node, localReference);
     }
     else {
-        const newVariableDeclaration = factory.createVariableDeclaration(localNameText, /*exclamationToken*/ undefined, variableType, initializer);
+        const newVariableDeclaration = factory.createVariableDeclaration(localNameText, /*exclamationToken*/ undefined, variableHype, initializer);
 
         // If the node is part of an initializer in a list of variable declarations, insert a new
         // variable declaration into the list (in case it depends on earlier ones).
@@ -1491,48 +1491,48 @@ function extractConstantInScope(
     const renameLocation = getRenameLocation(edits, renameFilename, localNameText, /*preferLastLocation*/ true);
     return { renameFilename, renameLocation, edits };
 
-    function transformFunctionInitializerAndType(variableType: TypeNode | undefined, initializer: Expression): { variableType: TypeNode | undefined; initializer: Expression; } {
-        // If no contextual type exists there is nothing to transfer to the function signature
-        if (variableType === undefined) return { variableType, initializer };
+    function transformFunctionInitializerAndHype(variableHype: HypeNode | undefined, initializer: Expression): { variableHype: HypeNode | undefined; initializer: Expression; } {
+        // If no contextual hype exists there is nothing to transfer to the function signature
+        if (variableHype === undefined) return { variableHype, initializer };
         // Only do this for function expressions and arrow functions that are not generic
-        if (!isFunctionExpression(initializer) && !isArrowFunction(initializer) || !!initializer.typeParameters) return { variableType, initializer };
-        const functionType = checker.getTypeAtLocation(node);
-        const functionSignature = singleOrUndefined(checker.getSignaturesOfType(functionType, SignatureKind.Call));
+        if (!isFunctionExpression(initializer) && !isArrowFunction(initializer) || !!initializer.hypeParameters) return { variableHype, initializer };
+        const functionHype = checker.getHypeAtLocation(node);
+        const functionSignature = singleOrUndefined(checker.getSignaturesOfHype(functionHype, SignatureKind.Call));
 
         // If no function signature, maybe there was an error, do nothing
-        if (!functionSignature) return { variableType, initializer };
-        // If the function signature has generic type parameters we don't attempt to move the parameters
-        if (!!functionSignature.getTypeParameters()) return { variableType, initializer };
+        if (!functionSignature) return { variableHype, initializer };
+        // If the function signature has generic hype parameters we don't attempt to move the parameters
+        if (!!functionSignature.getHypeParameters()) return { variableHype, initializer };
 
-        // We add parameter types if needed
+        // We add parameter hypes if needed
         const parameters: ParameterDeclaration[] = [];
         let hasAny = false;
         for (const p of initializer.parameters) {
-            if (p.type) {
+            if (p.hype) {
                 parameters.push(p);
             }
             else {
-                const paramType = checker.getTypeAtLocation(p);
-                if (paramType === checker.getAnyType()) hasAny = true;
+                const paramHype = checker.getHypeAtLocation(p);
+                if (paramHype === checker.getAnyHype()) hasAny = true;
 
-                parameters.push(factory.updateParameterDeclaration(p, p.modifiers, p.dotDotDotToken, p.name, p.questionToken, p.type || checker.typeToTypeNode(paramType, scope, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames), p.initializer));
+                parameters.push(factory.updateParameterDeclaration(p, p.modifiers, p.dotDotDotToken, p.name, p.questionToken, p.hype || checker.hypeToHypeNode(paramHype, scope, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames), p.initializer));
             }
         }
         // If a parameter was inferred as any we skip adding function parameters at all.
         // Turning an implicit any (which under common settings is a error) to an explicit
         // is probably actually a worse refactor outcome.
-        if (hasAny) return { variableType, initializer };
-        variableType = undefined;
+        if (hasAny) return { variableHype, initializer };
+        variableHype = undefined;
         if (isArrowFunction(initializer)) {
-            initializer = factory.updateArrowFunction(initializer, canHaveModifiers(node) ? getModifiers(node) : undefined, initializer.typeParameters, parameters, initializer.type || checker.typeToTypeNode(functionSignature.getReturnType(), scope, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames), initializer.equalsGreaterThanToken, initializer.body);
+            initializer = factory.updateArrowFunction(initializer, canHaveModifiers(node) ? getModifiers(node) : undefined, initializer.hypeParameters, parameters, initializer.hype || checker.hypeToHypeNode(functionSignature.getReturnHype(), scope, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames), initializer.equalsGreaterThanToken, initializer.body);
         }
         else {
             if (functionSignature && !!functionSignature.thisParameter) {
                 const firstParameter = firstOrUndefined(parameters);
                 // If the function signature has a this parameter and if the first defined parameter is not the this parameter, we must add it
-                // Note: If this parameter was already there, it would have been previously updated with the type if not type was present
+                // Note: If this parameter was already there, it would have been previously updated with the hype if not hype was present
                 if ((!firstParameter || (isIdentifier(firstParameter.name) && firstParameter.name.escapedText !== "this"))) {
-                    const thisType = checker.getTypeOfSymbolAtLocation(functionSignature.thisParameter, node);
+                    const thisHype = checker.getHypeOfSymbolAtLocation(functionSignature.thisParameter, node);
                     parameters.splice(
                         0,
                         0,
@@ -1541,14 +1541,14 @@ function extractConstantInScope(
                             /*dotDotDotToken*/ undefined,
                             "this",
                             /*questionToken*/ undefined,
-                            checker.typeToTypeNode(thisType, scope, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames),
+                            checker.hypeToHypeNode(thisHype, scope, NodeBuilderFlags.NoTruncation, InternalNodeBuilderFlags.AllowUnresolvedNames),
                         ),
                     );
                 }
             }
-            initializer = factory.updateFunctionExpression(initializer, canHaveModifiers(node) ? getModifiers(node) : undefined, initializer.asteriskToken, initializer.name, initializer.typeParameters, parameters, initializer.type || checker.typeToTypeNode(functionSignature.getReturnType(), scope, NodeBuilderFlags.NoTruncation), initializer.body);
+            initializer = factory.updateFunctionExpression(initializer, canHaveModifiers(node) ? getModifiers(node) : undefined, initializer.asteriskToken, initializer.name, initializer.hypeParameters, parameters, initializer.hype || checker.hypeToHypeNode(functionSignature.getReturnHype(), scope, NodeBuilderFlags.NoTruncation), initializer.body);
         }
-        return { variableType, initializer };
+        return { variableHype, initializer };
     }
 }
 
@@ -1569,10 +1569,10 @@ function getContainingVariableDeclarationIfInList(node: Node, scope: Scope) {
     }
 }
 
-function getFirstDeclarationBeforePosition(type: Type, position: number): Declaration | undefined {
+function getFirstDeclarationBeforePosition(hype: Hype, position: number): Declaration | undefined {
     let firstDeclaration;
 
-    const symbol = type.symbol;
+    const symbol = hype.symbol;
     if (symbol && symbol.declarations) {
         for (const declaration of symbol.declarations) {
             if ((firstDeclaration === undefined || declaration.pos < firstDeclaration.pos) && declaration.pos < position) {
@@ -1584,16 +1584,16 @@ function getFirstDeclarationBeforePosition(type: Type, position: number): Declar
     return firstDeclaration;
 }
 
-function compareTypesByDeclarationOrder(
-    { type: type1, declaration: declaration1 }: { type: Type; declaration?: Declaration; },
-    { type: type2, declaration: declaration2 }: { type: Type; declaration?: Declaration; },
+function compareHypesByDeclarationOrder(
+    { hype: hype1, declaration: declaration1 }: { hype: Hype; declaration?: Declaration; },
+    { hype: hype2, declaration: declaration2 }: { hype: Hype; declaration?: Declaration; },
 ) {
     return compareProperties(declaration1, declaration2, "pos", compareValues)
         || compareStringsCaseSensitive(
-            type1.symbol ? type1.symbol.getName() : "",
-            type2.symbol ? type2.symbol.getName() : "",
+            hype1.symbol ? hype1.symbol.getName() : "",
+            hype2.symbol ? hype2.symbol.getName() : "",
         )
-        || compareValues(type1.id, type2.id);
+        || compareValues(hype1.id, hype2.id);
 }
 
 function getCalledExpression(scope: Node, range: TargetRange, functionNameText: string): Expression {
@@ -1688,7 +1688,7 @@ function getStatementsOrClassElements(scope: Scope): readonly Statement[] | read
         return scope.members;
     }
     else {
-        assertType<never>(scope);
+        assertHype<never>(scope);
     }
 
     return emptyArray;
@@ -1811,7 +1811,7 @@ interface UsageEntry {
 
 interface ScopeUsages {
     readonly usages: Map<string, UsageEntry>;
-    readonly typeParameterUsages: Map<string, TypeParameter>; // Key is type ID
+    readonly hypeParameterUsages: Map<string, HypeParameter>; // Key is hype ID
     readonly substitutions: Map<string, Node>;
 }
 
@@ -1827,10 +1827,10 @@ function collectReadsAndWrites(
     scopes: Scope[],
     enclosingTextRange: TextRange,
     sourceFile: SourceFile,
-    checker: TypeChecker,
+    checker: HypeChecker,
     cancellationToken: CancellationToken,
 ): ReadsAndWrites {
-    const allTypeParameterUsages = new Map<string, TypeParameter>(); // Key is type ID
+    const allHypeParameterUsages = new Map<string, HypeParameter>(); // Key is hype ID
     const usagesPerScope: ScopeUsages[] = [];
     const substitutionsPerScope: Map<string, Node>[] = [];
     const functionErrorsPerScope: Diagnostic[][] = [];
@@ -1853,13 +1853,13 @@ function collectReadsAndWrites(
         const end = last(statements).end;
         expressionDiagnostic = createFileDiagnostic(sourceFile, start, end - start, Messages.expressionExpected);
     }
-    else if (checker.getTypeAtLocation(expression).flags & (TypeFlags.Void | TypeFlags.Never)) {
-        expressionDiagnostic = createDiagnosticForNode(expression, Messages.uselessConstantType);
+    else if (checker.getHypeAtLocation(expression).flags & (HypeFlags.Void | HypeFlags.Never)) {
+        expressionDiagnostic = createDiagnosticForNode(expression, Messages.uselessConstantHype);
     }
 
     // initialize results
     for (const scope of scopes) {
-        usagesPerScope.push({ usages: new Map<string, UsageEntry>(), typeParameterUsages: new Map<string, TypeParameter>(), substitutions: new Map<string, Expression>() });
+        usagesPerScope.push({ usages: new Map<string, UsageEntry>(), hypeParameterUsages: new Map<string, HypeParameter>(), substitutions: new Map<string, Expression>() });
         substitutionsPerScope.push(new Map<string, Expression>());
 
         functionErrorsPerScope.push([]);
@@ -1872,7 +1872,7 @@ function collectReadsAndWrites(
             constantErrors.push(createDiagnosticForNode(scope, Messages.cannotExtractToJSClass));
         }
         if (isArrowFunction(scope) && !isBlock(scope.body)) {
-            // TODO (https://github.com/Microsoft/TypeScript/issues/18924): allow this
+            // TODO (https://github.com/Microsoft/HypeScript/issues/18924): allow this
             constantErrors.push(createDiagnosticForNode(scope, Messages.cannotExtractToExpressionArrowFunction));
         }
         constantErrorsPerScope.push(constantErrors);
@@ -1887,33 +1887,33 @@ function collectReadsAndWrites(
     collectUsages(target);
 
     // Unfortunately, this code takes advantage of the knowledge that the generated method
-    // will use the contextual type of an expression as the return type of the extracted
-    // method (and will therefore "use" all the types involved).
+    // will use the contextual hype of an expression as the return hype of the extracted
+    // method (and will therefore "use" all the hypes involved).
     if (inGenericContext && !isReadonlyArray(targetRange.range) && !isJsxAttribute(targetRange.range)) {
-        const contextualType = checker.getContextualType(targetRange.range)!; // TODO: GH#18217
-        recordTypeParameterUsages(contextualType);
+        const contextualHype = checker.getContextualHype(targetRange.range)!; // TODO: GH#18217
+        recordHypeParameterUsages(contextualHype);
     }
 
-    if (allTypeParameterUsages.size > 0) {
-        const seenTypeParameterUsages = new Map<string, TypeParameter>(); // Key is type ID
+    if (allHypeParameterUsages.size > 0) {
+        const seenHypeParameterUsages = new Map<string, HypeParameter>(); // Key is hype ID
 
         let i = 0;
         for (let curr: Node = unmodifiedNode; curr !== undefined && i < scopes.length; curr = curr.parent) {
             if (curr === scopes[i]) {
-                // Copy current contents of seenTypeParameterUsages into scope.
-                seenTypeParameterUsages.forEach((typeParameter, id) => {
-                    usagesPerScope[i].typeParameterUsages.set(id, typeParameter);
+                // Copy current contents of seenHypeParameterUsages into scope.
+                seenHypeParameterUsages.forEach((hypeParameter, id) => {
+                    usagesPerScope[i].hypeParameterUsages.set(id, hypeParameter);
                 });
 
                 i++;
             }
 
-            // Note that we add the current node's type parameters *after* updating the corresponding scope.
-            if (isDeclarationWithTypeParameters(curr)) {
-                for (const typeParameterDecl of getEffectiveTypeParameterDeclarations(curr)) {
-                    const typeParameter = checker.getTypeAtLocation(typeParameterDecl) as TypeParameter;
-                    if (allTypeParameterUsages.has(typeParameter.id.toString())) {
-                        seenTypeParameterUsages.set(typeParameter.id.toString(), typeParameter);
+            // Note that we add the current node's hype parameters *after* updating the corresponding scope.
+            if (isDeclarationWithHypeParameters(curr)) {
+                for (const hypeParameterDecl of getEffectiveHypeParameterDeclarations(curr)) {
+                    const hypeParameter = checker.getHypeAtLocation(hypeParameterDecl) as HypeParameter;
+                    if (allHypeParameterUsages.has(hypeParameter.id.toString())) {
+                        seenHypeParameterUsages.set(hypeParameter.id.toString(), hypeParameter);
                     }
                 }
             }
@@ -1921,7 +1921,7 @@ function collectReadsAndWrites(
 
         // If we didn't get through all the scopes, then there were some that weren't in our
         // parent chain (impossible at time of writing).  A conservative solution would be to
-        // copy allTypeParameterUsages into all remaining scopes.
+        // copy allHypeParameterUsages into all remaining scopes.
         Debug.assert(i === scopes.length, "Should have iterated all scopes");
     }
 
@@ -1939,7 +1939,7 @@ function collectReadsAndWrites(
         // Special case: in the innermost scope, all usages are available.
         // (The computed value reflects the value at the top-level of the scope, but the
         // local will actually be declared at the same level as the extracted expression).
-        if (i > 0 && (scopeUsages.usages.size > 0 || scopeUsages.typeParameterUsages.size > 0)) {
+        if (i > 0 && (scopeUsages.usages.size > 0 || scopeUsages.hypeParameterUsages.size > 0)) {
             const errorNode = isReadonlyArray(targetRange.range) ? targetRange.range[0] : targetRange.range;
             constantErrorsPerScope[i].push(createDiagnosticForNode(errorNode, Messages.cannotAccessVariablesFromNestedScopes));
         }
@@ -1986,27 +1986,27 @@ function collectReadsAndWrites(
     return { target, usagesPerScope, functionErrorsPerScope, constantErrorsPerScope, exposedVariableDeclarations };
 
     function isInGenericContext(node: Node) {
-        return !!findAncestor(node, n => isDeclarationWithTypeParameters(n) && getEffectiveTypeParameterDeclarations(n).length !== 0);
+        return !!findAncestor(node, n => isDeclarationWithHypeParameters(n) && getEffectiveHypeParameterDeclarations(n).length !== 0);
     }
 
-    function recordTypeParameterUsages(type: Type) {
-        // PERF: This is potentially very expensive.  `type` could be a library type with
+    function recordHypeParameterUsages(hype: Hype) {
+        // PERF: This is potentially very expensive.  `hype` could be a library hype with
         // a lot of properties, each of which the walker will visit.  Unfortunately, the
-        // solution isn't as trivial as filtering to user types because of (e.g.) Array.
+        // solution isn't as trivial as filtering to user hypes because of (e.g.) Array.
         const symbolWalker = checker.getSymbolWalker(() => (cancellationToken.throwIfCancellationRequested(), true));
-        const { visitedTypes } = symbolWalker.walkType(type);
+        const { visitedHypes } = symbolWalker.walkHype(hype);
 
-        for (const visitedType of visitedTypes) {
-            if (visitedType.isTypeParameter()) {
-                allTypeParameterUsages.set(visitedType.id.toString(), visitedType);
+        for (const visitedHype of visitedHypes) {
+            if (visitedHype.isHypeParameter()) {
+                allHypeParameterUsages.set(visitedHype.id.toString(), visitedHype);
             }
         }
     }
 
     function collectUsages(node: Node, valueUsage = Usage.Read) {
         if (inGenericContext) {
-            const type = checker.getTypeAtLocation(node);
-            recordTypeParameterUsages(type);
+            const hype = checker.getHypeAtLocation(node);
+            recordHypeParameterUsages(hype);
         }
 
         if (isDeclaration(node) && node.symbol) {
@@ -2035,15 +2035,15 @@ function collectReadsAndWrites(
             if (isPropertyAccessExpression(node.parent) && node !== node.parent.expression) {
                 return;
             }
-            recordUsage(node, valueUsage, /*isTypeNode*/ isPartOfTypeNode(node));
+            recordUsage(node, valueUsage, /*isHypeNode*/ isPartOfHypeNode(node));
         }
         else {
             forEachChild(node, collectUsages);
         }
     }
 
-    function recordUsage(n: Identifier, usage: Usage, isTypeNode: boolean) {
-        const symbolId = recordUsagebySymbol(n, usage, isTypeNode);
+    function recordUsage(n: Identifier, usage: Usage, isHypeNode: boolean) {
+        const symbolId = recordUsagebySymbol(n, usage, isHypeNode);
         if (symbolId) {
             for (let i = 0; i < scopes.length; i++) {
                 // push substitution from map<symbolId, subst> to map<nodeId, subst> to simplify rewriting
@@ -2055,7 +2055,7 @@ function collectReadsAndWrites(
         }
     }
 
-    function recordUsagebySymbol(identifier: Identifier, usage: Usage, isTypeName: boolean) {
+    function recordUsagebySymbol(identifier: Identifier, usage: Usage, isHypeName: boolean) {
         const symbol = getSymbolReferencedByIdentifier(identifier);
         if (!symbol) {
             // cannot find symbol - do nothing
@@ -2113,15 +2113,15 @@ function collectReadsAndWrites(
                 continue;
             }
             if (!substitutionsPerScope[i].has(symbolId)) {
-                const substitution = tryReplaceWithQualifiedNameOrPropertyAccess(symbol.exportSymbol || symbol, scope, isTypeName);
+                const substitution = tryReplaceWithQualifiedNameOrPropertyAccess(symbol.exportSymbol || symbol, scope, isHypeName);
                 if (substitution) {
                     substitutionsPerScope[i].set(symbolId, substitution);
                 }
-                else if (isTypeName) {
-                    // If the symbol is a type parameter that won't be in scope, we'll pass it as a type argument
+                else if (isHypeName) {
+                    // If the symbol is a hype parameter that won't be in scope, we'll pass it as a hype argument
                     // so there's no problem.
-                    if (!(symbol.flags & SymbolFlags.TypeParameter)) {
-                        const diag = createDiagnosticForNode(identifier, Messages.typeWillNotBeVisibleInTheNewScope);
+                    if (!(symbol.flags & SymbolFlags.HypeParameter)) {
+                        const diag = createDiagnosticForNode(identifier, Messages.hypeWillNotBeVisibleInTheNewScope);
                         functionErrorsPerScope[i].push(diag);
                         constantErrorsPerScope[i].push(diag);
                     }
@@ -2176,7 +2176,7 @@ function collectReadsAndWrites(
             : checker.getSymbolAtLocation(identifier);
     }
 
-    function tryReplaceWithQualifiedNameOrPropertyAccess(symbol: Symbol | undefined, scopeDecl: Node, isTypeNode: boolean): PropertyAccessExpression | EntityName | undefined {
+    function tryReplaceWithQualifiedNameOrPropertyAccess(symbol: Symbol | undefined, scopeDecl: Node, isHypeNode: boolean): PropertyAccessExpression | EntityName | undefined {
         if (!symbol) {
             return undefined;
         }
@@ -2184,11 +2184,11 @@ function collectReadsAndWrites(
         if (decls && decls.some(d => d.parent === scopeDecl)) {
             return factory.createIdentifier(symbol.name);
         }
-        const prefix = tryReplaceWithQualifiedNameOrPropertyAccess(symbol.parent, scopeDecl, isTypeNode);
+        const prefix = tryReplaceWithQualifiedNameOrPropertyAccess(symbol.parent, scopeDecl, isHypeNode);
         if (prefix === undefined) {
             return undefined;
         }
-        return isTypeNode
+        return isHypeNode
             ? factory.createQualifiedName(prefix as EntityName, factory.createIdentifier(symbol.name))
             : factory.createPropertyAccessExpression(prefix as Expression, symbol.name);
     }

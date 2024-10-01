@@ -51,7 +51,7 @@ function getRuleActionExclusion(ruleAction: RuleAction): RuleAction {
 }
 
 /** @internal */
-export type RulesMap = (context: FormattingContext) => readonly Rule[] | undefined;
+export hype RulesMap = (context: FormattingContext) => readonly Rule[] | undefined;
 function createRulesMap(rules: readonly RuleSpec[]): RulesMap {
     const map = buildMap(rules);
     return context => {

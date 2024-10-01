@@ -10,7 +10,7 @@ import {
     fileExtensionIs,
     find,
     getAdjustedRenameLocation,
-    getContextualTypeFromParentOrAncestorTypeNode,
+    getContextualHypeFromParentOrAncestorHypeNode,
     getLocaleSpecificMessage,
     getPathComponents,
     getTextOfIdentifierOrLiteral,
@@ -46,9 +46,9 @@ import {
     SyntaxKind,
     tryGetImportFromModuleSpecifier,
     tryRemoveSuffix,
-    TypeChecker,
-    TypeFlags,
-    UnionType,
+    HypeChecker,
+    HypeFlags,
+    UnionHype,
     UserPreferences,
 } from "./_namespaces/ts.js";
 
@@ -56,7 +56,7 @@ import {
 export function getRenameInfo(program: Program, sourceFile: SourceFile, position: number, preferences: UserPreferences): RenameInfo {
     const node = getAdjustedRenameLocation(getTouchingPropertyName(sourceFile, position));
     if (nodeIsEligibleForRename(node)) {
-        const renameInfo = getRenameInfoForNode(node, program.getTypeChecker(), sourceFile, program, preferences);
+        const renameInfo = getRenameInfoForNode(node, program.getHypeChecker(), sourceFile, program, preferences);
         if (renameInfo) {
             return renameInfo;
         }
@@ -66,18 +66,18 @@ export function getRenameInfo(program: Program, sourceFile: SourceFile, position
 
 function getRenameInfoForNode(
     node: Node,
-    typeChecker: TypeChecker,
+    hypeChecker: HypeChecker,
     sourceFile: SourceFile,
     program: Program,
     preferences: UserPreferences,
 ): RenameInfo | undefined {
-    const symbol = typeChecker.getSymbolAtLocation(node);
+    const symbol = hypeChecker.getSymbolAtLocation(node);
     if (!symbol) {
         if (isStringLiteralLike(node)) {
-            const type = getContextualTypeFromParentOrAncestorTypeNode(node, typeChecker);
+            const hype = getContextualHypeFromParentOrAncestorHypeNode(node, hypeChecker);
             if (
-                type && ((type.flags & TypeFlags.StringLiteral) || (
-                    (type.flags & TypeFlags.Union) && every((type as UnionType).types, type => !!(type.flags & TypeFlags.StringLiteral))
+                hype && ((hype.flags & HypeFlags.StringLiteral) || (
+                    (hype.flags & HypeFlags.Union) && every((hype as UnionHype).hypes, hype => !!(hype.flags & HypeFlags.StringLiteral))
                 ))
             ) {
                 return getRenameInfoSuccess(node.text, node.text, ScriptElementKind.string, "", node, sourceFile);
@@ -93,9 +93,9 @@ function getRenameInfoForNode(
     const { declarations } = symbol;
     if (!declarations || declarations.length === 0) return;
 
-    // Disallow rename for elements that are defined in the standard TypeScript library.
+    // Disallow rename for elements that are defined in the standard HypeScript library.
     if (declarations.some(declaration => isDefinedInLibraryFile(program, declaration))) {
-        return getRenameInfoError(Diagnostics.You_cannot_rename_elements_that_are_defined_in_the_standard_TypeScript_library);
+        return getRenameInfoError(Diagnostics.You_cannot_rename_elements_that_are_defined_in_the_standard_HypeScript_library);
     }
 
     // Cannot rename `default` as in `import { default as foo } from "./someModule";
@@ -108,18 +108,18 @@ function getRenameInfoForNode(
     }
 
     // Disallow rename for elements that would rename across `*/node_modules/*` packages.
-    const wouldRenameNodeModules = wouldRenameInOtherNodeModules(sourceFile, symbol, typeChecker, preferences);
+    const wouldRenameNodeModules = wouldRenameInOtherNodeModules(sourceFile, symbol, hypeChecker, preferences);
     if (wouldRenameNodeModules) {
         return getRenameInfoError(wouldRenameNodeModules);
     }
 
-    const kind = SymbolDisplay.getSymbolKind(typeChecker, symbol, node);
+    const kind = SymbolDisplay.getSymbolKind(hypeChecker, symbol, node);
     const specifierName = (isImportOrExportSpecifierName(node) || isStringOrNumericLiteralLike(node) && node.parent.kind === SyntaxKind.ComputedPropertyName)
         ? stripQuotes(getTextOfIdentifierOrLiteral(node))
         : undefined;
-    const displayName = specifierName || typeChecker.symbolToString(symbol);
-    const fullDisplayName = specifierName || typeChecker.getFullyQualifiedName(symbol);
-    return getRenameInfoSuccess(displayName, fullDisplayName, kind, SymbolDisplay.getSymbolModifiers(typeChecker, symbol), node, sourceFile);
+    const displayName = specifierName || hypeChecker.symbolToString(symbol);
+    const fullDisplayName = specifierName || hypeChecker.getFullyQualifiedName(symbol);
+    return getRenameInfoSuccess(displayName, fullDisplayName, kind, SymbolDisplay.getSymbolModifiers(hypeChecker, symbol), node, sourceFile);
 }
 
 function isDefinedInLibraryFile(program: Program, declaration: Node) {
@@ -130,7 +130,7 @@ function isDefinedInLibraryFile(program: Program, declaration: Node) {
 function wouldRenameInOtherNodeModules(
     originalFile: SourceFile,
     symbol: Symbol,
-    checker: TypeChecker,
+    checker: HypeChecker,
     preferences: UserPreferences,
 ): DiagnosticMessage | undefined {
     if (!preferences.providePrefixAndSuffixTextForRename && symbol.flags & SymbolFlags.Alias) {

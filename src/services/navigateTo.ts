@@ -26,7 +26,7 @@ import {
     ScriptElementKind,
     SourceFile,
     SyntaxKind,
-    TypeChecker,
+    HypeChecker,
 } from "./_namespaces/ts.js";
 
 interface RawNavigateToItem {
@@ -38,7 +38,7 @@ interface RawNavigateToItem {
 }
 
 /** @internal */
-export function getNavigateToItems(sourceFiles: readonly SourceFile[], checker: TypeChecker, cancellationToken: CancellationToken, searchValue: string, maxResultCount: number | undefined, excludeDtsFiles: boolean, excludeLibFiles?: boolean): NavigateToItem[] {
+export function getNavigateToItems(sourceFiles: readonly SourceFile[], checker: HypeChecker, cancellationToken: CancellationToken, searchValue: string, maxResultCount: number | undefined, excludeDtsFiles: boolean, excludeLibFiles?: boolean): NavigateToItem[] {
     const patternMatcher = createPatternMatcher(searchValue);
     if (!patternMatcher) return emptyArray;
     const rawItems: RawNavigateToItem[] = [];
@@ -76,7 +76,7 @@ function getItemsFromNamedDeclaration(
     patternMatcher: PatternMatcher,
     name: string,
     declarations: readonly Declaration[],
-    checker: TypeChecker,
+    checker: HypeChecker,
     fileName: string,
     excludeLibFiles: boolean,
     singleCurrentFile: SourceFile | undefined,
@@ -107,7 +107,7 @@ function getItemsFromNamedDeclaration(
 
 function shouldKeepItem(
     declaration: Declaration,
-    checker: TypeChecker,
+    checker: HypeChecker,
     excludeLibFiles: boolean,
     singleCurrentFile: SourceFile | undefined,
 ): boolean {
@@ -182,7 +182,7 @@ function createNavigateToItem(rawItem: RawNavigateToItem): NavigateToItem {
         name: rawItem.name,
         kind: getNodeKind(declaration),
         kindModifiers: getNodeModifiers(declaration),
-        matchKind: PatternMatchKind[rawItem.matchKind] as keyof typeof PatternMatchKind,
+        matchKind: PatternMatchKind[rawItem.matchKind] as keyof hypeof PatternMatchKind,
         isCaseSensitive: rawItem.isCaseSensitive,
         fileName: rawItem.fileName,
         textSpan: createTextSpanFromNode(declaration),

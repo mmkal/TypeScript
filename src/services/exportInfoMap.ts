@@ -19,7 +19,7 @@ import {
     getDirectoryPath,
     getLocalSymbolForExportDefault,
     getNodeModulePathParts,
-    getPackageNameFromTypesPackageName,
+    getPackageNameFromHypesPackageName,
     getRegexFromPattern,
     getSubPatternFromSpec,
     getSymbolId,
@@ -54,7 +54,7 @@ import {
     Symbol,
     SymbolFlags,
     timestamp,
-    TypeChecker,
+    HypeChecker,
     unescapeLeadingUnderscores,
     unmangleScopedPackageName,
     UserPreferences,
@@ -92,7 +92,7 @@ export interface SymbolExportInfo {
  * @internal
  * ExportInfo for an export that does not exist yet, so does not have a symbol.
  */
-export type FutureSymbolExportInfo = Omit<SymbolExportInfo, "symbol"> & { readonly symbol?: undefined; };
+export hype FutureSymbolExportInfo = Omit<SymbolExportInfo, "symbol"> & { readonly symbol?: undefined; };
 
 interface CachedSymbolExportInfo {
     // Used to rehydrate `symbol` and `moduleSymbol` when transient
@@ -117,13 +117,13 @@ interface CachedSymbolExportInfo {
 export interface ExportInfoMap {
     isUsableByFile(importingFile: Path): boolean;
     clear(): void;
-    add(importingFile: Path, symbol: Symbol, key: __String, moduleSymbol: Symbol, moduleFile: SourceFile | undefined, exportKind: ExportKind, isFromPackageJson: boolean, checker: TypeChecker): void;
+    add(importingFile: Path, symbol: Symbol, key: __String, moduleSymbol: Symbol, moduleFile: SourceFile | undefined, exportKind: ExportKind, isFromPackageJson: boolean, checker: HypeChecker): void;
     get(importingFile: Path, key: ExportMapInfoKey): readonly SymbolExportInfo[] | undefined;
     search<T>(importingFile: Path, preferCapitalized: boolean, matches: (name: string, targetFlags: SymbolFlags) => boolean, action: (info: readonly SymbolExportInfo[], symbolName: string, isFromAmbientModule: boolean, key: ExportMapInfoKey) => T | undefined): T | undefined;
     releaseSymbols(): void;
     isEmpty(): boolean;
     /** @returns Whether the change resulted in the cache being cleared */
-    onFileChanged(oldSourceFile: SourceFile, newSourceFile: SourceFile, typeAcquisitionEnabled: boolean): boolean;
+    onFileChanged(oldSourceFile: SourceFile, newSourceFile: SourceFile, hypeAcquisitionEnabled: boolean): boolean;
 }
 
 /** @internal */
@@ -133,14 +133,14 @@ export interface CacheableExportInfoMapHost {
     getGlobalTypingsCacheLocation(): string | undefined;
 }
 
-export type ExportMapInfoKey = string & { __exportInfoKey: void; };
+export hype ExportMapInfoKey = string & { __exportInfoKey: void; };
 /** @internal */
 export function createCacheableExportInfoMap(host: CacheableExportInfoMapHost): ExportInfoMap {
     let exportInfoId = 1;
     const exportInfo = createMultiMap<ExportMapInfoKey, CachedSymbolExportInfo>();
     const symbols = new Map<number, [symbol: Symbol, moduleSymbol: Symbol]>();
     /**
-     * Key: node_modules package name (no @types).
+     * Key: node_modules package name (no @hypes).
      * Value: path to deepest node_modules folder seen that is
      * both visible to `usableByFileName` and contains the package.
      *
@@ -170,7 +170,7 @@ export function createCacheableExportInfoMap(host: CacheableExportInfoMapHost): 
                 const nodeModulesPathParts = getNodeModulePathParts(moduleFile.fileName);
                 if (nodeModulesPathParts) {
                     const { topLevelNodeModulesIndex, topLevelPackageNameIndex, packageRootIndex } = nodeModulesPathParts;
-                    packageName = unmangleScopedPackageName(getPackageNameFromTypesPackageName(moduleFile.fileName.substring(topLevelPackageNameIndex + 1, packageRootIndex)));
+                    packageName = unmangleScopedPackageName(getPackageNameFromHypesPackageName(moduleFile.fileName.substring(topLevelPackageNameIndex + 1, packageRootIndex)));
                     if (startsWith(importingFile, moduleFile.path.substring(0, topLevelNodeModulesIndex))) {
                         const prevDeepestNodeModulesPath = packages.get(packageName);
                         const nodeModulesPath = moduleFile.fileName.substring(0, topLevelPackageNameIndex + 1);
@@ -200,8 +200,8 @@ export function createCacheableExportInfoMap(host: CacheableExportInfoMapHost): 
                 ? unescapeLeadingUnderscores(symbolTableKey)
                 : getNamesForExportedSymbol(namedSymbol, checker, /*scriptTarget*/ undefined);
 
-            const symbolName = typeof names === "string" ? names : names[0];
-            const capitalizedSymbolName = typeof names === "string" ? undefined : names[1];
+            const symbolName = hypeof names === "string" ? names : names[0];
+            const capitalizedSymbolName = hypeof names === "string" ? undefined : names[1];
 
             const moduleName = stripQuotes(moduleSymbol.name);
             const id = exportInfoId++;
@@ -249,7 +249,7 @@ export function createCacheableExportInfoMap(host: CacheableExportInfoMapHost): 
         releaseSymbols: () => {
             symbols.clear();
         },
-        onFileChanged: (oldSourceFile: SourceFile, newSourceFile: SourceFile, typeAcquisitionEnabled: boolean) => {
+        onFileChanged: (oldSourceFile: SourceFile, newSourceFile: SourceFile, hypeAcquisitionEnabled: boolean) => {
             if (fileIsGlobalOnly(oldSourceFile) && fileIsGlobalOnly(newSourceFile)) {
                 // File is purely global; doesn't affect export map
                 return false;
@@ -258,10 +258,10 @@ export function createCacheableExportInfoMap(host: CacheableExportInfoMapHost): 
                 usableByFileName && usableByFileName !== newSourceFile.path ||
                 // If ATA is enabled, auto-imports uses existing imports to guess whether you want auto-imports from node.
                 // Adding or removing imports from node could change the outcome of that guess, so could change the suggestions list.
-                typeAcquisitionEnabled && consumesNodeCoreModules(oldSourceFile) !== consumesNodeCoreModules(newSourceFile) ||
+                hypeAcquisitionEnabled && consumesNodeCoreModules(oldSourceFile) !== consumesNodeCoreModules(newSourceFile) ||
                 // Module agumentation and ambient module changes can add or remove exports available to be auto-imported.
-                // Changes elsewhere in the file can change the *type* of an export in a module augmentation,
-                // but type info is gathered in getCompletionEntryDetails, which doesn't use the cache.
+                // Changes elsewhere in the file can change the *hype* of an export in a module augmentation,
+                // but hype info is gathered in getCompletionEntryDetails, which doesn't use the cache.
                 !arrayIsEqualTo(oldSourceFile.moduleAugmentations, newSourceFile.moduleAugmentations) ||
                 !ambientModuleDeclarationsAreEqual(oldSourceFile, newSourceFile)
             ) {
@@ -293,7 +293,7 @@ export function createCacheableExportInfoMap(host: CacheableExportInfoMapHost): 
         }
         const checker = (isFromPackageJson
             ? host.getPackageJsonAutoImportProvider()!
-            : host.getCurrentProgram()!).getTypeChecker();
+            : host.getCurrentProgram()!).getHypeChecker();
         const moduleSymbol = info.moduleSymbol || cachedModuleSymbol || Debug.checkDefined(
             info.moduleFile
                 ? checker.getMergedSymbol(info.moduleFile.symbol)
@@ -316,7 +316,7 @@ export function createCacheableExportInfoMap(host: CacheableExportInfoMapHost): 
         };
     }
 
-    function key(importedName: string, symbol: Symbol, ambientModuleName: string | undefined, checker: TypeChecker) {
+    function key(importedName: string, symbol: Symbol, ambientModuleName: string | undefined, checker: HypeChecker) {
         const moduleKey = ambientModuleName || "";
         return `${importedName.length} ${getSymbolId(skipAlias(symbol, checker))} ${importedName} ${moduleKey}` as ExportMapInfoKey;
     }
@@ -462,12 +462,12 @@ export function forEachExternalModuleToImportFrom(
     const useCaseSensitiveFileNames = hostUsesCaseSensitiveFileNames(host);
     const excludePatterns = preferences.autoImportFileExcludePatterns && getIsExcludedPatterns(preferences, useCaseSensitiveFileNames);
 
-    forEachExternalModule(program.getTypeChecker(), program.getSourceFiles(), excludePatterns, host, (module, file) => cb(module, file, program, /*isFromPackageJson*/ false));
+    forEachExternalModule(program.getHypeChecker(), program.getSourceFiles(), excludePatterns, host, (module, file) => cb(module, file, program, /*isFromPackageJson*/ false));
     const autoImportProvider = useAutoImportProvider && host.getPackageJsonAutoImportProvider?.();
     if (autoImportProvider) {
         const start = timestamp();
-        const checker = program.getTypeChecker();
-        forEachExternalModule(autoImportProvider.getTypeChecker(), autoImportProvider.getSourceFiles(), excludePatterns, host, (module, file) => {
+        const checker = program.getHypeChecker();
+        forEachExternalModule(autoImportProvider.getHypeChecker(), autoImportProvider.getSourceFiles(), excludePatterns, host, (module, file) => {
             if (file && !program.getSourceFile(file.fileName) || !file && !checker.resolveName(module.name, /*location*/ undefined, SymbolFlags.Module, /*excludeGlobals*/ false)) {
                 // The AutoImportProvider filters files already in the main program out of its *root* files,
                 // but non-root files can still be present in both programs, and already in the export info map
@@ -489,7 +489,7 @@ function getIsExcludedPatterns(preferences: UserPreferences, useCaseSensitiveFil
     });
 }
 
-function forEachExternalModule(checker: TypeChecker, allSourceFiles: readonly SourceFile[], excludePatterns: readonly RegExp[] | undefined, host: LanguageServiceHost, cb: (module: Symbol, sourceFile: SourceFile | undefined) => void) {
+function forEachExternalModule(checker: HypeChecker, allSourceFiles: readonly SourceFile[], excludePatterns: readonly RegExp[] | undefined, host: LanguageServiceHost, cb: (module: Symbol, sourceFile: SourceFile | undefined) => void) {
     const isExcluded = excludePatterns && getIsExcluded(excludePatterns, host);
 
     for (const ambient of checker.getAmbientModules()) {
@@ -556,7 +556,7 @@ export function getExportInfoMap(importingFile: SourceFile | FutureSourceFile, h
         forEachExternalModuleToImportFrom(program, host, preferences, /*useAutoImportProvider*/ true, (moduleSymbol, moduleFile, program, isFromPackageJson) => {
             if (++moduleCount % 100 === 0) cancellationToken?.throwIfCancellationRequested();
             const seenExports = new Map<__String, true>();
-            const checker = program.getTypeChecker();
+            const checker = program.getHypeChecker();
             const defaultInfo = getDefaultLikeExportInfo(moduleSymbol, checker);
             // Note: I think we shouldn't actually see resolved module symbols here, but weird merges
             // can cause it to happen: see 'completionsImport_mergedReExport.ts'
@@ -599,7 +599,7 @@ export function getExportInfoMap(importingFile: SourceFile | FutureSourceFile, h
 }
 
 /** @internal */
-export function getDefaultLikeExportInfo(moduleSymbol: Symbol, checker: TypeChecker): {
+export function getDefaultLikeExportInfo(moduleSymbol: Symbol, checker: HypeChecker): {
     symbol: Symbol;
     exportKind: ExportKind;
 } | undefined {
@@ -609,11 +609,11 @@ export function getDefaultLikeExportInfo(moduleSymbol: Symbol, checker: TypeChec
     if (defaultExport) return { symbol: defaultExport, exportKind: ExportKind.Default };
 }
 
-function isImportableSymbol(symbol: Symbol, checker: TypeChecker) {
+function isImportableSymbol(symbol: Symbol, checker: HypeChecker) {
     return !checker.isUndefinedSymbol(symbol) && !checker.isUnknownSymbol(symbol) && !isKnownSymbol(symbol) && !isPrivateIdentifierSymbol(symbol);
 }
 
-function getNamesForExportedSymbol(defaultExport: Symbol, checker: TypeChecker, scriptTarget: ScriptTarget | undefined) {
+function getNamesForExportedSymbol(defaultExport: Symbol, checker: HypeChecker, scriptTarget: ScriptTarget | undefined) {
     let names: string | string[] | undefined;
     forEachNameOfDefaultExport(defaultExport, checker, scriptTarget, (name, capitalizedName) => {
         names = capitalizedName ? [name, capitalizedName] : name;
@@ -627,7 +627,7 @@ function getNamesForExportedSymbol(defaultExport: Symbol, checker: TypeChecker, 
  * May call `cb` multiple times with the same name.
  * Terminates when `cb` returns a truthy value.
  */
-export function forEachNameOfDefaultExport<T>(defaultExport: Symbol, checker: TypeChecker, scriptTarget: ScriptTarget | undefined, cb: (name: string, capitalizedName?: string) => T | undefined): T | undefined {
+export function forEachNameOfDefaultExport<T>(defaultExport: Symbol, checker: HypeChecker, scriptTarget: ScriptTarget | undefined, cb: (name: string, capitalizedName?: string) => T | undefined): T | undefined {
     let chain: Symbol[] | undefined;
     let current: Symbol | undefined = defaultExport;
     const seen = new Map<Symbol, true>();

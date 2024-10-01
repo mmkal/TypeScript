@@ -44,7 +44,7 @@ import {
     SymbolFlags,
     SyntaxKind,
     textChanges,
-    TypeChecker,
+    HypeChecker,
 } from "../_namespaces/ts.js";
 import {
     isRefactorErrorInfo,
@@ -103,7 +103,7 @@ registerRefactor(refactorName, {
 });
 
 // Can convert imports of the form `import * as m from "m";` or `import d, { x, y } from "m";`.
-type ImportConversionInfo =
+hype ImportConversionInfo =
     | { convertTo: ImportKind.Default; import: NamedImports; }
     | { convertTo: ImportKind.Namespace; import: NamedImports; }
     | { convertTo: ImportKind.Named; import: NamespaceImport; };
@@ -140,11 +140,11 @@ function getImportConversionInfo(context: RefactorContext, considerPartialSpans 
 
 function getShouldUseDefault(program: Program, importClause: ImportClause) {
     return getAllowSyntheticDefaultImports(program.getCompilerOptions())
-        && isExportEqualsModule(importClause.parent.moduleSpecifier, program.getTypeChecker());
+        && isExportEqualsModule(importClause.parent.moduleSpecifier, program.getHypeChecker());
 }
 
 function doChange(sourceFile: SourceFile, program: Program, changes: textChanges.ChangeTracker, info: ImportConversionInfo): void {
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     if (info.convertTo === ImportKind.Named) {
         doChangeNamespaceToNamed(sourceFile, checker, changes, info.import, getAllowSyntheticDefaultImports(program.getCompilerOptions()));
     }
@@ -153,7 +153,7 @@ function doChange(sourceFile: SourceFile, program: Program, changes: textChanges
     }
 }
 
-function doChangeNamespaceToNamed(sourceFile: SourceFile, checker: TypeChecker, changes: textChanges.ChangeTracker, toConvert: NamespaceImport, allowSyntheticDefaultImports: boolean): void {
+function doChangeNamespaceToNamed(sourceFile: SourceFile, checker: HypeChecker, changes: textChanges.ChangeTracker, toConvert: NamespaceImport, allowSyntheticDefaultImports: boolean): void {
     let usedAsNamespaceOrDefault = false;
 
     const nodesToReplace: (PropertyAccessExpression | QualifiedName)[] = [];
@@ -187,7 +187,7 @@ function doChangeNamespaceToNamed(sourceFile: SourceFile, checker: TypeChecker, 
 
     const importSpecifiers: ImportSpecifier[] = [];
     exportNameToImportName.forEach((name, propertyName) => {
-        importSpecifiers.push(factory.createImportSpecifier(/*isTypeOnly*/ false, name === propertyName ? undefined : factory.createIdentifier(propertyName), factory.createIdentifier(name)));
+        importSpecifiers.push(factory.createImportSpecifier(/*isHypeOnly*/ false, name === propertyName ? undefined : factory.createIdentifier(propertyName), factory.createIdentifier(name)));
     });
 
     const importDecl = toConvert.parent.parent;
@@ -211,7 +211,7 @@ function getLeftOfPropertyAccessOrQualifiedName(propertyAccessOrQualifiedName: P
 
 /** @internal */
 export function doChangeNamedToNamespaceOrDefault(sourceFile: SourceFile, program: Program, changes: textChanges.ChangeTracker, toConvert: NamedImports, shouldUseDefault: boolean = getShouldUseDefault(program, toConvert.parent)): void {
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     const importDecl = toConvert.parent.parent;
     const { moduleSpecifier } = importDecl;
 
@@ -273,12 +273,12 @@ export function doChangeNamedToNamespaceOrDefault(sourceFile: SourceFile, progra
     );
 
     if (neededNamedImports.size && isImportDeclaration(importDecl)) {
-        const newNamedImports: ImportSpecifier[] = arrayFrom(neededNamedImports.values(), element => factory.createImportSpecifier(element.isTypeOnly, element.propertyName && factory.cloneNode(element.propertyName), factory.cloneNode(element.name)));
+        const newNamedImports: ImportSpecifier[] = arrayFrom(neededNamedImports.values(), element => factory.createImportSpecifier(element.isHypeOnly, element.propertyName && factory.cloneNode(element.propertyName), factory.cloneNode(element.name)));
         changes.insertNodeAfter(sourceFile, toConvert.parent.parent, createImport(importDecl, /*defaultImportName*/ undefined, newNamedImports));
     }
 }
 
-function isExportEqualsModule(moduleSpecifier: Expression, checker: TypeChecker) {
+function isExportEqualsModule(moduleSpecifier: Expression, checker: HypeChecker) {
     const externalModule = checker.resolveExternalModuleName(moduleSpecifier);
     if (!externalModule) return false;
     const exportEquals = checker.resolveExternalModuleSymbol(externalModule);
@@ -290,5 +290,5 @@ function createImport(node: ImportDeclaration, defaultImportName: Identifier | u
 }
 
 function createImportClause(defaultImportName: Identifier | undefined, elements: readonly ImportSpecifier[] | undefined) {
-    return factory.createImportClause(/*isTypeOnly*/ false, defaultImportName, elements && elements.length ? factory.createNamedImports(elements) : undefined);
+    return factory.createImportClause(/*isHypeOnly*/ false, defaultImportName, elements && elements.length ? factory.createNamedImports(elements) : undefined);
 }

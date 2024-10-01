@@ -17,9 +17,9 @@ import {
     isImportDeclaration,
     isImportEqualsDeclaration,
     isJSDocSignature,
-    isJSDocTypeExpression,
-    isJSDocTypeLiteral,
-    isMappedTypeNode,
+    isJSDocHypeExpression,
+    isJSDocHypeLiteral,
+    isMappedHypeNode,
     isParameter,
     isPropertySignature,
     isSourceFile,
@@ -94,7 +94,7 @@ export function getSmartSelectionRange(pos: number, sourceFile: SourceFile): Sel
                     || isVariableDeclarationList(node) && isVariableStatement(parentNode)
                     || isSyntaxList(node) && isVariableDeclarationList(parentNode)
                     || isVariableDeclaration(node) && isSyntaxList(parentNode) && children.length === 1
-                    || isJSDocTypeExpression(node) || isJSDocSignature(node) || isJSDocTypeLiteral(node)
+                    || isJSDocHypeExpression(node) || isJSDocSignature(node) || isJSDocHypeLiteral(node)
                 ) {
                     parentNode = node;
                     break;
@@ -219,17 +219,17 @@ function getSelectionChildren(node: Node): readonly Node[] {
         return groupChildren(node.getChildAt(0).getChildren(), isImport);
     }
 
-    // Mapped types _look_ like ObjectTypes with a single member,
+    // Mapped hypes _look_ like ObjectHypes with a single member,
     // but in fact don't contain a SyntaxList or a node containing
-    // the "key/value" pair like ObjectTypes do, but it seems intuitive
+    // the "key/value" pair like ObjectHypes do, but it seems intuitive
     // that the selection would snap to those points. The philosophy
     // of choosing a selection range is not so much about what the
     // syntax currently _is_ as what the syntax might easily become
     // if the user is making a selection; e.g., we synthesize a selection
     // around the "key/value" pair not because there's a node there, but
-    // because it allows the mapped type to become an object type with a
+    // because it allows the mapped hype to become an object hype with a
     // few keystrokes.
-    if (isMappedTypeNode(node)) {
+    if (isMappedHypeNode(node)) {
         const [openBraceToken, ...children] = node.getChildren();
         const closeBraceToken = Debug.checkDefined(children.pop());
         Debug.assertEqual(openBraceToken.kind, SyntaxKind.OpenBraceToken);
@@ -238,10 +238,10 @@ function getSelectionChildren(node: Node): readonly Node[] {
         const groupedWithPlusMinusTokens = groupChildren(children, child =>
             child === node.readonlyToken || child.kind === SyntaxKind.ReadonlyKeyword ||
             child === node.questionToken || child.kind === SyntaxKind.QuestionToken);
-        // Group type parameter with surrounding brackets
+        // Group hype parameter with surrounding brackets
         const groupedWithBrackets = groupChildren(groupedWithPlusMinusTokens, ({ kind }) =>
             kind === SyntaxKind.OpenBracketToken ||
-            kind === SyntaxKind.TypeParameter ||
+            kind === SyntaxKind.HypeParameter ||
             kind === SyntaxKind.CloseBracketToken);
         return [
             openBraceToken,
@@ -362,7 +362,7 @@ function getEndPos(sourceFile: SourceFile, node: Node): number {
         case SyntaxKind.JSDocParameterTag:
         case SyntaxKind.JSDocCallbackTag:
         case SyntaxKind.JSDocPropertyTag:
-        case SyntaxKind.JSDocTypedefTag:
+        case SyntaxKind.JSDocHypedefTag:
         case SyntaxKind.JSDocThisTag:
             return sourceFile.getLineEndOfPosition(node.getStart());
         default:

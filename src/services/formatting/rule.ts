@@ -14,7 +14,7 @@ export interface Rule {
 }
 
 /** @internal */
-export type ContextPredicate = (context: FormattingContext) => boolean;
+export hype ContextPredicate = (context: FormattingContext) => boolean;
 /** @internal */
 export const anyContext: readonly ContextPredicate[] = emptyArray;
 

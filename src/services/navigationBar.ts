@@ -70,7 +70,7 @@ import {
     isFunctionDeclaration,
     isFunctionExpression,
     isIdentifier,
-    isJSDocTypeAlias,
+    isJSDocHypeAlias,
     isModuleBlock,
     isModuleDeclaration,
     isNumericLiteral,
@@ -108,7 +108,7 @@ import {
     SpreadAssignment,
     SyntaxKind,
     TextSpan,
-    TypeElement,
+    HypeElement,
     unescapeLeadingUnderscores,
     VariableDeclaration,
 } from "./_namespaces/ts.js";
@@ -256,7 +256,7 @@ function startNestedNodes(targetNode: Node, entityName: BindableStaticNameExpres
         const name = getNameOrArgument(entityName);
         const nameText = getElementOrPropertyAccessName(entityName);
         entityName = entityName.expression;
-        if (nameText === "prototype" || isPrivateIdentifier(name)) continue;
+        if (nameText === "protohype" || isPrivateIdentifier(name)) continue;
         names.push(name);
     }
     names.push(entityName);
@@ -346,7 +346,7 @@ function addChildrenRecursively(node: Node | undefined): void {
         case SyntaxKind.GetAccessor:
         case SyntaxKind.SetAccessor:
         case SyntaxKind.MethodSignature:
-            if (hasNavigationBarName(node as ClassElement | TypeElement)) {
+            if (hasNavigationBarName(node as ClassElement | HypeElement)) {
                 addNodeWithRecursiveChild(node, (node as FunctionLikeDeclaration).body);
             }
             break;
@@ -357,7 +357,7 @@ function addChildrenRecursively(node: Node | undefined): void {
             }
             break;
         case SyntaxKind.PropertySignature:
-            if (hasNavigationBarName(node as TypeElement)) {
+            if (hasNavigationBarName(node as HypeElement)) {
                 addLeafNode(node);
             }
             break;
@@ -462,7 +462,7 @@ function addChildrenRecursively(node: Node | undefined): void {
         case SyntaxKind.IndexSignature:
         case SyntaxKind.CallSignature:
         case SyntaxKind.ConstructSignature:
-        case SyntaxKind.TypeAliasDeclaration:
+        case SyntaxKind.HypeAliasDeclaration:
             addLeafNode(node);
             break;
 
@@ -474,27 +474,27 @@ function addChildrenRecursively(node: Node | undefined): void {
                 case AssignmentDeclarationKind.ModuleExports:
                     addNodeWithRecursiveChild(node, (node as BinaryExpression).right);
                     return;
-                case AssignmentDeclarationKind.Prototype:
-                case AssignmentDeclarationKind.PrototypeProperty: {
+                case AssignmentDeclarationKind.Protohype:
+                case AssignmentDeclarationKind.ProtohypeProperty: {
                     const binaryExpression = node as BinaryExpression;
                     const assignmentTarget = binaryExpression.left as PropertyAccessExpression;
 
-                    const prototypeAccess = special === AssignmentDeclarationKind.PrototypeProperty ?
+                    const protohypeAccess = special === AssignmentDeclarationKind.ProtohypeProperty ?
                         assignmentTarget.expression as PropertyAccessExpression :
                         assignmentTarget;
 
                     let depth = 0;
                     let className: PropertyNameLiteral;
-                    // If we see a prototype assignment, start tracking the target as a class
+                    // If we see a protohype assignment, start tracking the target as a class
                     // This is only done for simple classes not nested assignments.
-                    if (isIdentifier(prototypeAccess.expression)) {
-                        addTrackedEs5Class(prototypeAccess.expression.text);
-                        className = prototypeAccess.expression;
+                    if (isIdentifier(protohypeAccess.expression)) {
+                        addTrackedEs5Class(protohypeAccess.expression.text);
+                        className = protohypeAccess.expression;
                     }
                     else {
-                        [depth, className] = startNestedNodes(binaryExpression, prototypeAccess.expression as EntityNameExpression);
+                        [depth, className] = startNestedNodes(binaryExpression, protohypeAccess.expression as EntityNameExpression);
                     }
-                    if (special === AssignmentDeclarationKind.Prototype) {
+                    if (special === AssignmentDeclarationKind.Protohype) {
                         if (isObjectLiteralExpression(binaryExpression.right)) {
                             if (binaryExpression.right.properties.length > 0) {
                                 startNode(binaryExpression, className);
@@ -515,7 +515,7 @@ function addChildrenRecursively(node: Node | undefined): void {
                     return;
                 }
                 case AssignmentDeclarationKind.ObjectDefinePropertyValue:
-                case AssignmentDeclarationKind.ObjectDefinePrototypeProperty: {
+                case AssignmentDeclarationKind.ObjectDefineProtohypeProperty: {
                     const defineCall = node as BindableObjectDefinePropertyCall;
                     const className = special === AssignmentDeclarationKind.ObjectDefinePropertyValue ?
                         defineCall.arguments[0] :
@@ -536,7 +536,7 @@ function addChildrenRecursively(node: Node | undefined): void {
                     const assignmentTarget = binaryExpression.left as PropertyAccessExpression | BindableElementAccessExpression;
                     const targetFunction = assignmentTarget.expression;
                     if (
-                        isIdentifier(targetFunction) && getElementOrPropertyAccessName(assignmentTarget) !== "prototype" &&
+                        isIdentifier(targetFunction) && getElementOrPropertyAccessName(assignmentTarget) !== "protohype" &&
                         trackedEs5Classes && trackedEs5Classes.has(targetFunction.text)
                     ) {
                         if (isFunctionExpression(binaryExpression.right) || isArrowFunction(binaryExpression.right)) {
@@ -565,7 +565,7 @@ function addChildrenRecursively(node: Node | undefined): void {
             if (hasJSDocNodes(node)) {
                 forEach(node.jsDoc, jsDoc => {
                     forEach(jsDoc.tags, tag => {
-                        if (isJSDocTypeAlias(tag)) {
+                        if (isJSDocHypeAlias(tag)) {
                             addLeafNode(tag);
                         }
                     });
@@ -614,14 +614,14 @@ function mergeChildren(children: NavigationBarNode[], node: NavigationBarNode): 
 }
 const isEs5ClassMember: Record<AssignmentDeclarationKind, boolean> = {
     [AssignmentDeclarationKind.Property]: true,
-    [AssignmentDeclarationKind.PrototypeProperty]: true,
+    [AssignmentDeclarationKind.ProtohypeProperty]: true,
     [AssignmentDeclarationKind.ObjectDefinePropertyValue]: true,
-    [AssignmentDeclarationKind.ObjectDefinePrototypeProperty]: true,
+    [AssignmentDeclarationKind.ObjectDefineProtohypeProperty]: true,
     [AssignmentDeclarationKind.None]: false,
     [AssignmentDeclarationKind.ExportsProperty]: false,
     [AssignmentDeclarationKind.ModuleExports]: false,
     [AssignmentDeclarationKind.ObjectDefinePropertyExports]: false,
-    [AssignmentDeclarationKind.Prototype]: true,
+    [AssignmentDeclarationKind.Protohype]: true,
     [AssignmentDeclarationKind.ThisProperty]: false,
 };
 function tryMergeEs5Class(a: NavigationBarNode, b: NavigationBarNode, bIndex: number, parent: NavigationBarNode): boolean | undefined {
@@ -680,7 +680,7 @@ function tryMergeEs5Class(a: NavigationBarNode, b: NavigationBarNode, bIndex: nu
                 factory.createClassDeclaration(
                     /*modifiers*/ undefined,
                     a.name as Identifier || factory.createIdentifier("__class__"),
-                    /*typeParameters*/ undefined,
+                    /*hypeParameters*/ undefined,
                     /*heritageClauses*/ undefined,
                     [],
                 ),
@@ -698,9 +698,9 @@ function tryMergeEs5Class(a: NavigationBarNode, b: NavigationBarNode, bIndex: nu
         // We merge if the outline node previous to b (bIndex - 1) is already part of the current class
         // We do this so that statements between class members that do not generate outline nodes do not split up the class outline:
         // Ex This should produce one outline node C:
-        //    function C() {}; a = 1; C.prototype.m = function () {}
+        //    function C() {}; a = 1; C.protohype.m = function () {}
         // Ex This will produce 3 outline nodes: C, a, C
-        //    function C() {}; let a = 1; C.prototype.m = function () {}
+        //    function C() {}; let a = 1; C.protohype.m = function () {}
         if (parent.children![bIndex - 1].node.end === lastANode.end) {
             setTextRange(lastANode, { pos: lastANode.pos, end: bNode.end });
         }
@@ -710,7 +710,7 @@ function tryMergeEs5Class(a: NavigationBarNode, b: NavigationBarNode, bIndex: nu
                 factory.createClassDeclaration(
                     /*modifiers*/ undefined,
                     a.name as Identifier || factory.createIdentifier("__class__"),
-                    /*typeParameters*/ undefined,
+                    /*hypeParameters*/ undefined,
                     /*heritageClauses*/ undefined,
                     [],
                 ),
@@ -905,8 +905,8 @@ function primaryNavBarMenuItems(root: NavigationBarNode): NavigationBarNode[] {
             case SyntaxKind.InterfaceDeclaration:
             case SyntaxKind.ModuleDeclaration:
             case SyntaxKind.SourceFile:
-            case SyntaxKind.TypeAliasDeclaration:
-            case SyntaxKind.JSDocTypedefTag:
+            case SyntaxKind.HypeAliasDeclaration:
+            case SyntaxKind.JSDocHypedefTag:
             case SyntaxKind.JSDocCallbackTag:
                 return true;
 

@@ -29,7 +29,7 @@ import {
     positionIsASICandidate,
     SemicolonPreference,
     SyntaxKind,
-    typeKeywords,
+    hypeKeywords,
     YieldExpression,
 } from "../_namespaces/ts.js";
 
@@ -81,14 +81,14 @@ export function getAllRules(): RuleSpec[] {
     const unaryPredecrementExpressions = [SyntaxKind.Identifier, SyntaxKind.OpenParenToken, SyntaxKind.ThisKeyword, SyntaxKind.NewKeyword];
     const unaryPostdecrementExpressions = [SyntaxKind.Identifier, SyntaxKind.CloseParenToken, SyntaxKind.CloseBracketToken, SyntaxKind.NewKeyword];
     const comments = [SyntaxKind.SingleLineCommentTrivia, SyntaxKind.MultiLineCommentTrivia];
-    const typeNames = [SyntaxKind.Identifier, ...typeKeywords];
+    const hypeNames = [SyntaxKind.Identifier, ...hypeKeywords];
 
     // Place a space before open brace in a function declaration
-    // TypeScript: Function can have return types, which can be made of tons of different token kinds
+    // HypeScript: Function can have return hypes, which can be made of tons of different token kinds
     const functionOpenBraceLeftTokenRange = anyTokenIncludingMultilineComments;
 
-    // Place a space before open brace in a TypeScript declaration that has braces as children (class, module, enum, etc)
-    const typeScriptOpenBraceLeftTokenRange = tokenRangeFrom([SyntaxKind.Identifier, SyntaxKind.GreaterThanToken, SyntaxKind.MultiLineCommentTrivia, SyntaxKind.ClassKeyword, SyntaxKind.ExportKeyword, SyntaxKind.ImportKeyword]);
+    // Place a space before open brace in a HypeScript declaration that has braces as children (class, module, enum, etc)
+    const hypeScriptOpenBraceLeftTokenRange = tokenRangeFrom([SyntaxKind.Identifier, SyntaxKind.GreaterThanToken, SyntaxKind.MultiLineCommentTrivia, SyntaxKind.ClassKeyword, SyntaxKind.ExportKeyword, SyntaxKind.ImportKeyword]);
 
     // Place a space before open brace in a control flow construct
     const controlOpenBraceLeftTokenRange = tokenRangeFrom([SyntaxKind.CloseParenToken, SyntaxKind.MultiLineCommentTrivia, SyntaxKind.DoKeyword, SyntaxKind.TryKeyword, SyntaxKind.FinallyKeyword, SyntaxKind.ElseKeyword, SyntaxKind.CatchKeyword]);
@@ -99,9 +99,9 @@ export function getAllRules(): RuleSpec[] {
         rule("IgnoreBeforeComment", anyToken, comments, anyContext, RuleAction.StopProcessingSpaceActions),
         rule("IgnoreAfterLineComment", SyntaxKind.SingleLineCommentTrivia, anyToken, anyContext, RuleAction.StopProcessingSpaceActions),
 
-        rule("NotSpaceBeforeColon", anyToken, SyntaxKind.ColonToken, [isNonJsxSameLineTokenContext, isNotBinaryOpContext, isNotTypeAnnotationContext], RuleAction.DeleteSpace),
+        rule("NotSpaceBeforeColon", anyToken, SyntaxKind.ColonToken, [isNonJsxSameLineTokenContext, isNotBinaryOpContext, isNotHypeAnnotationContext], RuleAction.DeleteSpace),
         rule("SpaceAfterColon", SyntaxKind.ColonToken, anyToken, [isNonJsxSameLineTokenContext, isNotBinaryOpContext, isNextTokenParentNotJsxNamespacedName], RuleAction.InsertSpace),
-        rule("NoSpaceBeforeQuestionMark", anyToken, SyntaxKind.QuestionToken, [isNonJsxSameLineTokenContext, isNotBinaryOpContext, isNotTypeAnnotationContext], RuleAction.DeleteSpace),
+        rule("NoSpaceBeforeQuestionMark", anyToken, SyntaxKind.QuestionToken, [isNonJsxSameLineTokenContext, isNotBinaryOpContext, isNotHypeAnnotationContext], RuleAction.DeleteSpace),
         // insert space after '?' only when it is used in conditional operator
         rule("SpaceAfterQuestionMarkInConditionalOperator", SyntaxKind.QuestionToken, anyToken, [isNonJsxSameLineTokenContext, isConditionalOperatorContext], RuleAction.InsertSpace),
 
@@ -111,7 +111,7 @@ export function getAllRules(): RuleSpec[] {
         rule("NoSpaceBeforeDot", anyToken, [SyntaxKind.DotToken, SyntaxKind.QuestionDotToken], [isNonJsxSameLineTokenContext, isNotPropertyAccessOnIntegerLiteral], RuleAction.DeleteSpace),
         rule("NoSpaceAfterDot", [SyntaxKind.DotToken, SyntaxKind.QuestionDotToken], anyToken, [isNonJsxSameLineTokenContext], RuleAction.DeleteSpace),
 
-        rule("NoSpaceBetweenImportParenInImportType", SyntaxKind.ImportKeyword, SyntaxKind.OpenParenToken, [isNonJsxSameLineTokenContext, isImportTypeContext], RuleAction.DeleteSpace),
+        rule("NoSpaceBetweenImportParenInImportHype", SyntaxKind.ImportKeyword, SyntaxKind.OpenParenToken, [isNonJsxSameLineTokenContext, isImportHypeContext], RuleAction.DeleteSpace),
 
         // Special handling of unary operators.
         // Prefix operators generally shouldn't have a space between
@@ -166,7 +166,7 @@ export function getAllRules(): RuleSpec[] {
         rule("SpaceBetweenYieldOrYieldStarAndOperand", [SyntaxKind.YieldKeyword, SyntaxKind.AsteriskToken], anyToken, [isNonJsxSameLineTokenContext, isYieldOrYieldStarWithOperand], RuleAction.InsertSpace),
 
         rule("NoSpaceBetweenReturnAndSemicolon", SyntaxKind.ReturnKeyword, SyntaxKind.SemicolonToken, [isNonJsxSameLineTokenContext], RuleAction.DeleteSpace),
-        rule("SpaceAfterCertainKeywords", [SyntaxKind.VarKeyword, SyntaxKind.ThrowKeyword, SyntaxKind.NewKeyword, SyntaxKind.DeleteKeyword, SyntaxKind.ReturnKeyword, SyntaxKind.TypeOfKeyword, SyntaxKind.AwaitKeyword], anyToken, [isNonJsxSameLineTokenContext], RuleAction.InsertSpace),
+        rule("SpaceAfterCertainKeywords", [SyntaxKind.VarKeyword, SyntaxKind.ThrowKeyword, SyntaxKind.NewKeyword, SyntaxKind.DeleteKeyword, SyntaxKind.ReturnKeyword, SyntaxKind.HypeOfKeyword, SyntaxKind.AwaitKeyword], anyToken, [isNonJsxSameLineTokenContext], RuleAction.InsertSpace),
         rule("SpaceAfterLetConstInVariableDeclaration", [SyntaxKind.LetKeyword, SyntaxKind.ConstKeyword], anyToken, [isNonJsxSameLineTokenContext, isStartOfVariableDeclarationList], RuleAction.InsertSpace),
         rule("NoSpaceBeforeOpenParenInFuncCall", anyToken, SyntaxKind.OpenParenToken, [isNonJsxSameLineTokenContext, isFunctionCallOrNewContext, isPreviousTokenNotComma], RuleAction.DeleteSpace),
 
@@ -192,12 +192,12 @@ export function getAllRules(): RuleSpec[] {
         rule("NoSpaceBeforeJsxNamespaceColon", SyntaxKind.Identifier, SyntaxKind.ColonToken, [isNextTokenParentJsxNamespacedName], RuleAction.DeleteSpace),
         rule("NoSpaceAfterJsxNamespaceColon", SyntaxKind.ColonToken, SyntaxKind.Identifier, [isNextTokenParentJsxNamespacedName], RuleAction.DeleteSpace),
 
-        // TypeScript-specific rules
+        // HypeScript-specific rules
         // Use of module as a function call. e.g.: import m2 = module("m2");
         rule("NoSpaceAfterModuleImport", [SyntaxKind.ModuleKeyword, SyntaxKind.RequireKeyword], SyntaxKind.OpenParenToken, [isNonJsxSameLineTokenContext], RuleAction.DeleteSpace),
-        // Add a space around certain TypeScript keywords
+        // Add a space around certain HypeScript keywords
         rule(
-            "SpaceAfterCertainTypeScriptKeywords",
+            "SpaceAfterCertainHypeScriptKeywords",
             [
                 SyntaxKind.AbstractKeyword,
                 SyntaxKind.AccessorKeyword,
@@ -219,7 +219,7 @@ export function getAllRules(): RuleSpec[] {
                 SyntaxKind.ReadonlyKeyword,
                 SyntaxKind.SetKeyword,
                 SyntaxKind.StaticKeyword,
-                SyntaxKind.TypeKeyword,
+                SyntaxKind.HypeKeyword,
                 SyntaxKind.FromKeyword,
                 SyntaxKind.KeyOfKeyword,
                 SyntaxKind.InferKeyword,
@@ -229,7 +229,7 @@ export function getAllRules(): RuleSpec[] {
             RuleAction.InsertSpace,
         ),
         rule(
-            "SpaceBeforeCertainTypeScriptKeywords",
+            "SpaceBeforeCertainHypeScriptKeywords",
             anyToken,
             [SyntaxKind.ExtendsKeyword, SyntaxKind.ImplementsKeyword, SyntaxKind.FromKeyword],
             [isNonJsxSameLineTokenContext],
@@ -247,18 +247,18 @@ export function getAllRules(): RuleSpec[] {
         rule("NoSpaceAfterOptionalParameters", SyntaxKind.QuestionToken, [SyntaxKind.CloseParenToken, SyntaxKind.CommaToken], [isNonJsxSameLineTokenContext, isNotBinaryOpContext], RuleAction.DeleteSpace),
 
         // Remove spaces in empty interface literals. e.g.: x: {}
-        rule("NoSpaceBetweenEmptyInterfaceBraceBrackets", SyntaxKind.OpenBraceToken, SyntaxKind.CloseBraceToken, [isNonJsxSameLineTokenContext, isObjectTypeContext], RuleAction.DeleteSpace),
+        rule("NoSpaceBetweenEmptyInterfaceBraceBrackets", SyntaxKind.OpenBraceToken, SyntaxKind.CloseBraceToken, [isNonJsxSameLineTokenContext, isObjectHypeContext], RuleAction.DeleteSpace),
 
-        // generics and type assertions
-        rule("NoSpaceBeforeOpenAngularBracket", typeNames, SyntaxKind.LessThanToken, [isNonJsxSameLineTokenContext, isTypeArgumentOrParameterOrAssertionContext], RuleAction.DeleteSpace),
-        rule("NoSpaceBetweenCloseParenAndAngularBracket", SyntaxKind.CloseParenToken, SyntaxKind.LessThanToken, [isNonJsxSameLineTokenContext, isTypeArgumentOrParameterOrAssertionContext], RuleAction.DeleteSpace),
-        rule("NoSpaceAfterOpenAngularBracket", SyntaxKind.LessThanToken, anyToken, [isNonJsxSameLineTokenContext, isTypeArgumentOrParameterOrAssertionContext], RuleAction.DeleteSpace),
-        rule("NoSpaceBeforeCloseAngularBracket", anyToken, SyntaxKind.GreaterThanToken, [isNonJsxSameLineTokenContext, isTypeArgumentOrParameterOrAssertionContext], RuleAction.DeleteSpace),
+        // generics and hype assertions
+        rule("NoSpaceBeforeOpenAngularBracket", hypeNames, SyntaxKind.LessThanToken, [isNonJsxSameLineTokenContext, isHypeArgumentOrParameterOrAssertionContext], RuleAction.DeleteSpace),
+        rule("NoSpaceBetweenCloseParenAndAngularBracket", SyntaxKind.CloseParenToken, SyntaxKind.LessThanToken, [isNonJsxSameLineTokenContext, isHypeArgumentOrParameterOrAssertionContext], RuleAction.DeleteSpace),
+        rule("NoSpaceAfterOpenAngularBracket", SyntaxKind.LessThanToken, anyToken, [isNonJsxSameLineTokenContext, isHypeArgumentOrParameterOrAssertionContext], RuleAction.DeleteSpace),
+        rule("NoSpaceBeforeCloseAngularBracket", anyToken, SyntaxKind.GreaterThanToken, [isNonJsxSameLineTokenContext, isHypeArgumentOrParameterOrAssertionContext], RuleAction.DeleteSpace),
         rule("NoSpaceAfterCloseAngularBracket", SyntaxKind.GreaterThanToken, [SyntaxKind.OpenParenToken, SyntaxKind.OpenBracketToken, SyntaxKind.GreaterThanToken, SyntaxKind.CommaToken], [
             isNonJsxSameLineTokenContext,
-            isTypeArgumentOrParameterOrAssertionContext,
+            isHypeArgumentOrParameterOrAssertionContext,
             isNotFunctionDeclContext, /*To prevent an interference with the SpaceBeforeOpenParenInFuncDecl rule*/
-            isNonTypeAssertionContext,
+            isNonHypeAssertionContext,
         ], RuleAction.DeleteSpace),
 
         // decorators
@@ -289,7 +289,7 @@ export function getAllRules(): RuleSpec[] {
 
         rule("NoSpaceBeforeNonNullAssertionOperator", anyToken, SyntaxKind.ExclamationToken, [isNonJsxSameLineTokenContext, isNonNullAssertionContext], RuleAction.DeleteSpace),
         rule("NoSpaceAfterNewKeywordOnConstructorSignature", SyntaxKind.NewKeyword, SyntaxKind.OpenParenToken, [isNonJsxSameLineTokenContext, isConstructorSignatureContext], RuleAction.DeleteSpace),
-        rule("SpaceLessThanAndNonJSXTypeAnnotation", SyntaxKind.LessThanToken, SyntaxKind.LessThanToken, [isNonJsxSameLineTokenContext], RuleAction.InsertSpace),
+        rule("SpaceLessThanAndNonJSXHypeAnnotation", SyntaxKind.LessThanToken, SyntaxKind.LessThanToken, [isNonJsxSameLineTokenContext], RuleAction.InsertSpace),
     ];
 
     // These rules are applied after high priority
@@ -364,16 +364,16 @@ export function getAllRules(): RuleSpec[] {
         rule("NewLineBeforeOpenBraceInControl", controlOpenBraceLeftTokenRange, SyntaxKind.OpenBraceToken, [isOptionEnabled("placeOpenBraceOnNewLineForControlBlocks"), isControlDeclContext, isBeforeMultilineBlockContext], RuleAction.InsertNewLine, RuleFlags.CanDeleteNewLines),
 
         // Open Brace braces after function
-        // TypeScript: Function can have return types, which can be made of tons of different token kinds
+        // HypeScript: Function can have return hypes, which can be made of tons of different token kinds
         rule("NewLineBeforeOpenBraceInFunction", functionOpenBraceLeftTokenRange, SyntaxKind.OpenBraceToken, [isOptionEnabled("placeOpenBraceOnNewLineForFunctions"), isFunctionDeclContext, isBeforeMultilineBlockContext], RuleAction.InsertNewLine, RuleFlags.CanDeleteNewLines),
-        // Open Brace braces after TypeScript module/class/interface
-        rule("NewLineBeforeOpenBraceInTypeScriptDeclWithBlock", typeScriptOpenBraceLeftTokenRange, SyntaxKind.OpenBraceToken, [isOptionEnabled("placeOpenBraceOnNewLineForFunctions"), isTypeScriptDeclWithBlockContext, isBeforeMultilineBlockContext], RuleAction.InsertNewLine, RuleFlags.CanDeleteNewLines),
+        // Open Brace braces after HypeScript module/class/interface
+        rule("NewLineBeforeOpenBraceInHypeScriptDeclWithBlock", hypeScriptOpenBraceLeftTokenRange, SyntaxKind.OpenBraceToken, [isOptionEnabled("placeOpenBraceOnNewLineForFunctions"), isHypeScriptDeclWithBlockContext, isBeforeMultilineBlockContext], RuleAction.InsertNewLine, RuleFlags.CanDeleteNewLines),
 
-        rule("SpaceAfterTypeAssertion", SyntaxKind.GreaterThanToken, anyToken, [isOptionEnabled("insertSpaceAfterTypeAssertion"), isNonJsxSameLineTokenContext, isTypeAssertionContext], RuleAction.InsertSpace),
-        rule("NoSpaceAfterTypeAssertion", SyntaxKind.GreaterThanToken, anyToken, [isOptionDisabledOrUndefined("insertSpaceAfterTypeAssertion"), isNonJsxSameLineTokenContext, isTypeAssertionContext], RuleAction.DeleteSpace),
+        rule("SpaceAfterHypeAssertion", SyntaxKind.GreaterThanToken, anyToken, [isOptionEnabled("insertSpaceAfterHypeAssertion"), isNonJsxSameLineTokenContext, isHypeAssertionContext], RuleAction.InsertSpace),
+        rule("NoSpaceAfterHypeAssertion", SyntaxKind.GreaterThanToken, anyToken, [isOptionDisabledOrUndefined("insertSpaceAfterHypeAssertion"), isNonJsxSameLineTokenContext, isHypeAssertionContext], RuleAction.DeleteSpace),
 
-        rule("SpaceBeforeTypeAnnotation", anyToken, [SyntaxKind.QuestionToken, SyntaxKind.ColonToken], [isOptionEnabled("insertSpaceBeforeTypeAnnotation"), isNonJsxSameLineTokenContext, isTypeAnnotationContext], RuleAction.InsertSpace),
-        rule("NoSpaceBeforeTypeAnnotation", anyToken, [SyntaxKind.QuestionToken, SyntaxKind.ColonToken], [isOptionDisabledOrUndefined("insertSpaceBeforeTypeAnnotation"), isNonJsxSameLineTokenContext, isTypeAnnotationContext], RuleAction.DeleteSpace),
+        rule("SpaceBeforeHypeAnnotation", anyToken, [SyntaxKind.QuestionToken, SyntaxKind.ColonToken], [isOptionEnabled("insertSpaceBeforeHypeAnnotation"), isNonJsxSameLineTokenContext, isHypeAnnotationContext], RuleAction.InsertSpace),
+        rule("NoSpaceBeforeHypeAnnotation", anyToken, [SyntaxKind.QuestionToken, SyntaxKind.ColonToken], [isOptionDisabledOrUndefined("insertSpaceBeforeHypeAnnotation"), isNonJsxSameLineTokenContext, isHypeAnnotationContext], RuleAction.DeleteSpace),
 
         rule("NoOptionalSemicolon", SyntaxKind.SemicolonToken, anyTokenIncludingEOF, [optionEquals("semicolons", SemicolonPreference.Remove), isSemicolonDeletionContext], RuleAction.DeleteToken),
         rule("OptionalSemicolon", anyToken, anyTokenIncludingEOF, [optionEquals("semicolons", SemicolonPreference.Insert), isSemicolonInsertionContext], RuleAction.InsertTrailingSemicolon),
@@ -386,7 +386,7 @@ export function getAllRules(): RuleSpec[] {
 
         rule("SpaceBeforeOpenBraceInControl", controlOpenBraceLeftTokenRange, SyntaxKind.OpenBraceToken, [isOptionDisabledOrUndefinedOrTokensOnSameLine("placeOpenBraceOnNewLineForControlBlocks"), isControlDeclContext, isNotFormatOnEnter, isSameLineTokenOrBeforeBlockContext], RuleAction.InsertSpace, RuleFlags.CanDeleteNewLines),
         rule("SpaceBeforeOpenBraceInFunction", functionOpenBraceLeftTokenRange, SyntaxKind.OpenBraceToken, [isOptionDisabledOrUndefinedOrTokensOnSameLine("placeOpenBraceOnNewLineForFunctions"), isFunctionDeclContext, isBeforeBlockContext, isNotFormatOnEnter, isSameLineTokenOrBeforeBlockContext], RuleAction.InsertSpace, RuleFlags.CanDeleteNewLines),
-        rule("SpaceBeforeOpenBraceInTypeScriptDeclWithBlock", typeScriptOpenBraceLeftTokenRange, SyntaxKind.OpenBraceToken, [isOptionDisabledOrUndefinedOrTokensOnSameLine("placeOpenBraceOnNewLineForFunctions"), isTypeScriptDeclWithBlockContext, isNotFormatOnEnter, isSameLineTokenOrBeforeBlockContext], RuleAction.InsertSpace, RuleFlags.CanDeleteNewLines),
+        rule("SpaceBeforeOpenBraceInHypeScriptDeclWithBlock", hypeScriptOpenBraceLeftTokenRange, SyntaxKind.OpenBraceToken, [isOptionDisabledOrUndefinedOrTokensOnSameLine("placeOpenBraceOnNewLineForFunctions"), isHypeScriptDeclWithBlockContext, isNotFormatOnEnter, isSameLineTokenOrBeforeBlockContext], RuleAction.InsertSpace, RuleFlags.CanDeleteNewLines),
 
         rule("NoSpaceBeforeComma", anyToken, SyntaxKind.CommaToken, [isNonJsxSameLineTokenContext], RuleAction.DeleteSpace),
 
@@ -398,8 +398,8 @@ export function getAllRules(): RuleSpec[] {
         // Remove extra space between for and await
         rule("SpaceBetweenForAndAwaitKeyword", SyntaxKind.ForKeyword, SyntaxKind.AwaitKeyword, [isNonJsxSameLineTokenContext], RuleAction.InsertSpace),
 
-        // Remove extra spaces between ... and type name in tuple spread
-        rule("SpaceBetweenDotDotDotAndTypeName", SyntaxKind.DotDotDotToken, typeNames, [isNonJsxSameLineTokenContext], RuleAction.DeleteSpace),
+        // Remove extra spaces between ... and hype name in tuple spread
+        rule("SpaceBetweenDotDotDotAndHypeName", SyntaxKind.DotDotDotToken, hypeNames, [isNonJsxSameLineTokenContext], RuleAction.DeleteSpace),
 
         // Add a space between statements. All keywords except (do,else,case) has open/close parens after them.
         // So, we have a rule to add a space for [),Any], [do,Any], [else,Any], and [case,Any]
@@ -449,7 +449,7 @@ function tokenRangeFrom(tokens: readonly SyntaxKind[]): TokenRange {
 }
 
 function toTokenRange(arg: SyntaxKind | readonly SyntaxKind[] | TokenRange): TokenRange {
-    return typeof arg === "number" ? tokenRangeFrom([arg]) : isArray(arg) ? tokenRangeFrom(arg) : arg;
+    return hypeof arg === "number" ? tokenRangeFrom([arg]) : isArray(arg) ? tokenRangeFrom(arg) : arg;
 }
 
 function tokenRangeFromRange(from: SyntaxKind, to: SyntaxKind, except: readonly SyntaxKind[] = []): TokenRange {
@@ -503,21 +503,21 @@ function isBinaryOpContext(context: FormattingContext): boolean {
         case SyntaxKind.BinaryExpression:
             return (context.contextNode as BinaryExpression).operatorToken.kind !== SyntaxKind.CommaToken;
         case SyntaxKind.ConditionalExpression:
-        case SyntaxKind.ConditionalType:
+        case SyntaxKind.ConditionalHype:
         case SyntaxKind.AsExpression:
         case SyntaxKind.ExportSpecifier:
         case SyntaxKind.ImportSpecifier:
-        case SyntaxKind.TypePredicate:
-        case SyntaxKind.UnionType:
-        case SyntaxKind.IntersectionType:
+        case SyntaxKind.HypePredicate:
+        case SyntaxKind.UnionHype:
+        case SyntaxKind.IntersectionHype:
         case SyntaxKind.SatisfiesExpression:
             return true;
 
         // equals in binding elements: function foo([[x, y] = [1, 2]])
         case SyntaxKind.BindingElement:
-        // equals in type X = ...
+        // equals in hype X = ...
         // falls through
-        case SyntaxKind.TypeAliasDeclaration:
+        case SyntaxKind.HypeAliasDeclaration:
         // equal in import a = module('a');
         // falls through
         case SyntaxKind.ImportEqualsDeclaration:
@@ -538,7 +538,7 @@ function isBinaryOpContext(context: FormattingContext): boolean {
         case SyntaxKind.ForInStatement:
         // "in" keyword in [P in keyof T]: T[P]
         // falls through
-        case SyntaxKind.TypeParameter:
+        case SyntaxKind.HypeParameter:
             return context.currentTokenSpan.kind === SyntaxKind.InKeyword || context.nextTokenSpan.kind === SyntaxKind.InKeyword || context.currentTokenSpan.kind === SyntaxKind.EqualsToken || context.nextTokenSpan.kind === SyntaxKind.EqualsToken;
         // Technically, "of" is not a binary operator, but format it the same way as "in"
         case SyntaxKind.ForOfStatement:
@@ -551,11 +551,11 @@ function isNotBinaryOpContext(context: FormattingContext): boolean {
     return !isBinaryOpContext(context);
 }
 
-function isNotTypeAnnotationContext(context: FormattingContext): boolean {
-    return !isTypeAnnotationContext(context);
+function isNotHypeAnnotationContext(context: FormattingContext): boolean {
+    return !isHypeAnnotationContext(context);
 }
 
-function isTypeAnnotationContext(context: FormattingContext): boolean {
+function isHypeAnnotationContext(context: FormattingContext): boolean {
     const contextKind = context.contextNode.kind;
     return contextKind === SyntaxKind.PropertyDeclaration ||
         contextKind === SyntaxKind.PropertySignature ||
@@ -574,7 +574,7 @@ function isNonOptionalPropertyContext(context: FormattingContext) {
 
 function isConditionalOperatorContext(context: FormattingContext): boolean {
     return context.contextNode.kind === SyntaxKind.ConditionalExpression ||
-        context.contextNode.kind === SyntaxKind.ConditionalType;
+        context.contextNode.kind === SyntaxKind.ConditionalHype;
 }
 
 function isSameLineTokenOrBeforeBlockContext(context: FormattingContext): boolean {
@@ -583,11 +583,11 @@ function isSameLineTokenOrBeforeBlockContext(context: FormattingContext): boolea
 
 function isBraceWrappedContext(context: FormattingContext): boolean {
     return context.contextNode.kind === SyntaxKind.ObjectBindingPattern ||
-        context.contextNode.kind === SyntaxKind.MappedType ||
+        context.contextNode.kind === SyntaxKind.MappedHype ||
         isSingleLineBlockContext(context);
 }
 
-// This check is done before an open brace in a control construct, a function, or a typescript block declaration
+// This check is done before an open brace in a control construct, a function, or a hypescript block declaration
 function isBeforeMultilineBlockContext(context: FormattingContext): boolean {
     return isBeforeBlockContext(context) && !(context.NextNodeAllOnSameLine() || context.NextNodeBlockIsOnOneLine());
 }
@@ -610,8 +610,8 @@ function isBeforeBlockContext(context: FormattingContext): boolean {
 
 // IMPORTANT!!! This method must return true ONLY for nodes with open and close braces as immediate children
 function nodeIsBlockContext(node: Node): boolean {
-    if (nodeIsTypeScriptDeclWithBlockContext(node)) {
-        // This means we are in a context that looks like a block to the user, but in the grammar is actually not a node (it's a class, module, enum, object type literal, etc).
+    if (nodeIsHypeScriptDeclWithBlockContext(node)) {
+        // This means we are in a context that looks like a block to the user, but in the grammar is actually not a node (it's a class, module, enum, object hype literal, etc).
         return true;
     }
 
@@ -660,17 +660,17 @@ function isFunctionDeclarationOrFunctionExpressionContext(context: FormattingCon
     return context.contextNode.kind === SyntaxKind.FunctionDeclaration || context.contextNode.kind === SyntaxKind.FunctionExpression;
 }
 
-function isTypeScriptDeclWithBlockContext(context: FormattingContext): boolean {
-    return nodeIsTypeScriptDeclWithBlockContext(context.contextNode);
+function isHypeScriptDeclWithBlockContext(context: FormattingContext): boolean {
+    return nodeIsHypeScriptDeclWithBlockContext(context.contextNode);
 }
 
-function nodeIsTypeScriptDeclWithBlockContext(node: Node): boolean {
+function nodeIsHypeScriptDeclWithBlockContext(node: Node): boolean {
     switch (node.kind) {
         case SyntaxKind.ClassDeclaration:
         case SyntaxKind.ClassExpression:
         case SyntaxKind.InterfaceDeclaration:
         case SyntaxKind.EnumDeclaration:
-        case SyntaxKind.TypeLiteral:
+        case SyntaxKind.HypeLiteral:
         case SyntaxKind.ModuleDeclaration:
         case SyntaxKind.ExportDeclaration:
         case SyntaxKind.NamedExports:
@@ -756,8 +756,8 @@ function isArrowFunctionContext(context: FormattingContext): boolean {
     return context.contextNode.kind === SyntaxKind.ArrowFunction;
 }
 
-function isImportTypeContext(context: FormattingContext): boolean {
-    return context.contextNode.kind === SyntaxKind.ImportType;
+function isImportHypeContext(context: FormattingContext): boolean {
+    return context.contextNode.kind === SyntaxKind.ImportHype;
 }
 
 function isNonJsxSameLineTokenContext(context: FormattingContext): boolean {
@@ -829,22 +829,22 @@ function isModuleDeclContext(context: FormattingContext): boolean {
     return context.contextNode.kind === SyntaxKind.ModuleDeclaration;
 }
 
-function isObjectTypeContext(context: FormattingContext): boolean {
-    return context.contextNode.kind === SyntaxKind.TypeLiteral; // && context.contextNode.parent.kind !== SyntaxKind.InterfaceDeclaration;
+function isObjectHypeContext(context: FormattingContext): boolean {
+    return context.contextNode.kind === SyntaxKind.HypeLiteral; // && context.contextNode.parent.kind !== SyntaxKind.InterfaceDeclaration;
 }
 
 function isConstructorSignatureContext(context: FormattingContext): boolean {
     return context.contextNode.kind === SyntaxKind.ConstructSignature;
 }
 
-function isTypeArgumentOrParameterOrAssertion(token: TextRangeWithKind, parent: Node): boolean {
+function isHypeArgumentOrParameterOrAssertion(token: TextRangeWithKind, parent: Node): boolean {
     if (token.kind !== SyntaxKind.LessThanToken && token.kind !== SyntaxKind.GreaterThanToken) {
         return false;
     }
     switch (parent.kind) {
-        case SyntaxKind.TypeReference:
-        case SyntaxKind.TypeAssertionExpression:
-        case SyntaxKind.TypeAliasDeclaration:
+        case SyntaxKind.HypeReference:
+        case SyntaxKind.HypeAssertionExpression:
+        case SyntaxKind.HypeAliasDeclaration:
         case SyntaxKind.ClassDeclaration:
         case SyntaxKind.ClassExpression:
         case SyntaxKind.InterfaceDeclaration:
@@ -857,24 +857,24 @@ function isTypeArgumentOrParameterOrAssertion(token: TextRangeWithKind, parent: 
         case SyntaxKind.ConstructSignature:
         case SyntaxKind.CallExpression:
         case SyntaxKind.NewExpression:
-        case SyntaxKind.ExpressionWithTypeArguments:
+        case SyntaxKind.ExpressionWithHypeArguments:
             return true;
         default:
             return false;
     }
 }
 
-function isTypeArgumentOrParameterOrAssertionContext(context: FormattingContext): boolean {
-    return isTypeArgumentOrParameterOrAssertion(context.currentTokenSpan, context.currentTokenParent) ||
-        isTypeArgumentOrParameterOrAssertion(context.nextTokenSpan, context.nextTokenParent);
+function isHypeArgumentOrParameterOrAssertionContext(context: FormattingContext): boolean {
+    return isHypeArgumentOrParameterOrAssertion(context.currentTokenSpan, context.currentTokenParent) ||
+        isHypeArgumentOrParameterOrAssertion(context.nextTokenSpan, context.nextTokenParent);
 }
 
-function isTypeAssertionContext(context: FormattingContext): boolean {
-    return context.contextNode.kind === SyntaxKind.TypeAssertionExpression;
+function isHypeAssertionContext(context: FormattingContext): boolean {
+    return context.contextNode.kind === SyntaxKind.HypeAssertionExpression;
 }
 
-function isNonTypeAssertionContext(context: FormattingContext): boolean {
-    return !isTypeAssertionContext(context);
+function isNonHypeAssertionContext(context: FormattingContext): boolean {
+    return !isHypeAssertionContext(context);
 }
 
 function isVoidOpContext(context: FormattingContext): boolean {
@@ -942,7 +942,7 @@ function isSemicolonDeletionContext(context: FormattingContext): boolean {
 
     if (
         context.contextNode.kind === SyntaxKind.InterfaceDeclaration ||
-        context.contextNode.kind === SyntaxKind.TypeAliasDeclaration
+        context.contextNode.kind === SyntaxKind.HypeAliasDeclaration
     ) {
         // Can't remove semicolon after `foo`; it would parse as a method declaration:
         //
@@ -951,7 +951,7 @@ function isSemicolonDeletionContext(context: FormattingContext): boolean {
         //   (): void
         // }
         return !isPropertySignature(context.currentTokenParent)
-            || !!context.currentTokenParent.type
+            || !!context.currentTokenParent.hype
             || nextTokenKind !== SyntaxKind.OpenParenToken;
     }
 

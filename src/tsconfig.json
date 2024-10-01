@@ -12,7 +12,7 @@
         { "path": "./testRunner" },
         { "path": "./tsc" },
         { "path": "./tsserver" },
-        { "path": "./typescript" },
+        { "path": "./hypescript" },
         { "path": "./typingsInstaller" },
         { "path": "./typingsInstallerCore" },
         { "path": "./watchGuard" }

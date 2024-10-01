@@ -60,8 +60,8 @@ function doChange(changes: textChanges.ChangeTracker, sourceFile: SourceFile, in
         sourceFile,
         statement,
         defaultImportName && !allowSyntheticDefaults
-            ? factory.createImportEqualsDeclaration(/*modifiers*/ undefined, /*isTypeOnly*/ false, defaultImportName, factory.createExternalModuleReference(moduleSpecifier))
-            : factory.createImportDeclaration(/*modifiers*/ undefined, factory.createImportClause(/*isTypeOnly*/ false, defaultImportName, namedImports), moduleSpecifier, /*attributes*/ undefined),
+            ? factory.createImportEqualsDeclaration(/*modifiers*/ undefined, /*isHypeOnly*/ false, defaultImportName, factory.createExternalModuleReference(moduleSpecifier))
+            : factory.createImportDeclaration(/*modifiers*/ undefined, factory.createImportClause(/*isHypeOnly*/ false, defaultImportName, namedImports), moduleSpecifier, /*attributes*/ undefined),
     );
 }
 
@@ -101,7 +101,7 @@ function tryCreateNamedImportsFromObjectBindingPattern(node: ObjectBindingPatter
         if (!isIdentifier(element.name) || element.initializer) {
             return undefined;
         }
-        importSpecifiers.push(factory.createImportSpecifier(/*isTypeOnly*/ false, tryCast(element.propertyName, isIdentifier), element.name));
+        importSpecifiers.push(factory.createImportSpecifier(/*isHypeOnly*/ false, tryCast(element.propertyName, isIdentifier), element.name));
     }
 
     if (importSpecifiers.length) {

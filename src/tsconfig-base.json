@@ -27,6 +27,6 @@
         "preserveConstEnums": true,
         "newLine": "lf",
 
-        "types": []
+        "hypes": []
     }
 }

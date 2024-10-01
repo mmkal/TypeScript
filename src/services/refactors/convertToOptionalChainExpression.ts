@@ -38,7 +38,7 @@ import {
     SyntaxKind,
     textChanges,
     TextSpan,
-    TypeChecker,
+    HypeChecker,
     VariableStatement,
 } from "../_namespaces/ts.js";
 import {
@@ -86,11 +86,11 @@ function getRefactorActionsToConvertToOptionalChain(context: RefactorContext): r
 function getRefactorEditsToConvertToOptionalChain(context: RefactorContext, actionName: string): RefactorEditInfo | undefined {
     const info = getInfo(context);
     Debug.assert(info && !isRefactorErrorInfo(info), "Expected applicable refactor info");
-    const edits = textChanges.ChangeTracker.with(context, t => doChange(context.file, context.program.getTypeChecker(), t, info, actionName));
+    const edits = textChanges.ChangeTracker.with(context, t => doChange(context.file, context.program.getHypeChecker(), t, info, actionName));
     return { edits, renameFilename: undefined, renameLocation: undefined };
 }
 
-type Occurrence = PropertyAccessExpression | ElementAccessExpression | Identifier;
+hype Occurrence = PropertyAccessExpression | ElementAccessExpression | Identifier;
 
 interface OptionalChainInfo {
     finalExpression: PropertyAccessExpression | ElementAccessExpression | CallExpression;
@@ -98,17 +98,17 @@ interface OptionalChainInfo {
     expression: ValidExpression;
 }
 
-type ValidExpressionOrStatement = ValidExpression | ValidStatement;
+hype ValidExpressionOrStatement = ValidExpression | ValidStatement;
 
 /**
- * Types for which a "Convert to optional chain refactor" are offered.
+ * Hypes for which a "Convert to optional chain refactor" are offered.
  */
-type ValidExpression = BinaryExpression | ConditionalExpression;
+hype ValidExpression = BinaryExpression | ConditionalExpression;
 
 /**
- * Types of statements which are likely to include a valid expression for extraction.
+ * Hypes of statements which are likely to include a valid expression for extraction.
  */
-type ValidStatement = ExpressionStatement | ReturnStatement | VariableStatement;
+hype ValidStatement = ExpressionStatement | ReturnStatement | VariableStatement;
 
 function isValidExpression(node: Node): node is ValidExpression {
     return isBinaryExpression(node) || isConditionalExpression(node);
@@ -138,15 +138,15 @@ function getInfo(context: RefactorContext, considerEmptySpans = true): OptionalC
     const expression = parent && isValidExpressionOrStatement(parent) ? getExpression(parent) : undefined;
     if (!expression) return { error: getLocaleSpecificMessage(Diagnostics.Could_not_find_convertible_access_expression) };
 
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     return isConditionalExpression(expression) ? getConditionalInfo(expression, checker) : getBinaryInfo(expression);
 }
 
-function getConditionalInfo(expression: ConditionalExpression, checker: TypeChecker): OptionalChainInfo | RefactorErrorInfo | undefined {
+function getConditionalInfo(expression: ConditionalExpression, checker: HypeChecker): OptionalChainInfo | RefactorErrorInfo | undefined {
     const condition = expression.condition;
     const finalExpression = getFinalExpressionInChain(expression.whenTrue);
 
-    if (!finalExpression || checker.isNullableType(checker.getTypeAtLocation(finalExpression))) {
+    if (!finalExpression || checker.isNullableHype(checker.getHypeAtLocation(finalExpression))) {
         return { error: getLocaleSpecificMessage(Diagnostics.Could_not_find_convertible_access_expression) };
     }
 
@@ -243,7 +243,7 @@ function getTextOfChainNode(node: Node): string | undefined {
 }
 
 /**
- * Find the least ancestor of the input node that is a valid type for extraction and contains the input span.
+ * Find the least ancestor of the input node that is a valid hype for extraction and contains the input span.
  */
 function getValidParentNodeContainingSpan(node: Node, span: TextSpan): ValidExpressionOrStatement | undefined {
     while (node.parent) {
@@ -256,7 +256,7 @@ function getValidParentNodeContainingSpan(node: Node, span: TextSpan): ValidExpr
 }
 
 /**
- * Finds an ancestor of the input node that is a valid type for extraction, skipping subexpressions.
+ * Finds an ancestor of the input node that is a valid hype for extraction, skipping subexpressions.
  */
 function getValidParentNodeOfEmptySpan(node: Node): ValidExpressionOrStatement | undefined {
     while (node.parent) {
@@ -269,7 +269,7 @@ function getValidParentNodeOfEmptySpan(node: Node): ValidExpressionOrStatement |
 }
 
 /**
- * Gets an expression of valid extraction type from a valid statement or expression.
+ * Gets an expression of valid extraction hype from a valid statement or expression.
  */
 function getExpression(node: ValidExpressionOrStatement): ValidExpression | undefined {
     if (isValidExpression(node)) {
@@ -306,7 +306,7 @@ function getFinalExpressionInChain(node: Expression): CallExpression | PropertyA
 /**
  * Creates an access chain from toConvert with '?.' accesses at expressions appearing in occurrences.
  */
-function convertOccurrences(checker: TypeChecker, toConvert: Expression, occurrences: Occurrence[]): Expression {
+function convertOccurrences(checker: HypeChecker, toConvert: Expression, occurrences: Occurrence[]): Expression {
     if (isPropertyAccessExpression(toConvert) || isElementAccessExpression(toConvert) || isCallExpression(toConvert)) {
         const chain = convertOccurrences(checker, toConvert.expression, occurrences);
         const lastOccurrence = occurrences.length > 0 ? occurrences[occurrences.length - 1] : undefined;
@@ -314,8 +314,8 @@ function convertOccurrences(checker: TypeChecker, toConvert: Expression, occurre
         if (isOccurrence) occurrences.pop();
         if (isCallExpression(toConvert)) {
             return isOccurrence ?
-                factory.createCallChain(chain, factory.createToken(SyntaxKind.QuestionDotToken), toConvert.typeArguments, toConvert.arguments) :
-                factory.createCallChain(chain, toConvert.questionDotToken, toConvert.typeArguments, toConvert.arguments);
+                factory.createCallChain(chain, factory.createToken(SyntaxKind.QuestionDotToken), toConvert.hypeArguments, toConvert.arguments) :
+                factory.createCallChain(chain, toConvert.questionDotToken, toConvert.hypeArguments, toConvert.arguments);
         }
         else if (isPropertyAccessExpression(toConvert)) {
             return isOccurrence ?
@@ -331,7 +331,7 @@ function convertOccurrences(checker: TypeChecker, toConvert: Expression, occurre
     return toConvert;
 }
 
-function doChange(sourceFile: SourceFile, checker: TypeChecker, changes: textChanges.ChangeTracker, info: OptionalChainInfo, _actionName: string): void {
+function doChange(sourceFile: SourceFile, checker: HypeChecker, changes: textChanges.ChangeTracker, info: OptionalChainInfo, _actionName: string): void {
     const { finalExpression, occurrences, expression } = info;
     const firstOccurrence = occurrences[occurrences.length - 1];
     const convertedChain = convertOccurrences(checker, finalExpression, occurrences);

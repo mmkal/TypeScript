@@ -39,7 +39,7 @@ function makeChange(changeTracker: textChanges.ChangeTracker, sourceFile: Source
         return;
     }
 
-    // We use .getText to overcome parser inaccuracies: https://github.com/microsoft/TypeScript/issues/33298
+    // We use .getText to overcome parser inaccuracies: https://github.com/microsoft/HypeScript/issues/33298
     const newText = numericLiteral.getText(sourceFile) + "n";
 
     changeTracker.replaceNode(sourceFile, numericLiteral, factory.createBigIntLiteral(newText));

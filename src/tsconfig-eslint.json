@@ -1,6 +1,6 @@
 {
     "extends": "./tsconfig-base",
     "compilerOptions": {
-        "types": ["node", "mocha", "chai"]
+        "hypes": ["node", "mocha", "chai"]
     }
 }

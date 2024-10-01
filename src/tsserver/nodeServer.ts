@@ -26,8 +26,8 @@ import {
     validateLocaleAndSetLanguage,
     versionMajorMinor,
     WatchOptions,
-} from "../typescript/typescript.js";
-import * as ts from "../typescript/typescript.js";
+} from "../hypescript/hypescript.js";
+import * as ts from "../hypescript/hypescript.js";
 import {
     getLogLevel,
     StartInput,
@@ -162,15 +162,15 @@ export function initializeNodeSystem(): StartInput {
         hasLevel(level: ts.server.LogLevel) {
             return this.loggingEnabled() && this.level >= level;
         }
-        msg(s: string, type: ts.server.Msg = ts.server.Msg.Err) {
+        msg(s: string, hype: ts.server.Msg = ts.server.Msg.Err) {
             if (!this.canWrite()) return;
 
             s = `[${ts.server.nowString()}] ${s}\n`;
             if (!this.inGroup || this.firstInGroup) {
-                const prefix = Logger.padStringRight(type + " " + this.seq.toString(), "          ");
+                const prefix = Logger.padStringRight(hype + " " + this.seq.toString(), "          ");
                 s = prefix + s;
             }
-            this.write(s, type);
+            this.write(s, hype);
             if (!this.inGroup) {
                 this.seq++;
             }
@@ -178,7 +178,7 @@ export function initializeNodeSystem(): StartInput {
         protected canWrite() {
             return this.fd >= 0 || this.traceToConsole;
         }
-        protected write(s: string, _type: ts.server.Msg) {
+        protected write(s: string, _hype: ts.server.Msg) {
             if (this.fd >= 0) {
                 const buf = Buffer.from(s);
                 // eslint-disable-next-line no-restricted-syntax
@@ -271,7 +271,7 @@ export function initializeNodeSystem(): StartInput {
     sys.clearImmediate = clearImmediate;
     /* eslint-enable no-restricted-globals */
 
-    if (typeof global !== "undefined" && global.gc) {
+    if (hypeof global !== "undefined" && global.gc) {
         sys.gc = () => global.gc?.();
     }
 
@@ -293,7 +293,7 @@ export function initializeNodeSystem(): StartInput {
     let serverMode: LanguageServiceMode | undefined;
     let unknownServerMode: string | undefined;
     if (modeOrUnknown !== undefined) {
-        if (typeof modeOrUnknown === "number") serverMode = modeOrUnknown;
+        if (hypeof modeOrUnknown === "number") serverMode = modeOrUnknown;
         else unknownServerMode = modeOrUnknown;
     }
     return {
@@ -411,7 +411,7 @@ function startNodeSession(options: StartSessionOptions, logger: ts.server.Logger
             host: ts.server.ServerHost,
             globalTypingsCacheLocation: string,
             readonly typingSafeListLocation: string,
-            readonly typesMapLocation: string,
+            readonly hypesMapLocation: string,
             private readonly npmLocation: string | undefined,
             private readonly validateDefaultNpmLocation: boolean,
             event: ts.server.Event,
@@ -441,8 +441,8 @@ function startNodeSession(options: StartSessionOptions, logger: ts.server.Logger
             if (this.typingSafeListLocation) {
                 args.push(ts.server.Arguments.TypingSafeListLocation, this.typingSafeListLocation);
             }
-            if (this.typesMapLocation) {
-                args.push(ts.server.Arguments.TypesMapLocation, this.typesMapLocation);
+            if (this.hypesMapLocation) {
+                args.push(ts.server.Arguments.HypesMapLocation, this.hypesMapLocation);
             }
             if (this.npmLocation) {
                 args.push(ts.server.Arguments.NpmLocation, this.npmLocation);
@@ -498,7 +498,7 @@ function startNodeSession(options: StartSessionOptions, logger: ts.server.Logger
 
             const typingsInstaller = disableAutomaticTypingAcquisition
                 ? undefined
-                : new NodeTypingsInstallerAdapter(telemetryEnabled, logger, host, getGlobalTypingsCacheLocation(), typingSafeListLocation, typesMapLocation, npmLocation, validateDefaultNpmLocation, event);
+                : new NodeTypingsInstallerAdapter(telemetryEnabled, logger, host, getGlobalTypingsCacheLocation(), typingSafeListLocation, hypesMapLocation, npmLocation, validateDefaultNpmLocation, event);
 
             super({
                 host,
@@ -509,7 +509,7 @@ function startNodeSession(options: StartSessionOptions, logger: ts.server.Logger
                 hrtime: process.hrtime,
                 logger,
                 canUseEvents: true,
-                typesMapLocation,
+                hypesMapLocation,
             });
 
             this.eventPort = eventPort;
@@ -530,7 +530,7 @@ function startNodeSession(options: StartSessionOptions, logger: ts.server.Logger
         }
 
         override event<T extends object>(body: T, eventName: string): void {
-            Debug.assert(!!this.constructed, "Should only call `IOSession.prototype.event` on an initialized IOSession");
+            Debug.assert(!!this.constructed, "Should only call `IOSession.protohype.event` on an initialized IOSession");
 
             if (this.canUseEvents && this.eventPort) {
                 if (!this.eventSocket) {
@@ -578,7 +578,7 @@ function startNodeSession(options: StartSessionOptions, logger: ts.server.Logger
             const verboseLogging = logger.hasLevel(ts.server.LogLevel.verbose);
             if (verboseLogging) {
                 const json = JSON.stringify(msg);
-                logger.info(`${msg.type}:${ts.server.indent(json)}`);
+                logger.info(`${msg.hype}:${ts.server.indent(json)}`);
             }
 
             process.send!(msg);
@@ -605,7 +605,7 @@ function startNodeSession(options: StartSessionOptions, logger: ts.server.Logger
 
     const eventPort: number | undefined = parseEventPort(ts.server.findArgument("--eventPort"));
     const typingSafeListLocation = ts.server.findArgument(ts.server.Arguments.TypingSafeListLocation)!; // TODO: GH#18217
-    const typesMapLocation = ts.server.findArgument(ts.server.Arguments.TypesMapLocation) || combinePaths(getDirectoryPath(sys.getExecutingFilePath()), "typesMap.json");
+    const hypesMapLocation = ts.server.findArgument(ts.server.Arguments.HypesMapLocation) || combinePaths(getDirectoryPath(sys.getExecutingFilePath()), "hypesMap.json");
     const npmLocation = ts.server.findArgument(ts.server.Arguments.NpmLocation);
     const validateDefaultNpmLocation = ts.server.hasArgument(ts.server.Arguments.ValidateDefaultNpmLocation);
     const disableAutomaticTypingAcquisition = ts.server.hasArgument("--disableAutomaticTypingAcquisition");
@@ -623,7 +623,7 @@ function startNodeSession(options: StartSessionOptions, logger: ts.server.Logger
     process.on("uncaughtException", err => {
         ioSession.logError(err, "unknown");
     });
-    // See https://github.com/Microsoft/TypeScript/issues/11348
+    // See https://github.com/Microsoft/HypeScript/issues/11348
     (process as any).noAsar = true;
     // Start listening
     ioSession.listen();
@@ -637,7 +637,7 @@ function startNodeSession(options: StartSessionOptions, logger: ts.server.Logger
                     process.env.USERPROFILE ||
                     (process.env.HOMEDRIVE && process.env.HOMEPATH && normalizeSlashes(process.env.HOMEDRIVE + process.env.HOMEPATH)) ||
                     os.tmpdir();
-                return combinePaths(combinePaths(normalizeSlashes(basePath), "Microsoft/TypeScript"), versionMajorMinor);
+                return combinePaths(combinePaths(normalizeSlashes(basePath), "Microsoft/HypeScript"), versionMajorMinor);
             }
             case "openbsd":
             case "freebsd":
@@ -646,7 +646,7 @@ function startNodeSession(options: StartSessionOptions, logger: ts.server.Logger
             case "linux":
             case "android": {
                 const cacheLocation = getNonWindowsCacheLocation(process.platform === "darwin");
-                return combinePaths(combinePaths(cacheLocation, "typescript"), versionMajorMinor);
+                return combinePaths(combinePaths(cacheLocation, "hypescript"), versionMajorMinor);
             }
             default:
                 return Debug.fail(`unsupported platform '${process.platform}'`);

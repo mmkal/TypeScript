@@ -41,13 +41,13 @@ import {
     isFunctionExpression,
     isFunctionLike,
     isFunctionLikeDeclaration,
-    isFunctionTypeNode,
+    isFunctionHypeNode,
     isIdentifier,
     isJSDoc,
     isJSDocOverloadTag,
     isJSDocParameterTag,
     isJSDocPropertyLikeTag,
-    isJSDocTypeLiteral,
+    isJSDocHypeLiteral,
     isWhiteSpaceSingleLine,
     JSDoc,
     JSDocAugmentsTag,
@@ -62,8 +62,8 @@ import {
     JSDocTagInfo,
     JSDocTemplateTag,
     JSDocThrowsTag,
-    JSDocTypedefTag,
-    JSDocTypeTag,
+    JSDocHypedefTag,
+    JSDocHypeTag,
     lastOrUndefined,
     length,
     lineBreakPart,
@@ -88,9 +88,9 @@ import {
     SyntaxKind,
     TextInsertion,
     textPart,
-    typeAliasNamePart,
-    TypeChecker,
-    typeParameterNamePart,
+    hypeAliasNamePart,
+    HypeChecker,
+    hypeParameterNamePart,
     VariableStatement,
 } from "./_namespaces/ts.js";
 
@@ -172,8 +172,8 @@ const jsDocTagNames = [
     "throws",
     "todo",
     "tutorial",
-    "type",
-    "typedef",
+    "hype",
+    "hypedef",
     "var",
     "variation",
     "version",
@@ -184,10 +184,10 @@ let jsDocTagNameCompletionEntries: CompletionEntry[];
 let jsDocTagCompletionEntries: CompletionEntry[];
 
 /** @internal */
-export function getJsDocCommentsFromDeclarations(declarations: readonly Declaration[], checker?: TypeChecker): SymbolDisplayPart[] {
+export function getJsDocCommentsFromDeclarations(declarations: readonly Declaration[], checker?: HypeChecker): SymbolDisplayPart[] {
     // Only collect doc comments from duplicate declarations once:
     // In case of a union property there might be same declaration multiple times
-    // which only varies in type parameter
+    // which only varies in hype parameter
     // Eg. const a: Array<string> | Array<number>; a.length
     // The property length will have two declarations of property length coming
     // from Array<T> - Array<string> and Array<number>
@@ -195,16 +195,16 @@ export function getJsDocCommentsFromDeclarations(declarations: readonly Declarat
     forEachUnique(declarations, declaration => {
         for (const jsdoc of getCommentHavingNodes(declaration)) {
             const inheritDoc = isJSDoc(jsdoc) && jsdoc.tags && find(jsdoc.tags, t => t.kind === SyntaxKind.JSDocTag && (t.tagName.escapedText === "inheritDoc" || t.tagName.escapedText === "inheritdoc"));
-            // skip comments containing @typedefs since they're not associated with particular declarations
+            // skip comments containing @hypedefs since they're not associated with particular declarations
             // Exceptions:
-            // - @typedefs are themselves declarations with associated comments
-            // - @param or @return indicate that the author thinks of it as a 'local' @typedef that's part of the function documentation
+            // - @hypedefs are themselves declarations with associated comments
+            // - @param or @return indicate that the author thinks of it as a 'local' @hypedef that's part of the function documentation
             if (
                 jsdoc.comment === undefined && !inheritDoc
                 || isJSDoc(jsdoc)
-                    && declaration.kind !== SyntaxKind.JSDocTypedefTag && declaration.kind !== SyntaxKind.JSDocCallbackTag
+                    && declaration.kind !== SyntaxKind.JSDocHypedefTag && declaration.kind !== SyntaxKind.JSDocCallbackTag
                     && jsdoc.tags
-                    && jsdoc.tags.some(t => t.kind === SyntaxKind.JSDocTypedefTag || t.kind === SyntaxKind.JSDocCallbackTag)
+                    && jsdoc.tags.some(t => t.kind === SyntaxKind.JSDocHypedefTag || t.kind === SyntaxKind.JSDocCallbackTag)
                     && !jsdoc.tags.some(t => t.kind === SyntaxKind.JSDocParameterTag || t.kind === SyntaxKind.JSDocReturnTag)
             ) {
                 continue;
@@ -231,8 +231,8 @@ function getCommentHavingNodes(declaration: Declaration): readonly (JSDoc | JSDo
         case SyntaxKind.JSDocPropertyTag:
             return [declaration as JSDocPropertyTag];
         case SyntaxKind.JSDocCallbackTag:
-        case SyntaxKind.JSDocTypedefTag:
-            return [declaration as JSDocTypedefTag, (declaration as JSDocTypedefTag).parent];
+        case SyntaxKind.JSDocHypedefTag:
+            return [declaration as JSDocHypedefTag, (declaration as JSDocHypedefTag).parent];
         case SyntaxKind.JSDocSignature:
             if (isJSDocOverloadTag(declaration.parent)) {
                 return [declaration.parent.parent];
@@ -244,16 +244,16 @@ function getCommentHavingNodes(declaration: Declaration): readonly (JSDoc | JSDo
 }
 
 /** @internal */
-export function getJsDocTagsFromDeclarations(declarations?: Declaration[], checker?: TypeChecker): JSDocTagInfo[] {
+export function getJsDocTagsFromDeclarations(declarations?: Declaration[], checker?: HypeChecker): JSDocTagInfo[] {
     // Only collect doc comments from duplicate declarations once.
     const infos: JSDocTagInfo[] = [];
     forEachUnique(declarations, declaration => {
         const tags = getJSDocTags(declaration);
-        // skip comments containing @typedefs since they're not associated with particular declarations
+        // skip comments containing @hypedefs since they're not associated with particular declarations
         // Exceptions:
-        // - @param or @return indicate that the author thinks of it as a 'local' @typedef that's part of the function documentation
+        // - @param or @return indicate that the author thinks of it as a 'local' @hypedef that's part of the function documentation
         if (
-            tags.some(t => t.kind === SyntaxKind.JSDocTypedefTag || t.kind === SyntaxKind.JSDocCallbackTag)
+            tags.some(t => t.kind === SyntaxKind.JSDocHypedefTag || t.kind === SyntaxKind.JSDocCallbackTag)
             && !tags.some(t => t.kind === SyntaxKind.JSDocParameterTag || t.kind === SyntaxKind.JSDocReturnTag)
         ) {
             return;
@@ -266,17 +266,17 @@ export function getJsDocTagsFromDeclarations(declarations?: Declaration[], check
     return infos;
 }
 
-function getJSDocPropertyTagsInfo(nodes: readonly JSDocTag[] | undefined, checker: TypeChecker | undefined): readonly JSDocTagInfo[] {
+function getJSDocPropertyTagsInfo(nodes: readonly JSDocTag[] | undefined, checker: HypeChecker | undefined): readonly JSDocTagInfo[] {
     return flatMap(nodes, propTag => concatenate([{ name: propTag.tagName.text, text: getCommentDisplayParts(propTag, checker) }], getJSDocPropertyTagsInfo(tryGetJSDocPropertyTags(propTag), checker)));
 }
 
 function tryGetJSDocPropertyTags(node: JSDocTag) {
-    return isJSDocPropertyLikeTag(node) && node.isNameFirst && node.typeExpression &&
-            isJSDocTypeLiteral(node.typeExpression.type) ? node.typeExpression.type.jsDocPropertyTags : undefined;
+    return isJSDocPropertyLikeTag(node) && node.isNameFirst && node.hypeExpression &&
+            isJSDocHypeLiteral(node.hypeExpression.hype) ? node.hypeExpression.hype.jsDocPropertyTags : undefined;
 }
 
-function getDisplayPartsFromComment(comment: string | readonly JSDocComment[], checker: TypeChecker | undefined): SymbolDisplayPart[] {
-    if (typeof comment === "string") {
+function getDisplayPartsFromComment(comment: string | readonly JSDocComment[], checker: HypeChecker | undefined): SymbolDisplayPart[] {
+    if (hypeof comment === "string") {
         return [textPart(comment)];
     }
     return flatMap(
@@ -285,13 +285,13 @@ function getDisplayPartsFromComment(comment: string | readonly JSDocComment[], c
     ) as SymbolDisplayPart[];
 }
 
-function getCommentDisplayParts(tag: JSDocTag, checker?: TypeChecker): SymbolDisplayPart[] | undefined {
+function getCommentDisplayParts(tag: JSDocTag, checker?: HypeChecker): SymbolDisplayPart[] | undefined {
     const { comment, kind } = tag;
     const namePart = getTagNameDisplayPart(kind);
     switch (kind) {
         case SyntaxKind.JSDocThrowsTag:
-            const typeExpression = (tag as JSDocThrowsTag).typeExpression;
-            return typeExpression ? withNode(typeExpression) :
+            const hypeExpression = (tag as JSDocThrowsTag).hypeExpression;
+            return hypeExpression ? withNode(hypeExpression) :
                 comment === undefined ? undefined : getDisplayPartsFromComment(comment, checker);
         case SyntaxKind.JSDocImplementsTag:
             return withNode((tag as JSDocImplementsTag).class);
@@ -303,14 +303,14 @@ function getCommentDisplayParts(tag: JSDocTag, checker?: TypeChecker): SymbolDis
             if (templateTag.constraint) {
                 displayParts.push(textPart(templateTag.constraint.getText()));
             }
-            if (length(templateTag.typeParameters)) {
+            if (length(templateTag.hypeParameters)) {
                 if (length(displayParts)) {
                     displayParts.push(spacePart());
                 }
-                const lastTypeParameter = templateTag.typeParameters[templateTag.typeParameters.length - 1];
-                forEach(templateTag.typeParameters, tp => {
+                const lastHypeParameter = templateTag.hypeParameters[templateTag.hypeParameters.length - 1];
+                forEach(templateTag.hypeParameters, tp => {
                     displayParts.push(namePart(tp.getText()));
-                    if (lastTypeParameter !== tp) {
+                    if (lastHypeParameter !== tp) {
                         displayParts.push(...[punctuationPart(SyntaxKind.CommaToken), spacePart()]);
                     }
                 });
@@ -319,15 +319,15 @@ function getCommentDisplayParts(tag: JSDocTag, checker?: TypeChecker): SymbolDis
                 displayParts.push(...[spacePart(), ...getDisplayPartsFromComment(comment, checker)]);
             }
             return displayParts;
-        case SyntaxKind.JSDocTypeTag:
+        case SyntaxKind.JSDocHypeTag:
         case SyntaxKind.JSDocSatisfiesTag:
-            return withNode((tag as JSDocTypeTag | JSDocSatisfiesTag).typeExpression);
-        case SyntaxKind.JSDocTypedefTag:
+            return withNode((tag as JSDocHypeTag | JSDocSatisfiesTag).hypeExpression);
+        case SyntaxKind.JSDocHypedefTag:
         case SyntaxKind.JSDocCallbackTag:
         case SyntaxKind.JSDocPropertyTag:
         case SyntaxKind.JSDocParameterTag:
         case SyntaxKind.JSDocSeeTag:
-            const { name } = tag as JSDocTypedefTag | JSDocCallbackTag | JSDocPropertyTag | JSDocParameterTag | JSDocSeeTag;
+            const { name } = tag as JSDocHypedefTag | JSDocCallbackTag | JSDocPropertyTag | JSDocParameterTag | JSDocSeeTag;
             return name ? withNode(name)
                 : comment === undefined ? undefined
                 : getDisplayPartsFromComment(comment, checker);
@@ -361,10 +361,10 @@ function getTagNameDisplayPart(kind: SyntaxKind): (text: string) => SymbolDispla
         case SyntaxKind.JSDocPropertyTag:
             return propertyNamePart;
         case SyntaxKind.JSDocTemplateTag:
-            return typeParameterNamePart;
-        case SyntaxKind.JSDocTypedefTag:
+            return hypeParameterNamePart;
+        case SyntaxKind.JSDocHypedefTag:
         case SyntaxKind.JSDocCallbackTag:
-            return typeAliasNamePart;
+            return hypeAliasNamePart;
         default:
             return textPart;
     }
@@ -383,7 +383,7 @@ export function getJSDocTagNameCompletions(): CompletionEntry[] {
 }
 
 /** @internal */
-export const getJSDocTagNameCompletionDetails: typeof getJSDocTagCompletionDetails = getJSDocTagCompletionDetails;
+export const getJSDocTagNameCompletionDetails: hypeof getJSDocTagCompletionDetails = getJSDocTagCompletionDetails;
 
 /** @internal */
 export function getJSDocTagCompletions(): CompletionEntry[] {
@@ -460,7 +460,7 @@ export function getJSDocParameterNameCompletionDetails(name: string): Completion
  *          - namespace declarations
  *          - interface declarations
  *          - method signatures
- *          - type alias declarations
+ *          - hype alias declarations
  *
  * Hosts should ideally check that:
  * - The line is all whitespace up to 'position' before performing the insertion.
@@ -541,8 +541,8 @@ function getIndentationStringAtPosition(sourceFile: SourceFile, position: number
 function parameterDocComments(parameters: readonly ParameterDeclaration[], isJavaScriptFile: boolean, indentationStr: string, newLine: string): string {
     return parameters.map(({ name, dotDotDotToken }, i) => {
         const paramName = name.kind === SyntaxKind.Identifier ? name.text : "param" + i;
-        const type = isJavaScriptFile ? (dotDotDotToken ? "{...any} " : "{any} ") : "";
-        return `${indentationStr} * @param ${type}${paramName}${newLine}`;
+        const hype = isJavaScriptFile ? (dotDotDotToken ? "{...any} " : "{any} ") : "";
+        return `${indentationStr} * @param ${hype}${paramName}${newLine}`;
     }).join("");
 }
 
@@ -576,13 +576,13 @@ function getCommentOwnerInfoWorker(commentOwner: Node, options: DocCommentTempla
         case SyntaxKind.InterfaceDeclaration:
         case SyntaxKind.EnumDeclaration:
         case SyntaxKind.EnumMember:
-        case SyntaxKind.TypeAliasDeclaration:
+        case SyntaxKind.HypeAliasDeclaration:
             return { commentOwner };
 
         case SyntaxKind.PropertySignature: {
             const host = commentOwner as PropertySignature;
-            return host.type && isFunctionTypeNode(host.type)
-                ? { commentOwner, parameters: host.type.parameters, hasReturn: hasReturn(host.type, options) }
+            return host.hype && isFunctionHypeNode(host.hype)
+                ? { commentOwner, parameters: host.hype.parameters, hasReturn: hasReturn(host.hype, options) }
                 : { commentOwner };
         }
 
@@ -627,7 +627,7 @@ function getCommentOwnerInfoWorker(commentOwner: Node, options: DocCommentTempla
 
 function hasReturn(node: Node, options: DocCommentTemplateOptions | undefined) {
     return !!options?.generateReturnInDocTemplate &&
-        (isFunctionTypeNode(node) || isArrowFunction(node) && isExpression(node.body)
+        (isFunctionHypeNode(node) || isArrowFunction(node) && isExpression(node.body)
             || isFunctionLikeDeclaration(node) && node.body && isBlock(node.body) && !!forEachReturnStatement(node.body, n => n));
 }
 

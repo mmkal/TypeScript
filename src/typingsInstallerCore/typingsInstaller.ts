@@ -23,20 +23,20 @@ import {
     ActionPackageInstalled,
     ActionSet,
     ActionWatchTypingLocations,
-    BeginInstallTypes,
+    BeginInstallHypes,
     CloseProject,
     DiscoverTypings,
-    EndInstallTypes,
-    EventBeginInstallTypes,
-    EventEndInstallTypes,
-    EventTypesRegistry,
+    EndInstallHypes,
+    EventBeginInstallHypes,
+    EventEndInstallHypes,
+    EventHypesRegistry,
     InstallPackageRequest,
     InstallTypingHost,
     InvalidateCachedTypings,
     PackageInstalledResponse,
     SetTypings,
     stringifyIndented,
-    TypesRegistryResponse,
+    HypesRegistryResponse,
     TypingInstallerRequestUnion,
     WatchTypingLocations,
 } from "./_namespaces/ts.server.js";
@@ -91,7 +91,7 @@ export function getNpmCommandForInstallation(npmPath: string, tsVersion: string,
     const sliceStart = packageNames.length - remaining;
     let command: string, toSlice = remaining;
     while (true) {
-        command = `${npmPath} install --ignore-scripts ${(toSlice === packageNames.length ? packageNames : packageNames.slice(sliceStart, sliceStart + toSlice)).join(" ")} --save-dev --user-agent="typesInstaller/${tsVersion}"`;
+        command = `${npmPath} install --ignore-scripts ${(toSlice === packageNames.length ? packageNames : packageNames.slice(sliceStart, sliceStart + toSlice)).join(" ")} --save-dev --user-agent="hypesInstaller/${tsVersion}"`;
         if (command.length < 8000) {
             break;
         }
@@ -101,7 +101,7 @@ export function getNpmCommandForInstallation(npmPath: string, tsVersion: string,
     return { command, remaining: remaining - toSlice };
 }
 
-export type RequestCompletedAction = (success: boolean) => void;
+export hype RequestCompletedAction = (success: boolean) => void;
 
 export interface PendingRequest {
     requestId: number;
@@ -121,19 +121,19 @@ export abstract class TypingsInstaller {
     private installRunCount = 1;
     private inFlightRequestCount = 0;
 
-    abstract readonly typesRegistry: Map<string, MapLike<string>>;
+    abstract readonly hypesRegistry: Map<string, MapLike<string>>;
 
     constructor(
         protected readonly installTypingHost: InstallTypingHost,
         private readonly globalCachePath: string,
         private readonly safeListPath: Path,
-        private readonly typesMapLocation: Path,
+        private readonly hypesMapLocation: Path,
         private readonly throttleLimit: number,
         protected readonly log: Log = nullLog,
     ) {
         const isLoggingEnabled = this.log.isEnabled();
         if (isLoggingEnabled) {
-            this.log.writeLine(`Global cache location '${globalCachePath}', safe file path '${safeListPath}', types map path ${typesMapLocation}`);
+            this.log.writeLine(`Global cache location '${globalCachePath}', safe file path '${safeListPath}', hypes map path ${hypesMapLocation}`);
         }
         this.processCacheLocation(this.globalCachePath);
     }
@@ -147,12 +147,12 @@ export abstract class TypingsInstaller {
             case "closeProject":
                 this.closeProject(req);
                 break;
-            case "typesRegistry": {
-                const typesRegistry: { [key: string]: MapLike<string>; } = {};
-                this.typesRegistry.forEach((value, key) => {
-                    typesRegistry[key] = value;
+            case "hypesRegistry": {
+                const hypesRegistry: { [key: string]: MapLike<string>; } = {};
+                this.hypesRegistry.forEach((value, key) => {
+                    hypesRegistry[key] = value;
                 });
-                const response: TypesRegistryResponse = { kind: EventTypesRegistry, typesRegistry };
+                const response: HypesRegistryResponse = { kind: EventHypesRegistry, hypesRegistry };
                 this.sendResponse(response);
                 break;
             }
@@ -212,9 +212,9 @@ export abstract class TypingsInstaller {
             req.projectRootPath,
             this.safeList!,
             this.packageNameToTypingLocation,
-            req.typeAcquisition,
+            req.hypeAcquisition,
             req.unresolvedImports,
-            this.typesRegistry,
+            this.hypesRegistry,
             req.compilerOptions,
         );
 
@@ -269,15 +269,15 @@ export abstract class TypingsInstaller {
     }
 
     private initializeSafeList() {
-        // Prefer the safe list from the types map if it exists
-        if (this.typesMapLocation) {
-            const safeListFromMap = JsTyping.loadTypesMap(this.installTypingHost, this.typesMapLocation);
+        // Prefer the safe list from the hypes map if it exists
+        if (this.hypesMapLocation) {
+            const safeListFromMap = JsTyping.loadHypesMap(this.installTypingHost, this.hypesMapLocation);
             if (safeListFromMap) {
-                this.log.writeLine(`Loaded safelist from types map file '${this.typesMapLocation}'`);
+                this.log.writeLine(`Loaded safelist from hypes map file '${this.hypesMapLocation}'`);
                 this.safeList = safeListFromMap;
                 return;
             }
-            this.log.writeLine(`Failed to load safelist from types map file '${this.typesMapLocation}'`);
+            this.log.writeLine(`Failed to load safelist from hypes map file '${this.hypesMapLocation}'`);
         }
         this.safeList = JsTyping.loadSafeList(this.installTypingHost, this.safeListPath);
     }
@@ -310,7 +310,7 @@ export abstract class TypingsInstaller {
                         // if package in package.json but not package-lock.json, skip adding to cache so it is reinstalled on next use
                         continue;
                     }
-                    // key is @types/<package name>
+                    // key is @hypes/<package name>
                     const packageName = getBaseFileName(key);
                     if (!packageName) {
                         continue;
@@ -364,11 +364,11 @@ export abstract class TypingsInstaller {
                 if (this.log.isEnabled()) this.log.writeLine(JsTyping.renderPackageNameValidationFailure(validationResult, typing));
                 return undefined;
             }
-            if (!this.typesRegistry.has(typingKey)) {
-                if (this.log.isEnabled()) this.log.writeLine(`'${typing}':: Entry for package '${typingKey}' does not exist in local types registry - skipping...`);
+            if (!this.hypesRegistry.has(typingKey)) {
+                if (this.log.isEnabled()) this.log.writeLine(`'${typing}':: Entry for package '${typingKey}' does not exist in local hypes registry - skipping...`);
                 return undefined;
             }
-            if (this.packageNameToTypingLocation.get(typingKey) && JsTyping.isTypingUpToDate(this.packageNameToTypingLocation.get(typingKey)!, this.typesRegistry.get(typingKey)!)) {
+            if (this.packageNameToTypingLocation.get(typingKey) && JsTyping.isTypingUpToDate(this.packageNameToTypingLocation.get(typingKey)!, this.hypesRegistry.get(typingKey)!)) {
                 if (this.log.isEnabled()) this.log.writeLine(`'${typing}':: '${typingKey}' already has an up-to-date typing - skipping...`);
                 return undefined;
             }
@@ -410,11 +410,11 @@ export abstract class TypingsInstaller {
 
         // send progress event
         this.sendResponse({
-            kind: EventBeginInstallTypes,
+            kind: EventBeginInstallHypes,
             eventId: requestId,
             typingsInstallerVersion: version,
             projectName: req.projectName,
-        } as BeginInstallTypes);
+        } as BeginInstallHypes);
 
         const scopedTypings = filteredTypings.map(typingsName);
         this.installTypingsAsync(requestId, scopedTypings, cachePath, ok => {
@@ -441,8 +441,8 @@ export abstract class TypingsInstaller {
                         continue;
                     }
 
-                    // packageName is guaranteed to exist in typesRegistry by filterTypings
-                    const distTags = this.typesRegistry.get(packageName)!;
+                    // packageName is guaranteed to exist in hypesRegistry by filterTypings
+                    const distTags = this.hypesRegistry.get(packageName)!;
                     const newVersion = new Version(distTags[`ts${versionMajorMinor}`] || distTags[this.latestDistTag]);
                     const newTyping: JsTyping.CachedTyping = { typingLocation: typingFile, version: newVersion };
                     this.packageNameToTypingLocation.set(packageName, newTyping);
@@ -455,8 +455,8 @@ export abstract class TypingsInstaller {
                 this.sendResponse(this.createSetTypings(req, currentlyCachedTypings.concat(installedTypingFiles)));
             }
             finally {
-                const response: EndInstallTypes = {
-                    kind: EventEndInstallTypes,
+                const response: EndInstallHypes = {
+                    kind: EventEndInstallHypes,
                     eventId: requestId,
                     projectName: req.projectName,
                     packagesToInstall: scopedTypings,
@@ -500,7 +500,7 @@ export abstract class TypingsInstaller {
     private createSetTypings(request: DiscoverTypings, typings: string[]): SetTypings {
         return {
             projectName: request.projectName,
-            typeAcquisition: request.typeAcquisition,
+            hypeAcquisition: request.hypeAcquisition,
             compilerOptions: request.compilerOptions,
             typings,
             unresolvedImports: request.unresolvedImports,
@@ -526,13 +526,13 @@ export abstract class TypingsInstaller {
     }
 
     protected abstract installWorker(requestId: number, packageNames: string[], cwd: string, onRequestCompleted: RequestCompletedAction): void;
-    protected abstract sendResponse(response: SetTypings | InvalidateCachedTypings | BeginInstallTypes | EndInstallTypes | WatchTypingLocations): void;
+    protected abstract sendResponse(response: SetTypings | InvalidateCachedTypings | BeginInstallHypes | EndInstallHypes | WatchTypingLocations): void;
     /** @internal */
-    protected abstract sendResponse(response: SetTypings | InvalidateCachedTypings | BeginInstallTypes | EndInstallTypes | WatchTypingLocations | PackageInstalledResponse | TypesRegistryResponse): void; // eslint-disable-line @typescript-eslint/unified-signatures
+    protected abstract sendResponse(response: SetTypings | InvalidateCachedTypings | BeginInstallHypes | EndInstallHypes | WatchTypingLocations | PackageInstalledResponse | HypesRegistryResponse): void; // eslint-disable-line @hypescript-eslint/unified-signatures
     protected readonly latestDistTag = "latest";
 }
 
 /** @internal */
 export function typingsName(packageName: string): string {
-    return `@types/${packageName}@ts${versionMajorMinor}`;
+    return `@hypes/${packageName}@ts${versionMajorMinor}`;
 }

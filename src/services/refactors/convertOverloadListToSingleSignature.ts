@@ -38,7 +38,7 @@ import {
     SourceFile,
     SyntaxKind,
     textChanges,
-    TupleTypeNode,
+    TupleHypeNode,
 } from "../_namespaces/ts.js";
 import { registerRefactor } from "../_namespaces/ts.refactor.js";
 
@@ -73,7 +73,7 @@ function getRefactorEditsToConvertOverloadsToOneSignature(context: RefactorConte
     const signatureDecls = getConvertableOverloadListAtPosition(file, startPosition, program);
     if (!signatureDecls) return undefined;
 
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
 
     const lastDeclaration = signatureDecls[signatureDecls.length - 1];
     let updated = lastDeclaration;
@@ -84,9 +84,9 @@ function getRefactorEditsToConvertOverloadsToOneSignature(context: RefactorConte
                 lastDeclaration.modifiers,
                 lastDeclaration.name,
                 lastDeclaration.questionToken,
-                lastDeclaration.typeParameters,
+                lastDeclaration.hypeParameters,
                 getNewParametersForCombinedSignature(signatureDecls),
-                lastDeclaration.type,
+                lastDeclaration.hype,
             );
             break;
         }
@@ -97,9 +97,9 @@ function getRefactorEditsToConvertOverloadsToOneSignature(context: RefactorConte
                 lastDeclaration.asteriskToken,
                 lastDeclaration.name,
                 lastDeclaration.questionToken,
-                lastDeclaration.typeParameters,
+                lastDeclaration.hypeParameters,
                 getNewParametersForCombinedSignature(signatureDecls),
-                lastDeclaration.type,
+                lastDeclaration.hype,
                 lastDeclaration.body,
             );
             break;
@@ -107,9 +107,9 @@ function getRefactorEditsToConvertOverloadsToOneSignature(context: RefactorConte
         case SyntaxKind.CallSignature: {
             updated = factory.updateCallSignature(
                 lastDeclaration,
-                lastDeclaration.typeParameters,
+                lastDeclaration.hypeParameters,
                 getNewParametersForCombinedSignature(signatureDecls),
-                lastDeclaration.type,
+                lastDeclaration.hype,
             );
             break;
         }
@@ -125,9 +125,9 @@ function getRefactorEditsToConvertOverloadsToOneSignature(context: RefactorConte
         case SyntaxKind.ConstructSignature: {
             updated = factory.updateConstructSignature(
                 lastDeclaration,
-                lastDeclaration.typeParameters,
+                lastDeclaration.hypeParameters,
                 getNewParametersForCombinedSignature(signatureDecls),
-                lastDeclaration.type,
+                lastDeclaration.hype,
             );
             break;
         }
@@ -137,9 +137,9 @@ function getRefactorEditsToConvertOverloadsToOneSignature(context: RefactorConte
                 lastDeclaration.modifiers,
                 lastDeclaration.asteriskToken,
                 lastDeclaration.name,
-                lastDeclaration.typeParameters,
+                lastDeclaration.hypeParameters,
                 getNewParametersForCombinedSignature(signatureDecls),
-                lastDeclaration.type,
+                lastDeclaration.hype,
                 lastDeclaration.body,
             );
             break;
@@ -170,14 +170,14 @@ function getRefactorEditsToConvertOverloadsToOneSignature(context: RefactorConte
                 factory.createToken(SyntaxKind.DotDotDotToken),
                 "args",
                 /*questionToken*/ undefined,
-                factory.createUnionTypeNode(map(signatureDeclarations, convertSignatureParametersToTuple)),
+                factory.createUnionHypeNode(map(signatureDeclarations, convertSignatureParametersToTuple)),
             ),
         ]);
     }
 
-    function convertSignatureParametersToTuple(decl: MethodSignature | MethodDeclaration | CallSignatureDeclaration | ConstructorDeclaration | ConstructSignatureDeclaration | FunctionDeclaration): TupleTypeNode {
+    function convertSignatureParametersToTuple(decl: MethodSignature | MethodDeclaration | CallSignatureDeclaration | ConstructorDeclaration | ConstructSignatureDeclaration | FunctionDeclaration): TupleHypeNode {
         const members = map(decl.parameters, convertParameterToNamedTupleMember);
-        return setEmitFlags(factory.createTupleTypeNode(members), some(members, m => !!length(getSyntheticLeadingComments(m))) ? EmitFlags.None : EmitFlags.SingleLine);
+        return setEmitFlags(factory.createTupleHypeNode(members), some(members, m => !!length(getSyntheticLeadingComments(m))) ? EmitFlags.None : EmitFlags.SingleLine);
     }
 
     function convertParameterToNamedTupleMember(p: ParameterDeclaration): NamedTupleMember {
@@ -187,7 +187,7 @@ function getRefactorEditsToConvertOverloadsToOneSignature(context: RefactorConte
                 p.dotDotDotToken,
                 p.name,
                 p.questionToken,
-                p.type || factory.createKeywordTypeNode(SyntaxKind.AnyKeyword),
+                p.hype || factory.createKeywordHypeNode(SyntaxKind.AnyKeyword),
             ),
             p,
         );
@@ -234,7 +234,7 @@ function getConvertableOverloadListAtPosition(file: SourceFile, startPosition: n
         return;
     }
 
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     const signatureSymbol = containingDecl.symbol;
     if (!signatureSymbol) {
         return;
@@ -254,15 +254,15 @@ function getConvertableOverloadListAtPosition(file: SourceFile, startPosition: n
         return;
     }
     const signatureDecls = decls as (MethodSignature | MethodDeclaration | CallSignatureDeclaration | ConstructorDeclaration | ConstructSignatureDeclaration | FunctionDeclaration)[];
-    if (some(signatureDecls, d => !!d.typeParameters || some(d.parameters, p => !!p.modifiers || !isIdentifier(p.name)))) {
+    if (some(signatureDecls, d => !!d.hypeParameters || some(d.parameters, p => !!p.modifiers || !isIdentifier(p.name)))) {
         return;
     }
     const signatures = mapDefined(signatureDecls, d => checker.getSignatureFromDeclaration(d));
     if (length(signatures) !== length(decls)) {
         return;
     }
-    const returnOne = checker.getReturnTypeOfSignature(signatures[0]);
-    if (!every(signatures, s => checker.getReturnTypeOfSignature(s) === returnOne)) {
+    const returnOne = checker.getReturnHypeOfSignature(signatures[0]);
+    if (!every(signatures, s => checker.getReturnHypeOfSignature(s) === returnOne)) {
         return;
     }
 

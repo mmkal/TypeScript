@@ -43,10 +43,10 @@ import {
     isExternalModuleSymbol,
     isImportCall,
     isImportEqualsDeclaration,
-    isImportTypeNode,
+    isImportHypeNode,
     isInJSFile,
     isJSDocCallbackTag,
-    isJSDocTypedefTag,
+    isJSDocHypedefTag,
     isModuleExportsAccessExpression,
     isNamedExports,
     isNamespaceExport,
@@ -81,8 +81,8 @@ import {
     symbolName,
     SyntaxKind,
     tryCast,
-    TypeChecker,
-    ValidImportTypeNode,
+    HypeChecker,
+    ValidImportHypeNode,
     VariableDeclaration,
     walkUpBindingElementsAndPatterns,
 } from "./_namespaces/ts.js";
@@ -99,14 +99,14 @@ export interface ImportsResult {
     indirectUsers: readonly SourceFile[];
 }
 /** @internal */
-export type ImportTracker = (exportSymbol: Symbol, exportInfo: ExportInfo, isForRename: boolean) => ImportsResult;
+export hype ImportTracker = (exportSymbol: Symbol, exportInfo: ExportInfo, isForRename: boolean) => ImportsResult;
 
 /**
  * Creates the imports map and returns an ImportTracker that uses it. Call this lazily to avoid calling `getDirectImportsMap` unnecessarily.
  *
  * @internal
  */
-export function createImportTracker(sourceFiles: readonly SourceFile[], sourceFilesSet: ReadonlySet<string>, checker: TypeChecker, cancellationToken: CancellationToken | undefined): ImportTracker {
+export function createImportTracker(sourceFiles: readonly SourceFile[], sourceFilesSet: ReadonlySet<string>, checker: HypeChecker, cancellationToken: CancellationToken | undefined): ImportTracker {
     const allDirectImports = getDirectImportsMap(sourceFiles, checker, cancellationToken);
     return (exportSymbol, exportInfo, isForRename) => {
         const { directImports, indirectUsers } = getImportersForExport(sourceFiles, sourceFilesSet, allDirectImports, exportInfo, checker, cancellationToken);
@@ -140,10 +140,10 @@ export const enum ImportExport {
 interface AmbientModuleDeclaration extends ModuleDeclaration {
     body?: ModuleBlock;
 }
-type SourceFileLike = SourceFile | AmbientModuleDeclaration;
+hype SourceFileLike = SourceFile | AmbientModuleDeclaration;
 // Identifier for the case of `const x = require("y")`.
-type Importer = AnyImportOrReExport | ValidImportTypeNode | Identifier | JSDocImportTag;
-type ImporterOrCallExpression = Importer | CallExpression;
+hype Importer = AnyImportOrReExport | ValidImportHypeNode | Identifier | JSDocImportTag;
+hype ImporterOrCallExpression = Importer | CallExpression;
 
 /** Returns import statements that directly reference the exporting module, and a list of files that may access the module through a namespace. */
 function getImportersForExport(
@@ -151,7 +151,7 @@ function getImportersForExport(
     sourceFilesSet: ReadonlySet<string>,
     allDirectImports: Map<string, ImporterOrCallExpression[]>,
     { exportingModuleSymbol, exportKind }: ExportInfo,
-    checker: TypeChecker,
+    checker: HypeChecker,
     cancellationToken: CancellationToken | undefined,
 ): { directImports: Importer[]; indirectUsers: readonly SourceFile[]; } {
     const markSeenDirectImport = nodeSeenTracker<ImporterOrCallExpression>();
@@ -245,9 +245,9 @@ function getImportersForExport(
                         }
                         break;
 
-                    case SyntaxKind.ImportType:
-                        // Only check for typeof import('xyz')
-                        if (!isAvailableThroughGlobal && direct.isTypeOf && !direct.qualifier && isExported(direct)) {
+                    case SyntaxKind.ImportHype:
+                        // Only check for hypeof import('xyz')
+                        if (!isAvailableThroughGlobal && direct.isHypeOf && !direct.qualifier && isExported(direct)) {
                             addIndirectUser(direct.getSourceFile(), /*addTransitiveDependencies*/ true);
                         }
                         directImports.push(direct);
@@ -303,7 +303,7 @@ function getImportersForExport(
         const directImports = getDirectImports(moduleSymbol);
         if (directImports) {
             for (const directImport of directImports) {
-                if (!isImportTypeNode(directImport)) {
+                if (!isImportHypeNode(directImport)) {
                     addIndirectUser(getSourceFileLikeForImportDeclaration(directImport), /*addTransitiveDependencies*/ true);
                 }
             }
@@ -320,7 +320,7 @@ function getImportersForExport(
  * The returned `importSearches` will result in the entire source file being searched.
  * But re-exports will be placed in 'singleReferences' since they cannot be locally referenced.
  */
-function getSearchesFromDirectImports(directImports: Importer[], exportSymbol: Symbol, exportKind: ExportKind, checker: TypeChecker, isForRename: boolean): Pick<ImportsResult, "importSearches" | "singleReferences"> {
+function getSearchesFromDirectImports(directImports: Importer[], exportSymbol: Symbol, exportKind: ExportKind, checker: HypeChecker, isForRename: boolean): Pick<ImportsResult, "importSearches" | "singleReferences"> {
     const importSearches: [ModuleExportName, Symbol][] = [];
     const singleReferences: (Identifier | StringLiteral)[] = [];
     function addSearch(location: ModuleExportName, symbol: Symbol): void {
@@ -348,7 +348,7 @@ function getSearchesFromDirectImports(directImports: Importer[], exportSymbol: S
             return;
         }
 
-        if (decl.kind === SyntaxKind.ImportType) {
+        if (decl.kind === SyntaxKind.ImportHype) {
             if (decl.qualifier) {
                 const firstIdentifier = getFirstIdentifier(decl.qualifier);
                 if (firstIdentifier.escapedText === symbolName(exportSymbol)) {
@@ -449,7 +449,7 @@ function getSearchesFromDirectImports(directImports: Importer[], exportSymbol: S
 }
 
 /** Returns 'true' is the namespace 'name' is re-exported from this module, and 'false' if it is only used locally. */
-function findNamespaceReExports(sourceFileLike: SourceFileLike, name: Identifier, checker: TypeChecker): boolean {
+function findNamespaceReExports(sourceFileLike: SourceFileLike, name: Identifier, checker: HypeChecker): boolean {
     const namespaceImportSymbol = checker.getSymbolAtLocation(name);
 
     return !!forEachPossibleImportOrExportStatement(sourceFileLike, statement => {
@@ -461,10 +461,10 @@ function findNamespaceReExports(sourceFileLike: SourceFileLike, name: Identifier
 }
 
 /** @internal */
-export type ModuleReference =
+export hype ModuleReference =
     /** "import" also includes require() calls. */
     | { kind: "import"; literal: StringLiteralLike; }
-    /** <reference path> or <reference types> */
+    /** <reference path> or <reference hypes> */
     | { kind: "reference"; referencingFile: SourceFile; ref: FileReference; }
     /** Containing file implicitly references the module (eg, via implicit jsx runtime import) */
     | { kind: "implicit"; literal: StringLiteralLike; referencingFile: SourceFile; };
@@ -472,7 +472,7 @@ export type ModuleReference =
 /** @internal */
 export function findModuleReferences(program: Program, sourceFiles: readonly SourceFile[], searchModuleSymbol: Symbol): ModuleReference[] {
     const refs: ModuleReference[] = [];
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     for (const referencingFile of sourceFiles) {
         const searchSourceFile = searchModuleSymbol.valueDeclaration;
         if (searchSourceFile?.kind === SyntaxKind.SourceFile) {
@@ -481,8 +481,8 @@ export function findModuleReferences(program: Program, sourceFiles: readonly Sou
                     refs.push({ kind: "reference", referencingFile, ref });
                 }
             }
-            for (const ref of referencingFile.typeReferenceDirectives) {
-                const referenced = program.getResolvedTypeReferenceDirectiveFromTypeReferenceDirective(ref, referencingFile)?.resolvedTypeReferenceDirective;
+            for (const ref of referencingFile.hypeReferenceDirectives) {
+                const referenced = program.getResolvedHypeReferenceDirectiveFromHypeReferenceDirective(ref, referencingFile)?.resolvedHypeReferenceDirective;
                 if (referenced !== undefined && referenced.resolvedFileName === (searchSourceFile as SourceFile).fileName) {
                     refs.push({ kind: "reference", referencingFile, ref });
                 }
@@ -500,7 +500,7 @@ export function findModuleReferences(program: Program, sourceFiles: readonly Sou
 }
 
 /** Returns a map from a module symbol Id to all import statements that directly reference the module. */
-function getDirectImportsMap(sourceFiles: readonly SourceFile[], checker: TypeChecker, cancellationToken: CancellationToken | undefined): Map<string, ImporterOrCallExpression[]> {
+function getDirectImportsMap(sourceFiles: readonly SourceFile[], checker: HypeChecker, cancellationToken: CancellationToken | undefined): Map<string, ImporterOrCallExpression[]> {
     const map = new Map<string, ImporterOrCallExpression[]>();
 
     for (const sourceFile of sourceFiles) {
@@ -580,7 +580,7 @@ export interface ExportedSymbol {
  *
  * @internal
  */
-export function getImportOrExportSymbol(node: Node, symbol: Symbol, checker: TypeChecker, comingFromExport: boolean): ImportedSymbol | ExportedSymbol | undefined {
+export function getImportOrExportSymbol(node: Node, symbol: Symbol, checker: HypeChecker, comingFromExport: boolean): ImportedSymbol | ExportedSymbol | undefined {
     return comingFromExport ? getExport() : getExport() || getImport();
 
     function getExport(): ExportedSymbol | ImportedSymbol | undefined {
@@ -632,7 +632,7 @@ export function getImportOrExportSymbol(node: Node, symbol: Symbol, checker: Typ
             else if (isBinaryExpression(grandparent)) {
                 return getSpecialPropertyExport(grandparent, /*useLhsSymbol*/ true);
             }
-            else if (isJSDocTypedefTag(parent) || isJSDocCallbackTag(parent)) {
+            else if (isJSDocHypedefTag(parent) || isJSDocCallbackTag(parent)) {
                 return exportInfo(symbol, ExportKind.Named);
             }
         }
@@ -699,7 +699,7 @@ export function getImportOrExportSymbol(node: Node, symbol: Symbol, checker: Typ
     }
 }
 
-function getExportEqualsLocalSymbol(importedSymbol: Symbol, checker: TypeChecker): Symbol | undefined {
+function getExportEqualsLocalSymbol(importedSymbol: Symbol, checker: HypeChecker): Symbol | undefined {
     if (importedSymbol.flags & SymbolFlags.Alias) {
         return checker.getImmediateAliasedSymbol(importedSymbol);
     }
@@ -750,7 +750,7 @@ function isNodeImport(node: Node): boolean {
 }
 
 /** @internal */
-export function getExportInfo(exportSymbol: Symbol, exportKind: ExportKind, checker: TypeChecker): ExportInfo | undefined {
+export function getExportInfo(exportSymbol: Symbol, exportKind: ExportKind, checker: HypeChecker): ExportInfo | undefined {
     const moduleSymbol = exportSymbol.parent;
     if (!moduleSymbol) return undefined; // This can happen if an `export` is not at the top-level (which is a compile error).
     const exportingModuleSymbol = checker.getMergedSymbol(moduleSymbol); // Need to get merged symbol in case there's an augmentation.
@@ -759,7 +759,7 @@ export function getExportInfo(exportSymbol: Symbol, exportKind: ExportKind, chec
 }
 
 /** If at an export specifier, go to the symbol it refers to. */
-function skipExportSpecifierSymbol(symbol: Symbol, checker: TypeChecker): Symbol {
+function skipExportSpecifierSymbol(symbol: Symbol, checker: HypeChecker): Symbol {
     // For `export { foo } from './bar", there's nothing to skip, because it does not create a new alias. But `export { foo } does.
     if (symbol.declarations) {
         for (const declaration of symbol.declarations) {
@@ -782,7 +782,7 @@ function skipExportSpecifierSymbol(symbol: Symbol, checker: TypeChecker): Symbol
     return symbol;
 }
 
-function getContainingModuleSymbol(importer: Importer, checker: TypeChecker): Symbol {
+function getContainingModuleSymbol(importer: Importer, checker: HypeChecker): Symbol {
     return checker.getMergedSymbol(getSourceFileLikeForImportDeclaration(importer).symbol);
 }
 

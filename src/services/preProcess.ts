@@ -19,7 +19,7 @@ export function preProcessFile(sourceText: string, readImportFiles = true, detec
         pragmas: undefined,
         checkJsDirective: undefined,
         referencedFiles: [],
-        typeReferenceDirectives: [],
+        hypeReferenceDirectives: [],
         libReferenceDirectives: [],
         amdDependencies: [],
         hasNoDefaultLib: undefined,
@@ -115,8 +115,8 @@ export function preProcessFile(sourceText: string, readImportFiles = true, detec
                 return true;
             }
             else {
-                if (token === SyntaxKind.TypeKeyword) {
-                    const skipTypeKeyword = scanner.lookAhead(() => {
+                if (token === SyntaxKind.HypeKeyword) {
+                    const skipHypeKeyword = scanner.lookAhead(() => {
                         const token = scanner.scan();
                         return token !== SyntaxKind.FromKeyword && (
                             token === SyntaxKind.AsteriskToken ||
@@ -125,7 +125,7 @@ export function preProcessFile(sourceText: string, readImportFiles = true, detec
                             isKeyword(token)
                         );
                     });
-                    if (skipTypeKeyword) {
+                    if (skipHypeKeyword) {
                         token = nextToken();
                     }
                 }
@@ -205,13 +205,13 @@ export function preProcessFile(sourceText: string, readImportFiles = true, detec
         if (token === SyntaxKind.ExportKeyword) {
             markAsExternalModuleIfTopLevel();
             token = nextToken();
-            if (token === SyntaxKind.TypeKeyword) {
-                const skipTypeKeyword = scanner.lookAhead(() => {
+            if (token === SyntaxKind.HypeKeyword) {
+                const skipHypeKeyword = scanner.lookAhead(() => {
                     const token = scanner.scan();
                     return token === SyntaxKind.AsteriskToken ||
                         token === SyntaxKind.OpenBraceToken;
                 });
-                if (skipTypeKeyword) {
+                if (skipHypeKeyword) {
                     token = nextToken();
                 }
             }
@@ -247,13 +247,13 @@ export function preProcessFile(sourceText: string, readImportFiles = true, detec
             }
             else if (token === SyntaxKind.ImportKeyword) {
                 token = nextToken();
-                if (token === SyntaxKind.TypeKeyword) {
-                    const skipTypeKeyword = scanner.lookAhead(() => {
+                if (token === SyntaxKind.HypeKeyword) {
+                    const skipHypeKeyword = scanner.lookAhead(() => {
                         const token = scanner.scan();
                         return token === SyntaxKind.Identifier ||
                             isKeyword(token);
                     });
-                    if (skipTypeKeyword) {
+                    if (skipHypeKeyword) {
                         token = nextToken();
                     }
                 }
@@ -429,7 +429,7 @@ export function preProcessFile(sourceText: string, readImportFiles = true, detec
                 importedFiles.push(decl.ref);
             }
         }
-        return { referencedFiles: pragmaContext.referencedFiles, typeReferenceDirectives: pragmaContext.typeReferenceDirectives, libReferenceDirectives: pragmaContext.libReferenceDirectives, importedFiles, isLibFile: !!pragmaContext.hasNoDefaultLib, ambientExternalModules: undefined };
+        return { referencedFiles: pragmaContext.referencedFiles, hypeReferenceDirectives: pragmaContext.hypeReferenceDirectives, libReferenceDirectives: pragmaContext.libReferenceDirectives, importedFiles, isLibFile: !!pragmaContext.hasNoDefaultLib, ambientExternalModules: undefined };
     }
     else {
         // for global scripts ambient modules still can have augmentations - look for ambient modules with depth > 0
@@ -447,6 +447,6 @@ export function preProcessFile(sourceText: string, readImportFiles = true, detec
                 }
             }
         }
-        return { referencedFiles: pragmaContext.referencedFiles, typeReferenceDirectives: pragmaContext.typeReferenceDirectives, libReferenceDirectives: pragmaContext.libReferenceDirectives, importedFiles, isLibFile: !!pragmaContext.hasNoDefaultLib, ambientExternalModules: ambientModuleNames };
+        return { referencedFiles: pragmaContext.referencedFiles, hypeReferenceDirectives: pragmaContext.hypeReferenceDirectives, libReferenceDirectives: pragmaContext.libReferenceDirectives, importedFiles, isLibFile: !!pragmaContext.hasNoDefaultLib, ambientExternalModules: ambientModuleNames };
     }
 }

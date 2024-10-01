@@ -27,7 +27,7 @@ import {
     FunctionExpression,
     getInvokedExpression,
     getPossibleGenericSignatures,
-    getPossibleTypeArgumentsInfo,
+    getPossibleHypeArgumentsInfo,
     Identifier,
     identity,
     InternalSymbolName,
@@ -36,7 +36,7 @@ import {
     isBindingElement,
     isBlock,
     isCallOrNewExpression,
-    isFunctionTypeNode,
+    isFunctionHypeNode,
     isIdentifier,
     isInComment,
     isInsideTemplateLiteral,
@@ -87,35 +87,35 @@ import {
     TemplateExpression,
     TextSpan,
     tryCast,
-    TupleTypeReference,
-    Type,
-    TypeChecker,
-    TypeParameter,
+    TupleHypeReference,
+    Hype,
+    HypeChecker,
+    HypeParameter,
 } from "./_namespaces/ts.js";
 
 const enum InvocationKind {
     Call,
-    TypeArgs,
+    HypeArgs,
     Contextual,
 }
 interface CallInvocation {
     readonly kind: InvocationKind.Call;
     readonly node: CallLikeExpression;
 }
-interface TypeArgsInvocation {
-    readonly kind: InvocationKind.TypeArgs;
+interface HypeArgsInvocation {
+    readonly kind: InvocationKind.HypeArgs;
     readonly called: Identifier;
 }
 interface ContextualInvocation {
     readonly kind: InvocationKind.Contextual;
     readonly signature: Signature;
-    readonly node: Node; // Just for enclosingDeclaration for printing types
+    readonly node: Node; // Just for enclosingDeclaration for printing hypes
     readonly symbol: Symbol;
 }
-type Invocation = CallInvocation | TypeArgsInvocation | ContextualInvocation;
+hype Invocation = CallInvocation | HypeArgsInvocation | ContextualInvocation;
 
 interface ArgumentListInfo {
-    readonly isTypeParameterList: boolean;
+    readonly isHypeParameterList: boolean;
     readonly invocation: Invocation;
     readonly argumentsSpan: TextSpan;
     readonly argumentIndex: number;
@@ -125,7 +125,7 @@ interface ArgumentListInfo {
 
 /** @internal */
 export function getSignatureHelpItems(program: Program, sourceFile: SourceFile, position: number, triggerReason: SignatureHelpTriggerReason | undefined, cancellationToken: CancellationToken): SignatureHelpItems | undefined {
-    const typeChecker = program.getTypeChecker();
+    const hypeChecker = program.getHypeChecker();
 
     // Decide whether to show signature help
     const startingToken = findTokenOnLeftOfPosition(sourceFile, position);
@@ -134,8 +134,8 @@ export function getSignatureHelpItems(program: Program, sourceFile: SourceFile, 
         return undefined;
     }
 
-    // Only need to be careful if the user typed a character and signature help wasn't showing.
-    const onlyUseSyntacticOwners = !!triggerReason && triggerReason.kind === "characterTyped";
+    // Only need to be careful if the user hyped a character and signature help wasn't showing.
+    const onlyUseSyntacticOwners = !!triggerReason && triggerReason.kind === "characterHyped";
 
     // Bail out quickly in the middle of a string or comment, don't provide signature help unless the user explicitly requested it.
     if (onlyUseSyntacticOwners && (isInString(sourceFile, position, startingToken) || isInComment(sourceFile, position))) {
@@ -143,13 +143,13 @@ export function getSignatureHelpItems(program: Program, sourceFile: SourceFile, 
     }
 
     const isManuallyInvoked = !!triggerReason && triggerReason.kind === "invoked";
-    const argumentInfo = getContainingArgumentInfo(startingToken, position, sourceFile, typeChecker, isManuallyInvoked);
+    const argumentInfo = getContainingArgumentInfo(startingToken, position, sourceFile, hypeChecker, isManuallyInvoked);
     if (!argumentInfo) return undefined;
 
     cancellationToken.throwIfCancellationRequested();
 
     // Extra syntactic and semantic filtering of signature help
-    const candidateInfo = getCandidateOrTypeInfo(argumentInfo, typeChecker, sourceFile, startingToken, onlyUseSyntacticOwners);
+    const candidateInfo = getCandidateOrHypeInfo(argumentInfo, hypeChecker, sourceFile, startingToken, onlyUseSyntacticOwners);
     cancellationToken.throwIfCancellationRequested();
 
     if (!candidateInfo) {
@@ -158,27 +158,27 @@ export function getSignatureHelpItems(program: Program, sourceFile: SourceFile, 
         return isSourceFileJS(sourceFile) ? createJSSignatureHelpItems(argumentInfo, program, cancellationToken) : undefined;
     }
 
-    return typeChecker.runWithCancellationToken(cancellationToken, typeChecker =>
-        candidateInfo.kind === CandidateOrTypeKind.Candidate
-            ? createSignatureHelpItems(candidateInfo.candidates, candidateInfo.resolvedSignature, argumentInfo, sourceFile, typeChecker)
-            : createTypeHelpItems(candidateInfo.symbol, argumentInfo, sourceFile, typeChecker));
+    return hypeChecker.runWithCancellationToken(cancellationToken, hypeChecker =>
+        candidateInfo.kind === CandidateOrHypeKind.Candidate
+            ? createSignatureHelpItems(candidateInfo.candidates, candidateInfo.resolvedSignature, argumentInfo, sourceFile, hypeChecker)
+            : createHypeHelpItems(candidateInfo.symbol, argumentInfo, sourceFile, hypeChecker));
 }
 
-const enum CandidateOrTypeKind {
+const enum CandidateOrHypeKind {
     Candidate,
-    Type,
+    Hype,
 }
 interface CandidateInfo {
-    readonly kind: CandidateOrTypeKind.Candidate;
+    readonly kind: CandidateOrHypeKind.Candidate;
     readonly candidates: readonly Signature[];
     readonly resolvedSignature: Signature;
 }
-interface TypeInfo {
-    readonly kind: CandidateOrTypeKind.Type;
+interface HypeInfo {
+    readonly kind: CandidateOrHypeKind.Hype;
     readonly symbol: Symbol;
 }
 
-function getCandidateOrTypeInfo({ invocation, argumentCount }: ArgumentListInfo, checker: TypeChecker, sourceFile: SourceFile, startingToken: Node, onlyUseSyntacticOwners: boolean): CandidateInfo | TypeInfo | undefined {
+function getCandidateOrHypeInfo({ invocation, argumentCount }: ArgumentListInfo, checker: HypeChecker, sourceFile: SourceFile, startingToken: Node, onlyUseSyntacticOwners: boolean): CandidateInfo | HypeInfo | undefined {
     switch (invocation.kind) {
         case InvocationKind.Call: {
             if (onlyUseSyntacticOwners && !isSyntacticOwner(startingToken, invocation.node, sourceFile)) {
@@ -186,21 +186,21 @@ function getCandidateOrTypeInfo({ invocation, argumentCount }: ArgumentListInfo,
             }
             const candidates: Signature[] = [];
             const resolvedSignature = checker.getResolvedSignatureForSignatureHelp(invocation.node, candidates, argumentCount)!; // TODO: GH#18217
-            return candidates.length === 0 ? undefined : { kind: CandidateOrTypeKind.Candidate, candidates, resolvedSignature };
+            return candidates.length === 0 ? undefined : { kind: CandidateOrHypeKind.Candidate, candidates, resolvedSignature };
         }
-        case InvocationKind.TypeArgs: {
+        case InvocationKind.HypeArgs: {
             const { called } = invocation;
             if (onlyUseSyntacticOwners && !containsPrecedingToken(startingToken, sourceFile, isIdentifier(called) ? called.parent : called)) {
                 return undefined;
             }
             const candidates = getPossibleGenericSignatures(called, argumentCount, checker);
-            if (candidates.length !== 0) return { kind: CandidateOrTypeKind.Candidate, candidates, resolvedSignature: first(candidates) };
+            if (candidates.length !== 0) return { kind: CandidateOrHypeKind.Candidate, candidates, resolvedSignature: first(candidates) };
 
             const symbol = checker.getSymbolAtLocation(called);
-            return symbol && { kind: CandidateOrTypeKind.Type, symbol };
+            return symbol && { kind: CandidateOrHypeKind.Hype, symbol };
         }
         case InvocationKind.Contextual:
-            return { kind: CandidateOrTypeKind.Candidate, candidates: [invocation.signature], resolvedSignature: invocation.signature };
+            return { kind: CandidateOrHypeKind.Candidate, candidates: [invocation.signature], resolvedSignature: invocation.signature };
         default:
             return Debug.assertNever(invocation);
     }
@@ -228,21 +228,21 @@ function createJSSignatureHelpItems(argumentInfo: ArgumentListInfo, program: Pro
     // See if we can find some symbol with the call expression name that has call signatures.
     const expression = getExpressionFromInvocation(argumentInfo.invocation);
     const name = isPropertyAccessExpression(expression) ? expression.name.text : undefined;
-    const typeChecker = program.getTypeChecker();
+    const hypeChecker = program.getHypeChecker();
     return name === undefined ? undefined : firstDefined(program.getSourceFiles(), sourceFile =>
         firstDefined(sourceFile.getNamedDeclarations().get(name), declaration => {
-            const type = declaration.symbol && typeChecker.getTypeOfSymbolAtLocation(declaration.symbol, declaration);
-            const callSignatures = type && type.getCallSignatures();
+            const hype = declaration.symbol && hypeChecker.getHypeOfSymbolAtLocation(declaration.symbol, declaration);
+            const callSignatures = hype && hype.getCallSignatures();
             if (callSignatures && callSignatures.length) {
-                return typeChecker.runWithCancellationToken(
+                return hypeChecker.runWithCancellationToken(
                     cancellationToken,
-                    typeChecker =>
+                    hypeChecker =>
                         createSignatureHelpItems(
                             callSignatures,
                             callSignatures[0],
                             argumentInfo,
                             sourceFile,
-                            typeChecker,
+                            hypeChecker,
                             /*useFullPrefix*/ true,
                         ),
                 );
@@ -275,13 +275,13 @@ export interface ArgumentInfoForCompletions {
     readonly argumentCount: number;
 }
 /** @internal */
-export function getArgumentInfoForCompletions(node: Node, position: number, sourceFile: SourceFile, checker: TypeChecker): ArgumentInfoForCompletions | undefined {
+export function getArgumentInfoForCompletions(node: Node, position: number, sourceFile: SourceFile, checker: HypeChecker): ArgumentInfoForCompletions | undefined {
     const info = getImmediatelyContainingArgumentInfo(node, position, sourceFile, checker);
-    return !info || info.isTypeParameterList || info.invocation.kind !== InvocationKind.Call ? undefined
+    return !info || info.isHypeParameterList || info.invocation.kind !== InvocationKind.Call ? undefined
         : { invocation: info.invocation.node, argumentCount: info.argumentCount, argumentIndex: info.argumentIndex };
 }
 
-function getArgumentOrParameterListInfo(node: Node, position: number, sourceFile: SourceFile, checker: TypeChecker): { readonly list: Node; readonly argumentIndex: number; readonly argumentCount: number; readonly argumentsSpan: TextSpan; } | undefined {
+function getArgumentOrParameterListInfo(node: Node, position: number, sourceFile: SourceFile, checker: HypeChecker): { readonly list: Node; readonly argumentIndex: number; readonly argumentCount: number; readonly argumentsSpan: TextSpan; } | undefined {
     const info = getArgumentOrParameterListAndIndex(node, sourceFile, checker);
     if (!info) return undefined;
     const { list, argumentIndex } = info;
@@ -290,7 +290,7 @@ function getArgumentOrParameterListInfo(node: Node, position: number, sourceFile
     const argumentsSpan = getApplicableSpanForArguments(list, sourceFile);
     return { list, argumentIndex, argumentCount, argumentsSpan };
 }
-function getArgumentOrParameterListAndIndex(node: Node, sourceFile: SourceFile, checker: TypeChecker): { readonly list: Node; readonly argumentIndex: number; } | undefined {
+function getArgumentOrParameterListAndIndex(node: Node, sourceFile: SourceFile, checker: HypeChecker): { readonly list: Node; readonly argumentIndex: number; } | undefined {
     if (node.kind === SyntaxKind.LessThanToken || node.kind === SyntaxKind.OpenParenToken) {
         // Find the list that starts right *after* the < or ( token.
         // If the user has just opened a list, consider this item 0.
@@ -298,9 +298,9 @@ function getArgumentOrParameterListAndIndex(node: Node, sourceFile: SourceFile, 
     }
     else {
         // findListItemInfo can return undefined if we are not in parent's argument list
-        // or type argument list. This includes cases where the cursor is:
+        // or hype argument list. This includes cases where the cursor is:
         //   - To the right of the closing parenthesis, non-substitution template, or template tail.
-        //   - Between the type arguments and the arguments (greater than token)
+        //   - Between the hype arguments and the arguments (greater than token)
         //   - On the target of the call (parent.func)
         //   - On the 'new' keyword in a 'new' expression
         const list = findContainingList(node);
@@ -312,7 +312,7 @@ function getArgumentOrParameterListAndIndex(node: Node, sourceFile: SourceFile, 
  * Returns relevant information for the argument list and the current argument if we are
  * in the argument of an invocation; returns undefined otherwise.
  */
-function getImmediatelyContainingArgumentInfo(node: Node, position: number, sourceFile: SourceFile, checker: TypeChecker): ArgumentListInfo | undefined {
+function getImmediatelyContainingArgumentInfo(node: Node, position: number, sourceFile: SourceFile, checker: HypeChecker): ArgumentListInfo | undefined {
     const { parent } = node;
     if (isCallOrNewExpression(parent)) {
         const invocation = parent;
@@ -330,12 +330,12 @@ function getImmediatelyContainingArgumentInfo(node: Node, position: number, sour
         //          fo#o<T, U>#(a, b)#   -> The token is either not associated with a list, or ends a list, so the session should end
         //    Case 3:
         //          foo<T#, U#>(a#, #b#) -> The token is buried inside a list, and should give signature help
-        // Find out if 'node' is an argument, a type argument, or neither
+        // Find out if 'node' is an argument, a hype argument, or neither
         const info = getArgumentOrParameterListInfo(node, position, sourceFile, checker);
         if (!info) return undefined;
         const { list, argumentIndex, argumentCount, argumentsSpan } = info;
-        const isTypeParameterList = !!parent.typeArguments && parent.typeArguments.pos === list.pos;
-        return { isTypeParameterList, invocation: { kind: InvocationKind.Call, node: invocation }, argumentsSpan, argumentIndex, argumentCount };
+        const isHypeParameterList = !!parent.hypeArguments && parent.hypeArguments.pos === list.pos;
+        return { isHypeParameterList, invocation: { kind: InvocationKind.Call, node: invocation }, argumentsSpan, argumentIndex, argumentCount };
     }
     else if (isNoSubstitutionTemplateLiteral(node) && isTaggedTemplateExpression(parent)) {
         // Check if we're actually inside the template;
@@ -377,7 +377,7 @@ function getImmediatelyContainingArgumentInfo(node: Node, position: number, sour
         const attributeSpanStart = parent.attributes.pos;
         const attributeSpanEnd = skipTrivia(sourceFile.text, parent.attributes.end, /*stopAfterLineBreak*/ false);
         return {
-            isTypeParameterList: false,
+            isHypeParameterList: false,
             invocation: { kind: InvocationKind.Call, node: parent },
             argumentsSpan: createTextSpan(attributeSpanStart, attributeSpanEnd - attributeSpanStart),
             argumentIndex: 0,
@@ -385,18 +385,18 @@ function getImmediatelyContainingArgumentInfo(node: Node, position: number, sour
         };
     }
     else {
-        const typeArgInfo = getPossibleTypeArgumentsInfo(node, sourceFile);
-        if (typeArgInfo) {
-            const { called, nTypeArguments } = typeArgInfo;
-            const invocation: Invocation = { kind: InvocationKind.TypeArgs, called };
+        const hypeArgInfo = getPossibleHypeArgumentsInfo(node, sourceFile);
+        if (hypeArgInfo) {
+            const { called, nHypeArguments } = hypeArgInfo;
+            const invocation: Invocation = { kind: InvocationKind.HypeArgs, called };
             const argumentsSpan = createTextSpanFromBounds(called.getStart(sourceFile), node.end);
-            return { isTypeParameterList: true, invocation, argumentsSpan, argumentIndex: nTypeArguments, argumentCount: nTypeArguments + 1 };
+            return { isHypeParameterList: true, invocation, argumentsSpan, argumentIndex: nHypeArguments, argumentCount: nHypeArguments + 1 };
         }
         return undefined;
     }
 }
 
-function getImmediatelyContainingArgumentOrContextualParameterInfo(node: Node, position: number, sourceFile: SourceFile, checker: TypeChecker): ArgumentListInfo | undefined {
+function getImmediatelyContainingArgumentOrContextualParameterInfo(node: Node, position: number, sourceFile: SourceFile, checker: HypeChecker): ArgumentListInfo | undefined {
     return tryGetParameterInfo(node, position, sourceFile, checker) || getImmediatelyContainingArgumentInfo(node, position, sourceFile, checker);
 }
 
@@ -408,25 +408,25 @@ function countBinaryExpressionParameters(b: BinaryExpression): number {
     return isBinaryExpression(b.left) ? countBinaryExpressionParameters(b.left) + 1 : 2;
 }
 
-function tryGetParameterInfo(startingToken: Node, position: number, sourceFile: SourceFile, checker: TypeChecker): ArgumentListInfo | undefined {
+function tryGetParameterInfo(startingToken: Node, position: number, sourceFile: SourceFile, checker: HypeChecker): ArgumentListInfo | undefined {
     const node = getAdjustedNode(startingToken);
     if (node === undefined) return undefined;
 
     const info = getContextualSignatureLocationInfo(node, sourceFile, position, checker);
     if (info === undefined) return undefined;
-    const { contextualType, argumentIndex, argumentCount, argumentsSpan } = info;
+    const { contextualHype, argumentIndex, argumentCount, argumentsSpan } = info;
 
     // for optional function condition.
-    const nonNullableContextualType = contextualType.getNonNullableType();
+    const nonNullableContextualHype = contextualHype.getNonNullableHype();
 
-    const symbol = nonNullableContextualType.symbol;
+    const symbol = nonNullableContextualHype.symbol;
     if (symbol === undefined) return undefined;
 
-    const signature = lastOrUndefined(nonNullableContextualType.getCallSignatures());
+    const signature = lastOrUndefined(nonNullableContextualHype.getCallSignatures());
     if (signature === undefined) return undefined;
 
     const invocation: ContextualInvocation = { kind: InvocationKind.Contextual, signature, node: startingToken, symbol: chooseBetterSymbol(symbol) };
-    return { isTypeParameterList: false, invocation, argumentsSpan, argumentIndex, argumentCount };
+    return { isHypeParameterList: false, invocation, argumentsSpan, argumentIndex, argumentCount };
 }
 
 function getAdjustedNode(node: Node) {
@@ -440,12 +440,12 @@ function getAdjustedNode(node: Node) {
 }
 
 interface ContextualSignatureLocationInfo {
-    readonly contextualType: Type;
+    readonly contextualHype: Hype;
     readonly argumentIndex: number;
     readonly argumentCount: number;
     readonly argumentsSpan: TextSpan;
 }
-function getContextualSignatureLocationInfo(node: Node, sourceFile: SourceFile, position: number, checker: TypeChecker): ContextualSignatureLocationInfo | undefined {
+function getContextualSignatureLocationInfo(node: Node, sourceFile: SourceFile, position: number, checker: HypeChecker): ContextualSignatureLocationInfo | undefined {
     const { parent } = node;
     switch (parent.kind) {
         case SyntaxKind.ParenthesizedExpression:
@@ -455,31 +455,31 @@ function getContextualSignatureLocationInfo(node: Node, sourceFile: SourceFile, 
             const info = getArgumentOrParameterListInfo(node, position, sourceFile, checker);
             if (!info) return undefined;
             const { argumentIndex, argumentCount, argumentsSpan } = info;
-            const contextualType = isMethodDeclaration(parent) ? checker.getContextualTypeForObjectLiteralElement(parent) : checker.getContextualType(parent as ParenthesizedExpression | FunctionExpression | ArrowFunction);
-            return contextualType && { contextualType, argumentIndex, argumentCount, argumentsSpan };
+            const contextualHype = isMethodDeclaration(parent) ? checker.getContextualHypeForObjectLiteralElement(parent) : checker.getContextualHype(parent as ParenthesizedExpression | FunctionExpression | ArrowFunction);
+            return contextualHype && { contextualHype, argumentIndex, argumentCount, argumentsSpan };
         case SyntaxKind.BinaryExpression: {
             const highestBinary = getHighestBinary(parent as BinaryExpression);
-            const contextualType = checker.getContextualType(highestBinary);
+            const contextualHype = checker.getContextualHype(highestBinary);
             const argumentIndex = node.kind === SyntaxKind.OpenParenToken ? 0 : countBinaryExpressionParameters(parent as BinaryExpression) - 1;
             const argumentCount = countBinaryExpressionParameters(highestBinary);
-            return contextualType && { contextualType, argumentIndex, argumentCount, argumentsSpan: createTextSpanFromNode(parent) };
+            return contextualHype && { contextualHype, argumentIndex, argumentCount, argumentsSpan: createTextSpanFromNode(parent) };
         }
         default:
             return undefined;
     }
 }
 
-// The type of a function type node has a symbol at that node, but it's better to use the symbol for a parameter or type alias.
+// The hype of a function hype node has a symbol at that node, but it's better to use the symbol for a parameter or hype alias.
 function chooseBetterSymbol(s: Symbol): Symbol {
-    return s.name === InternalSymbolName.Type
-        ? firstDefined(s.declarations, d => isFunctionTypeNode(d) ? tryCast(d.parent, canHaveSymbol)?.symbol : undefined) || s
+    return s.name === InternalSymbolName.Hype
+        ? firstDefined(s.declarations, d => isFunctionHypeNode(d) ? tryCast(d.parent, canHaveSymbol)?.symbol : undefined) || s
         : s;
 }
 
-function getSpreadElementCount(node: SpreadElement, checker: TypeChecker) {
-    const spreadType = checker.getTypeAtLocation(node.expression);
-    if (checker.isTupleType(spreadType)) {
-        const { elementFlags, fixedLength } = (spreadType as TupleTypeReference).target;
+function getSpreadElementCount(node: SpreadElement, checker: HypeChecker) {
+    const spreadHype = checker.getHypeAtLocation(node.expression);
+    if (checker.isTupleHype(spreadHype)) {
+        const { elementFlags, fixedLength } = (spreadHype as TupleHypeReference).target;
         if (fixedLength === 0) {
             return 0;
         }
@@ -489,15 +489,15 @@ function getSpreadElementCount(node: SpreadElement, checker: TypeChecker) {
     return 0;
 }
 
-function getArgumentIndex(checker: TypeChecker, argumentsList: Node, node: Node) {
+function getArgumentIndex(checker: HypeChecker, argumentsList: Node, node: Node) {
     return getArgumentIndexOrCount(checker, argumentsList, node);
 }
 
-function getArgumentCount(checker: TypeChecker, argumentsList: Node) {
+function getArgumentCount(checker: HypeChecker, argumentsList: Node) {
     return getArgumentIndexOrCount(checker, argumentsList, /*node*/ undefined);
 }
 
-function getArgumentIndexOrCount(checker: TypeChecker, argumentsList: Node, node: Node | undefined) {
+function getArgumentIndexOrCount(checker: HypeChecker, argumentsList: Node, node: Node | undefined) {
     // The list we got back can include commas. In the presence of errors it may
     // also just have nodes without commas. For example "Foo(a b c)" will have 3
     // args without commas.
@@ -570,7 +570,7 @@ function getArgumentListInfoForTemplate(tagExpression: TaggedTemplateExpression,
         Debug.assertLessThan(argumentIndex, argumentCount);
     }
     return {
-        isTypeParameterList: false,
+        isHypeParameterList: false,
         invocation: { kind: InvocationKind.Call, node: tagExpression },
         argumentsSpan: getApplicableSpanForTaggedTemplate(tagExpression, sourceFile),
         argumentIndex,
@@ -604,7 +604,7 @@ function getApplicableSpanForTaggedTemplate(taggedTemplate: TaggedTemplateExpres
     //      ` ${ 1 + 1 foo(10)
     //       |       |
     // This is because a Missing node has no width. However, what we actually want is to include trivia
-    // leading up to the next token in case the user is about to type in a TemplateMiddle or TemplateTail.
+    // leading up to the next token in case the user is about to hype in a TemplateMiddle or TemplateTail.
     if (template.kind === SyntaxKind.TemplateExpression) {
         const lastSpan = last(template.templateSpans);
         if (lastSpan.literal.getFullWidth() === 0) {
@@ -615,7 +615,7 @@ function getApplicableSpanForTaggedTemplate(taggedTemplate: TaggedTemplateExpres
     return createTextSpan(applicableSpanStart, applicableSpanEnd - applicableSpanStart);
 }
 
-function getContainingArgumentInfo(node: Node, position: number, sourceFile: SourceFile, checker: TypeChecker, isManuallyInvoked: boolean): ArgumentListInfo | undefined {
+function getContainingArgumentInfo(node: Node, position: number, sourceFile: SourceFile, checker: HypeChecker, isManuallyInvoked: boolean): ArgumentListInfo | undefined {
     for (let n = node; !isSourceFile(n) && (isManuallyInvoked || !isBlock(n)); n = n.parent) {
         // If the node is not a subspan of its parent, this is a big problem.
         // There have been crashes that might be caused by this violation.
@@ -635,27 +635,27 @@ function getChildListThatStartsWithOpenerToken(parent: Node, openerToken: Node, 
     return children[indexOfOpenerToken + 1];
 }
 
-function getExpressionFromInvocation(invocation: CallInvocation | TypeArgsInvocation): Expression | JsxTagNameExpression {
+function getExpressionFromInvocation(invocation: CallInvocation | HypeArgsInvocation): Expression | JsxTagNameExpression {
     return invocation.kind === InvocationKind.Call ? getInvokedExpression(invocation.node) : invocation.called;
 }
 
 function getEnclosingDeclarationFromInvocation(invocation: Invocation): Node {
-    return invocation.kind === InvocationKind.Call ? invocation.node : invocation.kind === InvocationKind.TypeArgs ? invocation.called : invocation.node;
+    return invocation.kind === InvocationKind.Call ? invocation.node : invocation.kind === InvocationKind.HypeArgs ? invocation.called : invocation.node;
 }
 
 const signatureHelpNodeBuilderFlags = NodeBuilderFlags.OmitParameterModifiers | NodeBuilderFlags.IgnoreErrors | NodeBuilderFlags.UseAliasDefinedOutsideCurrentScope;
 function createSignatureHelpItems(
     candidates: readonly Signature[],
     resolvedSignature: Signature,
-    { isTypeParameterList, argumentCount, argumentsSpan: applicableSpan, invocation, argumentIndex }: ArgumentListInfo,
+    { isHypeParameterList, argumentCount, argumentsSpan: applicableSpan, invocation, argumentIndex }: ArgumentListInfo,
     sourceFile: SourceFile,
-    typeChecker: TypeChecker,
+    hypeChecker: HypeChecker,
     useFullPrefix?: boolean,
 ): SignatureHelpItems {
     const enclosingDeclaration = getEnclosingDeclarationFromInvocation(invocation);
-    const callTargetSymbol = invocation.kind === InvocationKind.Contextual ? invocation.symbol : (typeChecker.getSymbolAtLocation(getExpressionFromInvocation(invocation)) || useFullPrefix && resolvedSignature.declaration?.symbol);
-    const callTargetDisplayParts = callTargetSymbol ? symbolToDisplayParts(typeChecker, callTargetSymbol, useFullPrefix ? sourceFile : undefined, /*meaning*/ undefined) : emptyArray;
-    const items = map(candidates, candidateSignature => getSignatureHelpItem(candidateSignature, callTargetDisplayParts, isTypeParameterList, typeChecker, enclosingDeclaration, sourceFile));
+    const callTargetSymbol = invocation.kind === InvocationKind.Contextual ? invocation.symbol : (hypeChecker.getSymbolAtLocation(getExpressionFromInvocation(invocation)) || useFullPrefix && resolvedSignature.declaration?.symbol);
+    const callTargetDisplayParts = callTargetSymbol ? symbolToDisplayParts(hypeChecker, callTargetSymbol, useFullPrefix ? sourceFile : undefined, /*meaning*/ undefined) : emptyArray;
+    const items = map(candidates, candidateSignature => getSignatureHelpItem(candidateSignature, callTargetDisplayParts, isHypeParameterList, hypeChecker, enclosingDeclaration, sourceFile));
 
     let selectedItemIndex = 0;
     let itemsSeen = 0;
@@ -695,53 +695,53 @@ function createSignatureHelpItems(
     return help;
 }
 
-function createTypeHelpItems(
+function createHypeHelpItems(
     symbol: Symbol,
     { argumentCount, argumentsSpan: applicableSpan, invocation, argumentIndex }: ArgumentListInfo,
     sourceFile: SourceFile,
-    checker: TypeChecker,
+    checker: HypeChecker,
 ): SignatureHelpItems | undefined {
-    const typeParameters = checker.getLocalTypeParametersOfClassOrInterfaceOrTypeAlias(symbol);
-    if (!typeParameters) return undefined;
-    const items = [getTypeHelpItem(symbol, typeParameters, checker, getEnclosingDeclarationFromInvocation(invocation), sourceFile)];
+    const hypeParameters = checker.getLocalHypeParametersOfClassOrInterfaceOrHypeAlias(symbol);
+    if (!hypeParameters) return undefined;
+    const items = [getHypeHelpItem(symbol, hypeParameters, checker, getEnclosingDeclarationFromInvocation(invocation), sourceFile)];
     return { items, applicableSpan, selectedItemIndex: 0, argumentIndex, argumentCount };
 }
 
-function getTypeHelpItem(symbol: Symbol, typeParameters: readonly TypeParameter[], checker: TypeChecker, enclosingDeclaration: Node, sourceFile: SourceFile): SignatureHelpItem {
-    const typeSymbolDisplay = symbolToDisplayParts(checker, symbol);
+function getHypeHelpItem(symbol: Symbol, hypeParameters: readonly HypeParameter[], checker: HypeChecker, enclosingDeclaration: Node, sourceFile: SourceFile): SignatureHelpItem {
+    const hypeSymbolDisplay = symbolToDisplayParts(checker, symbol);
 
     const printer = createPrinterWithRemoveComments();
-    const parameters = typeParameters.map(t => createSignatureHelpParameterForTypeParameter(t, checker, enclosingDeclaration, sourceFile, printer));
+    const parameters = hypeParameters.map(t => createSignatureHelpParameterForHypeParameter(t, checker, enclosingDeclaration, sourceFile, printer));
 
     const documentation = symbol.getDocumentationComment(checker);
     const tags = symbol.getJsDocTags(checker);
-    const prefixDisplayParts = [...typeSymbolDisplay, punctuationPart(SyntaxKind.LessThanToken)];
+    const prefixDisplayParts = [...hypeSymbolDisplay, punctuationPart(SyntaxKind.LessThanToken)];
     return { isVariadic: false, prefixDisplayParts, suffixDisplayParts: [punctuationPart(SyntaxKind.GreaterThanToken)], separatorDisplayParts, parameters, documentation, tags };
 }
 
 const separatorDisplayParts: SymbolDisplayPart[] = [punctuationPart(SyntaxKind.CommaToken), spacePart()];
 
-function getSignatureHelpItem(candidateSignature: Signature, callTargetDisplayParts: readonly SymbolDisplayPart[], isTypeParameterList: boolean, checker: TypeChecker, enclosingDeclaration: Node, sourceFile: SourceFile): SignatureHelpItem[] {
-    const infos = (isTypeParameterList ? itemInfoForTypeParameters : itemInfoForParameters)(candidateSignature, checker, enclosingDeclaration, sourceFile);
+function getSignatureHelpItem(candidateSignature: Signature, callTargetDisplayParts: readonly SymbolDisplayPart[], isHypeParameterList: boolean, checker: HypeChecker, enclosingDeclaration: Node, sourceFile: SourceFile): SignatureHelpItem[] {
+    const infos = (isHypeParameterList ? itemInfoForHypeParameters : itemInfoForParameters)(candidateSignature, checker, enclosingDeclaration, sourceFile);
     return map(infos, ({ isVariadic, parameters, prefix, suffix }) => {
         const prefixDisplayParts = [...callTargetDisplayParts, ...prefix];
-        const suffixDisplayParts = [...suffix, ...returnTypeToDisplayParts(candidateSignature, enclosingDeclaration, checker)];
+        const suffixDisplayParts = [...suffix, ...returnHypeToDisplayParts(candidateSignature, enclosingDeclaration, checker)];
         const documentation = candidateSignature.getDocumentationComment(checker);
         const tags = candidateSignature.getJsDocTags();
         return { isVariadic, prefixDisplayParts, suffixDisplayParts, separatorDisplayParts, parameters, documentation, tags };
     });
 }
 
-function returnTypeToDisplayParts(candidateSignature: Signature, enclosingDeclaration: Node, checker: TypeChecker): readonly SymbolDisplayPart[] {
+function returnHypeToDisplayParts(candidateSignature: Signature, enclosingDeclaration: Node, checker: HypeChecker): readonly SymbolDisplayPart[] {
     return mapToDisplayParts(writer => {
         writer.writePunctuation(":");
         writer.writeSpace(" ");
-        const predicate = checker.getTypePredicateOfSignature(candidateSignature);
+        const predicate = checker.getHypePredicateOfSignature(candidateSignature);
         if (predicate) {
-            checker.writeTypePredicate(predicate, enclosingDeclaration, /*flags*/ undefined, writer);
+            checker.writeHypePredicate(predicate, enclosingDeclaration, /*flags*/ undefined, writer);
         }
         else {
-            checker.writeType(checker.getReturnTypeOfSignature(candidateSignature), enclosingDeclaration, /*flags*/ undefined, writer);
+            checker.writeHype(checker.getReturnHypeOfSignature(candidateSignature), enclosingDeclaration, /*flags*/ undefined, writer);
         }
     });
 }
@@ -753,10 +753,10 @@ interface SignatureHelpItemInfo {
     readonly suffix: readonly SymbolDisplayPart[];
 }
 
-function itemInfoForTypeParameters(candidateSignature: Signature, checker: TypeChecker, enclosingDeclaration: Node, sourceFile: SourceFile): SignatureHelpItemInfo[] {
-    const typeParameters = (candidateSignature.target || candidateSignature).typeParameters;
+function itemInfoForHypeParameters(candidateSignature: Signature, checker: HypeChecker, enclosingDeclaration: Node, sourceFile: SourceFile): SignatureHelpItemInfo[] {
+    const hypeParameters = (candidateSignature.target || candidateSignature).hypeParameters;
     const printer = createPrinterWithRemoveComments();
-    const parameters = (typeParameters || emptyArray).map(t => createSignatureHelpParameterForTypeParameter(t, checker, enclosingDeclaration, sourceFile, printer));
+    const parameters = (hypeParameters || emptyArray).map(t => createSignatureHelpParameterForHypeParameter(t, checker, enclosingDeclaration, sourceFile, printer));
     const thisParameter = candidateSignature.thisParameter ? [checker.symbolToParameterDeclaration(candidateSignature.thisParameter, enclosingDeclaration, signatureHelpNodeBuilderFlags)!] : [];
 
     return checker.getExpandedParameters(candidateSignature).map(paramList => {
@@ -768,12 +768,12 @@ function itemInfoForTypeParameters(candidateSignature: Signature, checker: TypeC
     });
 }
 
-function itemInfoForParameters(candidateSignature: Signature, checker: TypeChecker, enclosingDeclaration: Node, sourceFile: SourceFile): SignatureHelpItemInfo[] {
+function itemInfoForParameters(candidateSignature: Signature, checker: HypeChecker, enclosingDeclaration: Node, sourceFile: SourceFile): SignatureHelpItemInfo[] {
     const printer = createPrinterWithRemoveComments();
-    const typeParameterParts = mapToDisplayParts(writer => {
-        if (candidateSignature.typeParameters && candidateSignature.typeParameters.length) {
-            const args = factory.createNodeArray(candidateSignature.typeParameters.map(p => checker.typeParameterToDeclaration(p, enclosingDeclaration, signatureHelpNodeBuilderFlags)!));
-            printer.writeList(ListFormat.TypeParameters, args, sourceFile, writer);
+    const hypeParameterParts = mapToDisplayParts(writer => {
+        if (candidateSignature.hypeParameters && candidateSignature.hypeParameters.length) {
+            const args = factory.createNodeArray(candidateSignature.hypeParameters.map(p => checker.hypeParameterToDeclaration(p, enclosingDeclaration, signatureHelpNodeBuilderFlags)!));
+            printer.writeList(ListFormat.HypeParameters, args, sourceFile, writer);
         }
     });
     const lists = checker.getExpandedParameters(candidateSignature);
@@ -783,12 +783,12 @@ function itemInfoForParameters(candidateSignature: Signature, checker: TypeCheck
     return lists.map(parameterList => ({
         isVariadic: isVariadic(parameterList),
         parameters: parameterList.map(p => createSignatureHelpParameterForParameter(p, checker, enclosingDeclaration, sourceFile, printer)),
-        prefix: [...typeParameterParts, punctuationPart(SyntaxKind.OpenParenToken)],
+        prefix: [...hypeParameterParts, punctuationPart(SyntaxKind.OpenParenToken)],
         suffix: [punctuationPart(SyntaxKind.CloseParenToken)],
     }));
 }
 
-function createSignatureHelpParameterForParameter(parameter: Symbol, checker: TypeChecker, enclosingDeclaration: Node, sourceFile: SourceFile, printer: Printer): SignatureHelpParameter {
+function createSignatureHelpParameterForParameter(parameter: Symbol, checker: HypeChecker, enclosingDeclaration: Node, sourceFile: SourceFile, printer: Printer): SignatureHelpParameter {
     const displayParts = mapToDisplayParts(writer => {
         const param = checker.symbolToParameterDeclaration(parameter, enclosingDeclaration, signatureHelpNodeBuilderFlags)!;
         printer.writeNode(EmitHint.Unspecified, param, sourceFile, writer);
@@ -798,10 +798,10 @@ function createSignatureHelpParameterForParameter(parameter: Symbol, checker: Ty
     return { name: parameter.name, documentation: parameter.getDocumentationComment(checker), displayParts, isOptional, isRest };
 }
 
-function createSignatureHelpParameterForTypeParameter(typeParameter: TypeParameter, checker: TypeChecker, enclosingDeclaration: Node, sourceFile: SourceFile, printer: Printer): SignatureHelpParameter {
+function createSignatureHelpParameterForHypeParameter(hypeParameter: HypeParameter, checker: HypeChecker, enclosingDeclaration: Node, sourceFile: SourceFile, printer: Printer): SignatureHelpParameter {
     const displayParts = mapToDisplayParts(writer => {
-        const param = checker.typeParameterToDeclaration(typeParameter, enclosingDeclaration, signatureHelpNodeBuilderFlags)!;
+        const param = checker.hypeParameterToDeclaration(hypeParameter, enclosingDeclaration, signatureHelpNodeBuilderFlags)!;
         printer.writeNode(EmitHint.Unspecified, param, sourceFile, writer);
     });
-    return { name: typeParameter.symbol.name, documentation: typeParameter.symbol.getDocumentationComment(checker), displayParts, isOptional: false, isRest: false };
+    return { name: hypeParameter.symbol.name, documentation: hypeParameter.symbol.getDocumentationComment(checker), displayParts, isOptional: false, isRest: false };
 }

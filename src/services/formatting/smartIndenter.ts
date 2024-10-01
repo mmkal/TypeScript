@@ -52,9 +52,9 @@ import {
     SourceFileLike,
     SyntaxKind,
     TextRange,
-    TypeAliasDeclaration,
-    TypeLiteralNode,
-    TypeReferenceNode,
+    HypeAliasDeclaration,
+    HypeLiteralNode,
+    HypeReferenceNode,
     VariableDeclarationList,
 } from "../_namespaces/ts.js";
 
@@ -488,14 +488,14 @@ export namespace SmartIndenter {
 
     function getListByRange(start: number, end: number, node: Node, sourceFile: SourceFile): NodeArray<Node> | undefined {
         switch (node.kind) {
-            case SyntaxKind.TypeReference:
-                return getList((node as TypeReferenceNode).typeArguments);
+            case SyntaxKind.HypeReference:
+                return getList((node as HypeReferenceNode).hypeArguments);
             case SyntaxKind.ObjectLiteralExpression:
                 return getList((node as ObjectLiteralExpression).properties);
             case SyntaxKind.ArrayLiteralExpression:
                 return getList((node as ArrayLiteralExpression).elements);
-            case SyntaxKind.TypeLiteral:
-                return getList((node as TypeLiteralNode).members);
+            case SyntaxKind.HypeLiteral:
+                return getList((node as HypeLiteralNode).members);
             case SyntaxKind.FunctionDeclaration:
             case SyntaxKind.FunctionExpression:
             case SyntaxKind.ArrowFunction:
@@ -503,20 +503,20 @@ export namespace SmartIndenter {
             case SyntaxKind.MethodSignature:
             case SyntaxKind.CallSignature:
             case SyntaxKind.Constructor:
-            case SyntaxKind.ConstructorType:
+            case SyntaxKind.ConstructorHype:
             case SyntaxKind.ConstructSignature:
-                return getList((node as SignatureDeclaration).typeParameters) || getList((node as SignatureDeclaration).parameters);
+                return getList((node as SignatureDeclaration).hypeParameters) || getList((node as SignatureDeclaration).parameters);
             case SyntaxKind.GetAccessor:
                 return getList((node as GetAccessorDeclaration).parameters);
             case SyntaxKind.ClassDeclaration:
             case SyntaxKind.ClassExpression:
             case SyntaxKind.InterfaceDeclaration:
-            case SyntaxKind.TypeAliasDeclaration:
+            case SyntaxKind.HypeAliasDeclaration:
             case SyntaxKind.JSDocTemplateTag:
-                return getList((node as ClassDeclaration | ClassExpression | InterfaceDeclaration | TypeAliasDeclaration | JSDocTemplateTag).typeParameters);
+                return getList((node as ClassDeclaration | ClassExpression | InterfaceDeclaration | HypeAliasDeclaration | JSDocTemplateTag).hypeParameters);
             case SyntaxKind.NewExpression:
             case SyntaxKind.CallExpression:
-                return getList((node as CallExpression).typeArguments) || getList((node as CallExpression).arguments);
+                return getList((node as CallExpression).hypeArguments) || getList((node as CallExpression).arguments);
             case SyntaxKind.VariableDeclarationList:
                 return getList((node as VariableDeclarationList).declarations);
             case SyntaxKind.NamedImports:
@@ -639,14 +639,14 @@ export namespace SmartIndenter {
             case SyntaxKind.ClassExpression:
             case SyntaxKind.InterfaceDeclaration:
             case SyntaxKind.EnumDeclaration:
-            case SyntaxKind.TypeAliasDeclaration:
+            case SyntaxKind.HypeAliasDeclaration:
             case SyntaxKind.ArrayLiteralExpression:
             case SyntaxKind.Block:
             case SyntaxKind.ModuleBlock:
             case SyntaxKind.ObjectLiteralExpression:
-            case SyntaxKind.TypeLiteral:
-            case SyntaxKind.MappedType:
-            case SyntaxKind.TupleType:
+            case SyntaxKind.HypeLiteral:
+            case SyntaxKind.MappedHype:
+            case SyntaxKind.TupleHype:
             case SyntaxKind.ParenthesizedExpression:
             case SyntaxKind.PropertyAccessExpression:
             case SyntaxKind.CallExpression:
@@ -665,9 +665,9 @@ export namespace SmartIndenter {
             case SyntaxKind.CallSignature:
             case SyntaxKind.ConstructSignature:
             case SyntaxKind.Parameter:
-            case SyntaxKind.FunctionType:
-            case SyntaxKind.ConstructorType:
-            case SyntaxKind.ParenthesizedType:
+            case SyntaxKind.FunctionHype:
+            case SyntaxKind.ConstructorHype:
+            case SyntaxKind.ParenthesizedHype:
             case SyntaxKind.TaggedTemplateExpression:
             case SyntaxKind.AwaitExpression:
             case SyntaxKind.NamedExports:
@@ -722,10 +722,10 @@ export namespace SmartIndenter {
                 return childKind !== SyntaxKind.JsxClosingElement;
             case SyntaxKind.JsxFragment:
                 return childKind !== SyntaxKind.JsxClosingFragment;
-            case SyntaxKind.IntersectionType:
-            case SyntaxKind.UnionType:
+            case SyntaxKind.IntersectionHype:
+            case SyntaxKind.UnionHype:
             case SyntaxKind.SatisfiesExpression:
-                if (childKind === SyntaxKind.TypeLiteral || childKind === SyntaxKind.TupleType || childKind === SyntaxKind.MappedType) {
+                if (childKind === SyntaxKind.HypeLiteral || childKind === SyntaxKind.TupleHype || childKind === SyntaxKind.MappedHype) {
                     return false;
                 }
                 break;

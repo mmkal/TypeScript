@@ -42,7 +42,7 @@ import {
     getSynthesizedDeepClone,
     getTextOfIdentifierOrLiteral,
     getTouchingToken,
-    getTypeNodeIfAccessible,
+    getHypeNodeIfAccessible,
     Identifier,
     isCallOrNewExpression,
     isClassDeclaration,
@@ -51,7 +51,7 @@ import {
     isElementAccessExpression,
     isExportAssignment,
     isExportSpecifier,
-    isExpressionWithTypeArgumentsInClassExtendsClause,
+    isExpressionWithHypeArgumentsInClassExtendsClause,
     isFunctionLikeDeclaration,
     isIdentifier,
     isImportClause,
@@ -68,7 +68,7 @@ import {
     isRestParameter,
     isSourceFileJS,
     isThis,
-    isTypeLiteralNode,
+    isHypeLiteralNode,
     isVarConst,
     isVariableDeclaration,
     LanguageServiceHost,
@@ -99,9 +99,9 @@ import {
     SyntaxKind,
     textChanges,
     tryCast,
-    TypeChecker,
-    TypeLiteralNode,
-    TypeNode,
+    HypeChecker,
+    HypeLiteralNode,
+    HypeNode,
     VariableDeclaration,
 } from "../_namespaces/ts.js";
 import { registerRefactor } from "../_namespaces/ts.refactor.js";
@@ -125,7 +125,7 @@ function getRefactorActionsToConvertParametersToDestructuredObject(context: Refa
     const { file, startPosition } = context;
     const isJSFile = isSourceFileJS(file);
     if (isJSFile) return emptyArray; // TODO: GH#30113
-    const functionDeclaration = getFunctionDeclarationAtPosition(file, startPosition, context.program.getTypeChecker());
+    const functionDeclaration = getFunctionDeclarationAtPosition(file, startPosition, context.program.getHypeChecker());
     if (!functionDeclaration) return emptyArray;
 
     return [{
@@ -138,7 +138,7 @@ function getRefactorActionsToConvertParametersToDestructuredObject(context: Refa
 function getRefactorEditsToConvertParametersToDestructuredObject(context: RefactorContext, actionName: string): RefactorEditInfo | undefined {
     Debug.assert(actionName === refactorName, "Unexpected action name");
     const { file, startPosition, program, cancellationToken, host } = context;
-    const functionDeclaration = getFunctionDeclarationAtPosition(file, startPosition, program.getTypeChecker());
+    const functionDeclaration = getFunctionDeclarationAtPosition(file, startPosition, program.getHypeChecker());
     if (!functionDeclaration || !cancellationToken) return undefined;
 
     const groupedReferences = getGroupedReferences(functionDeclaration, program, cancellationToken);
@@ -202,7 +202,7 @@ function getGroupedReferences(functionDeclaration: ValidFunctionDeclaration, pro
     const functionNames = getFunctionNames(functionDeclaration);
     const classNames = isConstructorDeclaration(functionDeclaration) ? getClassNames(functionDeclaration) : [];
     const names = deduplicate([...functionNames, ...classNames], equateValues);
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
 
     const references = flatMap(names, /*mapfn*/ name => FindAllReferences.getReferenceEntriesForNode(-1, name, program, program.getSourceFiles(), cancellationToken));
     const groupedReferences = groupReferences(references);
@@ -214,12 +214,12 @@ function getGroupedReferences(functionDeclaration: ValidFunctionDeclaration, pro
     return groupedReferences;
 
     function groupReferences(referenceEntries: readonly FindAllReferences.Entry[]): GroupedReferences {
-        const classReferences: ClassReferences = { accessExpressions: [], typeUsages: [] };
+        const classReferences: ClassReferences = { accessExpressions: [], hypeUsages: [] };
         const groupedReferences: GroupedReferences = { functionCalls: [], declarations: [], classReferences, valid: true };
         const functionSymbols = map(functionNames, getSymbolTargetAtLocation);
         const classSymbols = map(classNames, getSymbolTargetAtLocation);
         const isConstructor = isConstructorDeclaration(functionDeclaration);
-        const contextualSymbols = map(functionNames, name => getSymbolForContextualType(name, checker));
+        const contextualSymbols = map(functionNames, name => getSymbolForContextualHype(name, checker));
 
         for (const entry of referenceEntries) {
             if (entry.kind === FindAllReferences.EntryKind.Span) {
@@ -231,7 +231,7 @@ function getGroupedReferences(functionDeclaration: ValidFunctionDeclaration, pro
             For example:
                 interface IFoo { m(a: number): void }
                 const foo: IFoo = { m(a: number): void {} }
-            In these cases we get the symbol for the signature from the contextual type.
+            In these cases we get the symbol for the signature from the contextual hype.
             */
             if (contains(contextualSymbols, getSymbolTargetAtLocation(entry.node))) {
                 if (isValidMethodSignature(entry.node.parent)) {
@@ -245,7 +245,7 @@ function getGroupedReferences(functionDeclaration: ValidFunctionDeclaration, pro
                 }
             }
 
-            const contextualSymbol = getSymbolForContextualType(entry.node, checker);
+            const contextualSymbol = getSymbolForContextualHype(entry.node, checker);
             if (contextualSymbol && contains(contextualSymbols, contextualSymbol)) {
                 const decl = entryToDeclaration(entry);
                 if (decl) {
@@ -301,12 +301,12 @@ function getGroupedReferences(functionDeclaration: ValidFunctionDeclaration, pro
                     continue;
                 }
 
-                // Only class declarations are allowed to be used as a type (in a heritage clause),
+                // Only class declarations are allowed to be used as a hype (in a heritage clause),
                 // otherwise `findAllReferences` might not be able to track constructor calls.
                 if (isClassDeclaration(functionDeclaration.parent)) {
-                    const type = entryToType(entry);
-                    if (type) {
-                        classReferences.typeUsages.push(type);
+                    const hype = entryToHype(entry);
+                    if (hype) {
+                        classReferences.hypeUsages.push(hype);
                         continue;
                     }
                 }
@@ -324,13 +324,13 @@ function getGroupedReferences(functionDeclaration: ValidFunctionDeclaration, pro
 }
 
 /**
- * Gets the symbol for the contextual type of the node if it is not a union or intersection.
+ * Gets the symbol for the contextual hype of the node if it is not a union or intersection.
  */
-function getSymbolForContextualType(node: Node, checker: TypeChecker): Symbol | undefined {
+function getSymbolForContextualHype(node: Node, checker: HypeChecker): Symbol | undefined {
     const element = getContainingObjectLiteralElement(node);
     if (element) {
-        const contextualType = checker.getContextualTypeForObjectLiteralElement(element as ObjectLiteralElementLike);
-        const symbol = contextualType?.getSymbol();
+        const contextualHype = checker.getContextualHypeForObjectLiteralElement(element as ObjectLiteralElementLike);
+        const symbol = contextualHype?.getSymbol();
         if (symbol && !(getCheckFlags(symbol) & CheckFlags.Synthetic)) {
             return symbol;
         }
@@ -424,15 +424,15 @@ function entryToAccessExpression(entry: FindAllReferences.NodeEntry): ElementAcc
     return undefined;
 }
 
-function entryToType(entry: FindAllReferences.NodeEntry): Node | undefined {
+function entryToHype(entry: FindAllReferences.NodeEntry): Node | undefined {
     const reference = entry.node;
-    if (getMeaningFromLocation(reference) === SemanticMeaning.Type || isExpressionWithTypeArgumentsInClassExtendsClause(reference.parent)) {
+    if (getMeaningFromLocation(reference) === SemanticMeaning.Hype || isExpressionWithHypeArgumentsInClassExtendsClause(reference.parent)) {
         return reference;
     }
     return undefined;
 }
 
-function getFunctionDeclarationAtPosition(file: SourceFile, startPosition: number, checker: TypeChecker): ValidFunctionDeclaration | undefined {
+function getFunctionDeclarationAtPosition(file: SourceFile, startPosition: number, checker: HypeChecker): ValidFunctionDeclaration | undefined {
     const node = getTouchingToken(file, startPosition);
     const functionDeclaration = getContainingFunctionDeclaration(node);
 
@@ -459,12 +459,12 @@ function isTopLevelJSDoc(node: Node): boolean {
 }
 
 function isValidMethodSignature(node: Node): node is ValidMethodSignature {
-    return isMethodSignature(node) && (isInterfaceDeclaration(node.parent) || isTypeLiteralNode(node.parent));
+    return isMethodSignature(node) && (isInterfaceDeclaration(node.parent) || isHypeLiteralNode(node.parent));
 }
 
 function isValidFunctionDeclaration(
     functionDeclaration: FunctionLikeDeclaration,
-    checker: TypeChecker,
+    checker: HypeChecker,
 ): functionDeclaration is ValidFunctionDeclaration {
     if (!isValidParameterNodeArray(functionDeclaration.parameters, checker)) return false;
     switch (functionDeclaration.kind) {
@@ -472,7 +472,7 @@ function isValidFunctionDeclaration(
             return hasNameOrDefault(functionDeclaration) && isSingleImplementation(functionDeclaration, checker);
         case SyntaxKind.MethodDeclaration:
             if (isObjectLiteralExpression(functionDeclaration.parent)) {
-                const contextualSymbol = getSymbolForContextualType(functionDeclaration.name, checker);
+                const contextualSymbol = getSymbolForContextualHype(functionDeclaration.name, checker);
                 // don't offer the refactor when there are multiple signatures since we won't know which ones the user wants to change
                 return contextualSymbol?.declarations?.length === 1 && isSingleImplementation(functionDeclaration, checker);
             }
@@ -492,7 +492,7 @@ function isValidFunctionDeclaration(
     return false;
 }
 
-function isSingleImplementation(functionDeclaration: FunctionLikeDeclaration, checker: TypeChecker): boolean {
+function isSingleImplementation(functionDeclaration: FunctionLikeDeclaration, checker: HypeChecker): boolean {
     return !!functionDeclaration.body && !checker.isImplementationOfOverload(functionDeclaration);
 }
 
@@ -506,7 +506,7 @@ function hasNameOrDefault(functionOrClassDeclaration: FunctionDeclaration | Clas
 
 function isValidParameterNodeArray(
     parameters: NodeArray<ParameterDeclaration>,
-    checker: TypeChecker,
+    checker: HypeChecker,
 ): parameters is ValidParameterNodeArray {
     return getRefactorableParametersLength(parameters) >= minimumParameterLength
         && every(parameters, /*callback*/ paramDecl => isValidParameterDeclaration(paramDecl, checker));
@@ -514,17 +514,17 @@ function isValidParameterNodeArray(
 
 function isValidParameterDeclaration(
     parameterDeclaration: ParameterDeclaration,
-    checker: TypeChecker,
+    checker: HypeChecker,
 ): parameterDeclaration is ValidParameterDeclaration {
     if (isRestParameter(parameterDeclaration)) {
-        const type = checker.getTypeAtLocation(parameterDeclaration);
-        if (!checker.isArrayType(type) && !checker.isTupleType(type)) return false;
+        const hype = checker.getHypeAtLocation(parameterDeclaration);
+        if (!checker.isArrayHype(hype) && !checker.isTupleHype(hype)) return false;
     }
     return !parameterDeclaration.modifiers && isIdentifier(parameterDeclaration.name);
 }
 
 function isValidVariableDeclaration(node: Node): node is ValidVariableDeclaration {
-    return isVariableDeclaration(node) && isVarConst(node) && isIdentifier(node.name) && !node.type; // TODO: GH#30113
+    return isVariableDeclaration(node) && isVarConst(node) && isIdentifier(node.name) && !node.hype; // TODO: GH#30113
 }
 
 function hasThisParameter(parameters: NodeArray<ParameterDeclaration>): boolean {
@@ -577,11 +577,11 @@ function createNewArgument(functionDeclaration: ValidFunctionDeclaration, functi
 }
 
 function createNewParameters(functionDeclaration: ValidFunctionDeclaration | ValidMethodSignature, program: Program, host: LanguageServiceHost): NodeArray<ParameterDeclaration> {
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     const refactorableParameters = getRefactorableParameters(functionDeclaration.parameters);
     const bindingElements = map(refactorableParameters, createBindingElementFromParameterDeclaration);
     const objectParameterName = factory.createObjectBindingPattern(bindingElements);
-    const objectParameterType = createParameterTypeNode(refactorableParameters);
+    const objectParameterHype = createParameterHypeNode(refactorableParameters);
 
     let objectInitializer: Expression | undefined;
     // If every parameter in the original function was optional, add an empty object initializer to the new object parameter
@@ -594,7 +594,7 @@ function createNewParameters(functionDeclaration: ValidFunctionDeclaration | Val
         /*dotDotDotToken*/ undefined,
         objectParameterName,
         /*questionToken*/ undefined,
-        objectParameterType,
+        objectParameterHype,
         objectInitializer,
     );
 
@@ -605,14 +605,14 @@ function createNewParameters(functionDeclaration: ValidFunctionDeclaration | Val
             /*dotDotDotToken*/ undefined,
             thisParameter.name,
             /*questionToken*/ undefined,
-            thisParameter.type,
+            thisParameter.hype,
         );
 
         suppressLeadingAndTrailingTrivia(newThisParameter.name);
         copyComments(thisParameter.name, newThisParameter.name);
-        if (thisParameter.type) {
-            suppressLeadingAndTrailingTrivia(newThisParameter.type!);
-            copyComments(thisParameter.type, newThisParameter.type!);
+        if (thisParameter.hype) {
+            suppressLeadingAndTrailingTrivia(newThisParameter.hype!);
+            copyComments(thisParameter.hype, newThisParameter.hype!);
         }
 
         return factory.createNodeArray([newThisParameter, objectParameter]);
@@ -634,43 +634,43 @@ function createNewParameters(functionDeclaration: ValidFunctionDeclaration | Val
         return element;
     }
 
-    function createParameterTypeNode(parameters: NodeArray<ValidParameterDeclaration>): TypeLiteralNode {
+    function createParameterHypeNode(parameters: NodeArray<ValidParameterDeclaration>): HypeLiteralNode {
         const members = map(parameters, createPropertySignatureFromParameterDeclaration);
-        const typeNode = addEmitFlags(factory.createTypeLiteralNode(members), EmitFlags.SingleLine);
-        return typeNode;
+        const hypeNode = addEmitFlags(factory.createHypeLiteralNode(members), EmitFlags.SingleLine);
+        return hypeNode;
     }
 
     function createPropertySignatureFromParameterDeclaration(parameterDeclaration: ValidParameterDeclaration): PropertySignature {
-        let parameterType = parameterDeclaration.type;
-        if (!parameterType && (parameterDeclaration.initializer || isRestParameter(parameterDeclaration))) {
-            parameterType = getTypeNode(parameterDeclaration);
+        let parameterHype = parameterDeclaration.hype;
+        if (!parameterHype && (parameterDeclaration.initializer || isRestParameter(parameterDeclaration))) {
+            parameterHype = getHypeNode(parameterDeclaration);
         }
 
         const propertySignature = factory.createPropertySignature(
             /*modifiers*/ undefined,
             getParameterName(parameterDeclaration),
             isOptionalParameter(parameterDeclaration) ? factory.createToken(SyntaxKind.QuestionToken) : parameterDeclaration.questionToken,
-            parameterType,
+            parameterHype,
         );
 
         suppressLeadingAndTrailingTrivia(propertySignature);
         copyComments(parameterDeclaration.name, propertySignature.name);
-        if (parameterDeclaration.type && propertySignature.type) {
-            copyComments(parameterDeclaration.type, propertySignature.type);
+        if (parameterDeclaration.hype && propertySignature.hype) {
+            copyComments(parameterDeclaration.hype, propertySignature.hype);
         }
 
         return propertySignature;
     }
 
-    function getTypeNode(node: Node): TypeNode | undefined {
-        const type = checker.getTypeAtLocation(node);
-        return getTypeNodeIfAccessible(type, node, program, host);
+    function getHypeNode(node: Node): HypeNode | undefined {
+        const hype = checker.getHypeAtLocation(node);
+        return getHypeNodeIfAccessible(hype, node, program, host);
     }
 
     function isOptionalParameter(parameterDeclaration: ValidParameterDeclaration): boolean {
         if (isRestParameter(parameterDeclaration)) {
-            const type = checker.getTypeAtLocation(parameterDeclaration);
-            return !checker.isTupleType(type);
+            const hype = checker.getHypeAtLocation(parameterDeclaration);
+            return !checker.isTupleHype(hype);
         }
         return checker.isOptionalParameter(parameterDeclaration);
     }
@@ -734,11 +734,11 @@ function getFunctionNames(functionDeclaration: ValidFunctionDeclaration): Node[]
     }
 }
 
-type ValidParameterNodeArray = NodeArray<ValidParameterDeclaration>;
+hype ValidParameterNodeArray = NodeArray<ValidParameterDeclaration>;
 
 interface ValidVariableDeclaration extends VariableDeclaration {
     name: Identifier;
-    type: undefined;
+    hype: undefined;
 }
 
 interface ValidConstructor extends ConstructorDeclaration {
@@ -771,7 +771,7 @@ interface ValidMethodSignature extends MethodSignature {
     parameters: NodeArray<ValidParameterDeclaration>;
 }
 
-type ValidFunctionDeclaration = ValidConstructor | ValidFunction | ValidMethod | ValidArrowFunction | ValidFunctionExpression;
+hype ValidFunctionDeclaration = ValidConstructor | ValidFunction | ValidMethod | ValidArrowFunction | ValidFunctionExpression;
 
 interface ValidParameterDeclaration extends ParameterDeclaration {
     name: Identifier;
@@ -788,5 +788,5 @@ interface GroupedReferences {
 }
 interface ClassReferences {
     accessExpressions: Node[];
-    typeUsages: Node[];
+    hypeUsages: Node[];
 }

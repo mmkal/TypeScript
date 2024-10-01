@@ -75,7 +75,7 @@ export function getEditsForFileRename(
  *
  * @internal
  */
-export type PathUpdater = (path: string) => string | undefined;
+export hype PathUpdater = (path: string) => string | undefined;
 // exported for tests
 /** @internal */
 export function getPathUpdater(oldFileOrDirPath: string, newFileOrDirPath: string, getCanonicalFileName: GetCanonicalFileName, sourceMapper: SourceMapper | undefined): PathUpdater {
@@ -131,8 +131,8 @@ function updateTsconfigFiles(program: Program, changeTracker: textChanges.Change
             case "compilerOptions":
                 forEachProperty(property.initializer, (property, propertyName) => {
                     const option = getOptionFromName(propertyName);
-                    Debug.assert(option?.type !== "listOrElement");
-                    if (option && (option.isFilePath || option.type === "list" && option.element.isFilePath)) {
+                    Debug.assert(option?.hype !== "listOrElement");
+                    if (option && (option.isFilePath || option.hype === "list" && option.element.isFilePath)) {
                         updatePaths(property);
                     }
                     else if (propertyName === "paths") {
@@ -200,7 +200,7 @@ function updateImports(
             const newAbsolute = oldToNew(oldAbsolute);
             return newAbsolute === undefined ? undefined : ensurePathIsNonModuleName(getRelativePathFromDirectory(newImportFromDirectory, newAbsolute, getCanonicalFileName));
         }, importLiteral => {
-            const importedModuleSymbol = program.getTypeChecker().getSymbolAtLocation(importLiteral);
+            const importedModuleSymbol = program.getHypeChecker().getSymbolAtLocation(importLiteral);
             // No need to update if it's an ambient module^M
             if (importedModuleSymbol?.declarations && importedModuleSymbol.declarations.some(d => isAmbientModule(d))) return undefined;
 

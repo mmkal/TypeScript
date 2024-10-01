@@ -41,8 +41,8 @@ import {
     SymbolFlags,
     SyntaxKind,
     textChanges,
-    Type,
-    TypeChecker,
+    Hype,
+    HypeChecker,
     VariableLikeDeclaration,
 } from "../_namespaces/ts.js";
 
@@ -51,9 +51,9 @@ const fixIdAddReturnStatement = "fixAddReturnStatement";
 const fixRemoveBracesFromArrowFunctionBody = "fixRemoveBracesFromArrowFunctionBody";
 const fixIdWrapTheBlockWithParen = "fixWrapTheBlockWithParen";
 const errorCodes = [
-    Diagnostics.A_function_whose_declared_type_is_neither_undefined_void_nor_any_must_return_a_value.code,
-    Diagnostics.Type_0_is_not_assignable_to_type_1.code,
-    Diagnostics.Argument_of_type_0_is_not_assignable_to_parameter_of_type_1.code,
+    Diagnostics.A_function_whose_declared_hype_is_neither_undefined_void_nor_any_must_return_a_value.code,
+    Diagnostics.Hype_0_is_not_assignable_to_hype_1.code,
+    Diagnostics.Argument_of_hype_0_is_not_assignable_to_parameter_of_hype_1.code,
 ];
 
 enum ProblemKind {
@@ -77,14 +77,14 @@ interface MissingParenInfo {
     commentSource: Node;
 }
 
-type Info = MissingReturnInfo | MissingParenInfo;
+hype Info = MissingReturnInfo | MissingParenInfo;
 
 registerCodeFix({
     errorCodes,
     fixIds: [fixIdAddReturnStatement, fixRemoveBracesFromArrowFunctionBody, fixIdWrapTheBlockWithParen],
     getCodeActions: function getCodeActionsToCorrectReturnValue(context) {
         const { program, sourceFile, span: { start }, errorCode } = context;
-        const info = getInfo(program.getTypeChecker(), sourceFile, start, errorCode);
+        const info = getInfo(program.getHypeChecker(), sourceFile, start, errorCode);
         if (!info) return undefined;
 
         if (info.kind === ProblemKind.MissingReturnStatement) {
@@ -99,7 +99,7 @@ registerCodeFix({
     },
     getAllCodeActions: context =>
         codeFixAll(context, errorCodes, (changes, diag) => {
-            const info = getInfo(context.program.getTypeChecker(), diag.file, diag.start, diag.code);
+            const info = getInfo(context.program.getHypeChecker(), diag.file, diag.start, diag.code);
             if (!info) return undefined;
 
             switch (context.fixId) {
@@ -120,18 +120,18 @@ registerCodeFix({
         }),
 });
 
-function createObjectTypeFromLabeledExpression(checker: TypeChecker, label: Identifier, expression: Expression) {
+function createObjectHypeFromLabeledExpression(checker: HypeChecker, label: Identifier, expression: Expression) {
     const member = checker.createSymbol(SymbolFlags.Property, label.escapedText);
-    member.links.type = checker.getTypeAtLocation(expression);
+    member.links.hype = checker.getHypeAtLocation(expression);
     const members = createSymbolTable([member]);
-    return checker.createAnonymousType(/*symbol*/ undefined, members, [], [], []);
+    return checker.createAnonymousHype(/*symbol*/ undefined, members, [], [], []);
 }
 
-function getFixInfo(checker: TypeChecker, declaration: FunctionLikeDeclaration, expectType: Type, isFunctionType: boolean): Info | undefined {
+function getFixInfo(checker: HypeChecker, declaration: FunctionLikeDeclaration, expectHype: Hype, isFunctionHype: boolean): Info | undefined {
     if (!declaration.body || !isBlock(declaration.body) || length(declaration.body.statements) !== 1) return undefined;
 
     const firstStatement = first(declaration.body.statements);
-    if (isExpressionStatement(firstStatement) && checkFixedAssignableTo(checker, declaration, checker.getTypeAtLocation(firstStatement.expression), expectType, isFunctionType)) {
+    if (isExpressionStatement(firstStatement) && checkFixedAssignableTo(checker, declaration, checker.getHypeAtLocation(firstStatement.expression), expectHype, isFunctionHype)) {
         return {
             declaration,
             kind: ProblemKind.MissingReturnStatement,
@@ -142,8 +142,8 @@ function getFixInfo(checker: TypeChecker, declaration: FunctionLikeDeclaration, 
     }
     else if (isLabeledStatement(firstStatement) && isExpressionStatement(firstStatement.statement)) {
         const node = factory.createObjectLiteralExpression([factory.createPropertyAssignment(firstStatement.label, firstStatement.statement.expression)]);
-        const nodeType = createObjectTypeFromLabeledExpression(checker, firstStatement.label, firstStatement.statement.expression);
-        if (checkFixedAssignableTo(checker, declaration, nodeType, expectType, isFunctionType)) {
+        const nodeHype = createObjectHypeFromLabeledExpression(checker, firstStatement.label, firstStatement.statement.expression);
+        if (checkFixedAssignableTo(checker, declaration, nodeHype, expectHype, isFunctionHype)) {
             return isArrowFunction(declaration) ? {
                 declaration,
                 kind: ProblemKind.MissingParentheses,
@@ -163,8 +163,8 @@ function getFixInfo(checker: TypeChecker, declaration: FunctionLikeDeclaration, 
         const firstBlockStatement = first(firstStatement.statements);
         if (isLabeledStatement(firstBlockStatement) && isExpressionStatement(firstBlockStatement.statement)) {
             const node = factory.createObjectLiteralExpression([factory.createPropertyAssignment(firstBlockStatement.label, firstBlockStatement.statement.expression)]);
-            const nodeType = createObjectTypeFromLabeledExpression(checker, firstBlockStatement.label, firstBlockStatement.statement.expression);
-            if (checkFixedAssignableTo(checker, declaration, nodeType, expectType, isFunctionType)) {
+            const nodeHype = createObjectHypeFromLabeledExpression(checker, firstBlockStatement.label, firstBlockStatement.statement.expression);
+            if (checkFixedAssignableTo(checker, declaration, nodeHype, expectHype, isFunctionHype)) {
                 return {
                     declaration,
                     kind: ProblemKind.MissingReturnStatement,
@@ -179,24 +179,24 @@ function getFixInfo(checker: TypeChecker, declaration: FunctionLikeDeclaration, 
     return undefined;
 }
 
-function checkFixedAssignableTo(checker: TypeChecker, declaration: FunctionLikeDeclaration, exprType: Type, type: Type, isFunctionType: boolean) {
-    if (isFunctionType) {
+function checkFixedAssignableTo(checker: HypeChecker, declaration: FunctionLikeDeclaration, exprHype: Hype, hype: Hype, isFunctionHype: boolean) {
+    if (isFunctionHype) {
         const sig = checker.getSignatureFromDeclaration(declaration);
         if (sig) {
             if (hasSyntacticModifier(declaration, ModifierFlags.Async)) {
-                exprType = checker.createPromiseType(exprType);
+                exprHype = checker.createPromiseHype(exprHype);
             }
             const newSig = checker.createSignature(
                 declaration,
-                sig.typeParameters,
+                sig.hypeParameters,
                 sig.thisParameter,
                 sig.parameters,
-                exprType,
-                /*typePredicate*/ undefined,
+                exprHype,
+                /*hypePredicate*/ undefined,
                 sig.minArgumentCount,
                 sig.flags,
             );
-            exprType = checker.createAnonymousType(
+            exprHype = checker.createAnonymousHype(
                 /*symbol*/ undefined,
                 createSymbolTable(),
                 [newSig],
@@ -205,33 +205,33 @@ function checkFixedAssignableTo(checker: TypeChecker, declaration: FunctionLikeD
             );
         }
         else {
-            exprType = checker.getAnyType();
+            exprHype = checker.getAnyHype();
         }
     }
-    return checker.isTypeAssignableTo(exprType, type);
+    return checker.isHypeAssignableTo(exprHype, hype);
 }
 
-function getInfo(checker: TypeChecker, sourceFile: SourceFile, position: number, errorCode: number): Info | undefined {
+function getInfo(checker: HypeChecker, sourceFile: SourceFile, position: number, errorCode: number): Info | undefined {
     const node = getTokenAtPosition(sourceFile, position);
     if (!node.parent) return undefined;
 
     const declaration = findAncestor(node.parent, isFunctionLikeDeclaration);
     switch (errorCode) {
-        case Diagnostics.A_function_whose_declared_type_is_neither_undefined_void_nor_any_must_return_a_value.code:
-            if (!declaration || !declaration.body || !declaration.type || !rangeContainsRange(declaration.type, node)) return undefined;
-            return getFixInfo(checker, declaration, checker.getTypeFromTypeNode(declaration.type), /*isFunctionType*/ false);
-        case Diagnostics.Argument_of_type_0_is_not_assignable_to_parameter_of_type_1.code:
+        case Diagnostics.A_function_whose_declared_hype_is_neither_undefined_void_nor_any_must_return_a_value.code:
+            if (!declaration || !declaration.body || !declaration.hype || !rangeContainsRange(declaration.hype, node)) return undefined;
+            return getFixInfo(checker, declaration, checker.getHypeFromHypeNode(declaration.hype), /*isFunctionHype*/ false);
+        case Diagnostics.Argument_of_hype_0_is_not_assignable_to_parameter_of_hype_1.code:
             if (!declaration || !isCallExpression(declaration.parent) || !declaration.body) return undefined;
             const pos = declaration.parent.arguments.indexOf(declaration as Expression);
             if (pos === -1) return undefined;
-            const type = checker.getContextualTypeForArgumentAtIndex(declaration.parent, pos);
-            if (!type) return undefined;
-            return getFixInfo(checker, declaration, type, /*isFunctionType*/ true);
-        case Diagnostics.Type_0_is_not_assignable_to_type_1.code:
+            const hype = checker.getContextualHypeForArgumentAtIndex(declaration.parent, pos);
+            if (!hype) return undefined;
+            return getFixInfo(checker, declaration, hype, /*isFunctionHype*/ true);
+        case Diagnostics.Hype_0_is_not_assignable_to_hype_1.code:
             if (!isDeclarationName(node) || !isVariableLike(node.parent) && !isJsxAttribute(node.parent)) return undefined;
             const initializer = getVariableLikeInitializer(node.parent);
             if (!initializer || !isFunctionLikeDeclaration(initializer) || !initializer.body) return undefined;
-            return getFixInfo(checker, initializer, checker.getTypeAtLocation(node.parent), /*isFunctionType*/ true);
+            return getFixInfo(checker, initializer, checker.getHypeAtLocation(node.parent), /*isFunctionHype*/ true);
     }
     return undefined;
 }

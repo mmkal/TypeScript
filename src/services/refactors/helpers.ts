@@ -17,7 +17,7 @@ import {
     SourceFile,
     Symbol,
     SymbolFlags,
-    TypeChecker,
+    HypeChecker,
 } from "../_namespaces/ts.js";
 import { addImportsForMovedSymbols } from "./moveToFile.js";
 /**
@@ -55,7 +55,7 @@ export function refactorKindBeginsWith(known: string, requested: string | undefi
  *
  * @internal
  */
-export function getIdentifierForNode(node: Node, scope: FunctionLikeDeclaration | SourceFile | ModuleBlock | ClassLikeDeclaration, checker: TypeChecker, file: SourceFile): string {
+export function getIdentifierForNode(node: Node, scope: FunctionLikeDeclaration | SourceFile | ModuleBlock | ClassLikeDeclaration, checker: HypeChecker, file: SourceFile): string {
     return isPropertyAccessExpression(node) && !isClassLike(scope) && !checker.resolveName(node.name.text, node, SymbolFlags.Value, /*excludeGlobals*/ false) && !isPrivateIdentifier(node.name) && !identifierToKeywordKind(node.name)
         ? node.name.text
         : getUniqueName(isClassLike(scope) ? "newProperty" : "newLocal", file);
@@ -66,7 +66,7 @@ export function addTargetFileImports(
     oldFile: SourceFile,
     importsToCopy: Map<Symbol, [boolean, codefix.ImportOrRequireAliasDeclaration | undefined]>,
     targetFileImportsFromOldFile: Map<Symbol, boolean>,
-    checker: TypeChecker,
+    checker: HypeChecker,
     program: Program,
     importAdder: codefix.ImportAdder,
 ): void {
@@ -75,13 +75,13 @@ export function addTargetFileImports(
      * but sometimes it fails because of unresolved imports from files, or when a source file is not available for the target file (in this case when creating a new file).
      * So in that case, fall back to copying the import verbatim.
      */
-    importsToCopy.forEach(([isValidTypeOnlyUseSite, declaration], symbol) => {
+    importsToCopy.forEach(([isValidHypeOnlyUseSite, declaration], symbol) => {
         const targetSymbol = skipAlias(symbol, checker);
         if (checker.isUnknownSymbol(targetSymbol)) {
             importAdder.addVerbatimImport(Debug.checkDefined(declaration ?? findAncestor(symbol.declarations?.[0], isAnyImportOrRequireStatement)));
         }
         else {
-            importAdder.addImportFromExportedSymbol(targetSymbol, isValidTypeOnlyUseSite, declaration);
+            importAdder.addImportFromExportedSymbol(targetSymbol, isValidHypeOnlyUseSite, declaration);
         }
     });
 

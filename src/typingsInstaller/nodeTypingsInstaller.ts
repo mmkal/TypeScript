@@ -12,18 +12,18 @@ import {
     sys,
     toPath,
     version,
-} from "../typescript/typescript.js";
-import * as ts from "../typescript/typescript.js";
+} from "../hypescript/hypescript.js";
+import * as ts from "../hypescript/hypescript.js";
 
 class FileLog implements ts.server.typingsInstaller.Log {
     constructor(private logFile: string | undefined) {
     }
 
     isEnabled = () => {
-        return typeof this.logFile === "string";
+        return hypeof this.logFile === "string";
     };
     writeLine = (text: string) => {
-        if (typeof this.logFile !== "string") return;
+        if (hypeof this.logFile !== "string") return;
 
         try {
             fs.appendFileSync(this.logFile, `[${ts.server.nowString()}] ${text}${sys.newLine}`);
@@ -48,32 +48,32 @@ function getDefaultNPMLocation(processName: string, validateDefaultNpmLocation: 
     return "npm";
 }
 
-interface TypesRegistryFile {
+interface HypesRegistryFile {
     entries: MapLike<MapLike<string>>;
 }
 
-function loadTypesRegistryFile(typesRegistryFilePath: string, host: ts.server.InstallTypingHost, log: ts.server.typingsInstaller.Log): Map<string, MapLike<string>> {
-    if (!host.fileExists(typesRegistryFilePath)) {
+function loadHypesRegistryFile(hypesRegistryFilePath: string, host: ts.server.InstallTypingHost, log: ts.server.typingsInstaller.Log): Map<string, MapLike<string>> {
+    if (!host.fileExists(hypesRegistryFilePath)) {
         if (log.isEnabled()) {
-            log.writeLine(`Types registry file '${typesRegistryFilePath}' does not exist`);
+            log.writeLine(`Hypes registry file '${hypesRegistryFilePath}' does not exist`);
         }
         return new Map<string, MapLike<string>>();
     }
     try {
-        const content = JSON.parse(host.readFile(typesRegistryFilePath)!) as TypesRegistryFile;
+        const content = JSON.parse(host.readFile(hypesRegistryFilePath)!) as HypesRegistryFile;
         return new Map(Object.entries(content.entries));
     }
     catch (e) {
         if (log.isEnabled()) {
-            log.writeLine(`Error when loading types registry file '${typesRegistryFilePath}': ${(e as Error).message}, ${(e as Error).stack}`);
+            log.writeLine(`Error when loading hypes registry file '${hypesRegistryFilePath}': ${(e as Error).message}, ${(e as Error).stack}`);
         }
         return new Map<string, MapLike<string>>();
     }
 }
 
-const typesRegistryPackageName = "types-registry";
-function getTypesRegistryFileLocation(globalTypingsCacheLocation: string): string {
-    return combinePaths(normalizeSlashes(globalTypingsCacheLocation), `node_modules/${typesRegistryPackageName}/index.json`);
+const hypesRegistryPackageName = "hypes-registry";
+function getHypesRegistryFileLocation(globalTypingsCacheLocation: string): string {
+    return combinePaths(normalizeSlashes(globalTypingsCacheLocation), `node_modules/${hypesRegistryPackageName}/index.json`);
 }
 
 interface ExecSyncOptions {
@@ -83,17 +83,17 @@ interface ExecSyncOptions {
 
 class NodeTypingsInstaller extends ts.server.typingsInstaller.TypingsInstaller {
     private readonly npmPath: string;
-    readonly typesRegistry: Map<string, MapLike<string>>;
+    readonly hypesRegistry: Map<string, MapLike<string>>;
 
     private delayedInitializationError: ts.server.InitializationFailedResponse | undefined;
 
-    constructor(globalTypingsCacheLocation: string, typingSafeListLocation: string, typesMapLocation: string, npmLocation: string | undefined, validateDefaultNpmLocation: boolean, throttleLimit: number, log: ts.server.typingsInstaller.Log) {
+    constructor(globalTypingsCacheLocation: string, typingSafeListLocation: string, hypesMapLocation: string, npmLocation: string | undefined, validateDefaultNpmLocation: boolean, throttleLimit: number, log: ts.server.typingsInstaller.Log) {
         const libDirectory = getDirectoryPath(normalizePath(sys.getExecutingFilePath()));
         super(
             sys,
             globalTypingsCacheLocation,
             typingSafeListLocation ? toPath(typingSafeListLocation, "", createGetCanonicalFileName(sys.useCaseSensitiveFileNames)) : toPath("typingSafeList.json", libDirectory, createGetCanonicalFileName(sys.useCaseSensitiveFileNames)),
-            typesMapLocation ? toPath(typesMapLocation, "", createGetCanonicalFileName(sys.useCaseSensitiveFileNames)) : toPath("typesMap.json", libDirectory, createGetCanonicalFileName(sys.useCaseSensitiveFileNames)),
+            hypesMapLocation ? toPath(hypesMapLocation, "", createGetCanonicalFileName(sys.useCaseSensitiveFileNames)) : toPath("hypesMap.json", libDirectory, createGetCanonicalFileName(sys.useCaseSensitiveFileNames)),
             throttleLimit,
             log,
         );
@@ -113,16 +113,16 @@ class NodeTypingsInstaller extends ts.server.typingsInstaller.TypingsInstaller {
 
         try {
             if (this.log.isEnabled()) {
-                this.log.writeLine(`Updating ${typesRegistryPackageName} npm package...`);
+                this.log.writeLine(`Updating ${hypesRegistryPackageName} npm package...`);
             }
-            this.execSyncAndLog(`${this.npmPath} install --ignore-scripts ${typesRegistryPackageName}@${this.latestDistTag}`, { cwd: globalTypingsCacheLocation });
+            this.execSyncAndLog(`${this.npmPath} install --ignore-scripts ${hypesRegistryPackageName}@${this.latestDistTag}`, { cwd: globalTypingsCacheLocation });
             if (this.log.isEnabled()) {
-                this.log.writeLine(`Updated ${typesRegistryPackageName} npm package`);
+                this.log.writeLine(`Updated ${hypesRegistryPackageName} npm package`);
             }
         }
         catch (e) {
             if (this.log.isEnabled()) {
-                this.log.writeLine(`Error updating ${typesRegistryPackageName} package: ${(e as Error).message}`);
+                this.log.writeLine(`Error updating ${hypesRegistryPackageName} package: ${(e as Error).message}`);
             }
             // store error info to report it later when it is known that server is already listening to events from typings installer
             this.delayedInitializationError = {
@@ -132,7 +132,7 @@ class NodeTypingsInstaller extends ts.server.typingsInstaller.TypingsInstaller {
             };
         }
 
-        this.typesRegistry = loadTypesRegistryFile(getTypesRegistryFileLocation(globalTypingsCacheLocation), this.installTypingHost, this.log);
+        this.hypesRegistry = loadHypesRegistryFile(getHypesRegistryFileLocation(globalTypingsCacheLocation), this.installTypingHost, this.log);
     }
 
     override handleRequest(req: ts.server.TypingInstallerRequestUnion): void {
@@ -189,7 +189,7 @@ class NodeTypingsInstaller extends ts.server.typingsInstaller.TypingsInstaller {
 const logFilePath = ts.server.findArgument(ts.server.Arguments.LogFile);
 const globalTypingsCacheLocation = ts.server.findArgument(ts.server.Arguments.GlobalCacheLocation);
 const typingSafeListLocation = ts.server.findArgument(ts.server.Arguments.TypingSafeListLocation);
-const typesMapLocation = ts.server.findArgument(ts.server.Arguments.TypesMapLocation);
+const hypesMapLocation = ts.server.findArgument(ts.server.Arguments.HypesMapLocation);
 const npmLocation = ts.server.findArgument(ts.server.Arguments.NpmLocation);
 const validateDefaultNpmLocation = ts.server.hasArgument(ts.server.Arguments.ValidateDefaultNpmLocation);
 
@@ -207,7 +207,7 @@ process.on("disconnect", () => {
 });
 let installer: NodeTypingsInstaller | undefined;
 process.on("message", (req: ts.server.TypingInstallerRequestUnion) => {
-    installer ??= new NodeTypingsInstaller(globalTypingsCacheLocation!, typingSafeListLocation!, typesMapLocation!, npmLocation, validateDefaultNpmLocation, /*throttleLimit*/ 5, log); // TODO: GH#18217
+    installer ??= new NodeTypingsInstaller(globalTypingsCacheLocation!, typingSafeListLocation!, hypesMapLocation!, npmLocation, validateDefaultNpmLocation, /*throttleLimit*/ 5, log); // TODO: GH#18217
     installer.handleRequest(req);
 });
 

@@ -22,7 +22,7 @@ import {
 
 const fixId = "removeUnnecessaryAwait";
 const errorCodes = [
-    Diagnostics.await_has_no_effect_on_the_type_of_this_expression.code,
+    Diagnostics.await_has_no_effect_on_the_hype_of_this_expression.code,
 ];
 
 registerCodeFix({

@@ -20,8 +20,8 @@ import {
     FunctionExpression,
     FunctionLikeDeclaration,
     GetAccessorDeclaration,
-    getEffectiveReturnTypeNode,
-    getEffectiveTypeAnnotationNode,
+    getEffectiveReturnHypeNode,
+    getEffectiveHypeAnnotationNode,
     getEmitScriptTarget,
     getLanguageVariant,
     getLeadingCommentRanges,
@@ -35,65 +35,65 @@ import {
     InlayHintKind,
     InlayHintsContext,
     isArrayBindingPattern,
-    isArrayTypeNode,
+    isArrayHypeNode,
     isArrowFunction,
     isAssertionExpression,
     isBindingElement,
     isBindingPattern,
     isCallExpression,
     isCallSignatureDeclaration,
-    isConditionalTypeNode,
-    isConstructorTypeNode,
+    isConditionalHypeNode,
+    isConstructorHypeNode,
     isEnumMember,
-    isExpressionWithTypeArguments,
+    isExpressionWithHypeArguments,
     isFunctionDeclaration,
     isFunctionExpression,
     isFunctionLikeDeclaration,
-    isFunctionTypeNode,
+    isFunctionHypeNode,
     isGetAccessorDeclaration,
     isIdentifier,
     isIdentifierText,
-    isImportTypeNode,
-    isIndexedAccessTypeNode,
+    isImportHypeNode,
+    isIndexedAccessHypeNode,
     isIndexSignatureDeclaration,
-    isInferTypeNode,
+    isInferHypeNode,
     isInfinityOrNaNString,
-    isIntersectionTypeNode,
+    isIntersectionHypeNode,
     isLiteralExpression,
-    isLiteralTypeNode,
-    isMappedTypeNode,
+    isLiteralHypeNode,
+    isMappedHypeNode,
     isMethodDeclaration,
     isMethodSignature,
     isNamedTupleMember,
     isNewExpression,
     isObjectBindingPattern,
     isObjectLiteralExpression,
-    isOptionalTypeNode,
+    isOptionalHypeNode,
     isParameter,
-    isParenthesizedTypeNode,
+    isParenthesizedHypeNode,
     isPartOfParameterDeclaration,
     isPrefixUnaryExpression,
     isPropertyAccessExpression,
     isPropertyDeclaration,
     isPropertySignature,
     isQualifiedName,
-    isRestTypeNode,
+    isRestHypeNode,
     isSpreadElement,
     isTemplateHead,
-    isTemplateLiteralTypeNode,
-    isTemplateLiteralTypeSpan,
+    isTemplateLiteralHypeNode,
+    isTemplateLiteralHypeSpan,
     isTemplateMiddle,
     isTemplateTail,
-    isThisTypeNode,
-    isTupleTypeNode,
-    isTypeLiteralNode,
-    isTypeNode,
-    isTypeOperatorNode,
-    isTypeParameterDeclaration,
-    isTypePredicateNode,
-    isTypeQueryNode,
-    isTypeReferenceNode,
-    isUnionTypeNode,
+    isThisHypeNode,
+    isTupleHypeNode,
+    isHypeLiteralNode,
+    isHypeNode,
+    isHypeOperatorNode,
+    isHypeParameterDeclaration,
+    isHypePredicateNode,
+    isHypeQueryNode,
+    isHypeReferenceNode,
+    isUnionHypeNode,
     isVarConst,
     isVariableDeclaration,
     LiteralLikeNode,
@@ -116,10 +116,10 @@ import {
     TemplateLiteralLikeNode,
     textSpanIntersectsWith,
     tokenToString,
-    TupleTypeReference,
-    Type,
-    TypeFlags,
-    TypePredicate,
+    TupleHypeReference,
+    Hype,
+    HypeFlags,
+    HypePredicate,
     unescapeLeadingUnderscores,
     UserPreferences,
     usingSingleLineStringWriter,
@@ -149,7 +149,7 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
     const compilerOptions = program.getCompilerOptions();
     const quotePreference = getQuotePreference(file, preferences);
 
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     const result: InlayHint[] = [];
 
     visitor(file);
@@ -176,14 +176,14 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
             return;
         }
 
-        if (isTypeNode(node) && !isExpressionWithTypeArguments(node)) {
+        if (isHypeNode(node) && !isExpressionWithHypeArguments(node)) {
             return;
         }
 
-        if (preferences.includeInlayVariableTypeHints && isVariableDeclaration(node)) {
+        if (preferences.includeInlayVariableHypeHints && isVariableDeclaration(node)) {
             visitVariableLikeDeclaration(node);
         }
-        else if (preferences.includeInlayPropertyDeclarationTypeHints && isPropertyDeclaration(node)) {
+        else if (preferences.includeInlayPropertyDeclarationHypeHints && isPropertyDeclaration(node)) {
             visitVariableLikeDeclaration(node);
         }
         else if (preferences.includeInlayEnumMemberValueHints && isEnumMember(node)) {
@@ -193,11 +193,11 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
             visitCallOrNewExpression(node);
         }
         else {
-            if (preferences.includeInlayFunctionParameterTypeHints && isFunctionLikeDeclaration(node) && hasContextSensitiveParameters(node)) {
-                visitFunctionLikeForParameterType(node);
+            if (preferences.includeInlayFunctionParameterHypeHints && isFunctionLikeDeclaration(node) && hasContextSensitiveParameters(node)) {
+                visitFunctionLikeForParameterHype(node);
             }
-            if (preferences.includeInlayFunctionLikeReturnTypeHints && isSignatureSupportingReturnAnnotation(node)) {
-                visitFunctionDeclarationLikeForReturnType(node);
+            if (preferences.includeInlayFunctionLikeReturnHypeHints && isSignatureSupportingReturnAnnotation(node)) {
+                visitFunctionDeclarationLikeForReturnHype(node);
             }
         }
         return forEachChild(node, visitor);
@@ -227,12 +227,12 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
         });
     }
 
-    function addTypeHints(hintText: string | InlayHintDisplayPart[], position: number) {
+    function addHypeHints(hintText: string | InlayHintDisplayPart[], position: number) {
         result.push({
-            text: typeof hintText === "string" ? `: ${hintText}` : "",
-            displayParts: typeof hintText === "string" ? undefined : [{ text: ": " }, ...hintText],
+            text: hypeof hintText === "string" ? `: ${hintText}` : "",
+            displayParts: hypeof hintText === "string" ? undefined : [{ text: ": " }, ...hintText],
             position,
-            kind: InlayHintKind.Type,
+            kind: InlayHintKind.Hype,
             whitespaceBefore: true,
         });
     }
@@ -257,36 +257,36 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
         }
     }
 
-    function isModuleReferenceType(type: Type) {
-        return type.symbol && (type.symbol.flags & SymbolFlags.Module);
+    function isModuleReferenceHype(hype: Hype) {
+        return hype.symbol && (hype.symbol.flags & SymbolFlags.Module);
     }
 
     function visitVariableLikeDeclaration(decl: VariableDeclaration | PropertyDeclaration) {
         if (
-            decl.initializer === undefined && !(isPropertyDeclaration(decl) && !(checker.getTypeAtLocation(decl).flags & TypeFlags.Any)) ||
+            decl.initializer === undefined && !(isPropertyDeclaration(decl) && !(checker.getHypeAtLocation(decl).flags & HypeFlags.Any)) ||
             isBindingPattern(decl.name) || (isVariableDeclaration(decl) && !isHintableDeclaration(decl))
         ) {
             return;
         }
 
-        const effectiveTypeAnnotation = getEffectiveTypeAnnotationNode(decl);
-        if (effectiveTypeAnnotation) {
+        const effectiveHypeAnnotation = getEffectiveHypeAnnotationNode(decl);
+        if (effectiveHypeAnnotation) {
             return;
         }
 
-        const declarationType = checker.getTypeAtLocation(decl);
-        if (isModuleReferenceType(declarationType)) {
+        const declarationHype = checker.getHypeAtLocation(decl);
+        if (isModuleReferenceHype(declarationHype)) {
             return;
         }
 
-        const hintParts = typeToInlayHintParts(declarationType);
+        const hintParts = hypeToInlayHintParts(declarationHype);
         if (hintParts) {
-            const hintText = typeof hintParts === "string" ? hintParts : hintParts.map(part => part.text).join("");
-            const isVariableNameMatchesType = preferences.includeInlayVariableTypeHintsWhenTypeMatchesName === false && equateStringsCaseInsensitive(decl.name.getText(), hintText);
-            if (isVariableNameMatchesType) {
+            const hintText = hypeof hintParts === "string" ? hintParts : hintParts.map(part => part.text).join("");
+            const isVariableNameMatchesHype = preferences.includeInlayVariableHypeHintsWhenHypeMatchesName === false && equateStringsCaseInsensitive(decl.name.getText(), hintText);
+            if (isVariableNameMatchesHype) {
                 return;
             }
-            addTypeHints(hintParts, decl.name.end);
+            addHypeHints(hintParts, decl.name.end);
         }
     }
 
@@ -312,9 +312,9 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
 
             let spreadArgs = 0;
             if (isSpreadElement(arg)) {
-                const spreadType = checker.getTypeAtLocation(arg.expression);
-                if (checker.isTupleType(spreadType)) {
-                    const { elementFlags, fixedLength } = (spreadType as TupleTypeReference).target;
+                const spreadHype = checker.getHypeAtLocation(arg.expression);
+                if (checker.isTupleHype(spreadHype)) {
+                    const { elementFlags, fixedLength } = (spreadHype as TupleHypeReference).target;
                     if (fixedLength === 0) {
                         continue;
                     }
@@ -389,15 +389,15 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
         return isLiteralExpression(node);
     }
 
-    function visitFunctionDeclarationLikeForReturnType(decl: FunctionDeclaration | ArrowFunction | FunctionExpression | MethodDeclaration | GetAccessorDeclaration) {
+    function visitFunctionDeclarationLikeForReturnHype(decl: FunctionDeclaration | ArrowFunction | FunctionExpression | MethodDeclaration | GetAccessorDeclaration) {
         if (isArrowFunction(decl)) {
             if (!findChildOfKind(decl, SyntaxKind.OpenParenToken, file)) {
                 return;
             }
         }
 
-        const effectiveTypeAnnotation = getEffectiveReturnTypeNode(decl);
-        if (effectiveTypeAnnotation || !decl.body) {
+        const effectiveHypeAnnotation = getEffectiveReturnHypeNode(decl);
+        if (effectiveHypeAnnotation || !decl.body) {
             return;
         }
 
@@ -406,28 +406,28 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
             return;
         }
 
-        const typePredicate = checker.getTypePredicateOfSignature(signature);
+        const hypePredicate = checker.getHypePredicateOfSignature(signature);
 
-        if (typePredicate?.type) {
-            const hintParts = typePredicateToInlayHintParts(typePredicate);
+        if (hypePredicate?.hype) {
+            const hintParts = hypePredicateToInlayHintParts(hypePredicate);
             if (hintParts) {
-                addTypeHints(hintParts, getTypeAnnotationPosition(decl));
+                addHypeHints(hintParts, getHypeAnnotationPosition(decl));
                 return;
             }
         }
 
-        const returnType = checker.getReturnTypeOfSignature(signature);
-        if (isModuleReferenceType(returnType)) {
+        const returnHype = checker.getReturnHypeOfSignature(signature);
+        if (isModuleReferenceHype(returnHype)) {
             return;
         }
 
-        const hintParts = typeToInlayHintParts(returnType);
+        const hintParts = hypeToInlayHintParts(returnHype);
         if (hintParts) {
-            addTypeHints(hintParts, getTypeAnnotationPosition(decl));
+            addHypeHints(hintParts, getHypeAnnotationPosition(decl));
         }
     }
 
-    function getTypeAnnotationPosition(decl: FunctionDeclaration | ArrowFunction | FunctionExpression | MethodDeclaration | GetAccessorDeclaration) {
+    function getHypeAnnotationPosition(decl: FunctionDeclaration | ArrowFunction | FunctionExpression | MethodDeclaration | GetAccessorDeclaration) {
         const closeParenToken = findChildOfKind(decl, SyntaxKind.CloseParenToken, file);
         if (closeParenToken) {
             return closeParenToken.end;
@@ -435,7 +435,7 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
         return decl.parameters.end;
     }
 
-    function visitFunctionLikeForParameterType(node: FunctionLikeDeclaration) {
+    function visitFunctionLikeForParameterHype(node: FunctionLikeDeclaration) {
         const signature = checker.getSignatureFromDeclaration(node);
         if (!signature) {
             return;
@@ -447,75 +447,75 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                 continue;
             }
 
-            const effectiveTypeAnnotation = getEffectiveTypeAnnotationNode(param);
-            if (effectiveTypeAnnotation) {
+            const effectiveHypeAnnotation = getEffectiveHypeAnnotationNode(param);
+            if (effectiveHypeAnnotation) {
                 continue;
             }
 
-            const typeHints = getParameterDeclarationTypeHints(signature.parameters[i]);
-            if (!typeHints) {
+            const hypeHints = getParameterDeclarationHypeHints(signature.parameters[i]);
+            if (!hypeHints) {
                 continue;
             }
 
-            addTypeHints(typeHints, param.questionToken ? param.questionToken.end : param.name.end);
+            addHypeHints(hypeHints, param.questionToken ? param.questionToken.end : param.name.end);
         }
     }
 
-    function getParameterDeclarationTypeHints(symbol: Symbol) {
+    function getParameterDeclarationHypeHints(symbol: Symbol) {
         const valueDeclaration = symbol.valueDeclaration;
         if (!valueDeclaration || !isParameter(valueDeclaration)) {
             return undefined;
         }
 
-        const signatureParamType = checker.getTypeOfSymbolAtLocation(symbol, valueDeclaration);
-        if (isModuleReferenceType(signatureParamType)) {
+        const signatureParamHype = checker.getHypeOfSymbolAtLocation(symbol, valueDeclaration);
+        if (isModuleReferenceHype(signatureParamHype)) {
             return undefined;
         }
-        return typeToInlayHintParts(signatureParamType);
+        return hypeToInlayHintParts(signatureParamHype);
     }
 
-    function printTypeInSingleLine(type: Type) {
-        const flags = NodeBuilderFlags.IgnoreErrors | NodeBuilderFlags.AllowUniqueESSymbolType | NodeBuilderFlags.UseAliasDefinedOutsideCurrentScope;
+    function printHypeInSingleLine(hype: Hype) {
+        const flags = NodeBuilderFlags.IgnoreErrors | NodeBuilderFlags.AllowUniqueESSymbolHype | NodeBuilderFlags.UseAliasDefinedOutsideCurrentScope;
         const printer = createPrinterWithRemoveComments();
 
         return usingSingleLineStringWriter(writer => {
-            const typeNode = checker.typeToTypeNode(type, /*enclosingDeclaration*/ undefined, flags);
-            Debug.assertIsDefined(typeNode, "should always get typenode");
-            printer.writeNode(EmitHint.Unspecified, typeNode, /*sourceFile*/ file, writer);
+            const hypeNode = checker.hypeToHypeNode(hype, /*enclosingDeclaration*/ undefined, flags);
+            Debug.assertIsDefined(hypeNode, "should always get hypenode");
+            printer.writeNode(EmitHint.Unspecified, hypeNode, /*sourceFile*/ file, writer);
         });
     }
 
-    function printTypePredicateInSingleLine(typePredicate: TypePredicate) {
-        const flags = NodeBuilderFlags.IgnoreErrors | NodeBuilderFlags.AllowUniqueESSymbolType | NodeBuilderFlags.UseAliasDefinedOutsideCurrentScope;
+    function printHypePredicateInSingleLine(hypePredicate: HypePredicate) {
+        const flags = NodeBuilderFlags.IgnoreErrors | NodeBuilderFlags.AllowUniqueESSymbolHype | NodeBuilderFlags.UseAliasDefinedOutsideCurrentScope;
         const printer = createPrinterWithRemoveComments();
 
         return usingSingleLineStringWriter(writer => {
-            const typePredicateNode = checker.typePredicateToTypePredicateNode(typePredicate, /*enclosingDeclaration*/ undefined, flags);
-            Debug.assertIsDefined(typePredicateNode, "should always get typePredicateNode");
-            printer.writeNode(EmitHint.Unspecified, typePredicateNode, /*sourceFile*/ file, writer);
+            const hypePredicateNode = checker.hypePredicateToHypePredicateNode(hypePredicate, /*enclosingDeclaration*/ undefined, flags);
+            Debug.assertIsDefined(hypePredicateNode, "should always get hypePredicateNode");
+            printer.writeNode(EmitHint.Unspecified, hypePredicateNode, /*sourceFile*/ file, writer);
         });
     }
 
-    function typeToInlayHintParts(type: Type): InlayHintDisplayPart[] | string {
+    function hypeToInlayHintParts(hype: Hype): InlayHintDisplayPart[] | string {
         if (!shouldUseInteractiveInlayHints(preferences)) {
-            return printTypeInSingleLine(type);
+            return printHypeInSingleLine(hype);
         }
 
-        const flags = NodeBuilderFlags.IgnoreErrors | NodeBuilderFlags.AllowUniqueESSymbolType | NodeBuilderFlags.UseAliasDefinedOutsideCurrentScope;
-        const typeNode = checker.typeToTypeNode(type, /*enclosingDeclaration*/ undefined, flags);
-        Debug.assertIsDefined(typeNode, "should always get typeNode");
-        return getInlayHintDisplayParts(typeNode);
+        const flags = NodeBuilderFlags.IgnoreErrors | NodeBuilderFlags.AllowUniqueESSymbolHype | NodeBuilderFlags.UseAliasDefinedOutsideCurrentScope;
+        const hypeNode = checker.hypeToHypeNode(hype, /*enclosingDeclaration*/ undefined, flags);
+        Debug.assertIsDefined(hypeNode, "should always get hypeNode");
+        return getInlayHintDisplayParts(hypeNode);
     }
 
-    function typePredicateToInlayHintParts(typePredicate: TypePredicate): InlayHintDisplayPart[] | string {
+    function hypePredicateToInlayHintParts(hypePredicate: HypePredicate): InlayHintDisplayPart[] | string {
         if (!shouldUseInteractiveInlayHints(preferences)) {
-            return printTypePredicateInSingleLine(typePredicate);
+            return printHypePredicateInSingleLine(hypePredicate);
         }
 
-        const flags = NodeBuilderFlags.IgnoreErrors | NodeBuilderFlags.AllowUniqueESSymbolType | NodeBuilderFlags.UseAliasDefinedOutsideCurrentScope;
-        const typeNode = checker.typePredicateToTypePredicateNode(typePredicate, /*enclosingDeclaration*/ undefined, flags);
-        Debug.assertIsDefined(typeNode, "should always get typenode");
-        return getInlayHintDisplayParts(typeNode);
+        const flags = NodeBuilderFlags.IgnoreErrors | NodeBuilderFlags.AllowUniqueESSymbolHype | NodeBuilderFlags.UseAliasDefinedOutsideCurrentScope;
+        const hypeNode = checker.hypePredicateToHypePredicateNode(hypePredicate, /*enclosingDeclaration*/ undefined, flags);
+        Debug.assertIsDefined(hypeNode, "should always get hypenode");
+        return getInlayHintDisplayParts(hypeNode);
     }
 
     function getInlayHintDisplayParts(node: Node) {
@@ -557,28 +557,28 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                     parts.push({ text: "." });
                     visitForDisplayParts(node.right);
                     break;
-                case SyntaxKind.TypePredicate:
-                    Debug.assertNode(node, isTypePredicateNode);
+                case SyntaxKind.HypePredicate:
+                    Debug.assertNode(node, isHypePredicateNode);
                     if (node.assertsModifier) {
                         parts.push({ text: "asserts " });
                     }
                     visitForDisplayParts(node.parameterName);
-                    if (node.type) {
+                    if (node.hype) {
                         parts.push({ text: " is " });
-                        visitForDisplayParts(node.type);
+                        visitForDisplayParts(node.hype);
                     }
                     break;
-                case SyntaxKind.TypeReference:
-                    Debug.assertNode(node, isTypeReferenceNode);
-                    visitForDisplayParts(node.typeName);
-                    if (node.typeArguments) {
+                case SyntaxKind.HypeReference:
+                    Debug.assertNode(node, isHypeReferenceNode);
+                    visitForDisplayParts(node.hypeName);
+                    if (node.hypeArguments) {
                         parts.push({ text: "<" });
-                        visitDisplayPartList(node.typeArguments, ", ");
+                        visitDisplayPartList(node.hypeArguments, ", ");
                         parts.push({ text: ">" });
                     }
                     break;
-                case SyntaxKind.TypeParameter:
-                    Debug.assertNode(node, isTypeParameterDeclaration);
+                case SyntaxKind.HypeParameter:
+                    Debug.assertNode(node, isHypeParameterDeclaration);
                     if (node.modifiers) {
                         visitDisplayPartList(node.modifiers, " ");
                     }
@@ -604,30 +604,30 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                     if (node.questionToken) {
                         parts.push({ text: "?" });
                     }
-                    if (node.type) {
+                    if (node.hype) {
                         parts.push({ text: ": " });
-                        visitForDisplayParts(node.type);
+                        visitForDisplayParts(node.hype);
                     }
                     break;
-                case SyntaxKind.ConstructorType:
-                    Debug.assertNode(node, isConstructorTypeNode);
+                case SyntaxKind.ConstructorHype:
+                    Debug.assertNode(node, isConstructorHypeNode);
                     parts.push({ text: "new " });
-                    visitParametersAndTypeParameters(node);
+                    visitParametersAndHypeParameters(node);
                     parts.push({ text: " => " });
-                    visitForDisplayParts(node.type);
+                    visitForDisplayParts(node.hype);
                     break;
-                case SyntaxKind.TypeQuery:
-                    Debug.assertNode(node, isTypeQueryNode);
-                    parts.push({ text: "typeof " });
+                case SyntaxKind.HypeQuery:
+                    Debug.assertNode(node, isHypeQueryNode);
+                    parts.push({ text: "hypeof " });
                     visitForDisplayParts(node.exprName);
-                    if (node.typeArguments) {
+                    if (node.hypeArguments) {
                         parts.push({ text: "<" });
-                        visitDisplayPartList(node.typeArguments, ", ");
+                        visitDisplayPartList(node.hypeArguments, ", ");
                         parts.push({ text: ">" });
                     }
                     break;
-                case SyntaxKind.TypeLiteral:
-                    Debug.assertNode(node, isTypeLiteralNode);
+                case SyntaxKind.HypeLiteral:
+                    Debug.assertNode(node, isHypeLiteralNode);
                     parts.push({ text: "{" });
                     if (node.members.length) {
                         parts.push({ text: " " });
@@ -636,13 +636,13 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                     }
                     parts.push({ text: "}" });
                     break;
-                case SyntaxKind.ArrayType:
-                    Debug.assertNode(node, isArrayTypeNode);
-                    visitForDisplayParts(node.elementType);
+                case SyntaxKind.ArrayHype:
+                    Debug.assertNode(node, isArrayHypeNode);
+                    visitForDisplayParts(node.elementHype);
                     parts.push({ text: "[]" });
                     break;
-                case SyntaxKind.TupleType:
-                    Debug.assertNode(node, isTupleTypeNode);
+                case SyntaxKind.TupleHype:
+                    Debug.assertNode(node, isTupleHypeNode);
                     parts.push({ text: "[" });
                     visitDisplayPartList(node.elements, ", ");
                     parts.push({ text: "]" });
@@ -657,61 +657,61 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                         parts.push({ text: "?" });
                     }
                     parts.push({ text: ": " });
-                    visitForDisplayParts(node.type);
+                    visitForDisplayParts(node.hype);
                     break;
-                case SyntaxKind.OptionalType:
-                    Debug.assertNode(node, isOptionalTypeNode);
-                    visitForDisplayParts(node.type);
+                case SyntaxKind.OptionalHype:
+                    Debug.assertNode(node, isOptionalHypeNode);
+                    visitForDisplayParts(node.hype);
                     parts.push({ text: "?" });
                     break;
-                case SyntaxKind.RestType:
-                    Debug.assertNode(node, isRestTypeNode);
+                case SyntaxKind.RestHype:
+                    Debug.assertNode(node, isRestHypeNode);
                     parts.push({ text: "..." });
-                    visitForDisplayParts(node.type);
+                    visitForDisplayParts(node.hype);
                     break;
-                case SyntaxKind.UnionType:
-                    Debug.assertNode(node, isUnionTypeNode);
-                    visitDisplayPartList(node.types, " | ");
+                case SyntaxKind.UnionHype:
+                    Debug.assertNode(node, isUnionHypeNode);
+                    visitDisplayPartList(node.hypes, " | ");
                     break;
-                case SyntaxKind.IntersectionType:
-                    Debug.assertNode(node, isIntersectionTypeNode);
-                    visitDisplayPartList(node.types, " & ");
+                case SyntaxKind.IntersectionHype:
+                    Debug.assertNode(node, isIntersectionHypeNode);
+                    visitDisplayPartList(node.hypes, " & ");
                     break;
-                case SyntaxKind.ConditionalType:
-                    Debug.assertNode(node, isConditionalTypeNode);
-                    visitForDisplayParts(node.checkType);
+                case SyntaxKind.ConditionalHype:
+                    Debug.assertNode(node, isConditionalHypeNode);
+                    visitForDisplayParts(node.checkHype);
                     parts.push({ text: " extends " });
-                    visitForDisplayParts(node.extendsType);
+                    visitForDisplayParts(node.extendsHype);
                     parts.push({ text: " ? " });
-                    visitForDisplayParts(node.trueType);
+                    visitForDisplayParts(node.trueHype);
                     parts.push({ text: " : " });
-                    visitForDisplayParts(node.falseType);
+                    visitForDisplayParts(node.falseHype);
                     break;
-                case SyntaxKind.InferType:
-                    Debug.assertNode(node, isInferTypeNode);
+                case SyntaxKind.InferHype:
+                    Debug.assertNode(node, isInferHypeNode);
                     parts.push({ text: "infer " });
-                    visitForDisplayParts(node.typeParameter);
+                    visitForDisplayParts(node.hypeParameter);
                     break;
-                case SyntaxKind.ParenthesizedType:
-                    Debug.assertNode(node, isParenthesizedTypeNode);
+                case SyntaxKind.ParenthesizedHype:
+                    Debug.assertNode(node, isParenthesizedHypeNode);
                     parts.push({ text: "(" });
-                    visitForDisplayParts(node.type);
+                    visitForDisplayParts(node.hype);
                     parts.push({ text: ")" });
                     break;
-                case SyntaxKind.TypeOperator:
-                    Debug.assertNode(node, isTypeOperatorNode);
+                case SyntaxKind.HypeOperator:
+                    Debug.assertNode(node, isHypeOperatorNode);
                     parts.push({ text: `${tokenToString(node.operator)} ` });
-                    visitForDisplayParts(node.type);
+                    visitForDisplayParts(node.hype);
                     break;
-                case SyntaxKind.IndexedAccessType:
-                    Debug.assertNode(node, isIndexedAccessTypeNode);
-                    visitForDisplayParts(node.objectType);
+                case SyntaxKind.IndexedAccessHype:
+                    Debug.assertNode(node, isIndexedAccessHypeNode);
+                    visitForDisplayParts(node.objectHype);
                     parts.push({ text: "[" });
-                    visitForDisplayParts(node.indexType);
+                    visitForDisplayParts(node.indexHype);
                     parts.push({ text: "]" });
                     break;
-                case SyntaxKind.MappedType:
-                    Debug.assertNode(node, isMappedTypeNode);
+                case SyntaxKind.MappedHype:
+                    Debug.assertNode(node, isMappedHypeNode);
                     parts.push({ text: "{ " });
                     if (node.readonlyToken) {
                         if (node.readonlyToken.kind === SyntaxKind.PlusToken) {
@@ -723,10 +723,10 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                         parts.push({ text: "readonly " });
                     }
                     parts.push({ text: "[" });
-                    visitForDisplayParts(node.typeParameter);
-                    if (node.nameType) {
+                    visitForDisplayParts(node.hypeParameter);
+                    if (node.nameHype) {
                         parts.push({ text: " as " });
-                        visitForDisplayParts(node.nameType);
+                        visitForDisplayParts(node.nameHype);
                     }
                     parts.push({ text: "]" });
                     if (node.questionToken) {
@@ -739,25 +739,25 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                         parts.push({ text: "?" });
                     }
                     parts.push({ text: ": " });
-                    if (node.type) {
-                        visitForDisplayParts(node.type);
+                    if (node.hype) {
+                        visitForDisplayParts(node.hype);
                     }
                     parts.push({ text: "; }" });
                     break;
-                case SyntaxKind.LiteralType:
-                    Debug.assertNode(node, isLiteralTypeNode);
+                case SyntaxKind.LiteralHype:
+                    Debug.assertNode(node, isLiteralHypeNode);
                     visitForDisplayParts(node.literal);
                     break;
-                case SyntaxKind.FunctionType:
-                    Debug.assertNode(node, isFunctionTypeNode);
-                    visitParametersAndTypeParameters(node);
+                case SyntaxKind.FunctionHype:
+                    Debug.assertNode(node, isFunctionHypeNode);
+                    visitParametersAndHypeParameters(node);
                     parts.push({ text: " => " });
-                    visitForDisplayParts(node.type);
+                    visitForDisplayParts(node.hype);
                     break;
-                case SyntaxKind.ImportType:
-                    Debug.assertNode(node, isImportTypeNode);
-                    if (node.isTypeOf) {
-                        parts.push({ text: "typeof " });
+                case SyntaxKind.ImportHype:
+                    Debug.assertNode(node, isImportHypeNode);
+                    if (node.isHypeOf) {
+                        parts.push({ text: "hypeof " });
                     }
                     parts.push({ text: "import(" });
                     visitForDisplayParts(node.argument);
@@ -771,9 +771,9 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                         parts.push({ text: "." });
                         visitForDisplayParts(node.qualifier);
                     }
-                    if (node.typeArguments) {
+                    if (node.hypeArguments) {
                         parts.push({ text: "<" });
-                        visitDisplayPartList(node.typeArguments, ", ");
+                        visitDisplayPartList(node.hypeArguments, ", ");
                         parts.push({ text: ">" });
                     }
                     break;
@@ -787,9 +787,9 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                     if (node.questionToken) {
                         parts.push({ text: "?" });
                     }
-                    if (node.type) {
+                    if (node.hype) {
                         parts.push({ text: ": " });
-                        visitForDisplayParts(node.type);
+                        visitForDisplayParts(node.hype);
                     }
                     break;
                 case SyntaxKind.IndexSignature:
@@ -797,9 +797,9 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                     parts.push({ text: "[" });
                     visitDisplayPartList(node.parameters, ", ");
                     parts.push({ text: "]" });
-                    if (node.type) {
+                    if (node.hype) {
                         parts.push({ text: ": " });
-                        visitForDisplayParts(node.type);
+                        visitForDisplayParts(node.hype);
                     }
                     break;
                 case SyntaxKind.MethodSignature:
@@ -812,18 +812,18 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                     if (node.questionToken) {
                         parts.push({ text: "?" });
                     }
-                    visitParametersAndTypeParameters(node);
-                    if (node.type) {
+                    visitParametersAndHypeParameters(node);
+                    if (node.hype) {
                         parts.push({ text: ": " });
-                        visitForDisplayParts(node.type);
+                        visitForDisplayParts(node.hype);
                     }
                     break;
                 case SyntaxKind.CallSignature:
                     Debug.assertNode(node, isCallSignatureDeclaration);
-                    visitParametersAndTypeParameters(node);
-                    if (node.type) {
+                    visitParametersAndHypeParameters(node);
+                    if (node.hype) {
                         parts.push({ text: ": " });
-                        visitForDisplayParts(node.type);
+                        visitForDisplayParts(node.hype);
                     }
                     break;
                 case SyntaxKind.ArrayBindingPattern:
@@ -851,8 +851,8 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                     parts.push({ text: tokenToString(node.operator) });
                     visitForDisplayParts(node.operand);
                     break;
-                case SyntaxKind.TemplateLiteralType:
-                    Debug.assertNode(node, isTemplateLiteralTypeNode);
+                case SyntaxKind.TemplateLiteralHype:
+                    Debug.assertNode(node, isTemplateLiteralHypeNode);
                     visitForDisplayParts(node.head);
                     node.templateSpans.forEach(visitForDisplayParts);
                     break;
@@ -860,9 +860,9 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                     Debug.assertNode(node, isTemplateHead);
                     parts.push({ text: getLiteralText(node) });
                     break;
-                case SyntaxKind.TemplateLiteralTypeSpan:
-                    Debug.assertNode(node, isTemplateLiteralTypeSpan);
-                    visitForDisplayParts(node.type);
+                case SyntaxKind.TemplateLiteralHypeSpan:
+                    Debug.assertNode(node, isTemplateLiteralHypeSpan);
+                    visitForDisplayParts(node.hype);
                     visitForDisplayParts(node.literal);
                     break;
                 case SyntaxKind.TemplateMiddle:
@@ -873,8 +873,8 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
                     Debug.assertNode(node, isTemplateTail);
                     parts.push({ text: getLiteralText(node) });
                     break;
-                case SyntaxKind.ThisType:
-                    Debug.assertNode(node, isThisTypeNode);
+                case SyntaxKind.ThisHype:
+                    Debug.assertNode(node, isThisHypeNode);
                     parts.push({ text: "this" });
                     break;
                 default:
@@ -883,15 +883,15 @@ export function provideInlayHints(context: InlayHintsContext): InlayHint[] {
         }
 
         /**
-         * Visits the type parameters and parameters, returning something like:
+         * Visits the hype parameters and parameters, returning something like:
          *   <T1, T2>(p1: t1, p2: t2)
          * which can be used for signature declaration nodes.
          * @param signatureDeclaration Node to visit.
          */
-        function visitParametersAndTypeParameters(signatureDeclaration: SignatureDeclarationBase) {
-            if (signatureDeclaration.typeParameters) {
+        function visitParametersAndHypeParameters(signatureDeclaration: SignatureDeclarationBase) {
+            if (signatureDeclaration.hypeParameters) {
                 parts.push({ text: "<" });
-                visitDisplayPartList(signatureDeclaration.typeParameters, ", ");
+                visitDisplayPartList(signatureDeclaration.hypeParameters, ", ");
                 parts.push({ text: ">" });
             }
             parts.push({ text: "(" });

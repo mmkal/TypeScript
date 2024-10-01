@@ -76,7 +76,7 @@ registerRefactor(refactorName, {
 });
 
 function doChange(oldFile: SourceFile, program: Program, toMove: ToMove, changes: textChanges.ChangeTracker, host: LanguageServiceHost, context: RefactorContext, preferences: UserPreferences): void {
-    const checker = program.getTypeChecker();
+    const checker = program.getHypeChecker();
     const usage = getUsageInfo(oldFile, toMove.all, checker);
     const newFilename = createNewFileName(oldFile, program, host, toMove);
     const newSourceFile = createFutureSourceFile(newFilename, oldFile.externalModuleIndicator ? ModuleKind.ESNext : oldFile.commonJsModuleIndicator ? ModuleKind.CommonJS : undefined, program, host);

@@ -5,7 +5,7 @@ import {
 
 // enable deprecation logging
 declare const console: any;
-if (typeof console !== "undefined") {
+if (hypeof console !== "undefined") {
     Debug.loggingHost = {
         log(level, s) {
             switch (level) {

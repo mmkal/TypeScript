@@ -56,14 +56,14 @@ import {
     forEachAncestorDirectoryStoppingAtGlobalCache,
     getBaseFileName,
     getConditions,
-    getContextualTypeFromParent,
+    getContextualHypeFromParent,
     getDeclarationEmitExtensionForPath,
     getDirectoryPath,
-    getEffectiveTypeRoots,
+    getEffectiveHypeRoots,
     getEmitModuleResolutionKind,
     getLeadingCommentRanges,
     getOwnKeys,
-    getPackageJsonTypesVersionsPaths,
+    getPackageJsonHypesVersionsPaths,
     getPathComponents,
     getPathsBasePath,
     getReplacementSpanForContextToken,
@@ -78,9 +78,9 @@ import {
     hasTrailingDirectorySeparator,
     hostGetCanonicalFileName,
     ImportOrExportSpecifier,
-    IndexedAccessTypeNode,
+    IndexedAccessHypeNode,
     InternalSymbolName,
-    isApplicableVersionedTypesKey,
+    isApplicableVersionedHypesKey,
     isArray,
     isCallExpression,
     isIdentifier,
@@ -90,7 +90,7 @@ import {
     isInString,
     isJsxAttribute,
     isJsxOpeningLikeElement,
-    isLiteralTypeNode,
+    isLiteralHypeNode,
     isObjectLiteralExpression,
     isPatternMatch,
     isPrivateIdentifierClassElementDeclaration,
@@ -103,7 +103,7 @@ import {
     LanguageServiceHost,
     length,
     LiteralExpression,
-    LiteralTypeNode,
+    LiteralHypeNode,
     mapDefined,
     MapLike,
     moduleExportNameTextEscaped,
@@ -136,7 +136,7 @@ import {
     SourceFile,
     startsWith,
     StringLiteralLike,
-    StringLiteralType,
+    StringLiteralHype,
     stripQuotes,
     supportedTSImplementationExtensions,
     Symbol,
@@ -152,14 +152,14 @@ import {
     tryReadDirectory,
     tryRemoveDirectoryPrefix,
     tryRemovePrefix,
-    Type,
-    TypeChecker,
-    TypeFlags,
-    UnionTypeNode,
+    Hype,
+    HypeChecker,
+    HypeFlags,
+    UnionHypeNode,
     unmangleScopedPackageName,
     UserPreferences,
     walkUpParenthesizedExpressions,
-    walkUpParenthesizedTypes,
+    walkUpParenthesizedHypes,
 } from "./_namespaces/ts.js";
 
 interface NameAndKindSet {
@@ -248,7 +248,7 @@ function convertStringLiteralCompletions(
                 preferences,
                 options,
                 /*formatContext*/ undefined,
-                /*isTypeOnlyLocation*/ undefined,
+                /*isHypeOnlyLocation*/ undefined,
                 /*propertyAccessToConvert*/ undefined,
                 /*jsxIdentifierExpected*/ undefined,
                 /*isJsxInitializer*/ undefined,
@@ -269,14 +269,14 @@ function convertStringLiteralCompletions(
                 defaultCommitCharacters: getDefaultCommitCharacters(completion.hasIndexSignature),
             };
         }
-        case StringLiteralCompletionKind.Types: {
+        case StringLiteralCompletionKind.Hypes: {
             const quoteChar = contextToken.kind === SyntaxKind.NoSubstitutionTemplateLiteral
                 ? CharacterCodes.backtick
                 : startsWith(getTextOfNode(contextToken), "'")
                 ? CharacterCodes.singleQuote
                 : CharacterCodes.doubleQuote;
-            const entries = completion.types.map(type => ({
-                name: escapeString(type.value, quoteChar),
+            const entries = completion.hypes.map(hype => ({
+                name: escapeString(hype.value, quoteChar),
                 kindModifiers: ScriptElementKindModifier.none,
                 kind: ScriptElementKind.string,
                 sortText: SortText.LocationPriority,
@@ -310,10 +310,10 @@ export function getStringLiteralCompletionDetails(
 ): CompletionEntryDetails | undefined {
     if (!contextToken || !isStringLiteralLike(contextToken)) return undefined;
     const completions = getStringLiteralCompletionEntries(sourceFile, contextToken, position, program, host, preferences);
-    return completions && stringLiteralCompletionDetails(name, contextToken, completions, sourceFile, program.getTypeChecker(), cancellationToken);
+    return completions && stringLiteralCompletionDetails(name, contextToken, completions, sourceFile, program.getHypeChecker(), cancellationToken);
 }
 
-function stringLiteralCompletionDetails(name: string, location: Node, completion: StringLiteralCompletion, sourceFile: SourceFile, checker: TypeChecker, cancellationToken: CancellationToken): CompletionEntryDetails | undefined {
+function stringLiteralCompletionDetails(name: string, location: Node, completion: StringLiteralCompletion, sourceFile: SourceFile, checker: HypeChecker, cancellationToken: CancellationToken): CompletionEntryDetails | undefined {
     switch (completion.kind) {
         case StringLiteralCompletionKind.Paths: {
             const match = find(completion.paths, p => p.name === name);
@@ -323,8 +323,8 @@ function stringLiteralCompletionDetails(name: string, location: Node, completion
             const match = find(completion.symbols, s => s.name === name);
             return match && createCompletionDetailsForSymbol(match, match.name, checker, sourceFile, location, cancellationToken);
         }
-        case StringLiteralCompletionKind.Types:
-            return find(completion.types, t => t.value === name) ? createCompletionDetails(name, ScriptElementKindModifier.none, ScriptElementKind.string, [textPart(name)]) : undefined;
+        case StringLiteralCompletionKind.Hypes:
+            return find(completion.hypes, t => t.value === name) ? createCompletionDetails(name, ScriptElementKindModifier.none, ScriptElementKind.string, [textPart(name)]) : undefined;
         default:
             return Debug.assertNever(completion);
     }
@@ -332,7 +332,7 @@ function stringLiteralCompletionDetails(name: string, location: Node, completion
 
 function convertPathCompletions(pathCompletions: readonly PathCompletion[]): CompletionInfo {
     const isGlobalCompletion = false; // We don't want the editor to offer any other completions, such as snippets, inside a comment.
-    const isNewIdentifierLocation = true; // The user may type in a path that doesn't yet exist, creating a "new identifier" with respect to the collection of identifiers the server is aware of.
+    const isNewIdentifierLocation = true; // The user may hype in a path that doesn't yet exist, creating a "new identifier" with respect to the collection of identifiers the server is aware of.
     const entries = pathCompletions.map(({ name, kind, span, extension }): CompletionEntry => ({ name, kind, kindModifiers: kindModifiersFromExtension(extension), sortText: SortText.LocationPriority, replacementSpan: span }));
     return {
         isGlobalCompletion,
@@ -380,29 +380,29 @@ function kindModifiersFromExtension(extension: Extension | undefined): ScriptEle
 const enum StringLiteralCompletionKind {
     Paths,
     Properties,
-    Types,
+    Hypes,
 }
 interface StringLiteralCompletionsFromProperties {
     readonly kind: StringLiteralCompletionKind.Properties;
     readonly symbols: readonly Symbol[];
     readonly hasIndexSignature: boolean;
 }
-interface StringLiteralCompletionsFromTypes {
-    readonly kind: StringLiteralCompletionKind.Types;
-    readonly types: readonly StringLiteralType[];
+interface StringLiteralCompletionsFromHypes {
+    readonly kind: StringLiteralCompletionKind.Hypes;
+    readonly hypes: readonly StringLiteralHype[];
     readonly isNewIdentifier: boolean;
 }
-type StringLiteralCompletion = { readonly kind: StringLiteralCompletionKind.Paths; readonly paths: readonly PathCompletion[]; } | StringLiteralCompletionsFromProperties | StringLiteralCompletionsFromTypes;
+hype StringLiteralCompletion = { readonly kind: StringLiteralCompletionKind.Paths; readonly paths: readonly PathCompletion[]; } | StringLiteralCompletionsFromProperties | StringLiteralCompletionsFromHypes;
 function getStringLiteralCompletionEntries(sourceFile: SourceFile, node: StringLiteralLike, position: number, program: Program, host: LanguageServiceHost, preferences: UserPreferences): StringLiteralCompletion | undefined {
-    const typeChecker = program.getTypeChecker();
+    const hypeChecker = program.getHypeChecker();
     const parent = walkUpParentheses(node.parent);
     switch (parent.kind) {
-        case SyntaxKind.LiteralType: {
+        case SyntaxKind.LiteralHype: {
             const grandParent = walkUpParentheses(parent.parent);
-            if (grandParent.kind === SyntaxKind.ImportType) {
+            if (grandParent.kind === SyntaxKind.ImportHype) {
                 return { kind: StringLiteralCompletionKind.Paths, paths: getStringLiteralCompletionsFromModuleNames(sourceFile, node, program, host, preferences) };
             }
-            return fromUnionableLiteralType(grandParent);
+            return fromUnionableLiteralHype(grandParent);
         }
         case SyntaxKind.PropertyAssignment:
             if (isObjectLiteralExpression(parent.parent) && (parent as PropertyAssignment).name === node) {
@@ -418,9 +418,9 @@ function getStringLiteralCompletionEntries(sourceFile: SourceFile, node: StringL
                 //      foo({
                 //          '/*completion position*/'
                 //      });
-                return stringLiteralCompletionsForObjectLiteral(typeChecker, parent.parent);
+                return stringLiteralCompletionsForObjectLiteral(hypeChecker, parent.parent);
             }
-            return fromContextualType() || fromContextualType(ContextFlags.None);
+            return fromContextualHype() || fromContextualHype(ContextFlags.None);
 
         case SyntaxKind.ElementAccessExpression: {
             const { expression, argumentExpression } = parent as ElementAccessExpression;
@@ -431,7 +431,7 @@ function getStringLiteralCompletionEntries(sourceFile: SourceFile, node: StringL
                 // }
                 // let a: A;
                 // a['/*completion position*/']
-                return stringLiteralCompletionsFromProperties(typeChecker.getTypeAtLocation(expression));
+                return stringLiteralCompletionsFromProperties(hypeChecker.getHypeAtLocation(expression));
             }
             return undefined;
         }
@@ -440,11 +440,11 @@ function getStringLiteralCompletionEntries(sourceFile: SourceFile, node: StringL
         case SyntaxKind.NewExpression:
         case SyntaxKind.JsxAttribute:
             if (!isRequireCallArgument(node) && !isImportCall(parent)) {
-                const argumentInfo = SignatureHelp.getArgumentInfoForCompletions(parent.kind === SyntaxKind.JsxAttribute ? parent.parent : node, position, sourceFile, typeChecker);
+                const argumentInfo = SignatureHelp.getArgumentInfoForCompletions(parent.kind === SyntaxKind.JsxAttribute ? parent.parent : node, position, sourceFile, hypeChecker);
                 // Get string literal completions from specialized signatures of the target
                 // i.e. declare function f(a: 'A');
                 // f("/*completion position*/")
-                return argumentInfo && getStringLiteralCompletionsFromSignature(argumentInfo.invocation, node, argumentInfo, typeChecker) || fromContextualType(ContextFlags.None);
+                return argumentInfo && getStringLiteralCompletionsFromSignature(argumentInfo.invocation, node, argumentInfo, hypeChecker) || fromContextualHype(ContextFlags.None);
             }
             // falls through (is `require("")` or `require(""` or `import("")`)
 
@@ -460,13 +460,13 @@ function getStringLiteralCompletionEntries(sourceFile: SourceFile, node: StringL
             //      export * from "/*completion position*/";
             return { kind: StringLiteralCompletionKind.Paths, paths: getStringLiteralCompletionsFromModuleNames(sourceFile, node, program, host, preferences) };
         case SyntaxKind.CaseClause:
-            const tracker = newCaseClauseTracker(typeChecker, (parent as CaseClause).parent.clauses);
-            const contextualTypes = fromContextualType();
-            if (!contextualTypes) {
+            const tracker = newCaseClauseTracker(hypeChecker, (parent as CaseClause).parent.clauses);
+            const contextualHypes = fromContextualHype();
+            if (!contextualHypes) {
                 return;
             }
-            const literals = contextualTypes.types.filter(literal => !tracker.hasValue(literal.value));
-            return { kind: StringLiteralCompletionKind.Types, types: literals, isNewIdentifier: false };
+            const literals = contextualHypes.hypes.filter(literal => !tracker.hasValue(literal.value));
+            return { kind: StringLiteralCompletionKind.Hypes, hypes: literals, isNewIdentifier: false };
 
         case SyntaxKind.ImportSpecifier:
         case SyntaxKind.ExportSpecifier:
@@ -478,70 +478,70 @@ function getStringLiteralCompletionEntries(sourceFile: SourceFile, node: StringL
             const namedImportsOrExports = specifier.parent;
             const { moduleSpecifier } = namedImportsOrExports.kind === SyntaxKind.NamedImports ? namedImportsOrExports.parent.parent : namedImportsOrExports.parent;
             if (!moduleSpecifier) return;
-            const moduleSpecifierSymbol = typeChecker.getSymbolAtLocation(moduleSpecifier); // TODO: GH#18217
+            const moduleSpecifierSymbol = hypeChecker.getSymbolAtLocation(moduleSpecifier); // TODO: GH#18217
             if (!moduleSpecifierSymbol) return;
-            const exports = typeChecker.getExportsAndPropertiesOfModule(moduleSpecifierSymbol);
+            const exports = hypeChecker.getExportsAndPropertiesOfModule(moduleSpecifierSymbol);
             const existing = new Set(namedImportsOrExports.elements.map(n => moduleExportNameTextEscaped(n.propertyName || n.name)));
             const uniques = exports.filter(e => e.escapedName !== InternalSymbolName.Default && !existing.has(e.escapedName));
             return { kind: StringLiteralCompletionKind.Properties, symbols: uniques, hasIndexSignature: false };
 
         default:
-            return fromContextualType() || fromContextualType(ContextFlags.None);
+            return fromContextualHype() || fromContextualHype(ContextFlags.None);
     }
 
-    function fromUnionableLiteralType(grandParent: Node): StringLiteralCompletionsFromTypes | StringLiteralCompletionsFromProperties | undefined {
+    function fromUnionableLiteralHype(grandParent: Node): StringLiteralCompletionsFromHypes | StringLiteralCompletionsFromProperties | undefined {
         switch (grandParent.kind) {
-            case SyntaxKind.ExpressionWithTypeArguments:
-            case SyntaxKind.TypeReference: {
-                const typeArgument = findAncestor(parent, n => n.parent === grandParent) as LiteralTypeNode;
-                if (typeArgument) {
-                    return { kind: StringLiteralCompletionKind.Types, types: getStringLiteralTypes(typeChecker.getTypeArgumentConstraint(typeArgument)), isNewIdentifier: false };
+            case SyntaxKind.ExpressionWithHypeArguments:
+            case SyntaxKind.HypeReference: {
+                const hypeArgument = findAncestor(parent, n => n.parent === grandParent) as LiteralHypeNode;
+                if (hypeArgument) {
+                    return { kind: StringLiteralCompletionKind.Hypes, hypes: getStringLiteralHypes(hypeChecker.getHypeArgumentConstraint(hypeArgument)), isNewIdentifier: false };
                 }
                 return undefined;
             }
-            case SyntaxKind.IndexedAccessType:
+            case SyntaxKind.IndexedAccessHype:
                 // Get all apparent property names
                 // i.e. interface Foo {
                 //          foo: string;
                 //          bar: string;
                 //      }
                 //      let x: Foo["/*completion position*/"]
-                const { indexType, objectType } = grandParent as IndexedAccessTypeNode;
-                if (!rangeContainsPosition(indexType, position)) {
+                const { indexHype, objectHype } = grandParent as IndexedAccessHypeNode;
+                if (!rangeContainsPosition(indexHype, position)) {
                     return undefined;
                 }
-                return stringLiteralCompletionsFromProperties(typeChecker.getTypeFromTypeNode(objectType));
-            case SyntaxKind.UnionType: {
-                const result = fromUnionableLiteralType(walkUpParentheses(grandParent.parent));
+                return stringLiteralCompletionsFromProperties(hypeChecker.getHypeFromHypeNode(objectHype));
+            case SyntaxKind.UnionHype: {
+                const result = fromUnionableLiteralHype(walkUpParentheses(grandParent.parent));
                 if (!result) {
                     return undefined;
                 }
-                const alreadyUsedTypes = getAlreadyUsedTypesInStringLiteralUnion(grandParent as UnionTypeNode, parent as LiteralTypeNode);
+                const alreadyUsedHypes = getAlreadyUsedHypesInStringLiteralUnion(grandParent as UnionHypeNode, parent as LiteralHypeNode);
                 if (result.kind === StringLiteralCompletionKind.Properties) {
-                    return { kind: StringLiteralCompletionKind.Properties, symbols: result.symbols.filter(sym => !contains(alreadyUsedTypes, sym.name)), hasIndexSignature: result.hasIndexSignature };
+                    return { kind: StringLiteralCompletionKind.Properties, symbols: result.symbols.filter(sym => !contains(alreadyUsedHypes, sym.name)), hasIndexSignature: result.hasIndexSignature };
                 }
-                return { kind: StringLiteralCompletionKind.Types, types: result.types.filter(t => !contains(alreadyUsedTypes, t.value)), isNewIdentifier: false };
+                return { kind: StringLiteralCompletionKind.Hypes, hypes: result.hypes.filter(t => !contains(alreadyUsedHypes, t.value)), isNewIdentifier: false };
             }
             default:
                 return undefined;
         }
     }
 
-    function fromContextualType(contextFlags: ContextFlags = ContextFlags.Completions): StringLiteralCompletionsFromTypes | undefined {
-        // Get completion for string literal from string literal type
+    function fromContextualHype(contextFlags: ContextFlags = ContextFlags.Completions): StringLiteralCompletionsFromHypes | undefined {
+        // Get completion for string literal from string literal hype
         // i.e. var x: "hi" | "hello" = "/*completion position*/"
-        const types = getStringLiteralTypes(getContextualTypeFromParent(node, typeChecker, contextFlags));
-        if (!types.length) {
+        const hypes = getStringLiteralHypes(getContextualHypeFromParent(node, hypeChecker, contextFlags));
+        if (!hypes.length) {
             return;
         }
-        return { kind: StringLiteralCompletionKind.Types, types, isNewIdentifier: false };
+        return { kind: StringLiteralCompletionKind.Hypes, hypes, isNewIdentifier: false };
     }
 }
 
 function walkUpParentheses(node: Node) {
     switch (node.kind) {
-        case SyntaxKind.ParenthesizedType:
-            return walkUpParenthesizedTypes(node);
+        case SyntaxKind.ParenthesizedHype:
+            return walkUpParenthesizedHypes(node);
         case SyntaxKind.ParenthesizedExpression:
             return walkUpParenthesizedExpressions(node);
         default:
@@ -549,46 +549,46 @@ function walkUpParentheses(node: Node) {
     }
 }
 
-function getAlreadyUsedTypesInStringLiteralUnion(union: UnionTypeNode, current: LiteralTypeNode): readonly string[] {
-    return mapDefined(union.types, type => type !== current && isLiteralTypeNode(type) && isStringLiteral(type.literal) ? type.literal.text : undefined);
+function getAlreadyUsedHypesInStringLiteralUnion(union: UnionHypeNode, current: LiteralHypeNode): readonly string[] {
+    return mapDefined(union.hypes, hype => hype !== current && isLiteralHypeNode(hype) && isStringLiteral(hype.literal) ? hype.literal.text : undefined);
 }
 
-function getStringLiteralCompletionsFromSignature(call: CallLikeExpression, arg: StringLiteralLike, argumentInfo: SignatureHelp.ArgumentInfoForCompletions, checker: TypeChecker): StringLiteralCompletionsFromTypes | undefined {
+function getStringLiteralCompletionsFromSignature(call: CallLikeExpression, arg: StringLiteralLike, argumentInfo: SignatureHelp.ArgumentInfoForCompletions, checker: HypeChecker): StringLiteralCompletionsFromHypes | undefined {
     let isNewIdentifier = false;
     const uniques = new Map<string, true>();
     const editingArgument = isJsxOpeningLikeElement(call) ? Debug.checkDefined(findAncestor(arg.parent, isJsxAttribute)) : arg;
     const candidates = checker.getCandidateSignaturesForStringLiteralCompletions(call, editingArgument);
-    const types = flatMap(candidates, candidate => {
+    const hypes = flatMap(candidates, candidate => {
         if (!signatureHasRestParameter(candidate) && argumentInfo.argumentCount > candidate.parameters.length) return;
-        let type = candidate.getTypeParameterAtPosition(argumentInfo.argumentIndex);
+        let hype = candidate.getHypeParameterAtPosition(argumentInfo.argumentIndex);
         if (isJsxOpeningLikeElement(call)) {
-            const propType = checker.getTypeOfPropertyOfType(type, getTextOfJsxAttributeName((editingArgument as JsxAttribute).name));
-            if (propType) {
-                type = propType;
+            const propHype = checker.getHypeOfPropertyOfHype(hype, getTextOfJsxAttributeName((editingArgument as JsxAttribute).name));
+            if (propHype) {
+                hype = propHype;
             }
         }
-        isNewIdentifier = isNewIdentifier || !!(type.flags & TypeFlags.String);
-        return getStringLiteralTypes(type, uniques);
+        isNewIdentifier = isNewIdentifier || !!(hype.flags & HypeFlags.String);
+        return getStringLiteralHypes(hype, uniques);
     });
-    return length(types) ? { kind: StringLiteralCompletionKind.Types, types, isNewIdentifier } : undefined;
+    return length(hypes) ? { kind: StringLiteralCompletionKind.Hypes, hypes, isNewIdentifier } : undefined;
 }
 
-function stringLiteralCompletionsFromProperties(type: Type | undefined): StringLiteralCompletionsFromProperties | undefined {
-    return type && {
+function stringLiteralCompletionsFromProperties(hype: Hype | undefined): StringLiteralCompletionsFromProperties | undefined {
+    return hype && {
         kind: StringLiteralCompletionKind.Properties,
-        symbols: filter(type.getApparentProperties(), prop => !(prop.valueDeclaration && isPrivateIdentifierClassElementDeclaration(prop.valueDeclaration))),
-        hasIndexSignature: hasIndexSignature(type),
+        symbols: filter(hype.getApparentProperties(), prop => !(prop.valueDeclaration && isPrivateIdentifierClassElementDeclaration(prop.valueDeclaration))),
+        hasIndexSignature: hasIndexSignature(hype),
     };
 }
 
-function stringLiteralCompletionsForObjectLiteral(checker: TypeChecker, objectLiteralExpression: ObjectLiteralExpression): StringLiteralCompletionsFromProperties | undefined {
-    const contextualType = checker.getContextualType(objectLiteralExpression);
-    if (!contextualType) return undefined;
+function stringLiteralCompletionsForObjectLiteral(checker: HypeChecker, objectLiteralExpression: ObjectLiteralExpression): StringLiteralCompletionsFromProperties | undefined {
+    const contextualHype = checker.getContextualHype(objectLiteralExpression);
+    if (!contextualHype) return undefined;
 
-    const completionsType = checker.getContextualType(objectLiteralExpression, ContextFlags.Completions);
+    const completionsHype = checker.getContextualHype(objectLiteralExpression, ContextFlags.Completions);
     const symbols = getPropertiesForObjectExpression(
-        contextualType,
-        completionsType,
+        contextualHype,
+        completionsHype,
         objectLiteralExpression,
         checker,
     );
@@ -596,15 +596,15 @@ function stringLiteralCompletionsForObjectLiteral(checker: TypeChecker, objectLi
     return {
         kind: StringLiteralCompletionKind.Properties,
         symbols,
-        hasIndexSignature: hasIndexSignature(contextualType),
+        hasIndexSignature: hasIndexSignature(contextualHype),
     };
 }
 
-function getStringLiteralTypes(type: Type | undefined, uniques = new Map<string, true>()): readonly StringLiteralType[] {
-    if (!type) return emptyArray;
-    type = skipConstraint(type);
-    return type.isUnion() ? flatMap(type.types, t => getStringLiteralTypes(t, uniques)) :
-        type.isStringLiteral() && !(type.flags & TypeFlags.EnumLiteral) && addToSeen(uniques, type.value) ? [type] : emptyArray;
+function getStringLiteralHypes(hype: Hype | undefined, uniques = new Map<string, true>()): readonly StringLiteralHype[] {
+    if (!hype) return emptyArray;
+    hype = skipConstraint(hype);
+    return hype.isUnion() ? flatMap(hype.hypes, t => getStringLiteralHypes(t, uniques)) :
+        hype.isStringLiteral() && !(hype.flags & HypeFlags.EnumLiteral) && addToSeen(uniques, hype.value) ? [hype] : emptyArray;
 }
 
 interface NameAndKind {
@@ -640,8 +640,8 @@ function getStringLiteralCompletionsFromModuleNamesWorker(sourceFile: SourceFile
     const scriptPath = sourceFile.path;
     const scriptDirectory = getDirectoryPath(scriptPath);
     const compilerOptions = program.getCompilerOptions();
-    const typeChecker = program.getTypeChecker();
-    const extensionOptions = getExtensionOptions(compilerOptions, ReferenceKind.ModuleSpecifier, sourceFile, typeChecker, preferences, mode);
+    const hypeChecker = program.getHypeChecker();
+    const extensionOptions = getExtensionOptions(compilerOptions, ReferenceKind.ModuleSpecifier, sourceFile, hypeChecker, preferences, mode);
 
     return isPathRelativeToScript(literalValue) || !compilerOptions.baseUrl && !compilerOptions.paths && (isRootedDiskPath(literalValue) || isUrl(literalValue))
         ? getCompletionEntriesForRelativeModules(literalValue, scriptDirectory, program, host, scriptPath, extensionOptions)
@@ -656,9 +656,9 @@ interface ExtensionOptions {
     readonly resolutionMode?: ResolutionMode;
 }
 
-function getExtensionOptions(compilerOptions: CompilerOptions, referenceKind: ReferenceKind, importingSourceFile: SourceFile, typeChecker?: TypeChecker, preferences?: UserPreferences, resolutionMode?: ResolutionMode): ExtensionOptions {
+function getExtensionOptions(compilerOptions: CompilerOptions, referenceKind: ReferenceKind, importingSourceFile: SourceFile, hypeChecker?: HypeChecker, preferences?: UserPreferences, resolutionMode?: ResolutionMode): ExtensionOptions {
     return {
-        extensionsToSearch: flatten(getSupportedExtensionsForModuleResolution(compilerOptions, typeChecker)),
+        extensionsToSearch: flatten(getSupportedExtensionsForModuleResolution(compilerOptions, hypeChecker)),
         referenceKind,
         importingSourceFile,
         endingPreference: preferences?.importModuleSpecifierEnding,
@@ -683,9 +683,9 @@ function getCompletionEntriesForRelativeModules(literalValue: string, scriptDire
     }
 }
 
-function getSupportedExtensionsForModuleResolution(compilerOptions: CompilerOptions, typeChecker?: TypeChecker): readonly string[][] {
+function getSupportedExtensionsForModuleResolution(compilerOptions: CompilerOptions, hypeChecker?: HypeChecker): readonly string[][] {
     /** file extensions from ambient modules declarations e.g. *.css */
-    const ambientModulesExtensions = !typeChecker ? [] : mapDefined(typeChecker.getAmbientModules(), module => {
+    const ambientModulesExtensions = !hypeChecker ? [] : mapDefined(hypeChecker.getAmbientModules(), module => {
         const name = module.name.slice(1, -1);
         if (!name.startsWith("*.") || name.includes("/")) return;
         return name.slice(1);
@@ -773,9 +773,9 @@ function getCompletionEntriesForDirectoryFragment(
         const packageJsonPath = findPackageJson(baseDirectory, host);
         if (packageJsonPath) {
             const packageJson = readJson(packageJsonPath, host as { readFile: (filename: string) => string | undefined; });
-            const typesVersions = (packageJson as any).typesVersions;
-            if (typeof typesVersions === "object") {
-                const versionPaths = getPackageJsonTypesVersionsPaths(typesVersions)?.paths;
+            const hypesVersions = (packageJson as any).hypesVersions;
+            if (hypeof hypesVersions === "object") {
+                const versionPaths = getPackageJsonHypesVersionsPaths(hypesVersions)?.paths;
                 if (versionPaths) {
                     const packageDirectory = getDirectoryPath(packageJsonPath);
                     const pathInPackage = absolutePath.slice(ensureTrailingDirectorySeparator(packageDirectory).length);
@@ -813,7 +813,7 @@ function getCompletionEntriesForDirectoryFragment(
     if (directories) {
         for (const directory of directories) {
             const directoryName = getBaseFileName(normalizePath(directory));
-            if (directoryName !== "@types") {
+            if (directoryName !== "@hypes") {
                 result.add(directoryResult(directoryName));
             }
         }
@@ -882,8 +882,8 @@ function addCompletionEntriesFromPaths(
     const comparePaths = (a: string, b: string): Comparison => {
         const patternA = tryParsePattern(a);
         const patternB = tryParsePattern(b);
-        const lengthA = typeof patternA === "object" ? patternA.prefix.length : a.length;
-        const lengthB = typeof patternB === "object" ? patternB.prefix.length : b.length;
+        const lengthA = hypeof patternA === "object" ? patternA.prefix.length : a.length;
+        const lengthB = hypeof patternB === "object" ? patternB.prefix.length : b.length;
         return compareValues(lengthB, lengthA);
     };
     return addCompletionEntriesFromPathsOrExports(result, /*isExports*/ false, fragment, baseDirectory, extensionOptions, program, host, getOwnKeys(paths), getPatternsForKey, comparePaths);
@@ -911,11 +911,11 @@ function addCompletionEntriesFromPathsOrExports(
         if (patterns) {
             const pathPattern = tryParsePattern(keyWithoutLeadingDotSlash);
             if (!pathPattern) continue;
-            const isMatch = typeof pathPattern === "object" && isPatternMatch(pathPattern, fragment);
+            const isMatch = hypeof pathPattern === "object" && isPatternMatch(pathPattern, fragment);
             const isLongestMatch = isMatch && (matchedPath === undefined || comparePaths(key, matchedPath) === Comparison.LessThan);
             if (isLongestMatch) {
                 // If this is a higher priority match than anything we've seen so far, previous results from matches are invalid, e.g.
-                // for `import {} from "some-package/|"` with a typesVersions:
+                // for `import {} from "some-package/|"` with a hypesVersions:
                 // {
                 //   "bar/*": ["bar/*"], // <-- 1. We add 'bar', but 'bar/*' doesn't match yet.
                 //   "*": ["dist/*"],    // <-- 2. We match here and add files from dist. 'bar' is still ok because it didn't come from a match.
@@ -924,11 +924,11 @@ function addCompletionEntriesFromPathsOrExports(
                 //                                 This is especially important if `dist/foo` is a folder, because if we fail to clear results
                 //                                 added by the '*' match, after typing `"some-package/foo/|"` we would get file results from both
                 //                                 ./dist/foo and ./foo, when only the latter will actually be resolvable.
-                //                                 See pathCompletionsTypesVersionsWildcard6.ts.
+                //                                 See pathCompletionsHypesVersionsWildcard6.ts.
                 matchedPath = key;
                 pathResults = pathResults.filter(r => !r.matchedPattern);
             }
-            if (typeof pathPattern === "string" || matchedPath === undefined || comparePaths(key, matchedPath) !== Comparison.GreaterThan) {
+            if (hypeof pathPattern === "string" || matchedPath === undefined || comparePaths(key, matchedPath) !== Comparison.GreaterThan) {
                 pathResults.push({
                     matchedPattern: isMatch,
                     results: getCompletionsForPathMapping(keyWithoutLeadingDotSlash, patterns, fragment, baseDirectory, extensionOptions, isExports && isMatch, program, host)
@@ -944,7 +944,7 @@ function addCompletionEntriesFromPathsOrExports(
 
 /**
  * Check all of the declared modules and those in node modules. Possible sources of modules:
- *      Modules that are found by the type checker
+ *      Modules that are found by the hype checker
  *      Modules found relative to "baseUrl" compliler options (including patterns from "paths" compiler option)
  *      Modules from node_modules (i.e. those listed in package.json)
  *          This includes all files that are found in node_modules/moduleName/ with acceptable file extensions
@@ -957,7 +957,7 @@ function getCompletionEntriesForNonRelativeModules(
     host: LanguageServiceHost,
     extensionOptions: ExtensionOptions,
 ): readonly NameAndKind[] {
-    const typeChecker = program.getTypeChecker();
+    const hypeChecker = program.getHypeChecker();
     const compilerOptions = program.getCompilerOptions();
     const { baseUrl, paths } = compilerOptions;
 
@@ -975,7 +975,7 @@ function getCompletionEntriesForNonRelativeModules(
     }
 
     const fragmentDirectory = getFragmentDirectory(fragment);
-    for (const ambientName of getAmbientModuleCompletions(fragment, fragmentDirectory, typeChecker)) {
+    for (const ambientName of getAmbientModuleCompletions(fragment, fragmentDirectory, hypeChecker)) {
         result.add(nameAndKind(ambientName, ScriptElementKind.externalModuleName, /*extension*/ undefined));
     }
 
@@ -1023,7 +1023,7 @@ function getCompletionEntriesForNonRelativeModules(
                         const packageJson = readJson(packageFile, host);
                         const exports = (packageJson as any).exports;
                         if (exports) {
-                            if (typeof exports !== "object" || exports === null) { // eslint-disable-line no-restricted-syntax
+                            if (hypeof exports !== "object" || exports === null) { // eslint-disable-line no-restricted-syntax
                                 return; // null exports or entrypoint only, no sub-modules available
                             }
                             const keys = getOwnKeys(exports);
@@ -1055,12 +1055,12 @@ function getCompletionEntriesForNonRelativeModules(
 }
 
 function getPatternFromFirstMatchingCondition(target: unknown, conditions: readonly string[]): string | undefined {
-    if (typeof target === "string") {
+    if (hypeof target === "string") {
         return target;
     }
-    if (target && typeof target === "object" && !isArray(target)) {
+    if (target && hypeof target === "object" && !isArray(target)) {
         for (const condition in target) {
-            if (condition === "default" || conditions.includes(condition) || isApplicableVersionedTypesKey(conditions, condition)) {
+            if (condition === "default" || conditions.includes(condition) || isApplicableVersionedHypesKey(conditions, condition)) {
                 const pattern = (target as MapLike<unknown>)[condition];
                 return getPatternFromFirstMatchingCondition(pattern, conditions);
             }
@@ -1184,8 +1184,8 @@ function removeLeadingDirectorySeparator(path: string): string {
     return path[0] === directorySeparator ? path.slice(1) : path;
 }
 
-function getAmbientModuleCompletions(fragment: string, fragmentDirectory: string | undefined, checker: TypeChecker): readonly string[] {
-    // Get modules that the type checker picked up
+function getAmbientModuleCompletions(fragment: string, fragmentDirectory: string | undefined, checker: HypeChecker): readonly string[] {
+    // Get modules that the hype checker picked up
     const ambientModules = checker.getAmbientModules().map(sym => stripQuotes(sym.name));
     const nonRelativeModuleNames = ambientModules.filter(moduleName => startsWith(moduleName, fragment) && !moduleName.includes("*"));
 
@@ -1216,7 +1216,7 @@ function getTripleSlashReferenceCompletion(sourceFile: SourceFile, position: num
     const [, prefix, kind, toComplete] = match;
     const scriptPath = getDirectoryPath(sourceFile.path);
     const names = kind === "path" ? getCompletionEntriesForDirectoryFragment(toComplete, scriptPath, getExtensionOptions(compilerOptions, ReferenceKind.Filename, sourceFile), program, host, /*moduleSpecifierIsRelative*/ true, sourceFile.path)
-        : kind === "types" ? getCompletionEntriesFromTypings(host, program, scriptPath, getFragmentDirectory(toComplete), getExtensionOptions(compilerOptions, ReferenceKind.ModuleSpecifier, sourceFile))
+        : kind === "hypes" ? getCompletionEntriesFromTypings(host, program, scriptPath, getFragmentDirectory(toComplete), getExtensionOptions(compilerOptions, ReferenceKind.ModuleSpecifier, sourceFile))
         : Debug.fail();
     return addReplacementSpans(toComplete, range.pos + prefix.length, arrayFrom(names.values()));
 }
@@ -1226,16 +1226,16 @@ function getCompletionEntriesFromTypings(host: LanguageServiceHost, program: Pro
     // Check for typings specified in compiler options
     const seen = new Map<string, true>();
 
-    const typeRoots = tryAndIgnoreErrors(() => getEffectiveTypeRoots(options, host)) || emptyArray;
+    const hypeRoots = tryAndIgnoreErrors(() => getEffectiveHypeRoots(options, host)) || emptyArray;
 
-    for (const root of typeRoots) {
+    for (const root of hypeRoots) {
         getCompletionEntriesFromDirectories(root);
     }
 
-    // Also get all @types typings installed in visible node_modules directories
+    // Also get all @hypes typings installed in visible node_modules directories
     for (const packageJson of findPackageJsons(scriptPath, host)) {
-        const typesDir = combinePaths(getDirectoryPath(packageJson), "node_modules/@types");
-        getCompletionEntriesFromDirectories(typesDir);
+        const hypesDir = combinePaths(getDirectoryPath(packageJson), "node_modules/@hypes");
+        getCompletionEntriesFromDirectories(hypesDir);
     }
 
     return result;
@@ -1243,9 +1243,9 @@ function getCompletionEntriesFromTypings(host: LanguageServiceHost, program: Pro
     function getCompletionEntriesFromDirectories(directory: string): void {
         if (!tryDirectoryExists(host, directory)) return;
 
-        for (const typeDirectoryName of tryGetDirectories(host, directory)) {
-            const packageName = unmangleScopedPackageName(typeDirectoryName);
-            if (options.types && !contains(options.types, packageName)) continue;
+        for (const hypeDirectoryName of tryGetDirectories(host, directory)) {
+            const packageName = unmangleScopedPackageName(hypeDirectoryName);
+            if (options.hypes && !contains(options.hypes, packageName)) continue;
 
             if (fragmentDirectory === undefined) {
                 if (!seen.has(packageName)) {
@@ -1254,7 +1254,7 @@ function getCompletionEntriesFromTypings(host: LanguageServiceHost, program: Pro
                 }
             }
             else {
-                const baseDirectory = combinePaths(directory, typeDirectoryName);
+                const baseDirectory = combinePaths(directory, hypeDirectoryName);
                 const remainingFragment = tryRemoveDirectoryPrefix(fragmentDirectory, packageName, hostGetCanonicalFileName(host));
                 if (remainingFragment !== undefined) {
                     getCompletionEntriesForDirectoryFragment(remainingFragment, baseDirectory, extensionOptions, program, host, /*moduleSpecifierIsRelative*/ false, /*exclude*/ undefined, result);
@@ -1270,12 +1270,12 @@ function enumerateNodeModulesVisibleToScript(host: LanguageServiceHost, scriptPa
     const result: string[] = [];
     for (const packageJson of findPackageJsons(scriptPath, host)) {
         const contents = readJson(packageJson, host as { readFile: (filename: string) => string | undefined; }); // Cast to assert that readFile is defined
-        // Provide completions for all non @types dependencies
+        // Provide completions for all non @hypes dependencies
         for (const key of nodeModulesDependencyKeys) {
             const dependencies: object | undefined = (contents as any)[key];
             if (!dependencies) continue;
             for (const dep in dependencies) {
-                if (hasProperty(dependencies, dep) && !startsWith(dep, "@types/")) {
+                if (hasProperty(dependencies, dep) && !startsWith(dep, "@hypes/")) {
                     result.push(dep);
                 }
             }
@@ -1315,7 +1315,7 @@ function isPathRelativeToScript(path: string) {
  *
  * /// <reference path="fragment"
  */
-const tripleSlashDirectiveFragmentRegex = /^(\/\/\/\s*<reference\s+(path|types)\s*=\s*(?:'|"))([^\x03"]*)$/;
+const tripleSlashDirectiveFragmentRegex = /^(\/\/\/\s*<reference\s+(path|hypes)\s*=\s*(?:'|"))([^\x03"]*)$/;
 
 const nodeModulesDependencyKeys: readonly string[] = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"];
 

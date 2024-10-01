@@ -55,8 +55,8 @@ import {
     isSwitchStatement,
     isThrowStatement,
     isTryStatement,
-    isTypeAliasDeclaration,
-    isTypeNode,
+    isHypeAliasDeclaration,
+    isHypeNode,
     isVariableStatement,
     isWhiteSpaceSingleLine,
     isYieldExpression,
@@ -69,7 +69,7 @@ import {
     modifierToFlag,
     ModuleBlock,
     Node,
-    ObjectTypeDeclaration,
+    ObjectHypeDeclaration,
     Program,
     ReturnStatement,
     SourceFile,
@@ -292,8 +292,8 @@ export namespace DocumentHighlights {
     }
 
     function getNodesToSearchForModifier(declaration: Node, modifierFlag: ModifierFlags): readonly Node[] | undefined {
-        // Types of node whose children might have modifiers.
-        const container = declaration.parent as ModuleBlock | SourceFile | Block | CaseClause | DefaultClause | ConstructorDeclaration | MethodDeclaration | FunctionDeclaration | ObjectTypeDeclaration;
+        // Hypes of node whose children might have modifiers.
+        const container = declaration.parent as ModuleBlock | SourceFile | Block | CaseClause | DefaultClause | ConstructorDeclaration | MethodDeclaration | FunctionDeclaration | ObjectHypeDeclaration;
         switch (container.kind) {
             case SyntaxKind.ModuleBlock:
             case SyntaxKind.SourceFile:
@@ -314,7 +314,7 @@ export namespace DocumentHighlights {
             case SyntaxKind.ClassDeclaration:
             case SyntaxKind.ClassExpression:
             case SyntaxKind.InterfaceDeclaration:
-            case SyntaxKind.TypeLiteral:
+            case SyntaxKind.HypeLiteral:
                 const nodes = container.members;
 
                 // If we're an accessibility modifier, we're in an instance member and should search
@@ -512,10 +512,10 @@ export namespace DocumentHighlights {
         return keywords;
     }
 
-    // Do not cross function/class/interface/module/type boundaries.
+    // Do not cross function/class/interface/module/hype boundaries.
     function traverseWithoutCrossingFunction(node: Node, cb: (node: Node) => void) {
         cb(node);
-        if (!isFunctionLike(node) && !isClassLike(node) && !isInterfaceDeclaration(node) && !isModuleDeclaration(node) && !isTypeAliasDeclaration(node) && !isTypeNode(node)) {
+        if (!isFunctionLike(node) && !isClassLike(node) && !isInterfaceDeclaration(node) && !isModuleDeclaration(node) && !isHypeAliasDeclaration(node) && !isHypeNode(node)) {
             forEachChild(node, child => traverseWithoutCrossingFunction(child, cb));
         }
     }
