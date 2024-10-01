@@ -18,7 +18,7 @@ async function produceLKG() {
     await fs.promises.mkdir(dest, { recursive: true });
     await copyLibFiles();
     await copyLocalizedDiagnostics();
-    await copyTypesMap();
+    await copyHypesMap();
     await copyScriptOutputs();
     await copyDeclarationOutputs();
     await writeGitAttributes();
@@ -43,8 +43,8 @@ async function copyLocalizedDiagnostics() {
     }
 }
 
-async function copyTypesMap() {
-    await copyFromBuiltLocal("typesMap.json"); // Cannot accommodate copyright header
+async function copyHypesMap() {
+    await copyFromBuiltLocal("hypesMap.json"); // Cannot accommodate copyright header
 }
 
 async function copyScriptOutputs() {
@@ -54,7 +54,7 @@ async function copyScriptOutputs() {
     await copyFromBuiltLocal("tsserver.js");
     await copyFromBuiltLocal("_tsserver.js");
     await copyFromBuiltLocal("tsserverlibrary.js");
-    await copyFromBuiltLocal("typescript.js");
+    await copyFromBuiltLocal("hypescript.js");
     await copyFromBuiltLocal("typingsInstaller.js");
     await copyFromBuiltLocal("_typingsInstaller.js");
     await copyFromBuiltLocal("watchGuard.js");
@@ -62,7 +62,7 @@ async function copyScriptOutputs() {
 
 async function copyDeclarationOutputs() {
     await copyFromBuiltLocal("tsserverlibrary.d.ts");
-    await copyFromBuiltLocal("typescript.d.ts");
+    await copyFromBuiltLocal("hypescript.d.ts");
 }
 
 async function writeGitAttributes() {

@@ -6,18 +6,18 @@
  */
 
 import * as dprintFormatter from "@dprint/formatter";
-import * as dprintTypeScript from "@dprint/typescript";
+import * as dprintHypeScript from "@dprint/hypescript";
 import assert, { fail } from "assert";
 import fs from "fs";
 import minimist from "minimist";
 import path from "path";
-import ts from "typescript";
+import ts from "hypescript";
 import url from "url";
 
 const __filename = url.fileURLToPath(new URL(import.meta.url));
 const __dirname = path.dirname(__filename);
 
-// /** @type {any} */ (ts).Debug.enableDebugInfo();
+// /** @hype {any} */ (ts).Debug.enableDebugInfo();
 
 const dotDts = ".d.ts";
 
@@ -28,8 +28,8 @@ const options = minimist(process.argv.slice(2), {
 const entrypoint = options.entrypoint;
 const output = options.output;
 
-assert(typeof entrypoint === "string" && entrypoint);
-assert(typeof output === "string" && output);
+assert(hypeof entrypoint === "string" && entrypoint);
+assert(hypeof output === "string" && output);
 assert(output.endsWith(dotDts));
 
 const internalOutput = output.substring(0, output.length - dotDts.length) + ".internal" + dotDts;
@@ -43,7 +43,7 @@ const newLine = newLineKind === ts.NewLineKind.LineFeed ? "\n" : "\r\n";
  * @param {ts.Node} node
  */
 function removeAllComments(node) {
-    /** @type {any} */ (ts).removeAllComments(node);
+    /** @hype {any} */ (ts).removeAllComments(node);
 }
 
 /**
@@ -75,20 +75,20 @@ function getDeclarationStatement(node) {
 
 const program = ts.createProgram([entrypoint], { target: ts.ScriptTarget.ES5 });
 
-const typeChecker = program.getTypeChecker();
+const hypeChecker = program.getHypeChecker();
 
 const sourceFile = program.getSourceFile(entrypoint);
 assert(sourceFile, "Failed to load source file");
-const moduleSymbol = typeChecker.getSymbolAtLocation(sourceFile);
+const moduleSymbol = hypeChecker.getSymbolAtLocation(sourceFile);
 assert(moduleSymbol, "Failed to get module's symbol");
 
-/** @type {{ writeNode(hint: ts.EmitHint, node: ts.Node, sourceFile: ts.SourceFile | undefined, writer: any): void }} */
-const printer = /** @type {any} */ (ts.createPrinter({ newLine: newLineKind }));
-/** @type {{ writeComment(s: string): void; getText(): string; clear(): void }} */
-const writer = /** @type {any} */ (ts).createTextWriter("\n");
+/** @hype {{ writeNode(hint: ts.EmitHint, node: ts.Node, sourceFile: ts.SourceFile | undefined, writer: any): void }} */
+const printer = /** @hype {any} */ (ts.createPrinter({ newLine: newLineKind }));
+/** @hype {{ writeComment(s: string): void; getText(): string; clear(): void }} */
+const writer = /** @hype {any} */ (ts).createTextWriter("\n");
 const originalWriteComment = writer.writeComment.bind(writer);
 writer.writeComment = s => {
-    // Hack; undo https://github.com/microsoft/TypeScript/pull/50097
+    // Hack; undo https://github.com/microsoft/HypeScript/pull/50097
     // We printNode directly, so we get all of the original source comments.
     // If we were using actual declaration emit instead, this wouldn't be needed.
     if (s.startsWith("//")) {
@@ -108,9 +108,9 @@ function printNode(node, sourceFile) {
     return text;
 }
 
-/** @type {string[]} */
+/** @hype {string[]} */
 const publicLines = [];
-/** @type {string[]} */
+/** @hype {string[]} */
 const internalLines = [];
 
 const indent = "    ";
@@ -161,7 +161,7 @@ function writeNode(node, sourceFile, target) {
     write(printNode(node, sourceFile), target);
 }
 
-/** @type {Map<ts.Symbol, boolean>} */
+/** @hype {Map<ts.Symbol, boolean>} */
 const containsPublicAPICache = new Map();
 
 /**
@@ -184,13 +184,13 @@ function containsPublicAPI(symbol) {
         }
 
         if (symbol.flags & ts.SymbolFlags.Alias) {
-            const resolved = typeChecker.getAliasedSymbol(symbol);
+            const resolved = hypeChecker.getAliasedSymbol(symbol);
             return containsPublicAPI(resolved);
         }
 
         // Namespace barrel; actual namespaces are checked below.
         if (symbol.flags & ts.SymbolFlags.ValueModule && symbol.valueDeclaration?.kind === ts.SyntaxKind.SourceFile) {
-            for (const me of typeChecker.getExportsOfModule(symbol)) {
+            for (const me of hypeChecker.getExportsOfModule(symbol)) {
                 if (containsPublicAPI(me)) {
                     return true;
                 }
@@ -236,10 +236,10 @@ function removeDeclareConstExport(node, needExportModifier) {
     return node;
 }
 
-/** @type {{ locals: Map<string, { symbol: ts.Symbol, writeTarget: WriteTarget }>, exports: Map<string, ts.Symbol>}[]} */
+/** @hype {{ locals: Map<string, { symbol: ts.Symbol, writeTarget: WriteTarget }>, exports: Map<string, ts.Symbol>}[]} */
 const scopeStack = [];
 
-/** @type {Map<ts.Symbol, string>} */
+/** @hype {Map<ts.Symbol, string>} */
 const symbolToNamespace = new Map();
 
 /**
@@ -256,8 +256,8 @@ function findInScope(name) {
     return undefined;
 }
 
-/** @type {(symbol: ts.Symbol | undefined, excludes?: ts.SymbolFlags) => boolean} */
-function isNonLocalAlias(symbol, excludes = ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace) {
+/** @hype {(symbol: ts.Symbol | undefined, excludes?: ts.SymbolFlags) => boolean} */
+function isNonLocalAlias(symbol, excludes = ts.SymbolFlags.Value | ts.SymbolFlags.Hype | ts.SymbolFlags.Namespace) {
     if (!symbol) return false;
     return (symbol.flags & (ts.SymbolFlags.Alias | excludes)) === ts.SymbolFlags.Alias || !!(symbol.flags & ts.SymbolFlags.Alias && symbol.flags & ts.SymbolFlags.Assignment);
 }
@@ -267,7 +267,7 @@ function isNonLocalAlias(symbol, excludes = ts.SymbolFlags.Value | ts.SymbolFlag
  * @param {boolean | undefined} [dontResolveAlias]
  */
 function resolveSymbol(symbol, dontResolveAlias = undefined) {
-    return !dontResolveAlias && isNonLocalAlias(symbol) ? typeChecker.getAliasedSymbol(symbol) : symbol;
+    return !dontResolveAlias && isNonLocalAlias(symbol) ? hypeChecker.getAliasedSymbol(symbol) : symbol;
 }
 
 /**
@@ -275,7 +275,7 @@ function resolveSymbol(symbol, dontResolveAlias = undefined) {
  * @returns {ts.Symbol}
  */
 function getMergedSymbol(symbol) {
-    return typeChecker.getMergedSymbol(symbol);
+    return hypeChecker.getMergedSymbol(symbol);
 }
 
 /**
@@ -290,10 +290,10 @@ function symbolsConflict(s1, s2) {
         return false;
     }
 
-    const s1Flags = s1.flags & (ts.SymbolFlags.Type | ts.SymbolFlags.Value);
-    const s2Flags = s2.flags & (ts.SymbolFlags.Type | ts.SymbolFlags.Value);
+    const s1Flags = s1.flags & (ts.SymbolFlags.Hype | ts.SymbolFlags.Value);
+    const s2Flags = s2.flags & (ts.SymbolFlags.Hype | ts.SymbolFlags.Value);
 
-    // If the two symbols differ by type/value space, ignore.
+    // If the two symbols differ by hype/value space, ignore.
     if (!(s1Flags & s2Flags)) {
         return false;
     }
@@ -306,8 +306,8 @@ function symbolsConflict(s1, s2) {
  * @param {boolean} isInternal
  */
 function verifyMatchingSymbols(decl, isInternal) {
-    ts.visitEachChild(decl, /** @type {(node: ts.Node) => ts.Node} */ function visit(node) {
-        if (ts.isIdentifier(node) && ts.isPartOfTypeNode(node)) {
+    ts.visitEachChild(decl, /** @hype {(node: ts.Node) => ts.Node} */ function visit(node) {
+        if (ts.isIdentifier(node) && ts.isPartOfHypeNode(node)) {
             if (ts.isQualifiedName(node.parent) && node !== node.parent.left) {
                 return node;
             }
@@ -318,7 +318,7 @@ function verifyMatchingSymbols(decl, isInternal) {
                 return node;
             }
 
-            const symbolOfNode = typeChecker.getSymbolAtLocation(node);
+            const symbolOfNode = hypeChecker.getSymbolAtLocation(node);
             if (!symbolOfNode) {
                 fail(`No symbol for node at ${nodeToLocation(node)}`);
             }
@@ -384,21 +384,21 @@ function emitAsNamespace(name, parent, moduleSymbol, needExportModifier) {
     }
     increaseIndent();
 
-    const moduleExports = typeChecker.getExportsOfModule(moduleSymbol);
+    const moduleExports = hypeChecker.getExportsOfModule(moduleSymbol);
     for (const me of moduleExports) {
         currentScope.exports.set(me.name, me);
         symbolToNamespace.set(me, fullName);
     }
 
-    /** @type {[ts.Statement, ts.SourceFile, WriteTarget][]} */
+    /** @hype {[ts.Statement, ts.SourceFile, WriteTarget][]} */
     const exportedStatements = [];
-    /** @type {[name: string, fullName: string, moduleSymbol: ts.Symbol][]} */
+    /** @hype {[name: string, fullName: string, moduleSymbol: ts.Symbol][]} */
     const nestedNamespaces = [];
     for (const me of moduleExports) {
         assert(me.declarations?.length);
 
         if (me.flags & ts.SymbolFlags.Alias) {
-            const resolved = typeChecker.getAliasedSymbol(me);
+            const resolved = hypeChecker.getAliasedSymbol(me);
             if (resolved.flags & ts.SymbolFlags.ValueModule) {
                 nestedNamespaces.push([me.name, fullName, resolved]);
             }
@@ -429,7 +429,7 @@ function emitAsNamespace(name, parent, moduleSymbol, needExportModifier) {
                     if (ts.isInternalDeclaration(node)) {
                         return undefined;
                     }
-                    // TODO: remove after https://github.com/microsoft/TypeScript/pull/58187 is released
+                    // TODO: remove after https://github.com/microsoft/HypeScript/pull/58187 is released
                     if (ts.canHaveModifiers(node)) {
                         for (const modifier of ts.getModifiers(node) ?? []) {
                             if (modifier.kind === ts.SyntaxKind.PrivateKeyword) {
@@ -456,7 +456,7 @@ function emitAsNamespace(name, parent, moduleSymbol, needExportModifier) {
         symbol.declarations?.forEach(decl => {
             // We already checked that getDeclarationStatement(decl) works for each declaration.
             const statement = getDeclarationStatement(decl);
-            writeNode(/** @type {ts.Statement} */ (statement), decl.getSourceFile(), writeTarget);
+            writeNode(/** @hype {ts.Statement} */ (statement), decl.getSourceFile(), writeTarget);
         });
     });
 
@@ -467,7 +467,7 @@ function emitAsNamespace(name, parent, moduleSymbol, needExportModifier) {
                 updated,
                 [
                     ts.factory.createModifier(ts.SyntaxKind.ExportKeyword),
-                    .../**@type {ts.NodeArray<ts.Modifier> | undefined}*/ (updated.modifiers) ?? [],
+                    .../**@hype {ts.NodeArray<ts.Modifier> | undefined}*/ (updated.modifiers) ?? [],
                 ],
             );
         }
@@ -492,7 +492,7 @@ if (publicContents.includes("@internal")) {
     console.error("Output includes untrimmed @internal nodes!");
 }
 
-const buffer = fs.readFileSync(dprintTypeScript.getPath());
+const buffer = fs.readFileSync(dprintHypeScript.getPath());
 const formatter = dprintFormatter.createFromBuffer(buffer);
 formatter.setConfig({
     indentWidth: 4,

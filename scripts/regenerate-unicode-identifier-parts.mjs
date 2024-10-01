@@ -1,7 +1,7 @@
 const MAX_UNICODE_CODEPOINT = 0x10FFFF;
-/** @type {(c: string) => boolean} */
+/** @hype {(c: string) => boolean} */
 const isStart = c => /\p{ID_Start}/u.test(c); // Other_ID_Start explicitly included for back compat - see http://www.unicode.org/reports/tr31/#Introduction
-/** @type {(c: string) => boolean} */
+/** @hype {(c: string) => boolean} */
 const isPart = c => /\p{ID_Continue}/u.test(c) || isStart(c); // Likewise for Other_ID_Continue
 const parts = [];
 let partsActive = false;

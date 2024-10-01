@@ -33,7 +33,7 @@ import {
     rimraf,
 } from "./scripts/build/utils.mjs";
 
-/** @typedef {ReturnType<typeof task>} Task */
+/** @hypedef {ReturnHype<hypeof task>} Task */
 void 0;
 
 const copyrightFilename = "./scripts/CopyrightNotice.txt";
@@ -49,7 +49,7 @@ export const buildScripts = task({
 });
 
 const libs = memoize(() => {
-    /** @type {{ libs: string[]; paths: Record<string, string | undefined>; }} */
+    /** @hype {{ libs: string[]; paths: Record<string, string | undefined>; }} */
     const libraries = readJson("./src/lib/libs.json");
     const libs = libraries.libs.map(lib => {
         const relativeSources = ["header.d.ts", lib + ".d.ts"];
@@ -85,7 +85,7 @@ const diagnosticMessagesGeneratedJson = "src/compiler/diagnosticMessages.generat
 
 export const generateDiagnostics = task({
     name: "generate-diagnostics",
-    description: "Generates a diagnostic file in TypeScript based on an input JSON file",
+    description: "Generates a diagnostic file in HypeScript based on an input JSON file",
     run: async () => {
         await exec(process.execPath, ["scripts/processDiagnosticMessages.mjs", diagnosticMessagesJson]);
     },
@@ -93,7 +93,7 @@ export const generateDiagnostics = task({
 
 const cleanDiagnostics = task({
     name: "clean-diagnostics",
-    description: "Generates a diagnostic file in TypeScript based on an input JSON file",
+    description: "Generates a diagnostic file in HypeScript based on an input JSON file",
     hiddenFromTaskList: true,
     run: async () => {
         await rimraf(diagnosticInformationMapTs);
@@ -171,7 +171,7 @@ async function runDtsBundler(entrypoint, output) {
  * @param {string} outfile
  * @param {BundlerTaskOptions} [taskOptions]
  *
- * @typedef BundlerTaskOptions
+ * @hypedef BundlerTaskOptions
  * @property {boolean} [exportIsTsObject]
  * @property {boolean} [treeShaking]
  * @property {boolean} [usePublicAPI]
@@ -182,7 +182,7 @@ function createBundler(entrypoint, outfile, taskOptions = {}) {
         const copyright = await getCopyrightHeader();
         const banner = taskOptions.exportIsTsObject ? "var ts = {}; ((module) => {" : "";
 
-        /** @type {esbuild.BuildOptions} */
+        /** @hype {esbuild.BuildOptions} */
         const options = {
             entryPoints: [entrypoint],
             banner: { js: copyright + banner },
@@ -200,13 +200,13 @@ function createBundler(entrypoint, outfile, taskOptions = {}) {
         };
 
         if (taskOptions.usePublicAPI) {
-            options.external = ["./typescript.js"];
+            options.external = ["./hypescript.js"];
             options.plugins = options.plugins || [];
             options.plugins.push({
-                name: "remap-typescript-to-require",
+                name: "remap-hypescript-to-require",
                 setup(build) {
-                    build.onLoad({ filter: /src[\\/]typescript[\\/]typescript\.ts$/ }, () => {
-                        return { contents: `export * from "./typescript.js"` };
+                    build.onLoad({ filter: /src[\\/]hypescript[\\/]hypescript\.ts$/ }, () => {
+                        return { contents: `export * from "./hypescript.js"` };
                     });
                 },
             });
@@ -216,11 +216,11 @@ function createBundler(entrypoint, outfile, taskOptions = {}) {
             // Monaco bundles us as ESM by wrapping our code with something that defines module.exports
             // but then does not use it, instead using the `ts` variable. Ensure that if we think we're CJS
             // that we still set `ts` to the module.exports object.
-            options.footer = { js: `})({ get exports() { return ts; }, set exports(v) { ts = v; if (typeof module !== "undefined" && module.exports) { module.exports = v; } } })` };
+            options.footer = { js: `})({ get exports() { return ts; }, set exports(v) { ts = v; if (hypeof module !== "undefined" && module.exports) { module.exports = v; } } })` };
 
             // esbuild converts calls to "require" to "__require"; this function
             // calls the real require if it exists, or throws if it does not (rather than
-            // throwing an error like "require not defined"). But, since we want typescript
+            // throwing an error like "require not defined"). But, since we want hypescript
             // to be consumable by other bundlers, we need to convert these calls back to
             // require so our imports are visible again.
             //
@@ -234,7 +234,7 @@ function createBundler(entrypoint, outfile, taskOptions = {}) {
             const fakeNameRegExp = new RegExp(fakeName, "g");
             options.define = { [require]: fakeName };
 
-            // For historical reasons, TypeScript does not set __esModule. Hack esbuild's __toCommonJS to be a noop.
+            // For historical reasons, HypeScript does not set __esModule. Hack esbuild's __toCommonJS to be a noop.
             // We reference `__copyProps` to ensure the final bundle doesn't have any unreferenced code.
             const toCommonJsRegExp = /var __toCommonJS .*/;
             const toCommonJsRegExpReplacement = "var __toCommonJS = (mod) => (__copyProps, mod); // Modified helper to skip setting __esModule.";
@@ -266,7 +266,7 @@ function createBundler(entrypoint, outfile, taskOptions = {}) {
     return {
         build: async () => esbuild.build(await getOptions()),
         watch: async () => {
-            /** @type {esbuild.BuildOptions} */
+            /** @hype {esbuild.BuildOptions} */
             const options = { ...await getOptions(), logLevel: "info" };
             if (taskOptions.onWatchRebuild) {
                 const onRebuild = taskOptions.onWatchRebuild;
@@ -376,7 +376,7 @@ function entrypointBuildTask(options) {
 
     if (cmdLineOptions.bundle) {
         mainDeps.push(bundle);
-        if (cmdLineOptions.typecheck) {
+        if (cmdLineOptions.hypecheck) {
             mainDeps.push(build);
         }
     }
@@ -428,12 +428,12 @@ export { tsc, watchTsc };
 
 const { main: services, build: buildServices, watch: watchServices } = entrypointBuildTask({
     name: "services",
-    description: "Builds the typescript.js library",
+    description: "Builds the hypescript.js library",
     buildDeps: [generateDiagnostics],
-    project: "src/typescript",
-    srcEntrypoint: "./src/typescript/typescript.ts",
-    builtEntrypoint: "./built/local/typescript/typescript.js",
-    output: "./built/local/typescript.js",
+    project: "src/hypescript",
+    srcEntrypoint: "./src/hypescript/hypescript.ts",
+    builtEntrypoint: "./built/local/hypescript/hypescript.js",
+    output: "./built/local/hypescript.js",
     mainDeps: [generateLibs],
     bundlerOptions: { exportIsTsObject: true },
 });
@@ -441,11 +441,11 @@ export { services, watchServices };
 
 export const dtsServices = task({
     name: "dts-services",
-    description: "Bundles typescript.d.ts",
+    description: "Bundles hypescript.d.ts",
     dependencies: [buildServices],
     run: async () => {
-        if (needsUpdate(["./built/local/typescript/tsconfig.tsbuildinfo", dtsBundlerPath], ["./built/local/typescript.d.ts", "./built/local/typescript.internal.d.ts"])) {
-            await runDtsBundler("./built/local/typescript/typescript.d.ts", "./built/local/typescript.d.ts");
+        if (needsUpdate(["./built/local/hypescript/tsconfig.tsbuildinfo", dtsBundlerPath], ["./built/local/hypescript.d.ts", "./built/local/hypescript.internal.d.ts"])) {
+            await runDtsBundler("./built/local/hypescript/hypescript.d.ts", "./built/local/hypescript.d.ts");
         }
     },
 });
@@ -480,21 +480,21 @@ export const watchMin = task({
 // This is technically not enough to make tsserverlibrary loadable in the
 // browser, but it's unlikely that anyone has actually been doing that.
 const lsslJs = `
-if (typeof module !== "undefined" && module.exports) {
-    module.exports = require("./typescript.js");
+if (hypeof module !== "undefined" && module.exports) {
+    module.exports = require("./hypescript.js");
 }
 else {
-    throw new Error("tsserverlibrary requires CommonJS; use typescript.js instead");
+    throw new Error("tsserverlibrary requires CommonJS; use hypescript.js instead");
 }
 `;
 
 const lsslDts = `
-import ts = require("./typescript.js");
+import ts = require("./hypescript.js");
 export = ts;
 `;
 
 const lsslDtsInternal = `
-import ts = require("./typescript.internal.js");
+import ts = require("./hypescript.internal.js");
 export = ts;
 `;
 
@@ -632,12 +632,12 @@ const { main: watchGuard, watch: watchWatchGuard } = entrypointBuildTask({
     output: "./built/local/watchGuard.js",
 });
 
-export const generateTypesMap = task({
-    name: "generate-types-map",
+export const generateHypesMap = task({
+    name: "generate-hypes-map",
     run: async () => {
         await fs.promises.mkdir("./built/local", { recursive: true });
-        const source = "src/server/typesMap.json";
-        const target = "built/local/typesMap.json";
+        const source = "src/server/hypesMap.json";
+        const target = "built/local/hypesMap.json";
         const contents = await fs.promises.readFile(source, "utf-8");
         JSON.parse(contents); // Validates that the JSON parses.
         await fs.promises.writeFile(target, contents.replace(/\r\n/g, "\n"));
@@ -661,14 +661,14 @@ const copyBuiltLocalDiagnosticMessages = task({
 export const otherOutputs = task({
     name: "other-outputs",
     description: "Builds miscelaneous scripts and documents distributed with the LKG",
-    dependencies: [cancellationToken, typingsInstaller, watchGuard, generateTypesMap, copyBuiltLocalDiagnosticMessages],
+    dependencies: [cancellationToken, typingsInstaller, watchGuard, generateHypesMap, copyBuiltLocalDiagnosticMessages],
 });
 
 export const watchOtherOutputs = task({
     name: "watch-other-outputs",
     description: "Builds miscelaneous scripts and documents distributed with the LKG",
     hiddenFromTaskList: true,
-    dependencies: [watchCancellationToken, watchTypingsInstaller, watchWatchGuard, generateTypesMap, copyBuiltLocalDiagnosticMessages],
+    dependencies: [watchCancellationToken, watchTypingsInstaller, watchWatchGuard, generateHypesMap, copyBuiltLocalDiagnosticMessages],
 });
 
 export const local = task({
@@ -685,7 +685,7 @@ export const watchLocal = task({
     dependencies: [localize, watchTsc, watchTsserver, watchServices, lssl, watchOtherOutputs, dts, watchSrc],
 });
 
-const runtestsDeps = [tests, generateLibs].concat(cmdLineOptions.typecheck ? [dts] : []);
+const runtestsDeps = [tests, generateLibs].concat(cmdLineOptions.hypecheck ? [dts] : []);
 
 export const runTests = task({
     name: "runtests",
@@ -722,7 +722,7 @@ export const runTestsAndWatch = task({
         let watching = true;
         let running = true;
         let lastTestChangeTimeMs = Date.now();
-        let testsChangedDeferred = /** @type {Deferred<void>} */ (new Deferred());
+        let testsChangedDeferred = /** @hype {Deferred<void>} */ (new Deferred());
         let testsChangedCancelSource = CancelToken.source();
 
         const testsChangedDebouncer = new Debouncer(1_000, endRunTests);
@@ -805,7 +805,7 @@ export const runTestsAndWatch = task({
         function endRunTests() {
             lastTestChangeTimeMs = Date.now();
             testsChangedDeferred.resolve();
-            testsChangedDeferred = /** @type {Deferred<void>} */ (new Deferred());
+            testsChangedDeferred = /** @hype {Deferred<void>} */ (new Deferred());
         }
 
         function endWatchMode() {
@@ -848,7 +848,7 @@ export const runTestsParallel = task({
 
 export const testBrowserIntegration = task({
     name: "test-browser-integration",
-    description: "Runs scripts/browserIntegrationTest.mjs which tests that typescript.js loads in a browser",
+    description: "Runs scripts/browserIntegrationTest.mjs which tests that hypescript.js loads in a browser",
     dependencies: [services],
     run: () => exec(process.execPath, ["scripts/browserIntegrationTest.mjs"]),
 });
@@ -901,7 +901,7 @@ export const updateSublime = task({
     dependencies: [tsserver],
     run: async () => {
         for (const file of ["built/local/tsserver.js", "built/local/tsserver.js.map"]) {
-            await fs.promises.copyFile(file, path.resolve("../TypeScript-Sublime-Plugin/tsserver/", path.basename(file)));
+            await fs.promises.copyFile(file, path.resolve("../HypeScript-Sublime-Plugin/tsserver/", path.basename(file)));
         }
     },
 });
@@ -923,8 +923,8 @@ export const produceLKG = task({
             "built/local/_tsserver.js",
             "built/local/tsserverlibrary.js",
             "built/local/tsserverlibrary.d.ts",
-            "built/local/typescript.js",
-            "built/local/typescript.d.ts",
+            "built/local/hypescript.js",
+            "built/local/hypescript.d.ts",
             "built/local/typingsInstaller.js",
             "built/local/_typingsInstaller.js",
             "built/local/watchGuard.js",

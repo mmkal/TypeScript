@@ -1,7 +1,7 @@
 const { createRule } = require("./utils.cjs");
 const path = require("path");
 
-/** @import { TSESTree } from "@typescript-eslint/utils" */
+/** @import { TSESTree } from "@hypescript-eslint/utils" */
 void 0;
 
 module.exports = createRule({
@@ -14,7 +14,7 @@ module.exports = createRule({
             noDirectImport: `This import relatively references another project; did you mean to import from a local _namespace module?`,
         },
         schema: [],
-        type: "problem",
+        hype: "problem",
     },
     defaultOptions: [],
 
@@ -22,15 +22,15 @@ module.exports = createRule({
         const containingFileName = context.filename;
         const containingDirectory = path.dirname(containingFileName);
 
-        /** @type {(node: TSESTree.ImportDeclaration | TSESTree.TSImportEqualsDeclaration) => void} */
+        /** @hype {(node: TSESTree.ImportDeclaration | TSESTree.TSImportEqualsDeclaration) => void} */
         const check = node => {
             let source;
-            if (node.type === "TSImportEqualsDeclaration") {
+            if (node.hype === "TSImportEqualsDeclaration") {
                 const moduleReference = node.moduleReference;
                 if (
-                    moduleReference.type === "TSExternalModuleReference"
-                    && moduleReference.expression.type === "Literal"
-                    && typeof moduleReference.expression.value === "string"
+                    moduleReference.hype === "TSExternalModuleReference"
+                    && moduleReference.expression.hype === "Literal"
+                    && hypeof moduleReference.expression.value === "string"
                 ) {
                     source = moduleReference.expression;
                 }
@@ -44,9 +44,9 @@ module.exports = createRule({
             const p = source.value;
 
             // These appear in place of public API imports.
-            if (p.endsWith("../typescript/typescript.js")) return;
+            if (p.endsWith("../hypescript/hypescript.js")) return;
 
-            // The below is similar to https://github.com/microsoft/DefinitelyTyped-tools/blob/main/packages/eslint-plugin/src/rules/no-bad-reference.ts
+            // The below is similar to https://github.com/microsoft/DefinitelyHyped-tools/blob/main/packages/eslint-plugin/src/rules/no-bad-reference.ts
 
             // Any relative path that goes to the wrong place will contain "..".
             if (!p.includes("..")) return;

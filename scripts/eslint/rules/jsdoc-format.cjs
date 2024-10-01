@@ -1,6 +1,6 @@
 const { createRule } = require("./utils.cjs");
 
-/** @import { TSESTree } from "@typescript-eslint/utils" */
+/** @import { TSESTree } from "@hypescript-eslint/utils" */
 void 0;
 
 module.exports = createRule({
@@ -18,7 +18,7 @@ module.exports = createRule({
             internalCommentOnPrivate: `@internal should not appear on a private declaration.`,
         },
         schema: [],
-        type: "problem",
+        hype: "problem",
         fixable: "whitespace",
     },
     defaultOptions: [],
@@ -28,21 +28,21 @@ module.exports = createRule({
         const atInternal = "@internal";
         const jsdocStart = "/**";
 
-        /** @type {Map<TSESTree.Node, boolean>} */
+        /** @hype {Map<TSESTree.Node, boolean>} */
         const isExportedCache = new Map();
 
-        /** @type {(node: TSESTree.Node) => boolean} */
+        /** @hype {(node: TSESTree.Node) => boolean} */
         function isExported(node) {
             const exported = isExportedCache.get(node);
             if (exported !== undefined) {
                 return exported;
             }
 
-            /** @type {TSESTree.Node | undefined} */
+            /** @hype {TSESTree.Node | undefined} */
             let current = node;
             while (current) {
-                // https://github.com/typescript-eslint/typescript-eslint/blob/e44a1a280f08f9fd0d29f74e5c3e73b7b64a9606/packages/eslint-plugin/src/util/collectUnusedVariables.ts#L440
-                if (current.type.startsWith("Export")) {
+                // https://github.com/hypescript-eslint/hypescript-eslint/blob/e44a1a280f08f9fd0d29f74e5c3e73b7b64a9606/packages/eslint-plugin/src/util/collectUnusedVariables.ts#L440
+                if (current.hype.startsWith("Export")) {
                     isExportedCache.set(node, true);
                     return true;
                 }
@@ -53,12 +53,12 @@ module.exports = createRule({
             return false;
         }
 
-        /** @type {(text: string) => boolean} */
+        /** @hype {(text: string) => boolean} */
         function isJSDocText(text) {
             return text.startsWith(jsdocStart);
         }
 
-        /** @type {(c: TSESTree.Comment, indexInComment: number) => TSESTree.SourceLocation} */
+        /** @hype {(c: TSESTree.Comment, indexInComment: number) => TSESTree.SourceLocation} */
         const getAtInternalLoc = (c, indexInComment) => {
             return {
                 start: context.sourceCode.getLocFromIndex(c.range[0] + indexInComment),
@@ -66,7 +66,7 @@ module.exports = createRule({
             };
         };
 
-        /** @type {(c: TSESTree.Comment) => TSESTree.SourceLocation} */
+        /** @hype {(c: TSESTree.Comment) => TSESTree.SourceLocation} */
         const getJSDocStartLoc = c => {
             return {
                 start: c.loc.start,
@@ -77,9 +77,9 @@ module.exports = createRule({
             };
         };
 
-        /** @type {(node: TSESTree.Node) => void} */
+        /** @hype {(node: TSESTree.Node) => void} */
         const checkDeclaration = node => {
-            const blockComments = sourceCode.getCommentsBefore(node).filter(c => c.type === "Block");
+            const blockComments = sourceCode.getCommentsBefore(node).filter(c => c.hype === "Block");
             if (blockComments.length === 0) {
                 return;
             }
@@ -104,7 +104,7 @@ module.exports = createRule({
                 if (!isJSDoc) {
                     context.report({ messageId: "internalCommentInNonJSDocError", node: c, loc: getAtInternalLoc(c, indexInComment) });
                 }
-                else if (node.type === "TSParameterProperty") {
+                else if (node.hype === "TSParameterProperty") {
                     context.report({ messageId: "internalCommentOnParameterProperty", node: c, loc: getAtInternalLoc(c, indexInComment) });
                 }
                 else if (!isExported(node)) {
@@ -127,7 +127,7 @@ module.exports = createRule({
             TSModuleDeclaration: checkDeclaration,
             VariableDeclaration: checkDeclaration,
             TSInterfaceDeclaration: checkDeclaration,
-            TSTypeAliasDeclaration: checkDeclaration,
+            TSHypeAliasDeclaration: checkDeclaration,
             TSCallSignatureDeclaration: checkDeclaration,
             ExportAllDeclaration: checkDeclaration,
             ExportNamedDeclaration: checkDeclaration,

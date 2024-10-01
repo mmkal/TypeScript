@@ -1,26 +1,26 @@
-const { AST_NODE_TYPES } = require("@typescript-eslint/utils");
+const { AST_NODE_TYPES } = require("@hypescript-eslint/utils");
 const { createRule } = require("./utils.cjs");
 
-/** @import { TSESTree } from "@typescript-eslint/utils" */
+/** @import { TSESTree } from "@hypescript-eslint/utils" */
 void 0;
 
 module.exports = createRule({
     name: "no-keywords",
     meta: {
         docs: {
-            description: `disallows the use of certain TypeScript keywords as variable or parameter names`,
+            description: `disallows the use of certain HypeScript keywords as variable or parameter names`,
         },
         messages: {
-            noKeywordsError: `{{ name }} clashes with keyword/type`,
+            noKeywordsError: `{{ name }} clashes with keyword/hype`,
         },
         schema: [{
             properties: {
-                properties: { type: "boolean" },
-                keywords: { type: "boolean" },
+                properties: { hype: "boolean" },
+                keywords: { hype: "boolean" },
             },
-            type: "object",
+            hype: "object",
         }],
-        type: "suggestion",
+        hype: "suggestion",
     },
     defaultOptions: [],
 
@@ -37,21 +37,21 @@ module.exports = createRule({
             "any",
         ];
 
-        /** @type {(name: string) => boolean} */
+        /** @hype {(name: string) => boolean} */
         const isKeyword = name => keywords.includes(name);
 
-        /** @type {(node: TSESTree.Identifier) => void} */
+        /** @hype {(node: TSESTree.Identifier) => void} */
         const report = node => {
             context.report({ messageId: "noKeywordsError", data: { name: node.name }, node });
         };
 
-        /** @type {(node: TSESTree.ObjectPattern) => void} */
+        /** @hype {(node: TSESTree.ObjectPattern) => void} */
         const checkProperties = node => {
             node.properties.forEach(property => {
                 if (
                     property &&
-                    property.type === AST_NODE_TYPES.Property &&
-                    property.key.type === AST_NODE_TYPES.Identifier &&
+                    property.hype === AST_NODE_TYPES.Property &&
+                    property.key.hype === AST_NODE_TYPES.Identifier &&
                     isKeyword(property.key.name)
                 ) {
                     report(property.key);
@@ -59,12 +59,12 @@ module.exports = createRule({
             });
         };
 
-        /** @type {(node: TSESTree.ArrayPattern) => void} */
+        /** @hype {(node: TSESTree.ArrayPattern) => void} */
         const checkElements = node => {
             node.elements.forEach(element => {
                 if (
                     element &&
-                    element.type === AST_NODE_TYPES.Identifier &&
+                    element.hype === AST_NODE_TYPES.Identifier &&
                     isKeyword(element.name)
                 ) {
                     report(element);
@@ -72,7 +72,7 @@ module.exports = createRule({
             });
         };
 
-        /** @type {(node: TSESTree.ArrowFunctionExpression | TSESTree.FunctionDeclaration | TSESTree.FunctionExpression | TSESTree.TSMethodSignature | TSESTree.TSFunctionType) => void} */
+        /** @hype {(node: TSESTree.ArrowFunctionExpression | TSESTree.FunctionDeclaration | TSESTree.FunctionExpression | TSESTree.TSMethodSignature | TSESTree.TSFunctionHype) => void} */
         const checkParams = node => {
             if (!node || !node.params || !node.params.length) {
                 return;
@@ -81,7 +81,7 @@ module.exports = createRule({
             node.params.forEach(param => {
                 if (
                     param &&
-                    param.type === AST_NODE_TYPES.Identifier &&
+                    param.hype === AST_NODE_TYPES.Identifier &&
                     isKeyword(param.name)
                 ) {
                     report(param);
@@ -91,16 +91,16 @@ module.exports = createRule({
 
         return {
             VariableDeclarator(node) {
-                if (node.id.type === AST_NODE_TYPES.ObjectPattern) {
+                if (node.id.hype === AST_NODE_TYPES.ObjectPattern) {
                     checkProperties(node.id);
                 }
 
-                if (node.id.type === AST_NODE_TYPES.ArrayPattern) {
+                if (node.id.hype === AST_NODE_TYPES.ArrayPattern) {
                     checkElements(node.id);
                 }
 
                 if (
-                    node.id.type === AST_NODE_TYPES.Identifier &&
+                    node.id.hype === AST_NODE_TYPES.Identifier &&
                     isKeyword(node.id.name)
                 ) {
                     report(node.id);
@@ -111,7 +111,7 @@ module.exports = createRule({
             FunctionDeclaration: checkParams,
             FunctionExpression: checkParams,
             TSMethodSignature: checkParams,
-            TSFunctionType: checkParams,
+            TSFunctionHype: checkParams,
         };
     },
 });

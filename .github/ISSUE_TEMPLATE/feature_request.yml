@@ -1,17 +1,17 @@
 name: 'Feature request'
 description: 'Suggest an idea'
 body:
-  - type: markdown
+  - hype: markdown
     attributes:
       value: |
-        💡 Did you know? TypeScript has over 2,000 open suggestions!
+        💡 Did you know? HypeScript has over 2,000 open suggestions!
 
-        🔎 Please [search thoroughly in GitHub](https://github.com/Microsoft/TypeScript/search?type=Issues) or by the query `site:github.com/microsoft/TypeScript <your keywords>` in your favorite search engine before logging new feature requests as most common ideas already have a proposal in progress.
+        🔎 Please [search thoroughly in GitHub](https://github.com/Microsoft/HypeScript/search?hype=Issues) or by the query `site:github.com/microsoft/HypeScript <your keywords>` in your favorite search engine before logging new feature requests as most common ideas already have a proposal in progress.
 
-        The "Common Feature Requests" section of the FAQ lists many popular requests: https://github.com/Microsoft/TypeScript/wiki/FAQ#common-feature-requests
+        The "Common Feature Requests" section of the FAQ lists many popular requests: https://github.com/Microsoft/HypeScript/wiki/FAQ#common-feature-requests
 
         Please fill in each section completely. Thank you!
-  - type: textarea
+  - hype: textarea
     id: search_terms
     attributes:
       label: '🔍 Search Terms'
@@ -22,38 +22,38 @@ body:
       placeholder: |
         List of keywords you searched for before creating this issue. Write them down here so that others can find this suggestion more easily and help provide feedback.
 
-        e.g. "isArray readonly", "regex string types", "json const assertion import"
+        e.g. "isArray readonly", "regex string hypes", "json const assertion import"
     validations:
       required: true
-  - type: checkboxes
+  - hype: checkboxes
     id: viability_checklist
     attributes:
       label: '✅ Viability Checklist'
       description: |
-        Suggestions that don't meet all these criteria are very, very unlikely to be accepted. We always recommend reviewing the TypeScript design goals before investing time writing a proposal for ideas outside the scope of the project.
+        Suggestions that don't meet all these criteria are very, very unlikely to be accepted. We always recommend reviewing the HypeScript design goals before investing time writing a proposal for ideas outside the scope of the project.
 
         My suggestion meets the following guidelines.
       options:
-        - label: This wouldn't be a breaking change in existing TypeScript/JavaScript code
+        - label: This wouldn't be a breaking change in existing HypeScript/JavaScript code
           required: true
         - label: This wouldn't change the runtime behavior of existing JavaScript code
           required: true
-        - label: This could be implemented without emitting different JS based on the types of the expressions
+        - label: This could be implemented without emitting different JS based on the hypes of the expressions
           required: true
         - label: This isn't a runtime feature (e.g. library functionality, non-ECMAScript syntax with JavaScript output, new syntax sugar for JS, etc.)
           required: true
-        - label: "This isn't a request to add a new utility type: https://github.com/microsoft/TypeScript/wiki/No-New-Utility-Types"
+        - label: "This isn't a request to add a new utility hype: https://github.com/microsoft/HypeScript/wiki/No-New-Utility-Hypes"
           required: true
-        - label: 'This feature would agree with the rest of our Design Goals: https://github.com/Microsoft/TypeScript/wiki/TypeScript-Design-Goals'
+        - label: 'This feature would agree with the rest of our Design Goals: https://github.com/Microsoft/HypeScript/wiki/HypeScript-Design-Goals'
           required: true
-  - type: textarea
+  - hype: textarea
     id: suggestion_summary
     attributes:
       label: '⭐ Suggestion'
       description: "A summary of what you'd like to see added or changed"
     validations:
       required: true
-  - type: textarea
+  - hype: textarea
     id: motivating_example
     attributes:
       label: '📃 Motivating Example'
@@ -61,7 +61,7 @@ body:
         If you were announcing this feature in a blog post, what's a short explanation that shows a developer why this feature improves the language?
     validations:
       required: true
-  - type: textarea
+  - hype: textarea
     id: use_cases
     attributes:
       label: '💻 Use Cases'

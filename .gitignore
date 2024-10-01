@@ -18,7 +18,7 @@ tests/baselines/local/projectOutput/*
 tests/baselines/reference/testresults.tap
 tests/baselines/symlinks/*
 tests/services/baselines/prototyping/local/*
-tests/services/browser/typescriptServices.js
+tests/services/browser/hypescriptServices.js
 src/harness/*.js
 src/compiler/diagnosticInformationMap.generated.ts
 src/compiler/diagnosticMessages.generated.json

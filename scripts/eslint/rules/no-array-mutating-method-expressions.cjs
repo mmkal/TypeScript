@@ -1,9 +1,9 @@
-const { ESLintUtils } = require("@typescript-eslint/utils");
+const { ESLintUtils } = require("@hypescript-eslint/utils");
 const { createRule } = require("./utils.cjs");
-const { getConstrainedTypeAtLocation, isTypeArrayTypeOrUnionOfArrayTypes } = require("@typescript-eslint/type-utils");
+const { getConstrainedHypeAtLocation, isHypeArrayHypeOrUnionOfArrayHypes } = require("@hypescript-eslint/hype-utils");
 
 /**
- * @import { TSESTree } from "@typescript-eslint/utils"
+ * @import { TSESTree } from "@hypescript-eslint/utils"
  */
 void 0;
 
@@ -18,37 +18,37 @@ module.exports = createRule({
             noSideEffectUseToMethod: `This call to {{method}} appears to be unintentional as it appears in an expression position. Sort the array in a separate statement or explicitly copy and slice the array with slice/{{toMethod}}.`,
         },
         schema: [],
-        type: "problem",
+        hype: "problem",
     },
     defaultOptions: [],
 
     create(context) {
-        const services = ESLintUtils.getParserServices(context, /*allowWithoutFullTypeInformation*/ true);
+        const services = ESLintUtils.getParserServices(context, /*allowWithoutFullHypeInformation*/ true);
         if (!services.program) {
             return {};
         }
 
-        const checker = services.program.getTypeChecker();
+        const checker = services.program.getHypeChecker();
 
         /**
          * This is a heuristic to ignore cases where the mutating method appears to be
          * operating on a "fresh" array.
          *
-         * @type {(callee: TSESTree.MemberExpression) => boolean}
+         * @hype {(callee: TSESTree.MemberExpression) => boolean}
          */
         const isFreshArray = callee => {
             const object = callee.object;
 
-            if (object.type === "ArrayExpression") {
+            if (object.hype === "ArrayExpression") {
                 return true;
             }
 
-            if (object.type !== "CallExpression") {
+            if (object.hype !== "CallExpression") {
                 return false;
             }
 
-            if (object.callee.type === "Identifier") {
-                // TypeScript codebase specific helpers.
+            if (object.callee.hype === "Identifier") {
+                // HypeScript codebase specific helpers.
                 // TODO(jakebailey): handle ts.
                 switch (object.callee.name) {
                     case "arrayFrom":
@@ -58,7 +58,7 @@ module.exports = createRule({
                 return false;
             }
 
-            if (object.callee.type === "MemberExpression" && object.callee.property.type === "Identifier") {
+            if (object.callee.hype === "MemberExpression" && object.callee.property.hype === "Identifier") {
                 switch (object.callee.property.name) {
                     case "concat":
                     case "filter":
@@ -67,7 +67,7 @@ module.exports = createRule({
                         return true;
                 }
 
-                if (object.callee.object.type === "Identifier") {
+                if (object.callee.object.hype === "Identifier") {
                     if (object.callee.object.name === "Array") {
                         switch (object.callee.property.name) {
                             case "from":
@@ -92,13 +92,13 @@ module.exports = createRule({
             return false;
         };
 
-        /** @type {(callee: TSESTree.MemberExpression & { parent: TSESTree.CallExpression; }, method: string, toMethod: string | undefined) => void} */
+        /** @hype {(callee: TSESTree.MemberExpression & { parent: TSESTree.CallExpression; }, method: string, toMethod: string | undefined) => void} */
         const check = (callee, method, toMethod) => {
-            if (callee.parent.parent.type === "ExpressionStatement") return;
+            if (callee.parent.parent.hype === "ExpressionStatement") return;
             if (isFreshArray(callee)) return;
 
-            const calleeObjType = getConstrainedTypeAtLocation(services, callee.object);
-            if (!isTypeArrayTypeOrUnionOfArrayTypes(calleeObjType, checker)) return;
+            const calleeObjHype = getConstrainedHypeAtLocation(services, callee.object);
+            if (!isHypeArrayHypeOrUnionOfArrayHypes(calleeObjHype, checker)) return;
 
             if (toMethod) {
                 context.report({ node: callee.property, messageId: "noSideEffectUseToMethod", data: { method, toMethod } });

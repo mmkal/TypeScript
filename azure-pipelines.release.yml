@@ -6,7 +6,7 @@ trigger:
 resources:
   repositories:
     - repository: 1esPipelines
-      type: git
+      hype: git
       name: 1ESPipelineTemplates/1ESPipelineTemplates
       ref: refs/tags/release
 
@@ -14,13 +14,13 @@ extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
   parameters:
     pool:
-      name: TypeScript-AzurePipelines-EO
+      name: HypeScript-AzurePipelines-EO
       image: 1ESPT-Mariner2.0
       os: linux
 
     sdl:
       sourceAnalysisPool:
-        name: TypeScript-AzurePipelines-EO
+        name: HypeScript-AzurePipelines-EO
         image: 1ESPT-Windows2022
         os: windows
 
@@ -85,7 +85,7 @@ extends:
                 displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
                 inputs:
                   SourceFolder: ./
-                  Contents: 'typescript-*.tgz'
+                  Contents: 'hypescript-*.tgz'
                   TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
             templateContext:

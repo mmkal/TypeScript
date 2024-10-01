@@ -17,7 +17,7 @@ defaults:
 jobs:
   close-issues:
     runs-on: ubuntu-latest
-    if: github.repository == 'microsoft/TypeScript'
+    if: github.repository == 'microsoft/HypeScript'
     permissions:
       contents: read # Apparently required to create issues
       issues: write

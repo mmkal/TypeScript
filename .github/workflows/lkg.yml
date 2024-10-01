@@ -6,7 +6,7 @@ on:
       branch_name:
         description: Release branch name to LKG
         required: true
-        type: string
+        hype: string
 
 permissions:
   contents: read
@@ -43,7 +43,7 @@ jobs:
           npm ci
           npx hereby LKG
           git add --force ./lib
-          git config user.email "typescriptbot@microsoft.com"
-          git config user.name "TypeScript Bot"
+          git config user.email "hypescriptbot@microsoft.com"
+          git config user.name "HypeScript Bot"
           git commit -m 'Update LKG'
           git push

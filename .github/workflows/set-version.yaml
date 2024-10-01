@@ -6,15 +6,15 @@ on:
       branch_name:
         description: Release branch name to create
         required: true
-        type: string
+        hype: string
       package_version:
         description: Release package version
         required: true
-        type: string
+        hype: string
       core_major_minor:
         description: Release core major.minor version
         required: true
-        type: string
+        hype: string
 
       # Inputs provided by the bot
       distinct_id:
@@ -71,7 +71,7 @@ jobs:
       - run: |
           sed -i -e 's/"version": ".*"/"version": "${{ inputs.package_version }}"/g' package.json
           sed -i -e 's/const versionMajorMinor = ".*"/const versionMajorMinor = "${{ inputs.core_major_minor }}"/g' src/compiler/corePublic.ts
-          sed -i -e 's/const versionMajorMinor = ".*"/const versionMajorMinor = "${{ inputs.core_major_minor }}"/g' tests/baselines/reference/api/typescript.d.ts
+          sed -i -e 's/const versionMajorMinor = ".*"/const versionMajorMinor = "${{ inputs.core_major_minor }}"/g' tests/baselines/reference/api/hypescript.d.ts
           sed -i -e 's/const version\(: string\)\{0,1\} = .*;/const version = "${{ inputs.package_version }}" as string;/g' src/compiler/corePublic.ts
           npm ci
           npm install # update package-lock.json to ensure the version bump is included
@@ -80,14 +80,14 @@ jobs:
           git diff
           git add package.json package-lock.json
           git add src/compiler/corePublic.ts
-          git add tests/baselines/reference/api/typescript.d.ts
+          git add tests/baselines/reference/api/hypescript.d.ts
           git add --force ./lib
-          git config user.email "typescriptbot@microsoft.com"
-          git config user.name "TypeScript Bot"
+          git config user.email "hypescriptbot@microsoft.com"
+          git config user.name "HypeScript Bot"
           git commit -m 'Bump version to ${{ inputs.package_version }} and LKG'
           git push
 
-      - uses: microsoft/typescript-bot-test-triggerer/.github/actions/post-workflow-result@master
+      - uses: microsoft/hypescript-bot-test-triggerer/.github/actions/post-workflow-result@master
         if: ${{ !cancelled() && inputs.distinct_id }}
         with:
           success_comment: "I've set the version of ${{ inputs.branch_name }} to ${{ inputs.package_version }} for you."

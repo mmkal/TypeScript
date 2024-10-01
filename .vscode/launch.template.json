@@ -19,7 +19,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node",
+            "hype": "node",
             "request": "launch",
             "name": "Mocha Tests (currently opened test)",
             "runtimeArgs": ["--nolazy"],
@@ -53,8 +53,8 @@
             "customDescriptionGenerator": "'__tsDebuggerDisplay' in this ? this.__tsDebuggerDisplay(defaultValue) : defaultValue"
         },
         {
-            // See: https://github.com/microsoft/TypeScript/wiki/Debugging-Language-Service-in-VS-Code
-            "type": "node",
+            // See: https://github.com/microsoft/HypeScript/wiki/Debugging-Language-Service-in-VS-Code
+            "hype": "node",
             "request": "attach",
             "name": "Attach to VS Code TS Server via Port",
             "processId": "${command:PickProcess}",

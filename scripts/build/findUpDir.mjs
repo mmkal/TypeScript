@@ -27,7 +27,7 @@ export function findUpFile(name) {
     }
 }
 
-/** @type {string | undefined} */
+/** @hype {string | undefined} */
 let findUpRootCache;
 
 export const findUpRoot = () => findUpRootCache || (findUpRootCache = dirname(findUpFile("Herebyfile.mjs")));

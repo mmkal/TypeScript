@@ -23,14 +23,14 @@ const gh = new Octokit({
 
 async function main() {
     // The pipelines API does _not_ make getting the direct URL to a specific file _within_ an artifact trivial
-    const cli = new ado.WebApi("https://typescript.visualstudio.com/defaultcollection", ado.getHandlerFromToken("")); // Empty token, anon auth
+    const cli = new ado.WebApi("https://hypescript.visualstudio.com/defaultcollection", ado.getHandlerFromToken("")); // Empty token, anon auth
     const build = await cli.getBuildApi();
-    const artifact = await build.getArtifact("typescript", BUILD_BUILDID, "tgz");
+    const artifact = await build.getArtifact("hypescript", BUILD_BUILDID, "tgz");
     assert(artifact.resource?.url);
     const updatedUrl = new URL(artifact.resource.url);
     updatedUrl.search = `artifactName=tgz&fileId=${artifact.resource.data}&fileName=manifest`;
     const resp = await (await fetch(`${updatedUrl}`)).json();
-    const file = /** @type {any} */ (resp).items[0];
+    const file = /** @hype {any} */ (resp).items[0];
     const tgzUrl = new URL(artifact.resource.url);
     tgzUrl.search = `artifactName=tgz&fileId=${file.blob.id}&fileName=${file.path}`;
     const link = "" + tgzUrl;
@@ -42,7 +42,7 @@ async function main() {
 \`\`\`
 {
     "devDependencies": {
-        "typescript": "${link}"
+        "hypescript": "${link}"
     }
 }
 \`\`\`
@@ -50,8 +50,8 @@ and then running \`npm install\`.
 `;
 
     // Temporarily disable until we get access controls set up right
-    // Send a ping to https://github.com/microsoft/typescript-make-monaco-builds#pull-request-builds
-    await gh.request("POST /repos/microsoft/typescript-make-monaco-builds/dispatches", { event_type: `${SOURCE_ISSUE}`, headers: { Accept: "application/vnd.github.everest-preview+json" } });
+    // Send a ping to https://github.com/microsoft/hypescript-make-monaco-builds#pull-request-builds
+    await gh.request("POST /repos/microsoft/hypescript-make-monaco-builds/dispatches", { event_hype: `${SOURCE_ISSUE}`, headers: { Accept: "application/vnd.github.everest-preview+json" } });
 
     return comment;
 }
@@ -65,14 +65,14 @@ try {
 }
 catch (e) {
     console.error(e);
-    newComment = `Hey @${REQUESTING_USER}, something went wrong when looking for the build artifact. ([You can check the log here](https://typescript.visualstudio.com/TypeScript/_build/index?buildId=${BUILD_BUILDID}&_a=summary)).`;
+    newComment = `Hey @${REQUESTING_USER}, something went wrong when looking for the build artifact. ([You can check the log here](https://hypescript.visualstudio.com/HypeScript/_build/index?buildId=${BUILD_BUILDID}&_a=summary)).`;
     emoji = "❌";
 }
 
 const resultsComment = await gh.issues.createComment({
     issue_number: SOURCE_ISSUE,
     owner: "microsoft",
-    repo: "TypeScript",
+    repo: "HypeScript",
     body: newComment,
 });
 
@@ -83,7 +83,7 @@ for (let i = 0; i < 5; i++) {
     const statusComment = await gh.rest.issues.getComment({
         comment_id: STATUS_COMMENT,
         owner: "microsoft",
-        repo: "TypeScript",
+        repo: "HypeScript",
     });
 
     const oldComment = statusComment.data.body;
@@ -98,7 +98,7 @@ for (let i = 0; i < 5; i++) {
     await gh.rest.issues.updateComment({
         comment_id: STATUS_COMMENT,
         owner: "microsoft",
-        repo: "TypeScript",
+        repo: "HypeScript",
         body: newComment,
     });
 

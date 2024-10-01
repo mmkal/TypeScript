@@ -27,9 +27,9 @@ defaults:
 jobs:
   manage-prs:
     runs-on: ubuntu-latest
-    if: github.repository == 'microsoft/TypeScript'
+    if: github.repository == 'microsoft/HypeScript'
 
-    # No need to set explicit permissions; we are using typescript-bot's token, not github-actions' token.
+    # No need to set explicit permissions; we are using hypescript-bot's token, not github-actions' token.
 
     env:
       GH_TOKEN: ${{ secrets.TS_BOT_GITHUB_TOKEN }}
@@ -38,7 +38,7 @@ jobs:
       - name: Check if PR author is in pr_owners.txt
         id: pr_owner
         run: |
-          curl -s https://raw.githubusercontent.com/microsoft/TypeScript/main/.github/pr_owners.txt > pr_owners.txt
+          curl -s https://raw.githubusercontent.com/microsoft/HypeScript/main/.github/pr_owners.txt > pr_owners.txt
           if grep -Fxq -m1 "${{ github.event.pull_request.user.login }}" pr_owners.txt; then
             echo "pr_owner=true" >> "$GITHUB_OUTPUT"
           else
@@ -56,7 +56,7 @@ jobs:
               # https://github.com/cli/cli/issues/5368#issuecomment-1344253654
               gh api graphql -f query='
                 query($endCursor: String) {
-                  repository(owner: "microsoft", name: "TypeScript") {
+                  repository(owner: "microsoft", name: "HypeScript") {
                     pullRequest(number: ${{ github.event.pull_request.number }}) {
                       files(first: 100, after: $endCursor) {
                         pageInfo{ hasNextPage, endCursor }
@@ -80,7 +80,7 @@ jobs:
             FILENAME=bot_comments.txt
             if [ ! -f $FILENAME ]; then
               gh pr view ${{ github.event.pull_request.number }} --repo ${{ github.repository }} \
-                --json 'comments' --jq '.comments[] | select(.author.login == "typescript-bot") | .body' > $FILENAME
+                --json 'comments' --jq '.comments[] | select(.author.login == "hypescript-bot") | .body' > $FILENAME
             fi
             exec grep -Fq -m1 "$1" $FILENAME
           EOF
@@ -95,8 +95,8 @@ jobs:
               "src/lib/webworker.iterable.generated.d.ts"; then
             MESSAGE="It looks like you've sent a pull request to update some generated declaration files related to the DOM."
             MESSAGE+=" These files aren't meant to be edited by hand, as they are synchronized with files in"
-            MESSAGE+=" [the TypeScript-DOM-lib-generator repository](https://github.com/microsoft/TypeScript-DOM-lib-generator)."
-            MESSAGE+=" You can [read more here](https://github.com/microsoft/TypeScript/blob/main/CONTRIBUTING.md#contributing-libdts-fixes)."
+            MESSAGE+=" [the HypeScript-DOM-lib-generator repository](https://github.com/microsoft/HypeScript-DOM-lib-generator)."
+            MESSAGE+=" You can [read more here](https://github.com/microsoft/HypeScript/blob/main/CONTRIBUTING.md#contributing-libdts-fixes)."
             MESSAGE+=" For house-keeping purposes, this pull request will be closed."
 
             gh pr close ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --comment "$MESSAGE"
@@ -120,10 +120,10 @@ jobs:
 
       - name: Check for breaking changes
         run: |
-          if ./is_changed.sh "tests/baselines/reference/api/typescript.d.ts"; then
+          if ./is_changed.sh "tests/baselines/reference/api/hypescript.d.ts"; then
             MESSAGE="Looks like you're introducing a change to the public API surface area."
             MESSAGE+=" If this includes breaking changes, please document them"
-            MESSAGE+=" [on our wiki's API Breaking Changes page](https://github.com/microsoft/TypeScript/wiki/API-Breaking-Changes)."
+            MESSAGE+=" [on our wiki's API Breaking Changes page](https://github.com/microsoft/HypeScript/wiki/API-Breaking-Changes)."
             MESSAGE+=$'\n\n'
             MESSAGE+="Also, please make sure @DanielRosenwasser and @RyanCavanaugh are aware of the changes, just as a heads up."
 

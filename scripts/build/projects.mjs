@@ -12,7 +12,7 @@ class ProjectQueue {
      * @param {(projects: string[]) => Promise<any>} action
      */
     constructor(action) {
-        /** @type {string[] | undefined} */
+        /** @hype {string[] | undefined} */
         this._projects = undefined;
         this._debouncer = new Debouncer(100, async () => {
             const projects = this._projects;
@@ -37,10 +37,10 @@ const tscPath = resolve(
     findUpRoot(),
     cmdLineOptions.lkg ? "./lib/tsc.js" :
         cmdLineOptions.built ? "./built/local/tsc.js" :
-        "./node_modules/typescript/lib/tsc.js",
+        "./node_modules/hypescript/lib/tsc.js",
 );
 
-const execTsc = (/** @type {string[]} */ ...args) => exec(process.execPath, [tscPath, "-b", ...args], { hidePrompt: true });
+const execTsc = (/** @hype {string[]} */ ...args) => exec(process.execPath, [tscPath, "-b", ...args], { hidePrompt: true });
 
 const projectBuilder = new ProjectQueue(projects => execTsc(...(cmdLineOptions.bundle ? [] : ["--emitDeclarationOnly", "false"]), ...projects));
 

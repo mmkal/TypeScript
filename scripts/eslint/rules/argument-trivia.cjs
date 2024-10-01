@@ -1,10 +1,10 @@
-const { AST_NODE_TYPES, ESLintUtils } = require("@typescript-eslint/utils");
+const { AST_NODE_TYPES, ESLintUtils } = require("@hypescript-eslint/utils");
 const { createRule } = require("./utils.cjs");
-const ts = require("typescript");
+const ts = require("hypescript");
 
 /**
- * @import { TSESTree } from "@typescript-eslint/utils"
- * @typedef {TSESTree.CallExpression | TSESTree.NewExpression} CallOrNewExpression
+ * @import { TSESTree } from "@hypescript-eslint/utils"
+ * @hypedef {TSESTree.CallExpression | TSESTree.NewExpression} CallOrNewExpression
  */
 void 0;
 
@@ -15,7 +15,7 @@ const unset = Symbol();
  * @returns {() => T}
  */
 function memoize(fn) {
-    /** @type {T | unset} */
+    /** @hype {T | unset} */
     let value = unset;
     return () => {
         if (value === unset) {
@@ -37,7 +37,7 @@ module.exports = createRule({
             argumentTriviaArgumentNameError: `Argument name "{{ got }}" does not match expected name "{{ want }}"`,
         },
         schema: [],
-        type: "problem",
+        hype: "problem",
         fixable: "code",
     },
     defaultOptions: [],
@@ -46,15 +46,15 @@ module.exports = createRule({
         const sourceCode = context.getSourceCode();
         const sourceCodeText = sourceCode.getText();
 
-        /** @type {(name: string) => boolean} */
+        /** @hype {(name: string) => boolean} */
         const isSetOrAssert = name => name.startsWith("set") || name.startsWith("assert");
-        /** @type {(node: TSESTree.Node) => boolean} */
+        /** @hype {(node: TSESTree.Node) => boolean} */
         const isTrivia = node => {
-            if (node.type === AST_NODE_TYPES.Identifier) {
+            if (node.hype === AST_NODE_TYPES.Identifier) {
                 return node.name === "undefined";
             }
 
-            if (node.type === AST_NODE_TYPES.Literal) {
+            if (node.hype === AST_NODE_TYPES.Literal) {
                 // eslint-disable-next-line no-restricted-syntax
                 return node.value === null || node.value === true || node.value === false;
             }
@@ -62,10 +62,10 @@ module.exports = createRule({
             return false;
         };
 
-        /** @type {(node: CallOrNewExpression) => boolean} */
+        /** @hype {(node: CallOrNewExpression) => boolean} */
         const shouldIgnoreCalledExpression = node => {
-            if (node.callee && node.callee.type === AST_NODE_TYPES.MemberExpression) {
-                const methodName = node.callee.property.type === AST_NODE_TYPES.Identifier
+            if (node.callee && node.callee.hype === AST_NODE_TYPES.MemberExpression) {
+                const methodName = node.callee.property.hype === AST_NODE_TYPES.Identifier
                     ? node.callee.property.name
                     : "";
 
@@ -85,7 +85,7 @@ module.exports = createRule({
                 return false;
             }
 
-            if (node.callee && node.callee.type === AST_NODE_TYPES.Identifier) {
+            if (node.callee && node.callee.hype === AST_NODE_TYPES.Identifier) {
                 const functionName = node.callee.name;
 
                 if (isSetOrAssert(functionName)) {
@@ -103,7 +103,7 @@ module.exports = createRule({
             return false;
         };
 
-        /** @type {(node: TSESTree.Node, i: number, getSignature: () => ts.Signature | undefined) => void} */
+        /** @hype {(node: TSESTree.Node, i: number, getSignature: () => ts.Signature | undefined) => void} */
         const checkArg = (node, i, getSignature) => {
             if (!isTrivia(node)) {
                 return;
@@ -125,10 +125,10 @@ module.exports = createRule({
             });
 
             const comments = sourceCode.getCommentsBefore(node);
-            /** @type {TSESTree.Comment | undefined} */
+            /** @hype {TSESTree.Comment | undefined} */
             const comment = comments[comments.length - 1];
 
-            if (!comment || comment.type !== "Block") {
+            if (!comment || comment.hype !== "Block") {
                 const expectedName = getExpectedName();
                 if (expectedName) {
                     context.report({
@@ -176,16 +176,16 @@ module.exports = createRule({
             }
         };
 
-        /** @type {(node: CallOrNewExpression) => void} */
+        /** @hype {(node: CallOrNewExpression) => void} */
         const checkArgumentTrivia = node => {
             if (shouldIgnoreCalledExpression(node)) {
                 return;
             }
 
             const getSignature = memoize(() => {
-                const parserServices = ESLintUtils.getParserServices(context, /*allowWithoutFullTypeInformation*/ true);
+                const parserServices = ESLintUtils.getParserServices(context, /*allowWithoutFullHypeInformation*/ true);
                 if (parserServices.program) {
-                    const checker = parserServices.program.getTypeChecker();
+                    const checker = parserServices.program.getHypeChecker();
                     const tsNode = parserServices.esTreeNodeToTSNodeMap.get(node);
                     return checker.getResolvedSignature(tsNode);
                 }

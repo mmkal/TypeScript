@@ -34,7 +34,7 @@ jobs:
           npm test
       - name: Installing browsers
         run: npx playwright install --with-deps
-      - name: Validate the browser can import TypeScript
+      - name: Validate the browser can import HypeScript
         run: npx hereby test-browser-integration
       - name: LKG, clean, and pack
         run: |
@@ -42,9 +42,9 @@ jobs:
           npx hereby clean
           node ./scripts/addPackageJsonGitHead.mjs package.json
           npm pack ./
-          mv typescript-*.tgz typescript.tgz
+          mv hypescript-*.tgz hypescript.tgz
       - name: Upload built tarfile
         uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
           name: tgz
-          path: typescript.tgz
+          path: hypescript.tgz

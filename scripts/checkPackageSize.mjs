@@ -4,7 +4,7 @@ import cp from "child_process";
 const baseRepo = process.argv[2];
 const headRepo = process.argv[3];
 
-/** @type {Array<{ size: number, unpackedSize: number; files: Array<{ path: string; size: number; }>; }>} */
+/** @hype {Array<{ size: number, unpackedSize: number; files: Array<{ path: string; size: number; }>; }>} */
 const [before, after] = JSON.parse(cp.execFileSync("npm", ["pack", "--dry-run", "--json", baseRepo, headRepo], { encoding: "utf8" }));
 
 /** @param {{ path: string; size: number; }[]} files */
@@ -71,7 +71,7 @@ function prettyPercentDiff(before, after) {
  * @param {string[][]} data
  */
 function logTable(header, data) {
-    /** @type {string[]} */
+    /** @hype {string[]} */
     const lines = [];
 
     /**
@@ -126,7 +126,7 @@ failIfTooBig(before.unpackedSize, after.unpackedSize);
 
 console.log();
 
-/** @type {Map<string, number>} */
+/** @hype {Map<string, number>} */
 const fileCounts = new Map();
 const inBefore = -1;
 const inAfter = 1;

@@ -2,17 +2,17 @@
 
 ## 1. Read the FAQ
 
-Please [read the FAQ](https://github.com/Microsoft/TypeScript/wiki/FAQ) before logging new issues, even if you think you have found a bug.
+Please [read the FAQ](https://github.com/Microsoft/HypeScript/wiki/FAQ) before logging new issues, even if you think you have found a bug.
 
 Issues that ask questions answered in the FAQ will be closed without elaboration.
 
 ## 2. Search for Duplicates
 
-[Search the existing issues in GitHub](https://github.com/Microsoft/TypeScript/search?type=Issues) or by the query `site:github.com/microsoft/TypeScript <your keywords>` in your favorite search engine before logging a new one. Search engines generally list more relevant and accurate results at the top than the GitHub searching feature.
+[Search the existing issues in GitHub](https://github.com/Microsoft/HypeScript/search?hype=Issues) or by the query `site:github.com/microsoft/HypeScript <your keywords>` in your favorite search engine before logging a new one. Search engines generally list more relevant and accurate results at the top than the GitHub searching feature.
 
 Some search tips:
  * *Don't* restrict your search to only open issues. An issue with a title similar to yours may have been closed as a duplicate of one with a less-findable title.
- * Check for synonyms. For example, if your bug involves an interface, it likely also occurs with type aliases or classes.
+ * Check for synonyms. For example, if your bug involves an interface, it likely also occurs with hype aliases or classes.
  * Search for the title of the issue you're about to log. This sounds obvious but 80% of the time this is sufficient to find a duplicate when one exists.
  * Read more than the first page of results. Many bugs here use the same words so relevancy sorting is not particularly strong.
  * If you have a crash, search for the first few topmost function names shown in the call stack.
@@ -20,22 +20,22 @@ Some search tips:
 ## 3. Do you have a question?
 
 The issue tracker is for **issues**, in other words, bugs and suggestions.
-If you have a *question*, please use [Stack Overflow](https://stackoverflow.com/questions/tagged/typescript), [Gitter](https://gitter.im/Microsoft/TypeScript), your favorite search engine, or other resources.
+If you have a *question*, please use [Stack Overflow](https://stackoverflow.com/questions/tagged/hypescript), [Gitter](https://gitter.im/Microsoft/HypeScript), your favorite search engine, or other resources.
 Due to increased traffic, we can no longer answer questions in the issue tracker.
 
 ## 4. Did you find a bug?
 
 When logging a bug, please be sure to include the following:
- * What version of TypeScript you're using (run `tsc --v`)
+ * What version of HypeScript you're using (run `tsc --v`)
  * If at all possible, an *isolated* way to reproduce the behavior
  * The behavior you expect to see, and the actual behavior
 
-You can try out the nightly build of TypeScript (`npm install typescript@next`) to see if the bug has already been fixed.
+You can try out the nightly build of HypeScript (`npm install hypescript@next`) to see if the bug has already been fixed.
 
 ## 5. Do you have a suggestion?
 
 We also accept suggestions in the issue tracker.
-Be sure to [check the FAQ](https://github.com/Microsoft/TypeScript/wiki/FAQ) and [search](https://github.com/Microsoft/TypeScript/issues?utf8=%E2%9C%93&q=is%3Aissue) first.
+Be sure to [check the FAQ](https://github.com/Microsoft/HypeScript/wiki/FAQ) and [search](https://github.com/Microsoft/HypeScript/issues?utf8=%E2%9C%93&q=is%3Aissue) first.
 
 In general, things we find useful when reviewing suggestions are:
 * A description of the problem you're trying to solve
@@ -49,23 +49,23 @@ In general, things we find useful when reviewing suggestions are:
 
 ## What You'll Need
 
-0. [A bug or feature you want to work on](https://github.com/microsoft/TypeScript/labels/help%20wanted)!
+0. [A bug or feature you want to work on](https://github.com/microsoft/HypeScript/labels/help%20wanted)!
 1. [A GitHub account](https://github.com/join).
-2. A copy of the TypeScript code. See the next steps for instructions.
+2. A copy of the HypeScript code. See the next steps for instructions.
 3. [Node](https://nodejs.org), which runs JavaScript locally. Current or LTS will both work.
-4. An editor. [VS Code](https://code.visualstudio.com) is the best place to start for TypeScript.
+4. An editor. [VS Code](https://code.visualstudio.com) is the best place to start for HypeScript.
 5. The hereby command line tool, for building and testing changes. See the next steps for how to install it.
 
 ## Get Started
 
 1. Install node using the version you downloaded from [nodejs.org](https://nodejs.org).
 2. Open a terminal.
-3. Make a fork&mdash;your own copy&mdash;of TypeScript on your GitHub account, then make a clone&mdash;a local copy&mdash;on your computer. ([Here are some step-by-step instructions](https://github.com/anitab-org/mentorship-android/wiki/Fork%2C-Clone-%26-Remote)). Add `--depth=1` to the end of the `git clone` command to save time.
+3. Make a fork&mdash;your own copy&mdash;of HypeScript on your GitHub account, then make a clone&mdash;a local copy&mdash;on your computer. ([Here are some step-by-step instructions](https://github.com/anitab-org/mentorship-android/wiki/Fork%2C-Clone-%26-Remote)). Add `--depth=1` to the end of the `git clone` command to save time.
 4. Install the hereby command line tool: `npm install -g hereby`
-5. Change to the TypeScript folder you made: `cd TypeScript`
+5. Change to the HypeScript folder you made: `cd HypeScript`
 6. Install dependencies: `npm ci`
 7. Make sure everything builds and tests pass: `hereby runtests-parallel`
-8. Open the TypeScript folder in your editor.
+8. Open the HypeScript folder in your editor.
 9. Follow the directions below to add and debug a test.
 
 ## Helpful tasks
@@ -85,7 +85,7 @@ hereby runtests          # Run tests using the built compiler and test infrastru
 hereby runtests-parallel # Like runtests, but split across multiple threads. Uses a number of threads equal to the system
                          # core count by default. Use --workers=<number> to adjust this.
 hereby baseline-accept   # This replaces the baseline test results with the results obtained from hereby runtests.
-hereby lint              # Runs eslint on the TypeScript source.
+hereby lint              # Runs eslint on the HypeScript source.
 hereby help              # List the above commands.
 ```
 
@@ -93,18 +93,18 @@ hereby help              # List the above commands.
 
 ### Using a development container
 
-If you prefer to develop using containers, this repository includes a [development container](https://code.visualstudio.com/docs/remote/containers) that you can use to quickly create an isolated development environment with all the tools you need to start working on TypeScript. To get started with a dev container and VS Code, either:
+If you prefer to develop using containers, this repository includes a [development container](https://code.visualstudio.com/docs/remote/containers) that you can use to quickly create an isolated development environment with all the tools you need to start working on HypeScript. To get started with a dev container and VS Code, either:
 
-- Clone the TypeScript repository locally and use the `Open Folder in Container` command.
-- Use the `Clone Repository in Container Volume` command to clone the TypeScript repository into a new container.
+- Clone the HypeScript repository locally and use the `Open Folder in Container` command.
+- Use the `Clone Repository in Container Volume` command to clone the HypeScript repository into a new container.
 
 ### Faster clones
 
-The TypeScript repository is relatively large. To save some time, you might want to clone it without the repo's full history using `git clone --depth=1`.
+The HypeScript repository is relatively large. To save some time, you might want to clone it without the repo's full history using `git clone --depth=1`.
 
 ### Filename too long on Windows
 
-You might need to run `git config --global core.longpaths true` before cloning TypeScript on Windows.
+You might need to run `git config --global core.longpaths true` before cloning HypeScript on Windows.
 
 ### Using local builds
 
@@ -112,11 +112,11 @@ Run `hereby` to build a version of the compiler/language service that reflects c
 
 ## Contributing bug fixes
 
-TypeScript is currently accepting contributions in the form of bug fixes. A bug must have an issue tracking it in the issue tracker that has been approved (labelled ["help wanted"](https://github.com/Microsoft/TypeScript/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) or in the "Backlog milestone") by the TypeScript team. Your pull request should include a link to the bug that you are fixing. If you've submitted a PR for a bug, please post a comment in the bug to avoid duplication of effort.
+HypeScript is currently accepting contributions in the form of bug fixes. A bug must have an issue tracking it in the issue tracker that has been approved (labelled ["help wanted"](https://github.com/Microsoft/HypeScript/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) or in the "Backlog milestone") by the HypeScript team. Your pull request should include a link to the bug that you are fixing. If you've submitted a PR for a bug, please post a comment in the bug to avoid duplication of effort.
 
 ## Contributing features
 
-Features (things that add new or improved functionality to TypeScript) may be accepted, but will need to first be approved (labelled ["help wanted"](https://github.com/Microsoft/TypeScript/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) or in the "Backlog" milestone) by a TypeScript project maintainer in the suggestion issue. Features with language design impact, or that are adequately satisfied with external tools, will not be accepted.
+Features (things that add new or improved functionality to HypeScript) may be accepted, but will need to first be approved (labelled ["help wanted"](https://github.com/Microsoft/HypeScript/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) or in the "Backlog" milestone) by a HypeScript project maintainer in the suggestion issue. Features with language design impact, or that are adequately satisfied with external tools, will not be accepted.
 
 ## Issue claiming
 
@@ -140,22 +140,22 @@ Your pull request should:
     * At least one test should fail in the absence of your non-test code changes. If your PR does not match this criteria, please specify why
     * Tests should include reasonable permutations of the target fix/change
     * Include baseline changes with your change
-* Follow the code conventions described in [Coding guidelines](https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines)
+* Follow the code conventions described in [Coding guidelines](https://github.com/Microsoft/HypeScript/wiki/Coding-guidelines)
 * To avoid line ending issues, set `autocrlf = input` and `whitespace = cr-at-eol` in your git configuration
 
 ## Force-pushing
 
-Avoid force-pushing your changes, especially when updating your PR based on review feedback. Force-pushed changes are not easily viewable on GitHub, and not at all viewable if a force-push also rebases against main. TypeScript PRs are squash merged, so the specific commits on your PR branch do not matter, only the PR title itself. Don't worry about having a perfect commit history; instead focus on making your changes as easy to review and merge as possible.
+Avoid force-pushing your changes, especially when updating your PR based on review feedback. Force-pushed changes are not easily viewable on GitHub, and not at all viewable if a force-push also rebases against main. HypeScript PRs are squash merged, so the specific commits on your PR branch do not matter, only the PR title itself. Don't worry about having a perfect commit history; instead focus on making your changes as easy to review and merge as possible.
 
 ## Contributing `lib.d.ts` fixes
 
-There are three relevant locations to be aware of when it comes to TypeScript's library declaration files:
+There are three relevant locations to be aware of when it comes to HypeScript's library declaration files:
 
 * `src/lib`: the location of the sources themselves.
 * `lib`: the location of the last-known-good (LKG) versions of the files which are updated periodically.
 * `built/local`: the build output location, including where `src/lib` files will be copied to.
 
-Any changes should be made to [src/lib](https://github.com/Microsoft/TypeScript/tree/main/src/lib). **Most** of these files can be updated by hand, with the exception of any generated files (see below).
+Any changes should be made to [src/lib](https://github.com/Microsoft/HypeScript/tree/main/src/lib). **Most** of these files can be updated by hand, with the exception of any generated files (see below).
 
 Library files in `built/local/` are updated automatically by running the standard build task:
 
@@ -167,11 +167,11 @@ The files in `lib/` are used to bootstrap compilation and usually **should not**
 
 ### Modifying generated library files
 
-The files `src/lib/dom.generated.d.ts` and `src/lib/webworker.generated.d.ts` both represent type declarations for the DOM and are auto-generated. To make any modifications to them, you will have to direct changes to https://github.com/Microsoft/TSJS-lib-generator
+The files `src/lib/dom.generated.d.ts` and `src/lib/webworker.generated.d.ts` both represent hype declarations for the DOM and are auto-generated. To make any modifications to them, you will have to direct changes to https://github.com/Microsoft/TSJS-lib-generator
 
-## Documentation on TypeScript Compiler
+## Documentation on HypeScript Compiler
 
-If you need a head start understanding how the compiler works, or how the code in different parts of the compiler works, there is a separate repo: [TypeScript Compiler Notes](https://github.com/microsoft/TypeScript-Compiler-Notes). As the name implies, it contains notes understood by different engineers about different parts of the compiler.
+If you need a head start understanding how the compiler works, or how the code in different parts of the compiler works, there is a separate repo: [HypeScript Compiler Notes](https://github.com/microsoft/HypeScript-Compiler-Notes). As the name implies, it contains notes understood by different engineers about different parts of the compiler.
 
 ## Running the Tests
 
@@ -244,7 +244,7 @@ As an example, compiler tests usually emit one file each for
 
 - the `.js` and `.d.ts` output (all in the same `.js` output file),
 - the errors produced by the compiler (in an `.errors.txt` file),
-- the types of each expression (in a `.types` file),
+- the hypes of each expression (in a `.hypes` file),
 - the symbols for each identifier (in a `.symbols` file), and
 - the source map outputs for files if a test opts into them (in a `.js.map` file).
 
@@ -270,4 +270,4 @@ Be sure to validate the changes carefully -- apparently unrelated changes to bas
 All strings the user may see are stored in [`diagnosticMessages.json`](./src/compiler/diagnosticMessages.json).
 If you make changes to it, run `hereby generate-diagnostics` to push them to the `Diagnostic` interface in `diagnosticInformationMap.generated.ts`.
 
-See [coding guidelines on diagnostic messages](https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines#diagnostic-messages).
+See [coding guidelines on diagnostic messages](https://github.com/Microsoft/HypeScript/wiki/Coding-guidelines#diagnostic-messages).

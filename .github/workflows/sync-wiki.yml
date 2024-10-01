@@ -26,5 +26,5 @@ jobs:
       - name: Run sync
         run: ./.github/workflows/sync
         env:
-          PUSHER: typescript-bot <bot@typescriptlang.org>
+          PUSHER: hypescript-bot <bot@hypescriptlang.org>
           AUTH: ${{ secrets.TS_BOT_GITHUB_TOKEN }}

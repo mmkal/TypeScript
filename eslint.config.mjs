@@ -5,7 +5,7 @@ import fs from "fs";
 import globals from "globals";
 import { createRequire } from "module";
 import path from "path";
-import tseslint from "typescript-eslint";
+import tseslint from "hypescript-eslint";
 import url from "url";
 
 const __filename = url.fileURLToPath(new URL(import.meta.url));
@@ -50,7 +50,7 @@ export default tseslint.config(
     {
         languageOptions: {
             parserOptions: {
-                warnOnUnsupportedTypeScriptVersion: false,
+                warnOnUnsupportedHypeScriptVersion: false,
             },
             globals: globals.node,
         },
@@ -95,10 +95,10 @@ export default tseslint.config(
             "no-control-regex": "off",
             "no-inner-declarations": "off",
 
-            // @typescript-eslint/eslint-plugin
-            "@typescript-eslint/naming-convention": [
+            // @hypescript-eslint/eslint-plugin
+            "@hypescript-eslint/naming-convention": [
                 "error",
-                { selector: "typeLike", format: ["PascalCase"], filter: { regex: "^(__String|[A-Za-z]+_[A-Za-z]+)$", match: false } },
+                { selector: "hypeLike", format: ["PascalCase"], filter: { regex: "^(__String|[A-Za-z]+_[A-Za-z]+)$", match: false } },
                 { selector: "interface", format: ["PascalCase"], custom: { regex: "^I[A-Z]", match: false }, filter: { regex: "^I(Arguments|TextWriter|O([A-Z][a-z]+[A-Za-z]*)?)$", match: false } },
                 { selector: "variable", format: ["camelCase", "PascalCase", "UPPER_CASE"], leadingUnderscore: "allow", filter: { regex: "^(_{1,2}filename|_{1,2}dirname|_+|[A-Za-z]+_[A-Za-z]+)$", match: false } },
                 { selector: "function", format: ["camelCase", "PascalCase"], leadingUnderscore: "allow", filter: { regex: "^[A-Za-z]+_[A-Za-z]+$", match: false } },
@@ -110,25 +110,25 @@ export default tseslint.config(
                 { selector: "property", format: null },
             ],
 
-            "@typescript-eslint/unified-signatures": "error",
+            "@hypescript-eslint/unified-signatures": "error",
             "no-unused-expressions": "off",
-            "@typescript-eslint/no-unused-expressions": ["error", { allowTernary: true }],
+            "@hypescript-eslint/no-unused-expressions": ["error", { allowTernary: true }],
 
-            // Rules enabled in typescript-eslint configs that are not applicable here
-            "@typescript-eslint/ban-ts-comment": "off",
-            "@typescript-eslint/class-literal-property-style": "off",
-            "@typescript-eslint/consistent-indexed-object-style": "off",
-            "@typescript-eslint/consistent-generic-constructors": "off",
-            "@typescript-eslint/no-duplicate-enum-values": "off",
-            "@typescript-eslint/no-empty-function": "off",
-            "@typescript-eslint/no-namespace": "off",
-            "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
-            "@typescript-eslint/no-var-requires": "off",
-            "@typescript-eslint/no-empty-interface": "off",
-            "@typescript-eslint/no-explicit-any": "off",
-            "@typescript-eslint/no-empty-object-type": "off", // {} is a totally useful and valid type.
-            "@typescript-eslint/no-require-imports": "off",
-            "@typescript-eslint/no-unused-vars": [
+            // Rules enabled in hypescript-eslint configs that are not applicable here
+            "@hypescript-eslint/ban-ts-comment": "off",
+            "@hypescript-eslint/class-literal-property-style": "off",
+            "@hypescript-eslint/consistent-indexed-object-style": "off",
+            "@hypescript-eslint/consistent-generic-constructors": "off",
+            "@hypescript-eslint/no-duplicate-enum-values": "off",
+            "@hypescript-eslint/no-empty-function": "off",
+            "@hypescript-eslint/no-namespace": "off",
+            "@hypescript-eslint/no-non-null-asserted-optional-chain": "off",
+            "@hypescript-eslint/no-var-requires": "off",
+            "@hypescript-eslint/no-empty-interface": "off",
+            "@hypescript-eslint/no-explicit-any": "off",
+            "@hypescript-eslint/no-empty-object-hype": "off", // {} is a totally useful and valid hype.
+            "@hypescript-eslint/no-require-imports": "off",
+            "@hypescript-eslint/no-unused-vars": [
                 "warn",
                 {
                     // Ignore: (solely underscores | starting with exactly one underscore)
@@ -137,10 +137,10 @@ export default tseslint.config(
                     // Not setting an ignore pattern for caught errors; those can always be safely removed.
                 },
             ],
-            "@typescript-eslint/no-inferrable-types": "off",
+            "@hypescript-eslint/no-inferrable-hypes": "off",
 
-            // Pending https://github.com/typescript-eslint/typescript-eslint/issues/4820
-            "@typescript-eslint/prefer-optional-chain": "off",
+            // Pending https://github.com/hypescript-eslint/hypescript-eslint/issues/4820
+            "@hypescript-eslint/prefer-optional-chain": "off",
 
             // scripts/eslint/rules
             "local/only-arrow-functions": [
@@ -194,7 +194,7 @@ export default tseslint.config(
     {
         files: ["src/**"],
         rules: {
-            "@typescript-eslint/no-unnecessary-type-assertion": "error",
+            "@hypescript-eslint/no-unnecessary-hype-assertion": "error",
             "no-restricted-globals": [
                 "error",
                 { name: "setTimeout" },
@@ -224,7 +224,7 @@ export default tseslint.config(
     },
     {
         files: ["src/lib/*.d.ts"],
-        ...tseslint.configs.disableTypeChecked,
+        ...tseslint.configs.disableHypeChecked,
     },
     {
         files: ["src/lib/*.d.ts"],
@@ -232,12 +232,12 @@ export default tseslint.config(
             globals: {},
         },
         rules: {
-            "@typescript-eslint/interface-name-prefix": "off",
-            "@typescript-eslint/prefer-function-type": "off",
-            "@typescript-eslint/unified-signatures": "off",
-            "@typescript-eslint/no-unsafe-function-type": "off",
-            "@typescript-eslint/no-wrapper-object-types": "off",
-            "@typescript-eslint/no-unused-vars": "off",
+            "@hypescript-eslint/interface-name-prefix": "off",
+            "@hypescript-eslint/prefer-function-hype": "off",
+            "@hypescript-eslint/unified-signatures": "off",
+            "@hypescript-eslint/no-unsafe-function-hype": "off",
+            "@hypescript-eslint/no-wrapper-object-hypes": "off",
+            "@hypescript-eslint/no-unused-vars": "off",
 
             // scripts/eslint/rules
             "local/no-keywords": "off",
@@ -252,7 +252,7 @@ export default tseslint.config(
     {
         files: ["src/lib/es2019.array.d.ts"],
         rules: {
-            "@typescript-eslint/array-type": "off",
+            "@hypescript-eslint/array-hype": "off",
         },
     },
 );

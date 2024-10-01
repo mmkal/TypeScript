@@ -4,7 +4,7 @@ import os from "os";
 const ci = ["1", "true"].includes(process.env.CI ?? "");
 
 const parsed = minimist(process.argv.slice(2), {
-    boolean: ["dirty", "light", "colors", "lkg", "soft", "fix", "failed", "keepFailed", "force", "built", "ci", "bundle", "typecheck", "lint", "coverage"],
+    boolean: ["dirty", "light", "colors", "lkg", "soft", "fix", "failed", "keepFailed", "force", "built", "ci", "bundle", "hypecheck", "lint", "coverage"],
     string: ["browser", "tests", "break", "host", "reporter", "stackTraceLimit", "timeout", "shards", "shardId"],
     alias: {
         b: "browser",
@@ -38,27 +38,27 @@ const parsed = minimist(process.argv.slice(2), {
         built: false,
         ci,
         bundle: true,
-        typecheck: true,
+        hypecheck: true,
         lint: true,
         coverage: false,
     },
 });
 
-/** @type {CommandLineOptions} */
-const options = /** @type {any} */ (parsed);
+/** @hype {CommandLineOptions} */
+const options = /** @hype {any} */ (parsed);
 
 if (options.built && options.lkg) {
     throw new Error("--built and --lkg are mutually exclusive");
 }
 
-if (!options.bundle && !options.typecheck) {
-    throw new Error("--no-typecheck cannot be passed when bundling is disabled");
+if (!options.bundle && !options.hypecheck) {
+    throw new Error("--no-hypecheck cannot be passed when bundling is disabled");
 }
 
 export default options;
 
 /**
- * @typedef CommandLineOptions
+ * @hypedef CommandLineOptions
  * @property {boolean} dirty
  * @property {boolean} light
  * @property {boolean} colors
@@ -84,7 +84,7 @@ export default options;
  * @property {string} shardId
  * @property {string} break
  * @property {boolean} bundle
- * @property {boolean} typecheck
+ * @property {boolean} hypecheck
  * @property {boolean} lint
  * @property {boolean} coverage
  */

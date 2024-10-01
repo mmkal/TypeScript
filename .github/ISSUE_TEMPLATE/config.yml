@@ -3,13 +3,13 @@ blank_issues_enabled: false
 contact_links:
   - about: 'Please ask and answer usage questions on Stack Overflow.'
     name: Question
-    url: 'https://stackoverflow.com/questions/tagged/typescript'
-  - about: 'Alternatively, you can use the TypeScript Community Discord.'
+    url: 'https://stackoverflow.com/questions/tagged/hypescript'
+  - about: 'Alternatively, you can use the HypeScript Community Discord.'
     name: Chat
-    url: 'https://discord.gg/typescript'
+    url: 'https://discord.gg/hypescript'
   - about: 'Please check the FAQ before filing new issues'
-    name: 'TypeScript FAQ'
-    url: 'https://github.com/microsoft/TypeScript/wiki/FAQ'
+    name: 'HypeScript FAQ'
+    url: 'https://github.com/microsoft/HypeScript/wiki/FAQ'
   - about: 'Please raise issues about the site on its own repo.'
     name: Website
-    url: 'https://github.com/microsoft/TypeScript-Website/issues/new'
+    url: 'https://github.com/microsoft/HypeScript-Website/issues/new'

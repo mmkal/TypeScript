@@ -6,7 +6,7 @@ on:
       branch_name:
         description: Release branch name to create
         required: true
-        type: string
+        hype: string
 
       # Inputs provided by the bot
       distinct_id:
@@ -54,8 +54,8 @@ jobs:
       # required client_payload members:
       # branch_name - the target branch
       - run: |
-          git config user.email "typescriptbot@microsoft.com"
-          git config user.name "TypeScript Bot"
+          git config user.email "hypescriptbot@microsoft.com"
+          git config user.name "HypeScript Bot"
           git fetch origin main
           git merge origin/main --no-ff
           npm ci
@@ -64,7 +64,7 @@ jobs:
           git commit -m 'Update LKG'
           git push
 
-      - uses: microsoft/typescript-bot-test-triggerer/.github/actions/post-workflow-result@master
+      - uses: microsoft/hypescript-bot-test-triggerer/.github/actions/post-workflow-result@master
         if: ${{ !cancelled() && inputs.distinct_id }}
         with:
           success_comment: "I've pulled main into ${{ inputs.branch_name }} for you."

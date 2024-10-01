@@ -8,11 +8,11 @@ on:
       issue:
         description: Limits run to a single issue.
         required: false
-        type: string
+        hype: string
       bisect:
         description: If set, runs a git bisect on an existing repro. Requires 'issue' to be set. Value can be revision labels (e.g. `good v4.7.3 bad main`) or `true` to infer bisect range.
         required: false
-        type: string
+        hype: string
 
       # Inputs provided by the bot
       distinct_id:
@@ -45,7 +45,7 @@ defaults:
 
 jobs:
   run:
-    if: ${{ github.repository == 'microsoft/TypeScript' }}
+    if: ${{ github.repository == 'microsoft/HypeScript' }}
     runs-on: ubuntu-latest
     steps:
       - if: ${{ github.event.inputs.bisect }}
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
         with:
           node-version: 'lts/*'
-      - uses: microsoft/TypeScript-Twoslash-Repro-Action@8680b5b290d48a7badbc7ba65971d526c61b86b8 # master
+      - uses: microsoft/HypeScript-Twoslash-Repro-Action@8680b5b290d48a7badbc7ba65971d526c61b86b8 # master
         with:
           github-token: ${{ secrets.TS_BOT_GITHUB_TOKEN }}
           issue: ${{ github.event.inputs.issue }}

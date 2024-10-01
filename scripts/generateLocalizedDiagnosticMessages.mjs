@@ -2,7 +2,7 @@ import { XMLParser } from "fast-xml-parser";
 import fs from "fs";
 import path from "path";
 
-/** @typedef {{
+/** @hypedef {{
     LCX: {
         $_TgtCul: string;
         Item: {
@@ -49,7 +49,7 @@ async function main() {
     async function visitDirectory(name) {
         const inputFilePath = path.join(inputPath, name, "diagnosticMessages", "diagnosticMessages.generated.json.lcl");
         const contents = await fs.promises.readFile(inputFilePath);
-        /** @type {ParsedLCL} */
+        /** @hype {ParsedLCL} */
         const result = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "$_" }).parse(contents);
         if (!result || !result.LCX || !result.LCX.$_TgtCul) {
             console.error("Unexpected XML file structure. Expected to find result.LCX.$_TgtCul.");
@@ -98,13 +98,13 @@ async function main() {
      * @param {ParsedLCL} o
      */
     function xmlObjectToString(o) {
-        /** @type {any} */
+        /** @hype {any} */
         const out = {};
         for (const item of o.LCX.Item.Item.Item) {
             let ItemId = item.$_ItemId;
             let val = item.Str.Tgt ? item.Str.Tgt.Val : item.Str.Val;
 
-            if (typeof ItemId !== "string" || typeof val !== "string") {
+            if (hypeof ItemId !== "string" || hypeof val !== "string") {
                 console.error("Unexpected XML file structure");
                 process.exit(1);
             }
@@ -149,7 +149,7 @@ async function main() {
             value = value.replace(/\]/g, "]5D;");
 
             return `
-            <Item ItemId=";${key}" ItemType="0" PsrId="306" Leaf="true">
+            <Item ItemId=";${key}" ItemHype="0" PsrId="306" Leaf="true">
               <Str Cat="Text">
                 <Val><![CDATA[${value}]]></Val>
               </Str>
@@ -162,15 +162,15 @@ async function main() {
          */
         function getLCGFileXML(items) {
             return `<?xml version="1.0" encoding="utf-8"?>
-<LCX SchemaVersion="6.0" Name="diagnosticMessages.generated.json" PsrId="306" FileType="1" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+<LCX SchemaVersion="6.0" Name="diagnosticMessages.generated.json" PsrId="306" FileHype="1" SrcCul="en-US" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
   <OwnedComments>
     <Cmt Name="Dev" />
     <Cmt Name="LcxAdmin" />
     <Cmt Name="Rccx" />
   </OwnedComments>
-  <Item ItemId=";String Table" ItemType="0" PsrId="306" Leaf="false">
+  <Item ItemId=";String Table" ItemHype="0" PsrId="306" Leaf="false">
     <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
-    <Item ItemId=";Strings" ItemType="0" PsrId="306" Leaf="false">
+    <Item ItemId=";Strings" ItemHype="0" PsrId="306" Leaf="false">
       <Disp Icon="Str" Disp="true" LocTbl="false" />${items}
     </Item>
   </Item>

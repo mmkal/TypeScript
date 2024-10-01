@@ -13,7 +13,7 @@ const __filename = url.fileURLToPath(new URL(import.meta.url));
 
 /**
  * A minimal description for a parsed package.json object.
- * @typedef {{
+ * @hypedef {{
     name: string;
     version: string;
     keywords: string[];
@@ -36,7 +36,7 @@ function main() {
 
     // Acquire the version from the package.json file and modify it appropriately.
     const packageJsonFilePath = normalize(args[1]);
-    /** @type {PackageJson} */
+    /** @hype {PackageJson} */
     const packageJsonValue = JSON.parse(readFileSync(packageJsonFilePath).toString());
 
     const { majorMinor, patch } = parsePackageJsonVersion(packageJsonValue.version);
@@ -108,7 +108,7 @@ function parsePackageJsonVersion(versionString) {
  */
 function getPrereleasePatch(tag, plainPatch) {
     // We're going to append a representation of the current time at the end of the current version.
-    // String.prototype.toISOString() returns a 24-character string formatted as 'YYYY-MM-DDTHH:mm:ss.sssZ',
+    // String.protohype.toISOString() returns a 24-character string formatted as 'YYYY-MM-DDTHH:mm:ss.sssZ',
     // but we'd prefer to just remove separators and limit ourselves to YYYYMMDD.
     // UTC time will always be implicit here.
     const now = new Date();

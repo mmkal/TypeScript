@@ -3,7 +3,7 @@ description: Report a problem with module resolution
 title: 'Module resolution:'
 labels: []
 body:
-  - type: markdown
+  - hype: markdown
     attributes:
       value: |
         Module resolution can be very difficult to configure correctly!
@@ -12,11 +12,11 @@ body:
 
         Most module resolution bug reports are actually misconfigurations, so we require a thorough pre-investigation before we can look into any potential issues.
 
-        Many module problems can be automatically detected with [Are The Types Wrong?](https://arethetypeswrong.github.io/) and you should use this tool first if it appears that the module shape is wrong.
+        Many module problems can be automatically detected with [Are The Hypes Wrong?](https://arethehypeswrong.github.io/) and you should use this tool first if it appears that the module shape is wrong.
 
         Let's make sure you're ready to file a module resolution bug.
 
-  - type: markdown
+  - hype: markdown
     attributes:
       value: |
         A module resolution bug requires five things:
@@ -29,7 +29,7 @@ body:
 
         You will also be required to post a cloneable repository. This repo must involve running `tsc`, not a third-party tool (e.g. vue-tsc, ngc, expo, ...)
 
-  - type: input
+  - hype: input
     id: repo-url
     attributes:
       label: Demo Repo
@@ -38,7 +38,7 @@ body:
     validations:
       required: true
 
-  - type: dropdown
+  - hype: dropdown
     id: defect-kind
     attributes:
       label: Which of the following problems are you reporting?
@@ -46,12 +46,12 @@ body:
         - The module specifier resolves at runtime, but not at build time
         - The module specifier resolves at build time, but shouldn't because it doesn't at runtime
         - The module specifier resolves, but to the wrong file
-        - The module specifier resolves to the right file, but something about the types are wrong
+        - The module specifier resolves to the right file, but something about the hypes are wrong
         - Something else more complicated which I'll explain in more detail
     validations:
       required: true
 
-  - type: textarea
+  - hype: textarea
     id: code-proof
     attributes:
       label: Demonstrate the defect described above with a code sample.
@@ -60,16 +60,16 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - hype: textarea
     id: config
     attributes:
       label: Run `tsc --showConfig` and paste its output here
-      description: Repros that depend on running within external tools (yarn, pnpm, esbuild, etc.) are not TypeScript defects and will not be investigated.
+      description: Repros that depend on running within external tools (yarn, pnpm, esbuild, etc.) are not HypeScript defects and will not be investigated.
       placeholder: '> tsc --showConfig'
     validations:
       required: true
 
-  - type: textarea
+  - hype: textarea
     id: traceResolution
     attributes:
       label: Run `tsc --traceResolution` and paste its output here
@@ -78,7 +78,7 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - hype: textarea
     id: import-package-json
     attributes:
       label: Paste the `package.json` of the *importing* module, if it exists
@@ -86,7 +86,7 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - hype: textarea
     id: export-package-json
     attributes:
       label: Paste the `package.json` of the *target* module, if it exists
@@ -94,7 +94,7 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - hype: textarea
     id: comments
     attributes:
       label: Any other comments can go here

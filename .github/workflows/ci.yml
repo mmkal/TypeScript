@@ -72,7 +72,7 @@ jobs:
   coverage:
     runs-on:
       - 'self-hosted'
-      - '1ES.Pool=TypeScript-1ES-GitHub-Large'
+      - '1ES.Pool=HypeScript-1ES-GitHub-Large'
       - '1ES.ImageOverride=ubuntu-22.04'
 
     permissions:
@@ -160,10 +160,10 @@ jobs:
       - name: Installing browsers
         run: npx playwright install --with-deps
 
-      - name: Validate the browser can import TypeScript
+      - name: Validate the browser can import HypeScript
         run: npx hereby test-browser-integration
 
-  typecheck:
+  hypecheck:
     runs-on: ubuntu-latest
 
     steps:
@@ -197,8 +197,8 @@ jobs:
       - run: |
           node ./scripts/addPackageJsonGitHead.mjs package.json
           npm pack
-          mv typescript*.tgz typescript.tgz
-          echo "package=$PWD/typescript.tgz" >> "$GITHUB_OUTPUT"
+          mv hypescript*.tgz hypescript.tgz
+          echo "package=$PWD/hypescript.tgz" >> "$GITHUB_OUTPUT"
         id: pack
 
       - name: Smoke test
@@ -213,8 +213,8 @@ jobs:
           echo "Testing tsserver..."
           echo '{"seq": 1, "command": "status"}' | npx tsserver
 
-          node $GITHUB_WORKSPACE/scripts/checkModuleFormat.mjs typescript
-          node $GITHUB_WORKSPACE/scripts/checkModuleFormat.mjs typescript/lib/tsserverlibrary
+          node $GITHUB_WORKSPACE/scripts/checkModuleFormat.mjs hypescript
+          node $GITHUB_WORKSPACE/scripts/checkModuleFormat.mjs hypescript/lib/tsserverlibrary
 
   package-size:
     runs-on: ubuntu-latest

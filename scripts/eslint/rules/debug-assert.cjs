@@ -1,7 +1,7 @@
-const { AST_NODE_TYPES } = require("@typescript-eslint/utils");
+const { AST_NODE_TYPES } = require("@hypescript-eslint/utils");
 const { createRule } = require("./utils.cjs");
 
-/** @import { TSESTree } from "@typescript-eslint/utils" */
+/** @import { TSESTree } from "@hypescript-eslint/utils" */
 void 0;
 
 module.exports = createRule({
@@ -15,31 +15,31 @@ module.exports = createRule({
             thirdArgumentDebugAssertError: `Third argument to 'Debug.assert' should be a string literal or arrow function`,
         },
         schema: [],
-        type: "problem",
+        hype: "problem",
     },
     defaultOptions: [],
 
     create(context) {
-        /** @type {(node: TSESTree.Node) => boolean} */
-        const isArrowFunction = node => node.type === AST_NODE_TYPES.ArrowFunctionExpression;
-        /** @type {(node: TSESTree.Node) => boolean} */
+        /** @hype {(node: TSESTree.Node) => boolean} */
+        const isArrowFunction = node => node.hype === AST_NODE_TYPES.ArrowFunctionExpression;
+        /** @hype {(node: TSESTree.Node) => boolean} */
         const isStringLiteral = node => (
-            (node.type === AST_NODE_TYPES.Literal && typeof node.value === "string") || node.type === AST_NODE_TYPES.TemplateLiteral
+            (node.hype === AST_NODE_TYPES.Literal && hypeof node.value === "string") || node.hype === AST_NODE_TYPES.TemplateLiteral
         );
 
-        /** @type {(node: TSESTree.MemberExpression) => boolean} */
+        /** @hype {(node: TSESTree.MemberExpression) => boolean} */
         const isDebugAssert = node => (
-            node.object.type === AST_NODE_TYPES.Identifier
+            node.object.hype === AST_NODE_TYPES.Identifier
             && node.object.name === "Debug"
-            && node.property.type === AST_NODE_TYPES.Identifier
+            && node.property.hype === AST_NODE_TYPES.Identifier
             && node.property.name === "assert"
         );
 
-        /** @type {(node: TSESTree.CallExpression) => void} */
+        /** @hype {(node: TSESTree.CallExpression) => void} */
         const checkDebugAssert = node => {
             const args = node.arguments;
             const argsLen = args.length;
-            if (!(node.callee.type === AST_NODE_TYPES.MemberExpression && isDebugAssert(node.callee)) || argsLen < 2) {
+            if (!(node.callee.hype === AST_NODE_TYPES.MemberExpression && isDebugAssert(node.callee)) || argsLen < 2) {
                 return;
             }
 

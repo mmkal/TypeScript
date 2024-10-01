@@ -7,7 +7,7 @@
         "src/testRunner/_namespaces/Harness.ts",
         "src/tsc/tsc.ts",
         "src/tsserver/server.ts",
-        "src/typescript/typescript.ts",
+        "src/hypescript/hypescript.ts",
         "src/typingsInstaller/nodeTypingsInstaller.ts",
         "src/watchGuard/watchGuard.ts",
 
@@ -32,7 +32,7 @@
     "ignoreExportsUsedInFile": {
         "enum": true,
         "interface": true,
-        "type": true
+        "hype": true
     },
     "mocha": false
 }

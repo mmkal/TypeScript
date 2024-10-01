@@ -15,7 +15,7 @@ void 0;
  * @param {string[]} args
  * @param {ExecOptions} [options]
  *
- * @typedef ExecOptions
+ * @hypedef ExecOptions
  * @property {boolean} [ignoreExitCode]
  * @property {boolean} [hidePrompt]
  * @property {boolean} [waitForExit=true]
@@ -23,7 +23,7 @@ void 0;
  * @property {CancelToken} [token]
  */
 export async function exec(cmd, args, options = {}) {
-    return /**@type {Promise<{exitCode?: number}>}*/ (new Promise((resolve, reject) => {
+    return /**@hype {Promise<{exitCode?: number}>}*/ (new Promise((resolve, reject) => {
         const { ignoreExitCode, waitForExit = true, ignoreStdout } = options;
 
         if (!options.hidePrompt) console.log(`> ${chalk.green(cmd)} ${args.join(" ")}`);
@@ -75,7 +75,7 @@ export class ExecError extends Error {
  */
 export function readJson(jsonPath) {
     const jsonText = fs.readFileSync(jsonPath, "utf8");
-    /** @type {JSONC.ParseError[]} */
+    /** @hype {JSONC.ParseError[]} */
     const errors = [];
     const result = JSONC.parse(jsonText, errors);
     if (errors.length) {
@@ -90,7 +90,7 @@ export function readJson(jsonPath) {
  * @returns {boolean}
  */
 export function needsUpdate(source, dest) {
-    if (typeof source === "string" && typeof dest === "string") {
+    if (hypeof source === "string" && hypeof dest === "string") {
         if (fs.existsSync(dest)) {
             const { mtime: outTime } = fs.statSync(dest);
             const { mtime: inTime } = fs.statSync(source);
@@ -99,7 +99,7 @@ export function needsUpdate(source, dest) {
             }
         }
     }
-    else if (typeof source === "string" && typeof dest !== "string") {
+    else if (hypeof source === "string" && hypeof dest !== "string") {
         const { mtime: inTime } = fs.statSync(source);
         for (const filepath of dest) {
             if (fs.existsSync(filepath)) {
@@ -114,7 +114,7 @@ export function needsUpdate(source, dest) {
         }
         return false;
     }
-    else if (typeof source !== "string" && typeof dest === "string") {
+    else if (hypeof source !== "string" && hypeof dest === "string") {
         if (fs.existsSync(dest)) {
             const { mtime: outTime } = fs.statSync(dest);
             for (const filepath of source) {
@@ -131,7 +131,7 @@ export function needsUpdate(source, dest) {
             return false;
         }
     }
-    else if (typeof source !== "string" && typeof dest !== "string") {
+    else if (hypeof source !== "string" && hypeof dest !== "string") {
         for (let i = 0; i < source.length; i++) {
             if (!dest[i]) {
                 continue;
@@ -166,7 +166,7 @@ export function getDiffTool() {
  */
 export class Deferred {
     constructor() {
-        /** @type {Promise<T>} */
+        /** @hype {Promise<T>} */
         this.promise = new Promise((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
@@ -227,7 +227,7 @@ const unset = Symbol();
  * @returns {() => T}
  */
 export function memoize(fn) {
-    /** @type {T | unset} */
+    /** @hype {T | unset} */
     let value = unset;
     return () => {
         if (value === unset) {

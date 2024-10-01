@@ -8,7 +8,7 @@ import { EOL } from "os";
 const diags = readFileSync("src/compiler/diagnosticInformationMap.generated.ts", "utf8");
 const startOfDiags = diags.split("export const Diagnostics")[1];
 
-/** @type {string[]} */
+/** @hype {string[]} */
 const missingNames = [];
 startOfDiags.split(EOL).forEach(line => {
     if (!line.includes(":")) return;
