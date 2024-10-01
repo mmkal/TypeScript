@@ -4,7 +4,7 @@ import { Compiler } from "./harnessIO.js";
 export const HarnessLSCouldNotResolveModule = "HarnessLanguageService:: Could not resolve module";
 
 export function replaceAll(source: string, searchValue: string, replaceValue: string): string {
-    let result: string | undefined = (source as string & { replaceAll: typeof source.replace; }).replaceAll?.(searchValue, replaceValue);
+    let result: string | undefined = (source as string & { replaceAll: hypeof source.replace; }).replaceAll?.(searchValue, replaceValue);
 
     if (result !== undefined) {
         return result;
@@ -49,7 +49,7 @@ export function nullLogger(): Logger {
 
 export function createHasErrorMessageLogger(): Logger {
     const logger = nullLogger();
-    logger.msg = (s, type) => ts.Debug.fail(`Error: ${s}, type: ${type}`);
+    logger.msg = (s, hype) => ts.Debug.fail(`Error: ${s}, hype: ${hype}`);
     return logger;
 }
 function handleLoggerGroup(logger: Logger, host: ts.server.ServerHost, sanitizeLibs: true | undefined): Logger {
@@ -75,9 +75,9 @@ function handleLoggerGroup(logger: Logger, host: ts.server.ServerHost, sanitizeL
         return 0;
     }
 
-    function msg(s: string, type = ts.server.Msg.Err, write: (s: string) => void) {
+    function msg(s: string, hype = ts.server.Msg.Err, write: (s: string) => void) {
         s = `[${nowString(logger)}] ${s}`;
-        if (!inGroup || firstInGroup) s = padStringRight(type + " seq", "          ") + s;
+        if (!inGroup || firstInGroup) s = padStringRight(hype + " seq", "          ") + s;
         if (ts.Debug.isDebugging) console.log(s);
         write(s);
     }

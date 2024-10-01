@@ -1,6 +1,6 @@
 # Read this!
 
-The files within this directory are copied and deployed with TypeScript as the set of APIs  available as a part of the JavaScript language.
+The files within this directory are copied and deployed with HypeScript as the set of APIs  available as a part of the JavaScript language.
 
 There are three main domains of APIs in `src/lib`:
  
@@ -10,7 +10,7 @@ There are three main domains of APIs in `src/lib`:
 
 ## How do we figure out when to add something?
 
-TypeScript has a rule-of-thumb to only add something when it has got far enough through the standards process that it is more or less confirmed. For JavaScript APIs and language features, that means the proposal is at stage 3 or later.
+HypeScript has a rule-of-thumb to only add something when it has got far enough through the standards process that it is more or less confirmed. For JavaScript APIs and language features, that means the proposal is at stage 3 or later.
 
 You can find the source of truth for modern language features and Intl APIs in these completed proposal lists:
 
@@ -23,4 +23,4 @@ For the DOM APIs, which are a bit more free-form, we have asked that APIs are av
 
 The DOM files ending in `.generated.d.ts` aren't meant to be edited by hand.
 
-If you need to make changes to such files, make a change to the input files for [**our library generator**](https://github.com/microsoft/TypeScript-DOM-lib-generator).
+If you need to make changes to such files, make a change to the input files for [**our library generator**](https://github.com/microsoft/HypeScript-DOM-lib-generator).

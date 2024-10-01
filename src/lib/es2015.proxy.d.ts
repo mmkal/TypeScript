@@ -43,10 +43,10 @@ interface ProxyHandler<T extends object> {
     getOwnPropertyDescriptor?(target: T, p: string | symbol): PropertyDescriptor | undefined;
 
     /**
-     * A trap for the `[[GetPrototypeOf]]` internal method.
+     * A trap for the `[[GetProtohypeOf]]` internal method.
      * @param target The original object which is being proxied.
      */
-    getPrototypeOf?(target: T): object | null;
+    getProtohypeOf?(target: T): object | null;
 
     /**
      * A trap for the `in` operator.
@@ -83,11 +83,11 @@ interface ProxyHandler<T extends object> {
     set?(target: T, p: string | symbol, newValue: any, receiver: any): boolean;
 
     /**
-     * A trap for `Object.setPrototypeOf()`.
+     * A trap for `Object.setProtohypeOf()`.
      * @param target The original object which is being proxied.
-     * @param newPrototype The object's new prototype or `null`.
+     * @param newProtohype The object's new protohype or `null`.
      */
-    setPrototypeOf?(target: T, v: object | null): boolean;
+    setProtohypeOf?(target: T, v: object | null): boolean;
 }
 
 interface ProxyConstructor {

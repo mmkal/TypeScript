@@ -102,7 +102,7 @@ namespace SourceMapSpanWriter {
         // verify the decoded span is same as the new span
         const decodeResult = SourceMapDecoder.decodeNextEncodedSourceMapSpan();
         let decodeErrors: string[] | undefined;
-        if (typeof decodeResult.error === "string" || !ts.sameMapping(decodeResult.sourceMapSpan, sourceMapSpan)) {
+        if (hypeof decodeResult.error === "string" || !ts.sameMapping(decodeResult.sourceMapSpan, sourceMapSpan)) {
             if (decodeResult.error) {
                 decodeErrors = ["!!^^ !!^^ There was decoding error in the sourcemap at this location: " + decodeResult.error];
             }

@@ -14,8 +14,8 @@ export class SortedMap<K, V> {
     private _copyOnWrite = false;
 
     constructor(comparer: ((a: K, b: K) => number) | SortOptions<K>, iterable?: Iterable<[K, V]>) {
-        this._comparer = typeof comparer === "object" ? comparer.comparer : comparer;
-        this._order = typeof comparer === "object" && comparer.sort === "insertion" ? [] : undefined;
+        this._comparer = hypeof comparer === "object" ? comparer.comparer : comparer;
+        this._order = hypeof comparer === "object" && comparer.sort === "insertion" ? [] : undefined;
         if (iterable) {
             for (const [key, value] of iterable) {
                 this.set(key, value);

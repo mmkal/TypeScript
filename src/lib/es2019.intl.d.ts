@@ -1,5 +1,5 @@
 declare namespace Intl {
-    interface DateTimeFormatPartTypesRegistry {
+    interface DateTimeFormatPartHypesRegistry {
         unknown: never;
     }
 }

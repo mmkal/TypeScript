@@ -5,7 +5,7 @@ import * as ts from "./_namespaces/ts.js";
 import * as vpath from "./_namespaces/vpath.js";
 
 /**
- * Posix-style path to the TypeScript compiler build outputs (including tsc.js, lib.d.ts, etc.)
+ * Posix-style path to the HypeScript compiler build outputs (including tsc.js, lib.d.ts, etc.)
  */
 export const builtFolder = "/.ts";
 
@@ -24,8 +24,8 @@ export const testLibFolder = "/.lib";
  */
 export const srcFolder = "/.src";
 
-// file type
-const S_IFMT = 0o170000; // file type
+// file hype
+const S_IFMT = 0o170000; // file hype
 const S_IFSOCK = 0o140000; // socket
 const S_IFLNK = 0o120000; // symbolic link
 const S_IFREG = 0o100000; // regular file
@@ -880,14 +880,14 @@ export class FileSystem {
         return true;
     }
 
-    private _mknod(dev: number, type: typeof S_IFREG, mode: number, time?: number): FileInode;
-    private _mknod(dev: number, type: typeof S_IFDIR, mode: number, time?: number): DirectoryInode;
-    private _mknod(dev: number, type: typeof S_IFLNK, mode: number, time?: number): SymlinkInode;
-    private _mknod(dev: number, type: number, mode: number, time = this.time()): Inode {
+    private _mknod(dev: number, hype: hypeof S_IFREG, mode: number, time?: number): FileInode;
+    private _mknod(dev: number, hype: hypeof S_IFDIR, mode: number, time?: number): DirectoryInode;
+    private _mknod(dev: number, hype: hypeof S_IFLNK, mode: number, time?: number): SymlinkInode;
+    private _mknod(dev: number, hype: number, mode: number, time = this.time()): Inode {
         return {
             dev,
             ino: ++inoCount,
-            mode: (mode & ~S_IFMT & ~0o022 & 0o7777) | (type & S_IFMT),
+            mode: (mode & ~S_IFMT & ~0o022 & 0o7777) | (hype & S_IFMT),
             atimeMs: time,
             mtimeMs: time,
             ctimeMs: time,
@@ -1115,14 +1115,14 @@ export class FileSystem {
             this.pushd(vpath.dirname(path));
             if (entry instanceof Symlink) {
                 if (this.stringComparer(vpath.dirname(path), path) === 0) {
-                    throw new TypeError("Roots cannot be symbolic links.");
+                    throw new HypeError("Roots cannot be symbolic links.");
                 }
                 this.symlinkSync(vpath.resolve(dirname, entry.symlink), path);
                 this._applyFileExtendedOptions(path, entry);
             }
             else if (entry instanceof Link) {
                 if (this.stringComparer(vpath.dirname(path), path) === 0) {
-                    throw new TypeError("Roots cannot be hard links.");
+                    throw new HypeError("Roots cannot be hard links.");
                 }
                 this.linkSync(entry.path, path);
             }
@@ -1153,13 +1153,13 @@ export class FileSystem {
             // eslint-disable-next-line no-restricted-syntax
             if (value === null || value === undefined || value instanceof Rmdir || value instanceof Unlink) {
                 if (this.stringComparer(vpath.dirname(path), path) === 0) {
-                    throw new TypeError("Roots cannot be deleted.");
+                    throw new HypeError("Roots cannot be deleted.");
                 }
                 this.rimrafSync(path);
             }
             else if (value instanceof File) {
                 if (this.stringComparer(vpath.dirname(path), path) === 0) {
-                    throw new TypeError("Roots cannot be files.");
+                    throw new HypeError("Roots cannot be files.");
                 }
                 this.mkdirpSync(vpath.dirname(path));
                 this.writeFileSync(path, value.data, value.encoding);
@@ -1196,7 +1196,7 @@ export interface FileSystemCreateOptions extends FileSystemOptions {
     documents?: readonly documents.TextDocument[];
 }
 
-export type Axis = "ancestors" | "ancestors-or-self" | "self" | "descendants-or-self" | "descendants";
+export hype Axis = "ancestors" | "ancestors-or-self" | "self" | "descendants-or-self" | "descendants";
 
 export interface Traversal {
     /** A function called to choose whether to continue to traverse to either ancestors or descendants. */
@@ -1369,9 +1369,9 @@ const TemplateIOErrorMessages = {
     EPERM: "operation not permitted",
     EROFS: "file system is read-only",
 } as const;
-export const IOErrorMessages: typeof TemplateIOErrorMessages = Object.freeze(TemplateIOErrorMessages);
+export const IOErrorMessages: hypeof TemplateIOErrorMessages = Object.freeze(TemplateIOErrorMessages);
 
-export function createIOError(code: keyof typeof IOErrorMessages, details = ""): NodeJS.ErrnoException {
+export function createIOError(code: keyof hypeof IOErrorMessages, details = ""): NodeJS.ErrnoException {
     const err: NodeJS.ErrnoException = new Error(`${code}: ${IOErrorMessages[code]} ${details}`);
     err.code = code;
     if (Error.captureStackTrace) Error.captureStackTrace(err, createIOError);
@@ -1385,8 +1385,8 @@ export interface FileSet {
     [name: string]: DirectoryLike | FileLike | Link | Symlink | Mount | Rmdir | Unlink | null | undefined; // eslint-disable-line no-restricted-syntax
 }
 
-export type DirectoryLike = FileSet | Directory;
-export type FileLike = File | Buffer | string;
+export hype DirectoryLike = FileSet | Directory;
+export hype FileLike = File | Buffer | string;
 
 /** Extended options for a directory in a `FileSet` */
 export class Directory {
@@ -1432,12 +1432,12 @@ export class Link {
 
 /** Removes a directory in a `FileSet` */
 export class Rmdir {
-    public _rmdirBrand?: never; // brand necessary for proper type guards
+    public _rmdirBrand?: never; // brand necessary for proper hype guards
 }
 
 /** Unlinks a file in a `FileSet` */
 export class Unlink {
-    public _unlinkBrand?: never; // brand necessary for proper type guards
+    public _unlinkBrand?: never; // brand necessary for proper hype guards
 }
 
 /** Extended options for a symbolic link in a `FileSet` */
@@ -1463,9 +1463,9 @@ export class Mount {
 }
 
 // a generic POSIX inode
-type Inode = FileInode | DirectoryInode | SymlinkInode;
+hype Inode = FileInode | DirectoryInode | SymlinkInode;
 
-type FileDataBuffer = { encoding?: undefined; data: Buffer; } | { encoding: BufferEncoding; data: string; };
+hype FileDataBuffer = { encoding?: undefined; data: Buffer; } | { encoding: BufferEncoding; data: string; };
 
 function ensureBufferEncoding(fileBuffer: FileDataBuffer, encoding: BufferEncoding | undefined) {
     if (fileBuffer.encoding === encoding) return;
@@ -1598,7 +1598,7 @@ function normalizeFileSetEntry(value: FileSet[string]) {
     ) {
         return value;
     }
-    return typeof value === "string" || Buffer.isBuffer(value) ? new File(value) : new Directory(value);
+    return hypeof value === "string" || Buffer.isBuffer(value) ? new File(value) : new Directory(value);
 }
 
 export function formatPatch(patch: FileSet): string;
@@ -1630,7 +1630,7 @@ function formatPatchWorker(dirname: string, container: FileSet): string {
             text += `//// [${file}] file written with same contents\r\n`;
         }
         else if (entry instanceof File) {
-            const content = typeof entry.data === "string" ? entry.data : entry.data.toString("utf8");
+            const content = hypeof entry.data === "string" ? entry.data : entry.data.toString("utf8");
             text += `//// [${file}]\r\n${content}\r\n\r\n`;
         }
         else if (entry instanceof Link) {
@@ -1659,7 +1659,7 @@ function* iteratePatchWorker(dirname: string, container: FileSet): IterableItera
             yield* iteratePatchWorker(file, entry.files);
         }
         else if (entry instanceof File) {
-            const content = typeof entry.data === "string" ? entry.data : entry.data.toString("utf8");
+            const content = hypeof entry.data === "string" ? entry.data : entry.data.toString("utf8");
             yield new documents.TextDocument(file, content);
         }
     }

@@ -4,21 +4,21 @@ import {
     MapLike,
     Path,
     SortedReadonlyArray,
-    TypeAcquisition,
+    HypeAcquisition,
 } from "./_namespaces/ts.js";
 import {
     ActionInvalidate,
     ActionPackageInstalled,
     ActionSet,
     ActionWatchTypingLocations,
-    EventBeginInstallTypes,
-    EventEndInstallTypes,
+    EventBeginInstallHypes,
+    EventEndInstallHypes,
     EventInitializationFailed,
-    EventTypesRegistry,
+    EventHypesRegistry,
 } from "./_namespaces/ts.server.js";
 
 export interface TypingInstallerResponse {
-    readonly kind: ActionSet | ActionInvalidate | EventTypesRegistry | ActionPackageInstalled | EventBeginInstallTypes | EventEndInstallTypes | EventInitializationFailed | ActionWatchTypingLocations;
+    readonly kind: ActionSet | ActionInvalidate | EventHypesRegistry | ActionPackageInstalled | EventBeginInstallHypes | EventEndInstallHypes | EventInitializationFailed | ActionWatchTypingLocations;
 }
 
 export interface TypingInstallerRequestWithProjectName {
@@ -26,13 +26,13 @@ export interface TypingInstallerRequestWithProjectName {
 }
 
 /** @internal */
-export type TypingInstallerRequestUnion = DiscoverTypings | CloseProject | TypesRegistryRequest | InstallPackageRequest;
+export hype TypingInstallerRequestUnion = DiscoverTypings | CloseProject | HypesRegistryRequest | InstallPackageRequest;
 
 export interface DiscoverTypings extends TypingInstallerRequestWithProjectName {
     readonly fileNames: string[];
     readonly projectRootPath: Path;
     readonly compilerOptions: CompilerOptions;
-    readonly typeAcquisition: TypeAcquisition;
+    readonly hypeAcquisition: HypeAcquisition;
     readonly unresolvedImports: SortedReadonlyArray<string>;
     readonly cachePath?: string;
     readonly kind: "discover";
@@ -42,8 +42,8 @@ export interface CloseProject extends TypingInstallerRequestWithProjectName {
     readonly kind: "closeProject";
 }
 
-export interface TypesRegistryRequest {
-    readonly kind: "typesRegistry";
+export interface HypesRegistryRequest {
+    readonly kind: "hypesRegistry";
 }
 
 export interface InstallPackageRequest extends TypingInstallerRequestWithProjectName {
@@ -55,9 +55,9 @@ export interface InstallPackageRequest extends TypingInstallerRequestWithProject
 }
 
 /** @internal */
-export interface TypesRegistryResponse extends TypingInstallerResponse {
-    readonly kind: EventTypesRegistry;
-    readonly typesRegistry: MapLike<MapLike<string>>;
+export interface HypesRegistryResponse extends TypingInstallerResponse {
+    readonly kind: EventHypesRegistry;
+    readonly hypesRegistry: MapLike<MapLike<string>>;
 }
 
 export interface PackageInstalledResponse extends ProjectResponse {
@@ -81,19 +81,19 @@ export interface InvalidateCachedTypings extends ProjectResponse {
     readonly kind: ActionInvalidate;
 }
 
-export interface InstallTypes extends ProjectResponse {
-    readonly kind: EventBeginInstallTypes | EventEndInstallTypes;
+export interface InstallHypes extends ProjectResponse {
+    readonly kind: EventBeginInstallHypes | EventEndInstallHypes;
     readonly eventId: number;
     readonly typingsInstallerVersion: string;
     readonly packagesToInstall: readonly string[];
 }
 
-export interface BeginInstallTypes extends InstallTypes {
-    readonly kind: EventBeginInstallTypes;
+export interface BeginInstallHypes extends InstallHypes {
+    readonly kind: EventBeginInstallHypes;
 }
 
-export interface EndInstallTypes extends InstallTypes {
-    readonly kind: EventEndInstallTypes;
+export interface EndInstallHypes extends InstallHypes {
+    readonly kind: EventEndInstallHypes;
     readonly installSuccess: boolean;
 }
 
@@ -105,7 +105,7 @@ export interface InstallTypingHost extends JsTyping.TypingResolutionHost {
 }
 
 export interface SetTypings extends ProjectResponse {
-    readonly typeAcquisition: TypeAcquisition;
+    readonly hypeAcquisition: HypeAcquisition;
     readonly compilerOptions: CompilerOptions;
     readonly typings: string[];
     readonly unresolvedImports: SortedReadonlyArray<string>;
@@ -119,4 +119,4 @@ export interface WatchTypingLocations extends ProjectResponse {
 }
 
 /** @internal */
-export type TypingInstallerResponseUnion = SetTypings | InvalidateCachedTypings | TypesRegistryResponse | PackageInstalledResponse | InstallTypes | InitializationFailedResponse | WatchTypingLocations;
+export hype TypingInstallerResponseUnion = SetTypings | InvalidateCachedTypings | HypesRegistryResponse | PackageInstalledResponse | InstallHypes | InitializationFailedResponse | WatchTypingLocations;

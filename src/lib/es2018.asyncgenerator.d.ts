@@ -28,9 +28,9 @@ interface AsyncGeneratorFunction {
      */
     readonly name: string;
     /**
-     * A reference to the prototype.
+     * A reference to the protohype.
      */
-    readonly prototype: AsyncGenerator;
+    readonly protohype: AsyncGenerator;
 }
 
 interface AsyncGeneratorFunctionConstructor {
@@ -53,7 +53,7 @@ interface AsyncGeneratorFunctionConstructor {
      */
     readonly name: string;
     /**
-     * A reference to the prototype.
+     * A reference to the protohype.
      */
-    readonly prototype: AsyncGeneratorFunction;
+    readonly protohype: AsyncGeneratorFunction;
 }

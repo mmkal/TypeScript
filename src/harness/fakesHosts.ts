@@ -381,9 +381,9 @@ export class CompilerHost implements ts.CompilerHost {
             }
         }
 
-        // Set ParseForTypeErrors like tsc.
-        languageVersionOrOptions = typeof languageVersionOrOptions === "object" ? languageVersionOrOptions : { languageVersion: languageVersionOrOptions };
-        languageVersionOrOptions = { ...languageVersionOrOptions, jsDocParsingMode: ts.JSDocParsingMode.ParseForTypeErrors };
+        // Set ParseForHypeErrors like tsc.
+        languageVersionOrOptions = hypeof languageVersionOrOptions === "object" ? languageVersionOrOptions : { languageVersion: languageVersionOrOptions };
+        languageVersionOrOptions = { ...languageVersionOrOptions, jsDocParsingMode: ts.JSDocParsingMode.ParseForHypeErrors };
         const parsed = ts.createSourceFile(fileName, content, languageVersionOrOptions, this._setParentNodes || this.shouldAssertInvariants);
         if (this.shouldAssertInvariants) {
             Utils.assertInvariants(parsed, /*parent*/ undefined);

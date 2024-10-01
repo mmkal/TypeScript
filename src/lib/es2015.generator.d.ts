@@ -28,9 +28,9 @@ interface GeneratorFunction {
      */
     readonly name: string;
     /**
-     * A reference to the prototype.
+     * A reference to the protohype.
      */
-    readonly prototype: Generator;
+    readonly protohype: Generator;
 }
 
 interface GeneratorFunctionConstructor {
@@ -53,7 +53,7 @@ interface GeneratorFunctionConstructor {
      */
     readonly name: string;
     /**
-     * A reference to the prototype.
+     * A reference to the protohype.
      */
-    readonly prototype: GeneratorFunction;
+    readonly protohype: GeneratorFunction;
 }

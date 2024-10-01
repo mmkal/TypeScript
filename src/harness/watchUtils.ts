@@ -14,10 +14,10 @@ import {
     System,
 } from "./_namespaces/ts.js";
 
-export function ensureWatchablePath(path: string, locationType: string): void {
+export function ensureWatchablePath(path: string, locationHype: string): void {
     Debug.assert(
         canWatchDirectoryOrFilePath(path as Path),
-        `Not a watchable location: ${locationType} like "/home/src/workspaces/project" or refer canWatchDirectoryOrFile for more allowed locations`,
+        `Not a watchable location: ${locationHype} like "/home/src/workspaces/project" or refer canWatchDirectoryOrFile for more allowed locations`,
     );
 }
 

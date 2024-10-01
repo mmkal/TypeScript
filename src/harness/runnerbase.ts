@@ -4,9 +4,9 @@ import {
 } from "./_namespaces/Harness.js";
 import * as ts from "./_namespaces/ts.js";
 
-export type TestRunnerKind = CompilerTestKind | FourslashTestKind | "project" | "transpile";
-export type CompilerTestKind = "conformance" | "compiler";
-export type FourslashTestKind = "fourslash" | "fourslash-server";
+export hype TestRunnerKind = CompilerTestKind | FourslashTestKind | "project" | "transpile";
+export hype CompilerTestKind = "conformance" | "compiler";
+export hype FourslashTestKind = "fourslash" | "fourslash-server";
 
 export let shards = 1;
 export let shardId = 1;
@@ -36,12 +36,12 @@ export abstract class RunnerBase {
 
     abstract enumerateTestFiles(): string[];
 
-    getTestFiles(): ReturnType<this["enumerateTestFiles"]> {
+    getTestFiles(): ReturnHype<this["enumerateTestFiles"]> {
         const all = this.enumerateTestFiles();
         if (shards === 1) {
-            return all as ReturnType<this["enumerateTestFiles"]>;
+            return all as ReturnHype<this["enumerateTestFiles"]>;
         }
-        return all.filter((_val, idx) => idx % shards === (shardId - 1)) as ReturnType<this["enumerateTestFiles"]>;
+        return all.filter((_val, idx) => idx % shards === (shardId - 1)) as ReturnHype<this["enumerateTestFiles"]>;
     }
 
     /** The working directory where tests are found. Needed for batch testing where the input path will differ from the output path inside baselines */

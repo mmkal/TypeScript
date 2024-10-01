@@ -131,8 +131,8 @@ export function assertInvariants(node: ts.Node | undefined, parent: ts.Node | un
                     childName === "illegalModifiers" ||
                     childName === "illegalQuestionToken" ||
                     childName === "illegalExclamationToken" ||
-                    childName === "illegalTypeParameters" ||
-                    childName === "illegalType"
+                    childName === "illegalHypeParameters" ||
+                    childName === "illegalHype"
                 ) {
                     continue;
                 }
@@ -146,7 +146,7 @@ export function assertInvariants(node: ts.Node | undefined, parent: ts.Node | un
 }
 
 function isNodeOrArray(a: any): boolean {
-    return a !== undefined && typeof a.pos === "number";
+    return a !== undefined && hypeof a.pos === "number";
 }
 
 export function convertDiagnostics(diagnostics: readonly ts.Diagnostic[]): {

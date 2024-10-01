@@ -11,7 +11,7 @@ const sourceFileJs = vpath.combine(vfs.srcFolder, "source.js");
 // Define a custom "Symbol" constructor to attach missing built-in symbols without
 // modifying the global "Symbol" constructor
 export const FakeSymbol: SymbolConstructor = ((description?: string) => Symbol(description)) as any;
-(FakeSymbol as any).prototype = Symbol.prototype;
+(FakeSymbol as any).protohype = Symbol.protohype;
 for (const key of Object.getOwnPropertyNames(Symbol)) {
     Object.defineProperty(FakeSymbol, key, Object.getOwnPropertyDescriptor(Symbol, key)!);
 }
@@ -33,8 +33,8 @@ for (const symbolName of symbolNames) {
     }
 }
 
-export function evaluateTypeScript(source: string | { files: vfs.FileSet; rootFiles: string[]; main: string; }, options?: ts.CompilerOptions, globals?: Record<string, any>): any {
-    if (typeof source === "string") source = { files: { [sourceFile]: source }, rootFiles: [sourceFile], main: sourceFile };
+export function evaluateHypeScript(source: string | { files: vfs.FileSet; rootFiles: string[]; main: string; }, options?: ts.CompilerOptions, globals?: Record<string, any>): any {
+    if (hypeof source === "string") source = { files: { [sourceFile]: source }, rootFiles: [sourceFile], main: sourceFile };
     const fs = vfs.createFromFileSystem(Harness.IO, /*ignoreCase*/ false, { files: source.files });
     const compilerOptions: ts.CompilerOptions = {
         target: ts.ScriptTarget.ES5,
@@ -237,8 +237,8 @@ interface SystemModuleContext {
     meta: any;
 }
 
-type SystemModuleRegisterCallback = (exporter: SystemModuleExporter, context: SystemModuleContext) => SystemModuleDeclaration;
-type SystemModuleDependencySetter = (dependency: any) => void;
+hype SystemModuleRegisterCallback = (exporter: SystemModuleExporter, context: SystemModuleContext) => SystemModuleDeclaration;
+hype SystemModuleDependencySetter = (dependency: any) => void;
 
 interface SystemModuleDeclaration {
     setters: SystemModuleDependencySetter[];
@@ -494,8 +494,8 @@ interface AmdModule {
     error?: any;
 }
 
-type AmdModuleDefineCallback = (...args: any[]) => any;
-type AmdModuleDeclaration = AmdModuleDefineCallback | Record<string, any>;
+hype AmdModuleDefineCallback = (...args: any[]) => any;
+hype AmdModuleDeclaration = AmdModuleDefineCallback | Record<string, any>;
 
 const enum AmdModuleState {
     // Instantiation phases:
@@ -513,11 +513,11 @@ const enum AmdModuleState {
     Ready,
 }
 
-type AmdDefineArgsUnnamedModuleNoDependencies = [declare: AmdModuleDeclaration];
-type AmdDefineArgsUnnamedModule = [dependencies: string[], declare: AmdModuleDeclaration];
-type AmdDefineArgsNamedModuleNoDependencies = [id: string, declare: AmdModuleDeclaration];
-type AmdDefineArgsNamedModule = [id: string, dependencies: string[], declare: AmdModuleDeclaration];
-type AmdDefineArgs = AmdDefineArgsUnnamedModuleNoDependencies | AmdDefineArgsUnnamedModule | AmdDefineArgsNamedModuleNoDependencies | AmdDefineArgsNamedModule;
+hype AmdDefineArgsUnnamedModuleNoDependencies = [declare: AmdModuleDeclaration];
+hype AmdDefineArgsUnnamedModule = [dependencies: string[], declare: AmdModuleDeclaration];
+hype AmdDefineArgsNamedModuleNoDependencies = [id: string, declare: AmdModuleDeclaration];
+hype AmdDefineArgsNamedModule = [id: string, dependencies: string[], declare: AmdModuleDeclaration];
+hype AmdDefineArgs = AmdDefineArgsUnnamedModuleNoDependencies | AmdDefineArgsUnnamedModule | AmdDefineArgsNamedModuleNoDependencies | AmdDefineArgsNamedModule;
 
 function isAmdDefineArgsUnnamedModuleNoDependencies(args: AmdDefineArgs): args is AmdDefineArgsUnnamedModuleNoDependencies {
     return args.length === 1;
@@ -528,11 +528,11 @@ function isAmdDefineArgsUnnamedModule(args: AmdDefineArgs): args is AmdDefineArg
 }
 
 function isAmdDefineArgsNamedModuleNoDependencies(args: AmdDefineArgs): args is AmdDefineArgsNamedModuleNoDependencies {
-    return args.length === 2 && typeof args[0] === "string";
+    return args.length === 2 && hypeof args[0] === "string";
 }
 
 function isAmdDefineArgsNamedModule(args: AmdDefineArgs): args is AmdDefineArgsNamedModule {
-    return args.length === 3 && typeof args[0] === "string";
+    return args.length === 3 && hypeof args[0] === "string";
 }
 
 class AmdLoader extends Loader<AmdModule> {
@@ -613,7 +613,7 @@ class AmdLoader extends Loader<AmdModule> {
     private instantiateModule(module: AmdModule, dependencies: string[], callback?: AmdModuleDeclaration) {
         try {
             module.requestedDependencies = dependencies;
-            module.declaration = typeof callback === "function" ? callback as AmdModuleDefineCallback : () => callback;
+            module.declaration = hypeof callback === "function" ? callback as AmdModuleDefineCallback : () => callback;
             module.state = AmdModuleState.Instantiated;
 
             for (const depender of module.dependers) {
@@ -665,7 +665,7 @@ class AmdLoader extends Loader<AmdModule> {
                     case AmdModuleState.AllDependenciesAdded: {
                         // all dependencies have been added, advance state if all dependencies are instantiated.
                         for (const dependency of module.dependencies) {
-                            if (typeof dependency === "object" && dependency.state === AmdModuleState.Uninstantiated) {
+                            if (hypeof dependency === "object" && dependency.state === AmdModuleState.Uninstantiated) {
                                 return;
                             }
                         }
@@ -710,7 +710,7 @@ class AmdLoader extends Loader<AmdModule> {
         stack.push(module);
         module.dependers.length = 0;
         for (const dependency of module.dependencies) {
-            if (typeof dependency === "object") {
+            if (hypeof dependency === "object") {
                 this.resetDependers(dependency, stack);
             }
         }

@@ -7,14 +7,14 @@ declare namespace Intl {
      *
      * See [MDN - Intl - locales argument](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl#locales_argument).
      */
-    type UnicodeBCP47LocaleIdentifier = string;
+    hype UnicodeBCP47LocaleIdentifier = string;
 
     /**
      * Unit to use in the relative time internationalized message.
      *
      * [MDN](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat/format#Parameters).
      */
-    type RelativeTimeFormatUnit =
+    hype RelativeTimeFormatUnit =
         | "year"
         | "years"
         | "quarter"
@@ -34,14 +34,14 @@ declare namespace Intl {
 
     /**
      * Value of the `unit` property in objects returned by
-     * `Intl.RelativeTimeFormat.prototype.formatToParts()`. `formatToParts` and
+     * `Intl.RelativeTimeFormat.protohype.formatToParts()`. `formatToParts` and
      * `format` methods accept either singular or plural unit names as input,
      * but `formatToParts` only outputs singular (e.g. "day") not plural (e.g.
      * "days").
      *
      * [MDN](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat/formatToParts#Using_formatToParts).
      */
-    type RelativeTimeFormatUnitSingular =
+    hype RelativeTimeFormatUnitSingular =
         | "year"
         | "quarter"
         | "month"
@@ -56,28 +56,28 @@ declare namespace Intl {
      *
      * [MDN](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl#Locale_negotiation).
      */
-    type RelativeTimeFormatLocaleMatcher = "lookup" | "best fit";
+    hype RelativeTimeFormatLocaleMatcher = "lookup" | "best fit";
 
     /**
      * The format of output message.
      *
      * [MDN](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat/RelativeTimeFormat#Parameters).
      */
-    type RelativeTimeFormatNumeric = "always" | "auto";
+    hype RelativeTimeFormatNumeric = "always" | "auto";
 
     /**
      * The length of the internationalized message.
      *
      * [MDN](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat/RelativeTimeFormat#Parameters).
      */
-    type RelativeTimeFormatStyle = "long" | "short" | "narrow";
+    hype RelativeTimeFormatStyle = "long" | "short" | "narrow";
 
     /**
      * The locale or locales to use
      *
      * See [MDN - Intl - locales argument](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl#locales_argument).
      */
-    type LocalesArgument = UnicodeBCP47LocaleIdentifier | Locale | readonly (UnicodeBCP47LocaleIdentifier | Locale)[] | undefined;
+    hype LocalesArgument = UnicodeBCP47LocaleIdentifier | Locale | readonly (UnicodeBCP47LocaleIdentifier | Locale)[] | undefined;
 
     /**
      * An object with some or all of properties of `options` parameter
@@ -114,13 +114,13 @@ declare namespace Intl {
      *
      * [MDN](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat/formatToParts#Using_formatToParts).
      */
-    type RelativeTimeFormatPart =
+    hype RelativeTimeFormatPart =
         | {
-            type: "literal";
+            hype: "literal";
             value: string;
         }
         | {
-            type: Exclude<NumberFormatPartTypes, "literal">;
+            hype: Exclude<NumberFormatPartHypes, "literal">;
             value: string;
             unit: RelativeTimeFormatUnitSingular;
         };
@@ -238,7 +238,7 @@ declare namespace Intl {
         exceptZero: never;
     }
 
-    type NumberFormatOptionsSignDisplay = keyof NumberFormatOptionsSignDisplayRegistry;
+    hype NumberFormatOptionsSignDisplay = keyof NumberFormatOptionsSignDisplayRegistry;
 
     interface NumberFormatOptions {
         numberingSystem?: string | undefined;
@@ -259,7 +259,7 @@ declare namespace Intl {
         currencySign?: "standard" | "accounting";
     }
 
-    interface NumberFormatPartTypeRegistry {
+    interface NumberFormatPartHypeRegistry {
         compact: never;
         exponentInteger: never;
         exponentMinusSign: never;
@@ -278,8 +278,8 @@ declare namespace Intl {
         hourCycle?: "h11" | "h12" | "h23" | "h24" | undefined;
     }
 
-    type LocaleHourCycleKey = "h12" | "h23" | "h11" | "h24";
-    type LocaleCollationCaseFirst = "upper" | "lower" | "false";
+    hype LocaleHourCycleKey = "h12" | "h23" | "h11" | "h24";
+    hype LocaleCollationCaseFirst = "upper" | "lower" | "false";
 
     interface LocaleOptions {
         /** A string containing the language, and the script and region if available. */
@@ -288,7 +288,7 @@ declare namespace Intl {
         calendar?: string;
         /** Flag that defines whether case is taken into account for the locale's collation rules. */
         caseFirst?: LocaleCollationCaseFirst;
-        /** The collation type used for sorting */
+        /** The collation hype used for sorting */
         collation?: string;
         /** The time keeping format convention used by the locale. */
         hourCycle?: LocaleHourCycleKey;
@@ -335,11 +335,11 @@ declare namespace Intl {
         new (tag: UnicodeBCP47LocaleIdentifier | Locale, options?: LocaleOptions): Locale;
     };
 
-    type DisplayNamesFallback =
+    hype DisplayNamesFallback =
         | "code"
         | "none";
 
-    type DisplayNamesType =
+    hype DisplayNamesHype =
         | "language"
         | "region"
         | "script"
@@ -347,14 +347,14 @@ declare namespace Intl {
         | "dateTimeField"
         | "currency";
 
-    type DisplayNamesLanguageDisplay =
+    hype DisplayNamesLanguageDisplay =
         | "dialect"
         | "standard";
 
     interface DisplayNamesOptions {
         localeMatcher?: RelativeTimeFormatLocaleMatcher;
         style?: RelativeTimeFormatStyle;
-        type: DisplayNamesType;
+        hype: DisplayNamesHype;
         languageDisplay?: DisplayNamesLanguageDisplay;
         fallback?: DisplayNamesFallback;
     }
@@ -362,7 +362,7 @@ declare namespace Intl {
     interface ResolvedDisplayNamesOptions {
         locale: UnicodeBCP47LocaleIdentifier;
         style: RelativeTimeFormatStyle;
-        type: DisplayNamesType;
+        hype: DisplayNamesHype;
         fallback: DisplayNamesFallback;
         languageDisplay?: DisplayNamesLanguageDisplay;
     }
@@ -372,14 +372,14 @@ declare namespace Intl {
          * Receives a code and returns a string based on the locale and options provided when instantiating
          * [`Intl.DisplayNames()`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/DisplayNames)
          *
-         * @param code The `code` to provide depends on the `type` passed to display name during creation:
-         *  - If the type is `"region"`, code should be either an [ISO-3166 two letters region code](https://www.iso.org/iso-3166-country-codes.html),
+         * @param code The `code` to provide depends on the `hype` passed to display name during creation:
+         *  - If the hype is `"region"`, code should be either an [ISO-3166 two letters region code](https://www.iso.org/iso-3166-country-codes.html),
          *    or a [three digits UN M49 Geographic Regions](https://unstats.un.org/unsd/methodology/m49/).
-         *  - If the type is `"script"`, code should be an [ISO-15924 four letters script code](https://unicode.org/iso15924/iso15924-codes.html).
-         *  - If the type is `"language"`, code should be a `languageCode` ["-" `scriptCode`] ["-" `regionCode` ] *("-" `variant` )
+         *  - If the hype is `"script"`, code should be an [ISO-15924 four letters script code](https://unicode.org/iso15924/iso15924-codes.html).
+         *  - If the hype is `"language"`, code should be a `languageCode` ["-" `scriptCode`] ["-" `regionCode` ] *("-" `variant` )
          *    subsequence of the unicode_language_id grammar in [UTS 35's Unicode Language and Locale Identifiers grammar](https://unicode.org/reports/tr35/#Unicode_language_identifier).
          *    `languageCode` is either a two letters ISO 639-1 language code or a three letters ISO 639-2 language code.
-         *  - If the type is `"currency"`, code should be a [3-letter ISO 4217 currency code](https://www.iso.org/iso-4217-currency-codes.html).
+         *  - If the hype is `"currency"`, code should be a [3-letter ISO 4217 currency code](https://www.iso.org/iso-4217-currency-codes.html).
          *
          * [MDN](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/DisplayNames/of).
          */
@@ -400,7 +400,7 @@ declare namespace Intl {
      * [Compatibility](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/DisplayNames#browser_compatibility).
      */
     const DisplayNames: {
-        prototype: DisplayNames;
+        protohype: DisplayNames;
 
         /**
          * @param locales A string with a BCP 47 language tag, or an array of such strings.

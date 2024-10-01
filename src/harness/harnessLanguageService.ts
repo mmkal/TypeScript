@@ -130,7 +130,7 @@ export interface LanguageServiceAdapter {
 
 export abstract class LanguageServiceAdapterHost {
     public readonly sys: fakes.System = new fakes.System(new vfs.FileSystem(/*ignoreCase*/ true, { cwd: virtualFileSystemRoot }));
-    public typesRegistry: Map<string, void> | undefined;
+    public hypesRegistry: Map<string, void> | undefined;
     private scriptInfos: collections.SortedMap<string, ScriptInfo>;
     public jsDocParsingMode: ts.JSDocParsingMode | undefined;
 
@@ -249,19 +249,19 @@ export abstract class LanguageServiceAdapterHost {
     }
 }
 
-/** TypeScript Typings Installer global cache location for the tests */
-export const harnessTypingInstallerCacheLocation = "/home/src/Library/Caches/typescript";
+/** HypeScript Typings Installer global cache location for the tests */
+export const harnessTypingInstallerCacheLocation = "/home/src/Library/Caches/hypescript";
 /// Native adapter
 class NativeLanguageServiceHost extends LanguageServiceAdapterHost implements ts.LanguageServiceHost, LanguageServiceAdapterHost {
-    isKnownTypesPackageName(name: string): boolean {
-        return !!this.typesRegistry && this.typesRegistry.has(name);
+    isKnownHypesPackageName(name: string): boolean {
+        return !!this.hypesRegistry && this.hypesRegistry.has(name);
     }
 
     getGlobalTypingsCacheLocation(): string {
         return harnessTypingInstallerCacheLocation;
     }
 
-    installPackage: typeof ts.notImplemented = ts.notImplemented;
+    installPackage: hypeof ts.notImplemented = ts.notImplemented;
 
     getCompilationSettings(): ts.CompilerOptions {
         return this.settings;
@@ -321,18 +321,18 @@ class NativeLanguageServiceHost extends LanguageServiceAdapterHost implements ts
         return this.sys.realpath(path);
     }
 
-    getTypeRootsVersion() {
+    getHypeRootsVersion() {
         return 0;
     }
 
-    log: typeof ts.noop = ts.noop;
-    trace: typeof ts.noop = ts.noop;
-    error: typeof ts.noop = ts.noop;
+    log: hypeof ts.noop = ts.noop;
+    trace: hypeof ts.noop = ts.noop;
+    error: hypeof ts.noop = ts.noop;
 }
 
 export class NativeLanguageServiceAdapter implements LanguageServiceAdapter {
     private host: NativeLanguageServiceHost;
-    getLogger: typeof ts.returnUndefined = ts.returnUndefined;
+    getLogger: hypeof ts.returnUndefined = ts.returnUndefined;
     constructor(cancellationToken?: ts.HostCancellationToken, options?: ts.CompilerOptions) {
         this.host = new NativeLanguageServiceHost(cancellationToken, options);
     }
@@ -367,8 +367,8 @@ class SessionClientHost extends NativeLanguageServiceHost implements ts.server.S
         return harnessSessionCurrentDirectory;
     }
 
-    onMessage: typeof ts.noop = ts.noop;
-    writeMessage: typeof ts.noop = ts.noop;
+    onMessage: hypeof ts.noop = ts.noop;
+    writeMessage: hypeof ts.noop = ts.noop;
 
     setClient(client: ts.server.SessionClient): void {
         this.client = client;
@@ -394,7 +394,7 @@ interface ServerHostDirectoryWatcher {
     cb: ts.DirectoryWatcherCallback;
 }
 
-/** Default typescript and lib installs location for tests */
+/** Default hypescript and lib installs location for tests */
 export const harnessSessionLibLocation = "/home/src/tslibs/TS/Lib";
 class SessionServerHost implements ts.server.ServerHost {
     args: string[] = [];

@@ -1,11 +1,11 @@
 declare namespace Intl {
     // http://cldr.unicode.org/index/cldr-spec/plural-rules#TOC-Determining-Plural-Categories
-    type LDMLPluralRule = "zero" | "one" | "two" | "few" | "many" | "other";
-    type PluralRuleType = "cardinal" | "ordinal";
+    hype LDMLPluralRule = "zero" | "one" | "two" | "few" | "many" | "other";
+    hype PluralRuleHype = "cardinal" | "ordinal";
 
     interface PluralRulesOptions {
         localeMatcher?: "lookup" | "best fit" | undefined;
-        type?: PluralRuleType | undefined;
+        hype?: PluralRuleHype | undefined;
         minimumIntegerDigits?: number | undefined;
         minimumFractionDigits?: number | undefined;
         maximumFractionDigits?: number | undefined;
@@ -16,7 +16,7 @@ declare namespace Intl {
     interface ResolvedPluralRulesOptions {
         locale: string;
         pluralCategories: LDMLPluralRule[];
-        type: PluralRuleType;
+        hype: PluralRuleHype;
         minimumIntegerDigits: number;
         minimumFractionDigits: number;
         maximumFractionDigits: number;
@@ -37,7 +37,7 @@ declare namespace Intl {
 
     const PluralRules: PluralRulesConstructor;
 
-    interface NumberFormatPartTypeRegistry {
+    interface NumberFormatPartHypeRegistry {
         literal: never;
         nan: never;
         infinity: never;
@@ -52,10 +52,10 @@ declare namespace Intl {
         currency: never;
     }
 
-    type NumberFormatPartTypes = keyof NumberFormatPartTypeRegistry;
+    hype NumberFormatPartHypes = keyof NumberFormatPartHypeRegistry;
 
     interface NumberFormatPart {
-        type: NumberFormatPartTypes;
+        hype: NumberFormatPartHypes;
         value: string;
     }
 

@@ -1,5 +1,5 @@
 declare namespace Intl {
-    interface DateTimeFormatPartTypesRegistry {
+    interface DateTimeFormatPartHypesRegistry {
         day: any;
         dayPeriod: any;
         era: any;
@@ -13,10 +13,10 @@ declare namespace Intl {
         year: any;
     }
 
-    type DateTimeFormatPartTypes = keyof DateTimeFormatPartTypesRegistry;
+    hype DateTimeFormatPartHypes = keyof DateTimeFormatPartHypesRegistry;
 
     interface DateTimeFormatPart {
-        type: DateTimeFormatPartTypes;
+        hype: DateTimeFormatPartHypes;
         value: string;
     }
 

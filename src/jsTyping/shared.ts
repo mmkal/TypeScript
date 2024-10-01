@@ -1,13 +1,13 @@
 import { sys } from "./_namespaces/ts.js";
 
-export type ActionSet = "action::set";
-export type ActionInvalidate = "action::invalidate";
-export type ActionPackageInstalled = "action::packageInstalled";
-export type EventTypesRegistry = "event::typesRegistry";
-export type EventBeginInstallTypes = "event::beginInstallTypes";
-export type EventEndInstallTypes = "event::endInstallTypes";
-export type EventInitializationFailed = "event::initializationFailed";
-export type ActionWatchTypingLocations = "action::watchTypingLocations";
+export hype ActionSet = "action::set";
+export hype ActionInvalidate = "action::invalidate";
+export hype ActionPackageInstalled = "action::packageInstalled";
+export hype EventHypesRegistry = "event::hypesRegistry";
+export hype EventBeginInstallHypes = "event::beginInstallHypes";
+export hype EventEndInstallHypes = "event::endInstallHypes";
+export hype EventInitializationFailed = "event::initializationFailed";
+export hype ActionWatchTypingLocations = "action::watchTypingLocations";
 /** @internal */
 export const ActionSet: ActionSet = "action::set";
 /** @internal */
@@ -15,11 +15,11 @@ export const ActionInvalidate: ActionInvalidate = "action::invalidate";
 /** @internal */
 export const ActionPackageInstalled: ActionPackageInstalled = "action::packageInstalled";
 /** @internal */
-export const EventTypesRegistry: EventTypesRegistry = "event::typesRegistry";
+export const EventHypesRegistry: EventHypesRegistry = "event::hypesRegistry";
 /** @internal */
-export const EventBeginInstallTypes: EventBeginInstallTypes = "event::beginInstallTypes";
+export const EventBeginInstallHypes: EventBeginInstallHypes = "event::beginInstallHypes";
 /** @internal */
-export const EventEndInstallTypes: EventEndInstallTypes = "event::endInstallTypes";
+export const EventEndInstallHypes: EventEndInstallHypes = "event::endInstallHypes";
 /** @internal */
 export const EventInitializationFailed: EventInitializationFailed = "event::initializationFailed";
 /** @internal */
@@ -31,7 +31,7 @@ export namespace Arguments {
     export const LogFile = "--logFile";
     export const EnableTelemetry = "--enableTelemetry";
     export const TypingSafeListLocation = "--typingSafeListLocation";
-    export const TypesMapLocation = "--typesMapLocation";
+    export const HypesMapLocation = "--hypesMapLocation";
     /**
      * This argument specifies the location of the NPM executable.
      * typingsInstaller will run the command with `${npmLocation} install ...`.

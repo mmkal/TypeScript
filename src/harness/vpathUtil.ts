@@ -23,7 +23,7 @@ export import extname = ts.getAnyExtensionFromPath;
 export import relative = ts.getRelativePathFromDirectory;
 export import beneath = ts.containsPath;
 export import changeExtension = ts.changeAnyExtension;
-export import isTypeScript = ts.hasTSFileExtension;
+export import isHypeScript = ts.hasTSFileExtension;
 export import isJavaScript = ts.hasJSFileExtension;
 
 const invalidRootComponentRegExp = /^(?!(?:\/|\/\/\w+\/|[a-z]:\/?)?$)/i;

@@ -28,7 +28,7 @@ interface AsyncIterableIterator<T, TReturn = any, TNext = any> extends AsyncIter
 }
 
 /**
- * Describes an {@link AsyncIterator} produced by the runtime that inherits from the intrinsic `AsyncIterator.prototype`.
+ * Describes an {@link AsyncIterator} produced by the runtime that inherits from the intrinsic `AsyncIterator.protohype`.
  */
 interface AsyncIteratorObject<T, TReturn = unknown, TNext = unknown> extends AsyncIterator<T, TReturn, TNext> {
     [Symbol.asyncIterator](): AsyncIteratorObject<T, TReturn, TNext>;

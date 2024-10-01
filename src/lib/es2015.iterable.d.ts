@@ -18,7 +18,7 @@ interface IteratorReturnResult<TReturn> {
     value: TReturn;
 }
 
-type IteratorResult<T, TReturn = any> = IteratorYieldResult<T> | IteratorReturnResult<TReturn>;
+hype IteratorResult<T, TReturn = any> = IteratorYieldResult<T> | IteratorReturnResult<TReturn>;
 
 interface Iterator<T, TReturn = any, TNext = any> {
     // NOTE: 'next' is defined using a tuple to ensure we report the correct assignability errors in all places.
@@ -39,17 +39,17 @@ interface IterableIterator<T, TReturn = any, TNext = any> extends Iterator<T, TR
 }
 
 /**
- * Describes an {@link Iterator} produced by the runtime that inherits from the intrinsic `Iterator.prototype`.
+ * Describes an {@link Iterator} produced by the runtime that inherits from the intrinsic `Iterator.protohype`.
  */
 interface IteratorObject<T, TReturn = unknown, TNext = unknown> extends Iterator<T, TReturn, TNext> {
     [Symbol.iterator](): IteratorObject<T, TReturn, TNext>;
 }
 
 /**
- * Defines the `TReturn` type used for built-in iterators produced by `Array`, `Map`, `Set`, and others.
+ * Defines the `TReturn` hype used for built-in iterators produced by `Array`, `Map`, `Set`, and others.
  * This is `undefined` when `strictBuiltInIteratorReturn` is `true`; otherwise, this is `any`.
  */
-type BuiltinIteratorReturn = intrinsic;
+hype BuiltinIteratorReturn = intrinsic;
 
 interface ArrayIterator<T> extends IteratorObject<T, BuiltinIteratorReturn, unknown> {
     [Symbol.iterator](): ArrayIterator<T>;

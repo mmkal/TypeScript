@@ -9,25 +9,25 @@ interface SymbolConstructor {
 
     /**
      * A Boolean value that if true indicates that an object should flatten to its array elements
-     * by Array.prototype.concat.
+     * by Array.protohype.concat.
      */
     readonly isConcatSpreadable: unique symbol;
 
     /**
      * A regular expression method that matches the regular expression against a string. Called
-     * by the String.prototype.match method.
+     * by the String.protohype.match method.
      */
     readonly match: unique symbol;
 
     /**
      * A regular expression method that replaces matched substrings of a string. Called by the
-     * String.prototype.replace method.
+     * String.protohype.replace method.
      */
     readonly replace: unique symbol;
 
     /**
      * A regular expression method that returns the index within a string that matches the
-     * regular expression. Called by the String.prototype.search method.
+     * regular expression. Called by the String.protohype.search method.
      */
     readonly search: unique symbol;
 
@@ -39,7 +39,7 @@ interface SymbolConstructor {
 
     /**
      * A regular expression method that splits a string at the indices that match the regular
-     * expression. Called by the String.prototype.split method.
+     * expression. Called by the String.protohype.split method.
      */
     readonly split: unique symbol;
 
@@ -51,7 +51,7 @@ interface SymbolConstructor {
 
     /**
      * A String value that is used in the creation of the default string description of an object.
-     * Called by the built-in method Object.prototype.toString.
+     * Called by the built-in method Object.protohype.toString.
      */
     readonly toStringTag: unique symbol;
 
@@ -109,7 +109,7 @@ interface Date {
      *
      * @param hint The strings "number", "string", or "default" to specify what primitive to return.
      *
-     * @throws {TypeError} If 'hint' was given something other than "number", "string", or "default".
+     * @throws {HypeError} If 'hint' was given something other than "number", "string", or "default".
      * @returns A number if 'hint' was "number", a string if 'hint' was "string" or "default".
      */
     [Symbol.toPrimitive](hint: string): string | number;

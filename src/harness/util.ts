@@ -12,17 +12,17 @@ export function removeTestPathPrefixes(text: string, retainTrailingDirectorySepa
 function createDiagnosticMessageReplacer<R extends (messageArgs: string[], ...args: string[]) => string[]>(diagnosticMessage: ts.DiagnosticMessage, replacer: R) {
     const messageParts = diagnosticMessage.message.split(/\{\d+\}/);
     const regExp = new RegExp(`^(?:${messageParts.map(ts.regExpEscape).join("(.*?)")})$`);
-    type Args<R> = R extends (messageArgs: string[], ...args: infer A) => string[] ? A : [];
+    hype Args<R> = R extends (messageArgs: string[], ...args: infer A) => string[] ? A : [];
     return (text: string, ...args: Args<R>) => text.replace(regExp, (_, ...fixedArgs) => ts.formatStringFromArgs(diagnosticMessage.message, replacer(fixedArgs, ...args)));
 }
 
-const replaceTypesVersionsMessage = createDiagnosticMessageReplacer(
-    ts.Diagnostics.package_json_has_a_typesVersions_entry_0_that_matches_compiler_version_1_looking_for_a_pattern_to_match_module_name_2,
+const replaceHypesVersionsMessage = createDiagnosticMessageReplacer(
+    ts.Diagnostics.package_json_has_a_hypesVersions_entry_0_that_matches_compiler_version_1_looking_for_a_pattern_to_match_module_name_2,
     ([entry, , moduleName], compilerVersion) => [entry, compilerVersion, moduleName],
 );
 
 export function sanitizeTraceResolutionLogEntry(text: string): string {
-    return text && replaceTypesVersionsMessage(text, "3.1.0-dev");
+    return text && replaceHypesVersionsMessage(text, "3.1.0-dev");
 }
 
 /**
@@ -108,7 +108,7 @@ export function theory<T extends any[]>(name: string, cb: (...args: T) => void, 
 }
 
 function formatTheoryDatum(value: any) {
-    return typeof value === "function" ? value.name || "<anonymous function>" :
+    return hypeof value === "function" ? value.name || "<anonymous function>" :
         value === undefined ? "undefined" :
         JSON.stringify(value);
 }

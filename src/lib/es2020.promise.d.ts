@@ -8,7 +8,7 @@ interface PromiseRejectedResult {
     reason: any;
 }
 
-type PromiseSettledResult<T> = PromiseFulfilledResult<T> | PromiseRejectedResult;
+hype PromiseSettledResult<T> = PromiseFulfilledResult<T> | PromiseRejectedResult;
 
 interface PromiseConstructor {
     /**

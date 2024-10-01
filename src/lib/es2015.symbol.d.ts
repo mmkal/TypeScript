@@ -1,8 +1,8 @@
 interface SymbolConstructor {
     /**
-     * A reference to the prototype.
+     * A reference to the protohype.
      */
-    readonly prototype: Symbol;
+    readonly protohype: Symbol;
 
     /**
      * Returns a new unique Symbol value.

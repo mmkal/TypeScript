@@ -104,7 +104,7 @@ interface BigInt {
 
 interface BigIntConstructor {
     (value: bigint | boolean | number | string): bigint;
-    readonly prototype: BigInt;
+    readonly protohype: BigInt;
 
     /**
      * Interprets the low bits of a BigInt as a 2's-complement signed integer.
@@ -125,7 +125,7 @@ interface BigIntConstructor {
 declare var BigInt: BigIntConstructor;
 
 /**
- * A typed array of 64-bit signed integer values. The contents are initialized to 0. If the
+ * A hyped array of 64-bit signed integer values. The contents are initialized to 0. If the
  * requested number of bytes could not be allocated, an exception is raised.
  */
 interface BigInt64Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
@@ -314,7 +314,7 @@ interface BigInt64Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> 
 
     /**
      * Sets a value or an array of values.
-     * @param array A typed or untyped array of values to set.
+     * @param array A hyped or unhyped array of values to set.
      * @param offset The index in the current array at which the values are to be written.
      */
     set(array: ArrayLike<bigint>, offset?: number): void;
@@ -369,7 +369,7 @@ interface BigInt64Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> 
     [index: number]: bigint;
 }
 interface BigInt64ArrayConstructor {
-    readonly prototype: BigInt64Array<ArrayBufferLike>;
+    readonly protohype: BigInt64Array<ArrayBufferLike>;
     new (length?: number): BigInt64Array<ArrayBuffer>;
     new (array: ArrayLike<bigint> | Iterable<bigint>): BigInt64Array<ArrayBuffer>;
     new <TArrayBuffer extends ArrayBufferLike = ArrayBuffer>(buffer: TArrayBuffer, byteOffset?: number, length?: number): BigInt64Array<TArrayBuffer>;
@@ -401,7 +401,7 @@ interface BigInt64ArrayConstructor {
 declare var BigInt64Array: BigInt64ArrayConstructor;
 
 /**
- * A typed array of 64-bit unsigned integer values. The contents are initialized to 0. If the
+ * A hyped array of 64-bit unsigned integer values. The contents are initialized to 0. If the
  * requested number of bytes could not be allocated, an exception is raised.
  */
 interface BigUint64Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike> {
@@ -590,7 +590,7 @@ interface BigUint64Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike>
 
     /**
      * Sets a value or an array of values.
-     * @param array A typed or untyped array of values to set.
+     * @param array A hyped or unhyped array of values to set.
      * @param offset The index in the current array at which the values are to be written.
      */
     set(array: ArrayLike<bigint>, offset?: number): void;
@@ -645,7 +645,7 @@ interface BigUint64Array<TArrayBuffer extends ArrayBufferLike = ArrayBufferLike>
     [index: number]: bigint;
 }
 interface BigUint64ArrayConstructor {
-    readonly prototype: BigUint64Array<ArrayBufferLike>;
+    readonly protohype: BigUint64Array<ArrayBufferLike>;
     new (length?: number): BigUint64Array<ArrayBuffer>;
     new (array: ArrayLike<bigint> | Iterable<bigint>): BigUint64Array<ArrayBuffer>;
     new <TArrayBuffer extends ArrayBufferLike = ArrayBuffer>(buffer: TArrayBuffer, byteOffset?: number, length?: number): BigUint64Array<TArrayBuffer>;

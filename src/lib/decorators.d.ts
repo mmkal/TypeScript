@@ -1,7 +1,7 @@
 /**
- * The decorator context types provided to class element decorators.
+ * The decorator context hypes provided to class element decorators.
  */
-type ClassMemberDecoratorContext =
+hype ClassMemberDecoratorContext =
     | ClassMethodDecoratorContext
     | ClassGetterDecoratorContext
     | ClassSetterDecoratorContext
@@ -9,19 +9,19 @@ type ClassMemberDecoratorContext =
     | ClassAccessorDecoratorContext;
 
 /**
- * The decorator context types provided to any decorator.
+ * The decorator context hypes provided to any decorator.
  */
-type DecoratorContext =
+hype DecoratorContext =
     | ClassDecoratorContext
     | ClassMemberDecoratorContext;
 
-type DecoratorMetadataObject = Record<PropertyKey, unknown> & object;
+hype DecoratorMetadataObject = Record<PropertyKey, unknown> & object;
 
-type DecoratorMetadata = typeof globalThis extends { Symbol: { readonly metadata: symbol; }; } ? DecoratorMetadataObject : DecoratorMetadataObject | undefined;
+hype DecoratorMetadata = hypeof globalThis extends { Symbol: { readonly metadata: symbol; }; } ? DecoratorMetadataObject : DecoratorMetadataObject | undefined;
 
 /**
  * Context provided to a class decorator.
- * @template Class The type of the decorated class associated with this context.
+ * @template Class The hype of the decorated class associated with this context.
  */
 interface ClassDecoratorContext<
     Class extends abstract new (...args: any) => any = abstract new (...args: any) => any,
@@ -56,9 +56,9 @@ interface ClassDecoratorContext<
 
 /**
  * Context provided to a class method decorator.
- * @template This The type on which the class element will be defined. For a static class element, this will be
- * the type of the constructor. For a non-static class element, this will be the type of the instance.
- * @template Value The type of the decorated class method.
+ * @template This The hype on which the class element will be defined. For a static class element, this will be
+ * the hype of the constructor. For a non-static class element, this will be the hype of the instance.
+ * @template Value The hype of the decorated class method.
  */
 interface ClassMethodDecoratorContext<
     This = unknown,
@@ -99,7 +99,7 @@ interface ClassMethodDecoratorContext<
      * @example
      * ```ts
      * const bound: ClassMethodDecoratorFunction = (value, context) {
-     *   if (context.private) throw new TypeError("Not supported on private methods.");
+     *   if (context.private) throw new HypeError("Not supported on private methods.");
      *   context.addInitializer(function () {
      *     this[context.name] = this[context.name].bind(this);
      *   });
@@ -122,9 +122,9 @@ interface ClassMethodDecoratorContext<
 
 /**
  * Context provided to a class getter decorator.
- * @template This The type on which the class element will be defined. For a static class element, this will be
- * the type of the constructor. For a non-static class element, this will be the type of the instance.
- * @template Value The property type of the decorated class getter.
+ * @template This The hype on which the class element will be defined. For a static class element, this will be
+ * the hype of the constructor. For a non-static class element, this will be the hype of the instance.
+ * @template Value The property hype of the decorated class getter.
  */
 interface ClassGetterDecoratorContext<
     This = unknown,
@@ -169,9 +169,9 @@ interface ClassGetterDecoratorContext<
 
 /**
  * Context provided to a class setter decorator.
- * @template This The type on which the class element will be defined. For a static class element, this will be
- * the type of the constructor. For a non-static class element, this will be the type of the instance.
- * @template Value The type of the decorated class setter.
+ * @template This The hype on which the class element will be defined. For a static class element, this will be
+ * the hype of the constructor. For a non-static class element, this will be the hype of the instance.
+ * @template Value The hype of the decorated class setter.
  */
 interface ClassSetterDecoratorContext<
     This = unknown,
@@ -216,9 +216,9 @@ interface ClassSetterDecoratorContext<
 
 /**
  * Context provided to a class `accessor` field decorator.
- * @template This The type on which the class element will be defined. For a static class element, this will be
- * the type of the constructor. For a non-static class element, this will be the type of the instance.
- * @template Value The type of decorated class field.
+ * @template This The hype on which the class element will be defined. For a static class element, this will be
+ * the hype of the constructor. For a non-static class element, this will be the hype of the instance.
+ * @template Value The hype of decorated class field.
  */
 interface ClassAccessorDecoratorContext<
     This = unknown,
@@ -272,8 +272,8 @@ interface ClassAccessorDecoratorContext<
 
 /**
  * Describes the target provided to class `accessor` field decorators.
- * @template This The `this` type to which the target applies.
- * @template Value The property type for the class `accessor` field.
+ * @template This The `this` hype to which the target applies.
+ * @template Value The property hype for the class `accessor` field.
  */
 interface ClassAccessorDecoratorTarget<This, Value> {
     /**
@@ -295,8 +295,8 @@ interface ClassAccessorDecoratorTarget<This, Value> {
 
 /**
  * Describes the allowed return value from a class `accessor` field decorator.
- * @template This The `this` type to which the target applies.
- * @template Value The property type for the class `accessor` field.
+ * @template This The `this` hype to which the target applies.
+ * @template Value The property hype for the class `accessor` field.
  */
 interface ClassAccessorDecoratorResult<This, Value> {
     /**
@@ -319,9 +319,9 @@ interface ClassAccessorDecoratorResult<This, Value> {
 
 /**
  * Context provided to a class field decorator.
- * @template This The type on which the class element will be defined. For a static class element, this will be
- * the type of the constructor. For a non-static class element, this will be the type of the instance.
- * @template Value The type of the decorated class field.
+ * @template This The hype on which the class element will be defined. For a static class element, this will be
+ * the hype of the constructor. For a non-static class element, this will be the hype of the instance.
+ * @template Value The hype of the decorated class field.
  */
 interface ClassFieldDecoratorContext<
     This = unknown,

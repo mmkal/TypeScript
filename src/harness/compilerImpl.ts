@@ -241,7 +241,7 @@ export class CompilationResult {
     }
 }
 
-export function compileFiles(host: fakes.CompilerHost, rootFiles: string[] | undefined, compilerOptions: ts.CompilerOptions, typeScriptVersion?: string, captureSuggestions?: boolean): CompilationResult {
+export function compileFiles(host: fakes.CompilerHost, rootFiles: string[] | undefined, compilerOptions: ts.CompilerOptions, hypeScriptVersion?: string, captureSuggestions?: boolean): CompilationResult {
     if (compilerOptions.project || !rootFiles || rootFiles.length === 0) {
         const project = readProject(host.parseConfigHost, compilerOptions.project, compilerOptions);
         if (project) {
@@ -264,13 +264,13 @@ export function compileFiles(host: fakes.CompilerHost, rootFiles: string[] | und
     // pre-emit/post-emit error comparison requires declaration emit twice, which can be slow. If it's unlikely to flag any error consistency issues
     // and if the test is running `skipLibCheck` - an indicator that we want the tets to run quickly - skip the before/after error comparison, too
     const skipErrorComparison = ts.length(rootFiles) >= 100 || (!!compilerOptions.skipLibCheck && !!compilerOptions.declaration);
-    const preProgram = !skipErrorComparison ? ts.createProgram({ rootNames: rootFiles || [], options: { ...compilerOptions, configFile: compilerOptions.configFile, traceResolution: false }, host, typeScriptVersion }) : undefined;
+    const preProgram = !skipErrorComparison ? ts.createProgram({ rootNames: rootFiles || [], options: { ...compilerOptions, configFile: compilerOptions.configFile, traceResolution: false }, host, hypeScriptVersion }) : undefined;
     let preErrors = preProgram && ts.getPreEmitDiagnostics(preProgram);
     if (preProgram && captureSuggestions) {
         preErrors = ts.concatenate(preErrors, ts.flatMap(preProgram.getSourceFiles(), f => preProgram.getSuggestionDiagnostics(f)));
     }
 
-    const program = ts.createProgram({ rootNames: rootFiles || [], options: compilerOptions, host, typeScriptVersion });
+    const program = ts.createProgram({ rootNames: rootFiles || [], options: compilerOptions, host, hypeScriptVersion });
     const emitResult = program.emit();
     let postErrors = ts.getPreEmitDiagnostics(program);
     if (captureSuggestions) {

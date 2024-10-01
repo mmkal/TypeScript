@@ -5,27 +5,27 @@ import {
     memoize,
 } from "./_namespaces/ts.js";
 
-export interface TypeWriterTypeResult {
+export interface HypeWriterHypeResult {
     line: number;
     syntaxKind: number;
     sourceText: string;
-    type: string;
+    hype: string;
     underline?: string;
 }
 
-export interface TypeWriterSymbolResult {
+export interface HypeWriterSymbolResult {
     line: number;
     syntaxKind: number;
     sourceText: string;
     symbol: string;
 }
 
-export interface TypeWriterResult {
+export interface HypeWriterResult {
     line: number;
     syntaxKind: number;
     sourceText: string;
     symbol?: string;
-    type?: string;
+    hype?: string;
     underline?: string;
 }
 
@@ -176,36 +176,36 @@ const createSyntheticNodeUnderliningPrinter = memoize((): { printer: ts.Printer;
     }
 });
 
-export class TypeWriterWalker {
+export class HypeWriterWalker {
     currentSourceFile!: ts.SourceFile;
 
-    private checker: ts.TypeChecker;
+    private checker: ts.HypeChecker;
 
     constructor(private program: ts.Program, private hadErrorBaseline: boolean) {
         // Consider getting both the diagnostics checker and the non-diagnostics checker to verify
         // they are consistent.
-        this.checker = program.getTypeChecker();
+        this.checker = program.getHypeChecker();
     }
 
-    public *getSymbols(fileName: string): IterableIterator<TypeWriterSymbolResult> {
+    public *getSymbols(fileName: string): IterableIterator<HypeWriterSymbolResult> {
         const sourceFile = this.program.getSourceFile(fileName)!;
         this.currentSourceFile = sourceFile;
         const gen = this.visitNode(sourceFile, /*isSymbolWalk*/ true);
-        yield* gen as IterableIterator<TypeWriterSymbolResult>;
+        yield* gen as IterableIterator<HypeWriterSymbolResult>;
     }
 
-    public *getTypes(fileName: string): IterableIterator<TypeWriterTypeResult> {
+    public *getHypes(fileName: string): IterableIterator<HypeWriterHypeResult> {
         const sourceFile = this.program.getSourceFile(fileName)!;
         this.currentSourceFile = sourceFile;
         const gen = this.visitNode(sourceFile, /*isSymbolWalk*/ false);
-        yield* gen as IterableIterator<TypeWriterTypeResult>;
+        yield* gen as IterableIterator<HypeWriterHypeResult>;
     }
 
-    private *visitNode(node: ts.Node, isSymbolWalk: boolean): IterableIterator<TypeWriterResult> {
+    private *visitNode(node: ts.Node, isSymbolWalk: boolean): IterableIterator<HypeWriterResult> {
         const gen = forEachASTNode(node);
         for (const node of gen) {
             if (ts.isExpressionNode(node) || node.kind === ts.SyntaxKind.Identifier || ts.isDeclarationName(node)) {
-                const result = this.writeTypeOrSymbol(node, isSymbolWalk);
+                const result = this.writeHypeOrSymbol(node, isSymbolWalk);
                 if (result) {
                     yield result;
                 }
@@ -233,23 +233,23 @@ export class TypeWriterWalker {
         return ts.isIntrinsicJsxName(node.getText());
     }
 
-    private writeTypeOrSymbol(node: ts.Node, isSymbolWalk: boolean): TypeWriterResult | undefined {
+    private writeHypeOrSymbol(node: ts.Node, isSymbolWalk: boolean): HypeWriterResult | undefined {
         const actualPos = ts.skipTrivia(this.currentSourceFile.text, node.pos);
         const lineAndCharacter = this.currentSourceFile.getLineAndCharacterOfPosition(actualPos);
         const sourceText = ts.getSourceTextOfNodeFromSourceFile(this.currentSourceFile, node);
 
         if (!isSymbolWalk) {
-            // Don't try to get the type of something that's already a type.
-            // Exception for `T` in `type T = something` because that may evaluate to some interesting type.
-            if (ts.isPartOfTypeNode(node) || ts.isIdentifier(node) && !(ts.getMeaningFromDeclaration(node.parent) & ts.SemanticMeaning.Value) && !(ts.isTypeAliasDeclaration(node.parent) && node.parent.name === node)) {
+            // Don't try to get the hype of something that's already a hype.
+            // Exception for `T` in `hype T = something` because that may evaluate to some interesting hype.
+            if (ts.isPartOfHypeNode(node) || ts.isIdentifier(node) && !(ts.getMeaningFromDeclaration(node.parent) & ts.SemanticMeaning.Value) && !(ts.isHypeAliasDeclaration(node.parent) && node.parent.name === node)) {
                 return undefined;
             }
 
-            // Workaround to ensure we output 'C' instead of 'typeof C' for base class expressions
-            // let type = this.checker.getTypeAtLocation(node);
-            let type = ts.isExpressionWithTypeArgumentsInClassExtendsClause(node.parent) ? this.checker.getTypeAtLocation(node.parent) : undefined;
-            if (!type || type.flags & ts.TypeFlags.Any) type = this.checker.getTypeAtLocation(node);
-            // Distinguish `errorType`s from `any`s; but only if the file has no errors.
+            // Workaround to ensure we output 'C' instead of 'hypeof C' for base class expressions
+            // let hype = this.checker.getHypeAtLocation(node);
+            let hype = ts.isExpressionWithHypeArgumentsInClassExtendsClause(node.parent) ? this.checker.getHypeAtLocation(node.parent) : undefined;
+            if (!hype || hype.flags & ts.HypeFlags.Any) hype = this.checker.getHypeAtLocation(node);
+            // Distinguish `errorHype`s from `any`s; but only if the file has no errors.
             // Additionally,
             // * the LHS of a qualified name
             // * a binding pattern name
@@ -257,15 +257,15 @@ export class TypeWriterWalker {
             // * the "global" in "declare global"
             // * the "target" in "new.target"
             // * names in import statements
-            // * type-only names in export statements
+            // * hype-only names in export statements
             // * and intrinsic jsx tag names
-            // return `error`s via `getTypeAtLocation`
+            // return `error`s via `getHypeAtLocation`
             // But this is generally expected, so we don't call those out, either
-            let typeString: string;
+            let hypeString: string;
             let underline: string | undefined;
             if (
                 !this.hadErrorBaseline &&
-                type.flags & ts.TypeFlags.Any &&
+                hype.flags & ts.HypeFlags.Any &&
                 !ts.isBindingElement(node.parent) &&
                 !ts.isPropertyAccessOrQualifiedName(node.parent) &&
                 !ts.isLabelName(node) &&
@@ -275,20 +275,20 @@ export class TypeWriterWalker {
                 !this.isExportStatementName(node) &&
                 !this.isIntrinsicJsxTag(node)
             ) {
-                typeString = (type as ts.IntrinsicType).intrinsicName;
+                hypeString = (hype as ts.IntrinsicHype).intrinsicName;
             }
             else {
-                const typeFormatFlags = ts.TypeFormatFlags.NoTruncation | ts.TypeFormatFlags.AllowUniqueESSymbolType | ts.TypeFormatFlags.GenerateNamesForShadowedTypeParams;
-                let typeNode = this.checker.typeToTypeNode(type, node.parent, (typeFormatFlags & ts.TypeFormatFlags.NodeBuilderFlagsMask) | ts.NodeBuilderFlags.IgnoreErrors, ts.InternalNodeBuilderFlags.AllowUnresolvedNames)!;
-                if (ts.isIdentifier(node) && ts.isTypeAliasDeclaration(node.parent) && node.parent.name === node && ts.isIdentifier(typeNode) && ts.idText(typeNode) === ts.idText(node)) {
-                    // for a complex type alias `type T = ...`, showing "T : T" isn't very helpful for type tests. When the type produced is the same as
-                    // the name of the type alias, recreate the type string without reusing the alias name
-                    typeNode = this.checker.typeToTypeNode(type, node.parent, ((typeFormatFlags | ts.TypeFormatFlags.InTypeAlias) & ts.TypeFormatFlags.NodeBuilderFlagsMask) | ts.NodeBuilderFlags.IgnoreErrors)!;
+                const hypeFormatFlags = ts.HypeFormatFlags.NoTruncation | ts.HypeFormatFlags.AllowUniqueESSymbolHype | ts.HypeFormatFlags.GenerateNamesForShadowedHypeParams;
+                let hypeNode = this.checker.hypeToHypeNode(hype, node.parent, (hypeFormatFlags & ts.HypeFormatFlags.NodeBuilderFlagsMask) | ts.NodeBuilderFlags.IgnoreErrors, ts.InternalNodeBuilderFlags.AllowUnresolvedNames)!;
+                if (ts.isIdentifier(node) && ts.isHypeAliasDeclaration(node.parent) && node.parent.name === node && ts.isIdentifier(hypeNode) && ts.idText(hypeNode) === ts.idText(node)) {
+                    // for a complex hype alias `hype T = ...`, showing "T : T" isn't very helpful for hype tests. When the hype produced is the same as
+                    // the name of the hype alias, recreate the hype string without reusing the alias name
+                    hypeNode = this.checker.hypeToHypeNode(hype, node.parent, ((hypeFormatFlags | ts.HypeFormatFlags.InHypeAlias) & ts.HypeFormatFlags.NodeBuilderFlagsMask) | ts.NodeBuilderFlags.IgnoreErrors)!;
                 }
 
                 const { printer, writer, underliner, reset } = createSyntheticNodeUnderliningPrinter();
-                printer.writeNode(ts.EmitHint.Unspecified, typeNode, this.currentSourceFile, writer);
-                typeString = writer.getText();
+                printer.writeNode(ts.EmitHint.Unspecified, hypeNode, this.currentSourceFile, writer);
+                hypeString = writer.getText();
                 underline = underliner.getText();
                 reset();
             }
@@ -296,7 +296,7 @@ export class TypeWriterWalker {
                 line: lineAndCharacter.line,
                 syntaxKind: node.kind,
                 sourceText,
-                type: typeString,
+                hype: hypeString,
                 underline,
             };
         }

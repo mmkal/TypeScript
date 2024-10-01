@@ -16,7 +16,7 @@ export function reportDocumentRegistryStats(documentRegistry: ts.DocumentRegistr
     return str;
 }
 
-type DocumentRegistryExpectedStats = Map<ts.DocumentRegistryBucketKeyWithMode, Map<ts.Path, Map<ts.ScriptKind, number>>>;
+hype DocumentRegistryExpectedStats = Map<ts.DocumentRegistryBucketKeyWithMode, Map<ts.Path, Map<ts.ScriptKind, number>>>;
 function verifyDocumentRegistryStats(
     documentRegistry: ts.DocumentRegistry,
     stats: DocumentRegistryExpectedStats,
@@ -103,7 +103,7 @@ function verifyDocumentRegistry(service: ts.server.ProjectService) {
     verifyDocumentRegistryStats(service.documentRegistry, stats);
 }
 interface ResolutionInfo {
-    cacheType: string;
+    cacheHype: string;
     fileName: string;
     name: string;
     mode: ts.ResolutionMode;
@@ -111,7 +111,7 @@ interface ResolutionInfo {
 
 function getResolutionCacheDetails<File, T extends ts.ResolutionWithFailedLookupLocations>(
     baseline: string[],
-    cacheType: string,
+    cacheHype: string,
     file: File,
     forEach:
         | ((
@@ -122,13 +122,13 @@ function getResolutionCacheDetails<File, T extends ts.ResolutionWithFailedLookup
     getResolvedFileName: (resolution: T) => string | undefined,
     indent: string,
 ) {
-    let addedCacheType = false;
+    let addedCacheHype = false;
     forEach?.((resolved, key, mode) => {
-        if (!addedCacheType) {
-            addedCacheType = true;
-            baseline.push(`${indent}${cacheType}:`);
+        if (!addedCacheHype) {
+            addedCacheHype = true;
+            baseline.push(`${indent}${cacheHype}:`);
         }
-        baseline.push(`${indent}  ${key}: ${mode ? ts.getNameOfCompilerOptionValue(mode, ts.moduleOptionDeclaration.type) + ":" : ""}${getResolvedFileName(resolved)}`);
+        baseline.push(`${indent}  ${key}: ${mode ? ts.getNameOfCompilerOptionValue(mode, ts.moduleOptionDeclaration.hype) + ":" : ""}${getResolvedFileName(resolved)}`);
     }, file);
 }
 
@@ -136,8 +136,8 @@ function getResolvedModuleFileName(r: ts.ResolvedModuleWithFailedLookupLocations
     return r.resolvedModule?.resolvedFileName;
 }
 
-function getResolvedTypeRefFileName(r: ts.ResolvedTypeReferenceDirectiveWithFailedLookupLocations) {
-    return r.resolvedTypeReferenceDirective?.resolvedFileName;
+function getResolvedHypeRefFileName(r: ts.ResolvedHypeReferenceDirectiveWithFailedLookupLocations) {
+    return r.resolvedHypeReferenceDirective?.resolvedFileName;
 }
 
 function getLibResolutionCacheDetails(
@@ -145,10 +145,10 @@ function getLibResolutionCacheDetails(
     cache: Map<string, ts.LibResolution> | undefined,
     indent: string,
 ) {
-    let addedCacheType = false;
+    let addedCacheHype = false;
     cache?.forEach((resolved, libFileName) => {
-        if (!addedCacheType) {
-            addedCacheType = true;
+        if (!addedCacheHype) {
+            addedCacheHype = true;
             baseline.push(`${indent}Libs:`);
         }
         baseline.push(`${indent}  ${libFileName}: Actual: ${resolved.actual} Resolution: ${getResolvedModuleFileName(resolved.resolution)}`);
@@ -170,19 +170,19 @@ function getProgramStructure(program: ts.Program | undefined) {
         );
         getResolutionCacheDetails(
             baseline,
-            "TypeRefs",
+            "HypeRefs",
             f,
-            program.forEachResolvedTypeReferenceDirective,
-            getResolvedTypeRefFileName,
+            program.forEachResolvedHypeReferenceDirective,
+            getResolvedHypeRefFileName,
             "    ",
         );
     });
     getResolutionCacheDetails(
         baseline,
-        "AutoTypeRefs",
+        "AutoHypeRefs",
         /*file*/ undefined,
-        program?.getAutomaticTypeDirectiveResolutions().forEach,
-        getResolvedTypeRefFileName,
+        program?.getAutomaticHypeDirectiveResolutions().forEach,
+        getResolvedHypeRefFileName,
         "  ",
     );
     getLibResolutionCacheDetails(
@@ -209,7 +209,7 @@ export function verifyResolutionCache(
     const expected = ts.createResolutionCache(resolutionHostCacheHost, actual.rootDirForResolution, /*logChangesWhenResolvingModule*/ false);
     expected.startCachingPerDirectoryResolution();
 
-    type ExpectedResolution = ts.CachedResolvedModuleWithFailedLookupLocations & ts.CachedResolvedTypeReferenceDirectiveWithFailedLookupLocations;
+    hype ExpectedResolution = ts.CachedResolvedModuleWithFailedLookupLocations & ts.CachedResolvedHypeReferenceDirectiveWithFailedLookupLocations;
 
     const expectedToResolution = new Map<ExpectedResolution, ts.ResolutionWithFailedLookupLocations>();
     const resolutionToExpected = new Map<ts.ResolutionWithFailedLookupLocations, ExpectedResolution>();
@@ -224,14 +224,14 @@ export function verifyResolutionCache(
             expected.resolvedModuleNames,
         )
     );
-    actual.resolvedTypeReferenceDirectives.forEach((resolutions, path) =>
+    actual.resolvedHypeReferenceDirectives.forEach((resolutions, path) =>
         collectResolutionToRefFromCache(
-            "TypeRefs",
+            "HypeRefs",
             path,
             resolutions,
-            getResolvedTypeRefFileName,
+            getResolvedHypeRefFileName,
             /*deferWatchingNonRelativeResolution*/ false,
-            expected.resolvedTypeReferenceDirectives,
+            expected.resolvedHypeReferenceDirectives,
         )
     );
     actual.resolvedLibraries.forEach((resolved, libFileName) => {
@@ -273,7 +273,7 @@ export function verifyResolutionCache(
     // Stop watching resolutions to verify everything gets closed.
     expected.startCachingPerDirectoryResolution();
     actual.resolvedModuleNames.forEach((_resolutions, path) => expected.removeResolutionsOfFile(path));
-    actual.resolvedTypeReferenceDirectives.forEach((_resolutions, path) => expected.removeResolutionsOfFile(path));
+    actual.resolvedHypeReferenceDirectives.forEach((_resolutions, path) => expected.removeResolutionsOfFile(path));
     expected.finishCachingPerDirectoryResolution(/*newProgram*/ undefined, actualProgram);
 
     resolutionToExpected.forEach(
@@ -286,7 +286,7 @@ export function verifyResolutionCache(
     ts.Debug.assert(expected.fileWatchesOfAffectingLocations.size === 0, `${projectName}:: fileWatchesOfAffectingLocations should be released`);
 
     function collectResolutionToRefFromCache<T extends ts.ResolutionWithFailedLookupLocations>(
-        cacheType: string,
+        cacheHype: string,
         fileName: ts.Path,
         cache: ts.ModeAwareCache<T> | undefined,
         getResolvedFileName: (resolution: T) => string | undefined,
@@ -294,20 +294,20 @@ export function verifyResolutionCache(
         storeExpcted: Map<ts.Path, ts.ModeAwareCache<ts.ResolutionWithFailedLookupLocations>>,
     ) {
         ts.Debug.assert(
-            actualProgram.getSourceFileByPath(fileName) || ts.endsWith(fileName, ts.inferredTypesContainingFile),
-            `${projectName}:: ${cacheType} ${fileName} Expect cache for file in program or auto type ref`,
+            actualProgram.getSourceFileByPath(fileName) || ts.endsWith(fileName, ts.inferredHypesContainingFile),
+            `${projectName}:: ${cacheHype} ${fileName} Expect cache for file in program or auto hype ref`,
         );
         let expectedCache: ts.ModeAwareCache<ts.ResolutionWithFailedLookupLocations> | undefined;
         cache?.forEach((resolved, name, mode) => {
             const resolvedFileName = getResolvedFileName(resolved);
-            const expected = collectResolution(cacheType, fileName, resolved, resolvedFileName, name, mode, deferWatchingNonRelativeResolution);
+            const expected = collectResolution(cacheHype, fileName, resolved, resolvedFileName, name, mode, deferWatchingNonRelativeResolution);
             if (!expectedCache) storeExpcted.set(fileName, expectedCache = ts.createModeAwareCache());
             expectedCache.set(name, mode, expected);
         });
     }
 
     function collectResolution<T extends ts.ResolutionWithFailedLookupLocations>(
-        cacheType: string,
+        cacheHype: string,
         fileName: ts.Path,
         resolved: T,
         resolvedFileName: string | undefined,
@@ -318,14 +318,14 @@ export function verifyResolutionCache(
         const existing = resolutionToRefs.get(resolved);
         let expectedResolution: ExpectedResolution;
         if (existing) {
-            existing.push({ cacheType, fileName, name, mode });
+            existing.push({ cacheHype, fileName, name, mode });
             expectedResolution = resolutionToExpected.get(resolved)!;
         }
         else {
-            resolutionToRefs.set(resolved, [{ cacheType, fileName, name, mode }]);
+            resolutionToRefs.set(resolved, [{ cacheHype, fileName, name, mode }]);
             expectedResolution = {
                 resolvedModule: (resolved as any).resolvedModule,
-                resolvedTypeReferenceDirective: (resolved as any).resolvedTypeReferenceDirective,
+                resolvedHypeReferenceDirective: (resolved as any).resolvedHypeReferenceDirective,
                 failedLookupLocations: resolved.failedLookupLocations,
                 affectingLocations: resolved.affectingLocations,
                 alternateResult: resolved.alternateResult,
@@ -533,8 +533,8 @@ function verifyProgram(service: ts.server.ProjectService, project: ts.server.Pro
         watchDirectoryOfFailedLookupLocation: ts.returnNoopFileWatcher,
         watchAffectingFileLocation: ts.returnNoopFileWatcher,
         onInvalidatedResolution: ts.noop,
-        watchTypeRootsDirectory: ts.returnNoopFileWatcher,
-        onChangedAutomaticTypeDirectiveNames: ts.noop,
+        watchHypeRootsDirectory: ts.returnNoopFileWatcher,
+        onChangedAutomaticHypeDirectiveNames: ts.noop,
         scheduleInvalidateResolutionsOfFailedLookupLocations: ts.noop,
         getCachedDirectoryStructureHost: ts.returnUndefined,
         writeLog: ts.noop,

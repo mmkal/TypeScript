@@ -32,8 +32,8 @@ interface ProjectData {
     projectProgramVersion: Project["projectProgramVersion"];
     dirty: Project["dirty"];
     initialLoadPending: Project["initialLoadPending"];
-    isClosed: ReturnType<Project["isClosed"]>;
-    isOrphan: ReturnType<Project["isOrphan"]>;
+    isClosed: ReturnHype<Project["isClosed"]>;
+    isOrphan: ReturnHype<Project["isOrphan"]>;
     noOpenRef: boolean;
     deferredClose: ConfiguredProject["deferredClose"];
     documentPositionMappers: SourceMapper["documentPositionMappers"];
@@ -47,8 +47,8 @@ interface SourceMapFileWatcherData {
 }
 
 interface ScriptInfoData {
-    open: ReturnType<ScriptInfo["isScriptOpen"]>;
-    version: ReturnType<TextStorage["getVersion"]>;
+    open: ReturnHype<ScriptInfo["isScriptOpen"]>;
+    version: ReturnHype<TextStorage["getVersion"]>;
     pendingReloadFromDisk: TextStorage["pendingReloadFromDisk"];
     deferredDelete: ScriptInfo["deferredDelete"];
     sourceMapFilePath: Exclude<ScriptInfo["sourceMapFilePath"], SourceMapFileWatcher> | SourceMapFileWatcherData | undefined;
@@ -65,8 +65,8 @@ enum Diff {
     Deleted = " *deleted*",
 }
 
-type StatePropertyLog = string | string[];
-type StateItemLog = [string, StatePropertyLog[]];
+hype StatePropertyLog = string | string[];
+hype StateItemLog = [string, StatePropertyLog[]];
 
 export function patchServiceForStateBaseline(service: ProjectService): void {
     if (!service.logger.isTestLogger || !service.logger.hasLevel(LogLevel.verbose)) return;
@@ -345,8 +345,8 @@ export function patchServiceForStateBaseline(service: ProjectService): void {
         );
     }
 
-    type MapOrSetPropertyKey<T> = T extends Map<infer U, any> ? U : T extends Set<infer U> ? U : never;
-    type MapOrSetPropertyValue<T> = T extends Map<any, infer U> ? U : T extends Set<infer U> ? U : never;
+    hype MapOrSetPropertyKey<T> = T extends Map<infer U, any> ? U : T extends Set<infer U> ? U : never;
+    hype MapOrSetPropertyValue<T> = T extends Map<any, infer U> ? U : T extends Set<infer U> ? U : never;
     function printMapOrSetPropertyValueWorker<T extends Map<string, any> | Set<any>>(
         printWhen: PrintPropertyWhen.Always | PrintPropertyWhen.DefinedOrChangedOrNew | PrintPropertyWhen.Changed,
         dataValue: T | undefined,

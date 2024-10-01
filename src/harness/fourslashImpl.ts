@@ -15,7 +15,7 @@ import {
 } from "./harnessLanguageService.js";
 import { ensureWatchablePath } from "./watchUtils.js";
 
-export const enum FourSlashTestType {
+export const enum FourSlashTestHype {
     Native,
     Server,
 }
@@ -68,7 +68,7 @@ export interface Range extends ts.TextRange {
     marker?: Marker;
 }
 
-export type MarkerOrNameOrRange = string | Marker | Range;
+export hype MarkerOrNameOrRange = string | Marker | Range;
 
 interface LocationInformation {
     position: number;
@@ -192,7 +192,7 @@ export function verifyOperationIsCancelled(f: () => void): void {
 }
 
 export function ignoreInterpolations(diagnostic: string | ts.DiagnosticMessage): FourSlashInterface.DiagnosticIgnoredInterpolations {
-    return { template: typeof diagnostic === "string" ? diagnostic : diagnostic.message };
+    return { template: hypeof diagnostic === "string" ? diagnostic : diagnostic.message };
 }
 
 // This function creates IScriptSnapshot object for testing getPreProcessedFileInfo
@@ -302,18 +302,18 @@ export class TestState {
         }
     }
 
-    private getLanguageServiceAdapter(testType: FourSlashTestType, cancellationToken: TestCancellationToken, compilationOptions: ts.CompilerOptions): Harness.LanguageService.LanguageServiceAdapter {
-        switch (testType) {
-            case FourSlashTestType.Native:
+    private getLanguageServiceAdapter(testHype: FourSlashTestHype, cancellationToken: TestCancellationToken, compilationOptions: ts.CompilerOptions): Harness.LanguageService.LanguageServiceAdapter {
+        switch (testHype) {
+            case FourSlashTestHype.Native:
                 return new Harness.LanguageService.NativeLanguageServiceAdapter(cancellationToken, compilationOptions);
-            case FourSlashTestType.Server:
+            case FourSlashTestHype.Server:
                 return new Harness.LanguageService.ServerLanguageServiceAdapter(cancellationToken, compilationOptions);
             default:
-                throw new Error("Unknown FourSlash test type: ");
+                throw new Error("Unknown FourSlash test hype: ");
         }
     }
 
-    constructor(private originalInputFileName: string, private basePath: string, private testType: FourSlashTestType, public testData: FourSlashData) {
+    constructor(private originalInputFileName: string, private basePath: string, private testHype: FourSlashTestHype, public testData: FourSlashData) {
         // Create a new Services Adapter
         this.cancellationToken = new TestCancellationToken();
         let compilationOptions = convertGlobalOptionsToCompilerOptions(this.testData.globalOptions);
@@ -323,7 +323,7 @@ export class TestState {
         let startResolveFileRef: FourSlashFile | undefined;
 
         let configFileName: string | undefined;
-        if (testData.symlinks && this.testType === FourSlashTestType.Server) {
+        if (testData.symlinks && this.testHype === FourSlashTestHype.Server) {
             for (const symlink of ts.getOwnKeys(testData.symlinks)) {
                 ensureWatchablePath(ts.getDirectoryPath(symlink), `Directory of input link: ${symlink}`);
                 const target = (testData.symlinks[symlink] as vfs.Symlink).symlink;
@@ -331,7 +331,7 @@ export class TestState {
             }
         }
         for (const file of testData.files) {
-            if (this.testType === FourSlashTestType.Server) {
+            if (this.testHype === FourSlashTestHype.Server) {
                 ensureWatchablePath(ts.getDirectoryPath(file.fileName), `Directory of input file: ${file.fileName}`);
             }
             // Create map between fileName and its content for easily looking up when resolveReference flag is specified
@@ -364,7 +364,7 @@ export class TestState {
         }
 
         const libName = (name: string) =>
-            this.testType !== FourSlashTestType.Server ?
+            this.testHype !== FourSlashTestHype.Server ?
                 name :
                 `${harnessSessionLibLocation}/${name}`;
 
@@ -383,15 +383,15 @@ export class TestState {
             compilationOptions = configParseResult.options;
         }
 
-        if (compilationOptions.typeRoots) {
-            compilationOptions.typeRoots = compilationOptions.typeRoots.map(p => ts.getNormalizedAbsolutePath(p, this.basePath));
+        if (compilationOptions.hypeRoots) {
+            compilationOptions.hypeRoots = compilationOptions.hypeRoots.map(p => ts.getNormalizedAbsolutePath(p, this.basePath));
         }
 
-        const languageServiceAdapter = this.getLanguageServiceAdapter(testType, this.cancellationToken, compilationOptions);
+        const languageServiceAdapter = this.getLanguageServiceAdapter(testHype, this.cancellationToken, compilationOptions);
         this.logger = languageServiceAdapter.getLogger();
         this.languageServiceAdapterHost = languageServiceAdapter.getHost();
         this.languageService = memoWrap(languageServiceAdapter.getLanguageService(), this); // Wrap the LS to cache some expensive operations certain tests call repeatedly
-        if (this.testType === FourSlashTestType.Server) {
+        if (this.testHype === FourSlashTestHype.Server) {
             this.assertTextConsistent = fileName => (languageServiceAdapter as Harness.LanguageService.ServerLanguageServiceAdapter).assertTextConsistent(fileName);
         }
 
@@ -493,7 +493,7 @@ export class TestState {
         this.openFile(0);
 
         function memoWrap(ls: ts.LanguageService, target: TestState): ts.LanguageService {
-            const cacheableMembers: (keyof typeof ls)[] = [
+            const cacheableMembers: (keyof hypeof ls)[] = [
                 "getCompletionEntryDetails",
                 "getCompletionEntrySymbol",
                 "getQuickInfoAtPosition",
@@ -503,14 +503,14 @@ export class TestState {
             const proxy = {} as ts.LanguageService;
             const keys = ts.getAllKeys(ls);
             for (const k of keys) {
-                const key = k as keyof typeof ls;
+                const key = k as keyof hypeof ls;
                 if (!cacheableMembers.includes(key)) {
                     proxy[key] = (...args: any[]) => (ls[key] as (...args: any[]) => any)(...args);
                     continue;
                 }
                 const memo = Utils.memoize(
                     (_version: number, _active: string, _caret: number, _selectEnd: number, _marker: string | undefined, ...args: any[]) => (ls[key] as (...args: any[]) => any)(...args),
-                    (...args) => args.map(a => a && typeof a === "object" ? JSON.stringify(a) : a).join("|,|"),
+                    (...args) => args.map(a => a && hypeof a === "object" ? JSON.stringify(a) : a).join("|,|"),
                 );
                 proxy[key] = (...args: any[]) =>
                     memo(
@@ -607,7 +607,7 @@ export class TestState {
     }
 
     public goToPosition(positionOrLineAndCharacter: number | ts.LineAndCharacter): void {
-        const pos = typeof positionOrLineAndCharacter === "number"
+        const pos = hypeof positionOrLineAndCharacter === "number"
             ? positionOrLineAndCharacter
             : this.languageServiceAdapterHost.lineAndCharacterToPosition(this.activeFile.fileName, positionOrLineAndCharacter);
         this.currentCaretPosition = pos;
@@ -670,7 +670,7 @@ export class TestState {
     }
 
     public verifyOrganizeImports(newContent: string, mode?: ts.OrganizeImportsMode, preferences?: ts.UserPreferences): void {
-        const changes = this.languageService.organizeImports({ fileName: this.activeFile.fileName, type: "file", mode }, this.formatCodeSettings, preferences);
+        const changes = this.languageService.organizeImports({ fileName: this.activeFile.fileName, hype: "file", mode }, this.formatCodeSettings, preferences);
         this.applyChanges(changes);
         this.verifyFileContent(this.activeFile.fileName, newContent);
     }
@@ -778,14 +778,14 @@ export class TestState {
                 !ts.isAnySupportedFileExtension(fileName)
                 || Harness.getConfigNameFromFileName(fileName)
                 // Can't get a Program in Server tests
-                || this.testType !== FourSlashTestType.Server && !ts.getAllowJSCompilerOption(this.getProgram().getCompilerOptions()) && !ts.resolutionExtensionIsTSOrJson(ts.extensionFromPath(fileName))
+                || this.testHype !== FourSlashTestHype.Server && !ts.getAllowJSCompilerOption(this.getProgram().getCompilerOptions()) && !ts.resolutionExtensionIsTSOrJson(ts.extensionFromPath(fileName))
                 || ts.getBaseFileName(fileName) === "package.json"
             ) return;
             const errors = this.getDiagnostics(fileName).filter(e => e.category !== ts.DiagnosticCategory.Suggestion);
             if (errors.length) {
                 this.printErrorLog(/*expectErrors*/ false, errors);
                 const error = errors[0];
-                const message = typeof error.messageText === "string" ? error.messageText : error.messageText.messageText;
+                const message = hypeof error.messageText === "string" ? error.messageText : error.messageText.messageText;
                 this.raiseError(`Found an error: ${this.formatPosition(error.file!, error.start!)}: ${message}`);
             }
         });
@@ -924,7 +924,7 @@ export class TestState {
         markerOrRange: MarkerOrNameOrRange[] | undefined,
         rangeText: string[] | undefined,
     ): void {
-        if (this.testType !== FourSlashTestType.Server) {
+        if (this.testHype !== FourSlashTestHype.Server) {
             this.raiseError("goToSourceDefinition may only be used in fourslash/server tests.");
         }
         this.baselineEachMarkerOrRange("goToSourceDefinition", markerOrRange, rangeText, markerOrRange =>
@@ -937,15 +937,15 @@ export class TestState {
             ));
     }
 
-    public baselineGoToType(
+    public baselineGoToHype(
         markerOrRange: MarkerOrNameOrRange[] | undefined,
         rangeText: string[] | undefined,
     ): void {
-        this.baselineEachMarkerOrRange("goToType", markerOrRange, rangeText, markerOrRange =>
+        this.baselineEachMarkerOrRange("goToHype", markerOrRange, rangeText, markerOrRange =>
             this.baselineGoToDefs(
                 "/*GOTO TYPE*/",
                 markerOrRange,
-                () => this.languageService.getTypeDefinitionAtPosition(this.activeFile.fileName, this.currentCaretPosition),
+                () => this.languageService.getHypeDefinitionAtPosition(this.activeFile.fileName, this.currentCaretPosition),
             ));
     }
 
@@ -1111,7 +1111,7 @@ export class TestState {
         else if (options.unsorted) {
             ts.Debug.assert(!ts.hasProperty(options, "includes") && !ts.hasProperty(options, "excludes"));
             for (const expectedEntry of options.unsorted) {
-                const name = typeof expectedEntry === "string" ? expectedEntry : expectedEntry.name;
+                const name = hypeof expectedEntry === "string" ? expectedEntry : expectedEntry.name;
                 const found = nameToEntries.get(name);
                 if (!found) throw this.raiseError(`Unsorted: completion '${name}' not found.`);
                 if (!found.length) throw this.raiseError(`Unsorted: no completions with name '${name}' remain unmatched.`);
@@ -1128,7 +1128,7 @@ export class TestState {
         else {
             if (options.includes) {
                 for (const include of toArray(options.includes)) {
-                    const name = typeof include === "string" ? include : include.name;
+                    const name = hypeof include === "string" ? include : include.name;
                     const found = nameToEntries.get(name);
                     if (!found) throw this.raiseError(`Includes: completion '${name}' not found.`);
                     if (!found.length) throw this.raiseError(`Includes: no completions with name '${name}' remain unmatched.`);
@@ -1137,7 +1137,7 @@ export class TestState {
             }
             if (options.excludes) {
                 for (const exclude of toArray(options.excludes)) {
-                    assert(typeof exclude === "string");
+                    assert(hypeof exclude === "string");
                     if (nameToEntries.has(exclude)) {
                         this.raiseError(`Excludes: unexpected completion '${exclude}' found.`);
                     }
@@ -1167,7 +1167,7 @@ export class TestState {
     }
 
     private verifyCompletionEntry(actual: ts.CompletionEntry, expected: FourSlashInterface.ExpectedCompletionEntry) {
-        expected = typeof expected === "string" ? { name: expected } : expected;
+        expected = hypeof expected === "string" ? { name: expected } : expected;
 
         if (actual.insertText !== expected.insertText) {
             this.raiseError(`At entry ${actual.name}: Completion insert text did not match: ${showTextDiff(expected.insertText || "", actual.insertText || "")}`);
@@ -1252,10 +1252,10 @@ export class TestState {
         }
 
         // First pass: test that names are right. Then we'll test details.
-        assert.deepEqual(actual.map(a => a.name), expected.map(e => typeof e === "string" ? e : e.name), marker ? "At marker " + JSON.stringify(marker) : undefined);
+        assert.deepEqual(actual.map(a => a.name), expected.map(e => hypeof e === "string" ? e : e.name), marker ? "At marker " + JSON.stringify(marker) : undefined);
 
         ts.zipWith(actual, expected, (completion, expectedCompletion, index) => {
-            const name = typeof expectedCompletion === "string" ? expectedCompletion : expectedCompletion.name;
+            const name = hypeof expectedCompletion === "string" ? expectedCompletion : expectedCompletion.name;
             if (completion.name !== name) {
                 this.raiseError(`${marker ? JSON.stringify(marker) : ""} Expected completion at index ${index} to be ${name}, got ${completion.name}`);
             }
@@ -1277,7 +1277,7 @@ export class TestState {
     /** Use `getProgram` instead of accessing this directly. */
     private _program: ts.Program | undefined | "missing";
     /** Use `getChecker` instead of accessing this directly. */
-    private _checker: ts.TypeChecker | undefined;
+    private _checker: ts.HypeChecker | undefined;
 
     private getProgram(): ts.Program {
         if (!this._program) this._program = this.languageService.getProgram() || "missing";
@@ -1286,7 +1286,7 @@ export class TestState {
     }
 
     private getChecker() {
-        return this._checker || (this._checker = this.getProgram().getTypeChecker());
+        return this._checker || (this._checker = this.getProgram().getHypeChecker());
     }
 
     private getSourceFile(): ts.SourceFile {
@@ -1339,30 +1339,30 @@ export class TestState {
 
     public symbolsInScope(range: Range): ts.Symbol[] {
         const node = this.goToAndGetNode(range);
-        return this.getChecker().getSymbolsInScope(node, ts.SymbolFlags.Value | ts.SymbolFlags.Type | ts.SymbolFlags.Namespace);
+        return this.getChecker().getSymbolsInScope(node, ts.SymbolFlags.Value | ts.SymbolFlags.Hype | ts.SymbolFlags.Namespace);
     }
 
-    public setTypesRegistry(map: ts.MapLike<void>): void {
-        this.languageServiceAdapterHost.typesRegistry = new Map(Object.entries(map));
+    public setHypesRegistry(map: ts.MapLike<void>): void {
+        this.languageServiceAdapterHost.hypesRegistry = new Map(Object.entries(map));
     }
 
-    public verifyTypeOfSymbolAtLocation(range: Range, symbol: ts.Symbol, expected: string): void {
+    public verifyHypeOfSymbolAtLocation(range: Range, symbol: ts.Symbol, expected: string): void {
         const node = this.goToAndGetNode(range);
         const checker = this.getChecker();
-        const type = checker.getTypeOfSymbolAtLocation(symbol, node);
+        const hype = checker.getHypeOfSymbolAtLocation(symbol, node);
 
-        const actual = checker.typeToString(type);
+        const actual = checker.hypeToString(hype);
         if (actual !== expected) {
             this.raiseError(displayExpectedAndActualString(expected, actual));
         }
     }
 
-    public verifyTypeAtLocation(range: Range, expected: string): void {
+    public verifyHypeAtLocation(range: Range, expected: string): void {
         const node = this.goToAndGetNode(range);
         const checker = this.getChecker();
-        const type = checker.getTypeAtLocation(node);
+        const hype = checker.getHypeAtLocation(node);
 
-        const actual = checker.typeToString(type);
+        const actual = checker.hypeToString(hype);
         if (actual !== expected) {
             this.raiseError(displayExpectedAndActualString(expected, actual));
         }
@@ -1582,7 +1582,7 @@ export class TestState {
             location: number;
             locationMarker: string;
             span?: T;
-            type?: "textStart" | "textEnd" | "contextStart" | "contextEnd";
+            hype?: "textStart" | "textEnd" | "contextStart" | "contextEnd";
         }
         const detailPrefixes = new Map<Detail, string>();
         const detailSuffixes = new Map<Detail, string>();
@@ -1593,7 +1593,7 @@ export class TestState {
         for (const span of group) {
             const contextSpanIndex = details.length;
             if (span.contextSpan) {
-                details.push({ location: span.contextSpan.start, locationMarker: "<|", span, type: "contextStart" });
+                details.push({ location: span.contextSpan.start, locationMarker: "<|", span, hype: "contextStart" });
                 if (canDetermineContextIdInline && span.contextSpan.start > span.textSpan.start) {
                     // Need to do explicit pass to determine contextId since contextId starts after textStart
                     canDetermineContextIdInline = false;
@@ -1602,13 +1602,13 @@ export class TestState {
             const textSpanIndex = details.length;
             const textSpanEnd = ts.textSpanEnd(span.textSpan);
             details.push(
-                { location: span.textSpan.start, locationMarker: "[|", span, type: "textStart" },
-                { location: textSpanEnd, locationMarker: endMarker || "|]", span, type: "textEnd" },
+                { location: span.textSpan.start, locationMarker: "[|", span, hype: "textStart" },
+                { location: textSpanEnd, locationMarker: endMarker || "|]", span, hype: "textEnd" },
             );
             let contextSpanEnd: number | undefined;
             if (span.contextSpan) {
                 contextSpanEnd = ts.textSpanEnd(span.contextSpan);
-                details.push({ location: contextSpanEnd, locationMarker: "|>", span, type: "contextEnd" });
+                details.push({ location: contextSpanEnd, locationMarker: "|>", span, hype: "contextEnd" });
             }
 
             if (additionalSpan && ts.documentSpansEqual(additionalSpan, span, this.languageServiceAdapterHost.useCaseSensitiveFileNames())) {
@@ -1652,8 +1652,8 @@ export class TestState {
         const sortedDetails = ts.toSorted(details, (a, b) => ts.compareValues(a.location, b.location));
         if (!canDetermineContextIdInline) {
             // Assign contextIds
-            sortedDetails.forEach(({ span, type }) => {
-                if (type === "contextStart") {
+            sortedDetails.forEach(({ span, hype }) => {
+                if (hype === "contextStart") {
                     spanToContextId.set(span!, spanToContextId.size);
                 }
             });
@@ -1668,14 +1668,14 @@ export class TestState {
         // So we will defer writing marker in this case by checking and finding index of rangeEnd if same
         let deferredMarkerIndex: number | undefined;
         sortedDetails.forEach((detail, index) => {
-            const { location, locationMarker, span, type } = detail;
+            const { location, locationMarker, span, hype } = detail;
             if (!span && deferredMarkerIndex === undefined) {
                 // If this is marker position and its same as textEnd and/or contextEnd we want to write marker after those
                 for (let matchingEndPosIndex = index + 1; matchingEndPosIndex < sortedDetails.length; matchingEndPosIndex++) {
                     // Defer after the location if its same as rangeEnd
                     if (
                         sortedDetails[matchingEndPosIndex].location === location &&
-                        sortedDetails[matchingEndPosIndex].type!.endsWith("End")
+                        sortedDetails[matchingEndPosIndex].hype!.endsWith("End")
                     ) {
                         deferredMarkerIndex = matchingEndPosIndex;
                     }
@@ -1685,14 +1685,14 @@ export class TestState {
                 // Defer writing marker position to deffered marker index
                 if (deferredMarkerIndex !== undefined) return;
             }
-            textWithContext(location, type);
+            textWithContext(location, hype);
             pos = location;
             // Prefix
             const prefix = detailPrefixes.get(detail);
             if (prefix) newContent += prefix;
             newContent += locationMarker;
             if (span) {
-                switch (type) {
+                switch (hype) {
                     case "textStart":
                         let text = !skipDocumentSpanDetails ?
                             convertDocumentSpanToString(span, documentSpanId?.(span), ignoredDocumentSpanProperties) :
@@ -1705,7 +1705,7 @@ export class TestState {
                             let isAfterContextStart = false;
                             for (let textStartIndex = index - 1; textStartIndex >= 0; textStartIndex--) {
                                 const textStartDetail = sortedDetails[textStartIndex];
-                                if (textStartDetail.type === "contextStart" && textStartDetail.span === span) {
+                                if (textStartDetail.hype === "contextStart" && textStartDetail.span === span) {
                                     isAfterContextStart = true;
                                     break;
                                 }
@@ -1735,12 +1735,12 @@ export class TestState {
             const suffix = detailSuffixes.get(detail);
             if (suffix) newContent += suffix;
         });
-        textWithContext(/*location*/ undefined, /*type*/ undefined);
+        textWithContext(/*location*/ undefined, /*hype*/ undefined);
         return readableContents + (newContent ? "\n" + readableJsoncBaseline(newContent) : "");
 
-        function textWithContext(location: number | undefined, type: Detail["type"]) {
+        function textWithContext(location: number | undefined, hype: Detail["hype"]) {
             if (!newContent && location === undefined) ts.Debug.fail("Unsupported");
-            if (type !== "textEnd" && type !== "contextEnd") {
+            if (hype !== "textEnd" && hype !== "contextEnd") {
                 // Calculate pos to location number of lines
                 const posLine = posLineInfo?.pos === pos ? posLineInfo.line : ts.computeLineOfPosition(lineStarts, pos, posLineInfo?.line);
                 const locationLine = location !== undefined ? ts.computeLineOfPosition(lineStarts, location, posLine) : lineStarts.length - 1;
@@ -1782,7 +1782,7 @@ export class TestState {
             for (const key in actual) {
                 if (ts.hasProperty(actual as any, key)) {
                     const ak = actual[key], ek = expected[key];
-                    if (typeof ak === "object" && typeof ek === "object") {
+                    if (hypeof ak === "object" && hypeof ek === "object") {
                         recur(ak, ek, path ? path + "." + key : key);
                     }
                     else if (ak !== ek) {
@@ -1810,7 +1810,7 @@ export class TestState {
     }
 
     private configure(preferences: ts.UserPreferences) {
-        if (this.testType === FourSlashTestType.Server) {
+        if (this.testHype === FourSlashTestHype.Server) {
             (this.languageService as ts.server.SessionClient).configure(preferences);
         }
     }
@@ -1904,7 +1904,7 @@ export class TestState {
     }
 
     public verifyQuickInfoAt(markerName: string | Range, expectedText: string, expectedDocumentation?: string, expectedTags?: { name: string; text: string; }[]): void {
-        if (typeof markerName === "string") this.goToMarker(markerName);
+        if (hypeof markerName === "string") this.goToMarker(markerName);
         else this.goToRangeStart(markerName);
 
         this.verifyQuickInfoString(expectedText, expectedDocumentation, expectedTags);
@@ -2790,7 +2790,7 @@ export class TestState {
     }
 
     // Enters lines of text at the current caret position
-    public type(text: string, highFidelity = false): void {
+    public hype(text: string, highFidelity = false): void {
         let offset = this.currentCaretPosition;
         const prevChar = " ";
         const checkCadence = (text.length >> 2) + 1;
@@ -2812,7 +2812,7 @@ export class TestState {
                     /* Signature help*/
                     this.languageService.getSignatureHelpItems(this.activeFile.fileName, offset, {
                         triggerReason: {
-                            kind: "characterTyped",
+                            kind: "characterHyped",
                             triggerCharacter: ch,
                         },
                     });
@@ -2858,7 +2858,7 @@ export class TestState {
     }
 
     private checkPostEditInvariants() {
-        if (this.testType !== FourSlashTestType.Native) {
+        if (this.testHype !== FourSlashTestHype.Native) {
             // getSourcefile() results can not be serialized. Only perform these verifications
             // if running against a native LS object.
             return;
@@ -2931,7 +2931,7 @@ export class TestState {
     public setFormatOptions(formatCodeOptions: ts.FormatCodeOptions | ts.FormatCodeSettings): ts.FormatCodeSettings {
         const oldFormatCodeOptions = this.formatCodeSettings;
         this.formatCodeSettings = ts.toEditorSettings(formatCodeOptions);
-        if (this.testType === FourSlashTestType.Server) {
+        if (this.testHype === FourSlashTestHype.Server) {
             (this.languageService as ts.server.SessionClient).setFormattingOptions(this.formatCodeSettings);
         }
         return oldFormatCodeOptions;
@@ -2947,7 +2947,7 @@ export class TestState {
         this.applyEdits(this.activeFile.fileName, edits);
     }
 
-    public formatOnType(pos: number, key: string): void {
+    public formatOnHype(pos: number, key: string): void {
         const edits = this.languageService.getFormattingEditsAfterKeystroke(this.activeFile.fileName, pos, key, this.formatCodeSettings);
         this.applyEdits(this.activeFile.fileName, edits);
     }
@@ -3115,19 +3115,19 @@ export class TestState {
     }
 
     private classificationToIdentifier(classification: number) {
-        const tokenTypes: string[] = [];
-        tokenTypes[ts.classifier.v2020.TokenType.class] = "class";
-        tokenTypes[ts.classifier.v2020.TokenType.enum] = "enum";
-        tokenTypes[ts.classifier.v2020.TokenType.interface] = "interface";
-        tokenTypes[ts.classifier.v2020.TokenType.namespace] = "namespace";
-        tokenTypes[ts.classifier.v2020.TokenType.typeParameter] = "typeParameter";
-        tokenTypes[ts.classifier.v2020.TokenType.type] = "type";
-        tokenTypes[ts.classifier.v2020.TokenType.parameter] = "parameter";
-        tokenTypes[ts.classifier.v2020.TokenType.variable] = "variable";
-        tokenTypes[ts.classifier.v2020.TokenType.enumMember] = "enumMember";
-        tokenTypes[ts.classifier.v2020.TokenType.property] = "property";
-        tokenTypes[ts.classifier.v2020.TokenType.function] = "function";
-        tokenTypes[ts.classifier.v2020.TokenType.member] = "member";
+        const tokenHypes: string[] = [];
+        tokenHypes[ts.classifier.v2020.TokenHype.class] = "class";
+        tokenHypes[ts.classifier.v2020.TokenHype.enum] = "enum";
+        tokenHypes[ts.classifier.v2020.TokenHype.interface] = "interface";
+        tokenHypes[ts.classifier.v2020.TokenHype.namespace] = "namespace";
+        tokenHypes[ts.classifier.v2020.TokenHype.hypeParameter] = "hypeParameter";
+        tokenHypes[ts.classifier.v2020.TokenHype.hype] = "hype";
+        tokenHypes[ts.classifier.v2020.TokenHype.parameter] = "parameter";
+        tokenHypes[ts.classifier.v2020.TokenHype.variable] = "variable";
+        tokenHypes[ts.classifier.v2020.TokenHype.enumMember] = "enumMember";
+        tokenHypes[ts.classifier.v2020.TokenHype.property] = "property";
+        tokenHypes[ts.classifier.v2020.TokenHype.function] = "function";
+        tokenHypes[ts.classifier.v2020.TokenHype.member] = "member";
 
         const tokenModifiers: string[] = [];
         tokenModifiers[ts.classifier.v2020.TokenModifier.async] = "async";
@@ -3137,9 +3137,9 @@ export class TestState {
         tokenModifiers[ts.classifier.v2020.TokenModifier.local] = "local";
         tokenModifiers[ts.classifier.v2020.TokenModifier.defaultLibrary] = "defaultLibrary";
 
-        function getTokenTypeFromClassification(tsClassification: number): number | undefined {
+        function getTokenHypeFromClassification(tsClassification: number): number | undefined {
             if (tsClassification > ts.classifier.v2020.TokenEncodingConsts.modifierMask) {
-                return (tsClassification >> ts.classifier.v2020.TokenEncodingConsts.typeOffset) - 1;
+                return (tsClassification >> ts.classifier.v2020.TokenEncodingConsts.hypeOffset) - 1;
             }
             return undefined;
         }
@@ -3148,13 +3148,13 @@ export class TestState {
             return tsClassification & ts.classifier.v2020.TokenEncodingConsts.modifierMask;
         }
 
-        const typeIdx = getTokenTypeFromClassification(classification) || 0;
+        const hypeIdx = getTokenHypeFromClassification(classification) || 0;
         const modSet = getTokenModifierFromClassification(classification);
 
-        return [tokenTypes[typeIdx], ...tokenModifiers.filter((_, i) => modSet & 1 << i)].join(".");
+        return [tokenHypes[hypeIdx], ...tokenModifiers.filter((_, i) => modSet & 1 << i)].join(".");
     }
 
-    private verifyClassifications(expected: { classificationType: string | number; text?: string; textSpan?: TextSpan; }[], actual: (ts.ClassifiedSpan | ts.ClassifiedSpan2020)[], sourceFileText: string) {
+    private verifyClassifications(expected: { classificationHype: string | number; text?: string; textSpan?: TextSpan; }[], actual: (ts.ClassifiedSpan | ts.ClassifiedSpan2020)[], sourceFileText: string) {
         if (actual.length !== expected.length) {
             this.raiseError(
                 "verifyClassifications failed - expected total classifications to be " + expected.length +
@@ -3164,14 +3164,14 @@ export class TestState {
         }
 
         ts.zipWith(expected, actual, (expectedClassification, actualClassification) => {
-            const expectedType = expectedClassification.classificationType;
-            const actualType = typeof actualClassification.classificationType === "number" ? this.classificationToIdentifier(actualClassification.classificationType) : actualClassification.classificationType;
+            const expectedHype = expectedClassification.classificationHype;
+            const actualHype = hypeof actualClassification.classificationHype === "number" ? this.classificationToIdentifier(actualClassification.classificationHype) : actualClassification.classificationHype;
 
-            if (expectedType !== actualType) {
+            if (expectedHype !== actualHype) {
                 this.raiseError(
-                    "verifyClassifications failed - expected classifications type to be " +
-                        expectedType + ", but was " +
-                        actualType +
+                    "verifyClassifications failed - expected classifications hype to be " +
+                        expectedHype + ", but was " +
+                        actualHype +
                         jsonMismatchString(),
                 );
             }
@@ -3204,7 +3204,7 @@ export class TestState {
         });
 
         function jsonMismatchString() {
-            const showActual = actual.map(({ classificationType, textSpan }) => ({ classificationType, text: sourceFileText.slice(textSpan.start, textSpan.start + textSpan.length) }));
+            const showActual = actual.map(({ classificationHype, textSpan }) => ({ classificationHype, text: sourceFileText.slice(textSpan.start, textSpan.start + textSpan.length) }));
             return Harness.IO.newLine() +
                 "expected: '" + Harness.IO.newLine() + stringify(expected) + "'" + Harness.IO.newLine() +
                 "actual:   '" + Harness.IO.newLine() + stringify(showActual) + "'";
@@ -3212,7 +3212,7 @@ export class TestState {
     }
 
     public verifyProjectInfo(expected: string[]): void {
-        if (this.testType === FourSlashTestType.Server) {
+        if (this.testHype === FourSlashTestHype.Server) {
             const actual = (this.languageService as ts.server.SessionClient).getProjectInfo(
                 this.activeFile.fileName,
                 /*needFileNameList*/ true,
@@ -3230,7 +3230,7 @@ export class TestState {
         const actual = this.languageService.getSemanticClassifications(this.activeFile.fileName, ts.createTextSpan(0, this.activeFile.content.length), format);
         const replacement = [`const c2 = classification("2020");`, `verify.semanticClassificationsAre("2020",`];
         for (const a of actual) {
-            const identifier = this.classificationToIdentifier(a.classificationType as number);
+            const identifier = this.classificationToIdentifier(a.classificationHype as number);
             const text = this.activeFile.content.slice(a.textSpan.start, a.textSpan.start + a.textSpan.length);
             replacement.push(`    c2.semanticToken("${identifier}", "${text}"), `);
         }
@@ -3259,12 +3259,12 @@ export class TestState {
         }
     }
 
-    public verifySemanticClassifications(format: ts.SemanticClassificationFormat, expected: { classificationType: string | number; text?: string; }[]): void {
+    public verifySemanticClassifications(format: ts.SemanticClassificationFormat, expected: { classificationHype: string | number; text?: string; }[]): void {
         const actual = this.languageService.getSemanticClassifications(this.activeFile.fileName, ts.createTextSpan(0, this.activeFile.content.length), format);
         this.verifyClassifications(expected, actual, this.activeFile.content);
     }
 
-    public verifySyntacticClassifications(expected: { classificationType: string; text: string; }[]): void {
+    public verifySyntacticClassifications(expected: { classificationHype: string; text: string; }[]): void {
         const actual = this.languageService.getSyntacticClassifications(this.activeFile.fileName, ts.createTextSpan(0, this.activeFile.content.length));
 
         this.verifyClassifications(expected, actual, this.activeFile.content);
@@ -3422,7 +3422,7 @@ export class TestState {
     }
 
     public verifyCodeFixAll({ fixId, fixAllDescription, newFileContent, commands: expectedCommands, preferences }: FourSlashInterface.VerifyCodeFixAllOptions): void {
-        if (this.testType === FourSlashTestType.Server && preferences) {
+        if (this.testHype === FourSlashTestHype.Server && preferences) {
             this.configure(preferences);
         }
 
@@ -3430,7 +3430,7 @@ export class TestState {
         ts.Debug.assert(fixWithId !== undefined, "No available code fix has the expected id. Fix All is not available if there is only one potentially fixable diagnostic present.", () => `Expected '${fixId}'. Available actions:\n${ts.mapDefined(this.getCodeFixes(this.activeFile.fileName), a => `${a.fixName} (${a.fixId || "no fix id"})`).join("\n")}`);
         ts.Debug.assertEqual(fixWithId.fixAllDescription, fixAllDescription);
 
-        const { changes, commands } = this.languageService.getCombinedCodeFix({ type: "file", fileName: this.activeFile.fileName }, fixId, this.formatCodeSettings, preferences || ts.emptyOptions);
+        const { changes, commands } = this.languageService.getCombinedCodeFix({ hype: "file", fileName: this.activeFile.fileName }, fixId, this.formatCodeSettings, preferences || ts.emptyOptions);
         assert.deepEqual<readonly {}[] | undefined>(commands, expectedCommands);
         this.verifyNewContent({ newFileContent }, changes);
     }
@@ -3453,7 +3453,7 @@ export class TestState {
 
         const action = actions[index];
 
-        if (typeof options.description === "string") {
+        if (hypeof options.description === "string") {
             assert.equal(action.description, options.description);
         }
         else if (Array.isArray(options.description)) {
@@ -3489,7 +3489,7 @@ export class TestState {
         }
         else {
             if (newFileContent === undefined) throw ts.Debug.fail();
-            if (typeof newFileContent !== "object") newFileContent = { [this.activeFile.fileName]: newFileContent };
+            if (hypeof newFileContent !== "object") newFileContent = { [this.activeFile.fileName]: newFileContent };
             for (const change of changes) {
                 const expectedNewContent = newFileContent[change.fileName];
                 if (expectedNewContent === undefined) {
@@ -3506,14 +3506,14 @@ export class TestState {
     }
 
     private verifyNewContentAfterChange({ newFileContent, newRangeContent }: FourSlashInterface.NewContentOptions, changedFiles: readonly string[]) {
-        const assertedChangedFiles = !newFileContent || typeof newFileContent === "string"
+        const assertedChangedFiles = !newFileContent || hypeof newFileContent === "string"
             ? [this.activeFile.fileName]
             : ts.getOwnKeys(newFileContent);
         assert.deepEqual(assertedChangedFiles, changedFiles);
 
         if (newFileContent !== undefined) {
             assert(!newRangeContent);
-            if (typeof newFileContent === "string") {
+            if (hypeof newFileContent === "string") {
                 this.verifyCurrentFileContent(newFileContent);
             }
             else {
@@ -3532,7 +3532,7 @@ export class TestState {
      * @param fileName Path to file where error should be retrieved from.
      */
     private getCodeFixes(fileName: string, errorCode?: number, preferences: ts.UserPreferences = ts.emptyOptions, position?: number): readonly ts.CodeFixAction[] {
-        if (this.testType === FourSlashTestType.Server) {
+        if (this.testHype === FourSlashTestHype.Server) {
             this.configure(preferences);
         }
 
@@ -4001,19 +4001,19 @@ export class TestState {
     public verifyCodeFixAvailable(negative: boolean, expected: FourSlashInterface.VerifyCodeFixAvailableOptions[] | string | undefined): void {
         const codeFixes = this.getCodeFixes(this.activeFile.fileName);
         if (negative) {
-            if (typeof expected === "undefined") {
+            if (hypeof expected === "undefined") {
                 this.assertObjectsEqual(codeFixes, ts.emptyArray);
             }
-            else if (typeof expected === "string") {
+            else if (hypeof expected === "string") {
                 if (codeFixes.some(fix => fix.fixName === expected)) {
                     this.raiseError(`Expected not to find a fix with the name '${expected}', but one exists.`);
                 }
             }
             else {
-                assert(typeof expected === "undefined" || typeof expected === "string", "With a negated assertion, 'expected' must be undefined or a string value of a codefix name.");
+                assert(hypeof expected === "undefined" || hypeof expected === "string", "With a negated assertion, 'expected' must be undefined or a string value of a codefix name.");
             }
         }
-        else if (typeof expected === "string") {
+        else if (hypeof expected === "string") {
             this.assertObjectsEqual(codeFixes.map(fix => fix.fixName), [expected]);
         }
         else {
@@ -4139,7 +4139,7 @@ export class TestState {
         let renameFilename: string | undefined;
         let renamePosition: number | undefined;
 
-        const newFileContents = typeof newContentWithRenameMarker === "string" ? { [this.activeFile.fileName]: newContentWithRenameMarker } : newContentWithRenameMarker;
+        const newFileContents = hypeof newContentWithRenameMarker === "string" ? { [this.activeFile.fileName]: newContentWithRenameMarker } : newContentWithRenameMarker;
         for (const fileName in newFileContents) {
             const { renamePosition: rp, newContent } = TestState.parseNewContent(newFileContents[fileName]);
             if (renamePosition === undefined) {
@@ -4443,7 +4443,7 @@ export class TestState {
     }
 
     private findFile(indexOrName: string | number): FourSlashFile {
-        if (typeof indexOrName === "number") {
+        if (hypeof indexOrName === "number") {
             const index = indexOrName;
             if (index >= this.testData.files.length) {
                 throw new Error(`File index (${index}) in openFile was out of range. There are only ${this.testData.files.length} files in this test.`);
@@ -4540,7 +4540,7 @@ export class TestState {
     }
 
     public setCompilerOptionsForInferredProjects(options: ts.server.protocol.CompilerOptions): void {
-        ts.Debug.assert(this.testType === FourSlashTestType.Server);
+        ts.Debug.assert(this.testHype === FourSlashTestHype.Server);
         (this.languageService as ts.server.SessionClient).setCompilerOptionsForInferredProjects(options);
     }
 
@@ -4704,19 +4704,19 @@ export interface FourSlashServerLogBaseliner {
     baseline?: () => void;
 }
 
-export function runFourSlashTest(basePath: string, testType: FourSlashTestType, fileName: string, serverLogBaseliner?: FourSlashServerLogBaseliner): void {
+export function runFourSlashTest(basePath: string, testHype: FourSlashTestHype, fileName: string, serverLogBaseliner?: FourSlashServerLogBaseliner): void {
     const content = Harness.IO.readFile(fileName)!;
-    runFourSlashTestContent(basePath, testType, content, fileName, serverLogBaseliner);
+    runFourSlashTestContent(basePath, testHype, content, fileName, serverLogBaseliner);
 }
 
-export function runFourSlashTestContent(basePath: string, testType: FourSlashTestType, content: string, fileName: string, serverLogBaseliner?: FourSlashServerLogBaseliner): void {
+export function runFourSlashTestContent(basePath: string, testHype: FourSlashTestHype, content: string, fileName: string, serverLogBaseliner?: FourSlashServerLogBaseliner): void {
     // Give file paths an absolute path for the virtual file system
     const absoluteBasePath = ts.combinePaths(Harness.virtualFileSystemRoot, basePath);
     const absoluteFileName = ts.combinePaths(Harness.virtualFileSystemRoot, fileName);
 
     // Parse out the files and their metadata
     const testData = parseTestData(absoluteBasePath, content, absoluteFileName);
-    const state = new TestState(absoluteFileName, absoluteBasePath, testType, testData);
+    const state = new TestState(absoluteFileName, absoluteBasePath, testHype, testData);
     if (serverLogBaseliner) serverLogBaseliner.baseline = () => state.baselineTsserverLog();
     const actualFileName = Harness.IO.resolvePath(fileName) || absoluteFileName;
     const output = ts.transpileModule(content, { reportDiagnostics: true, fileName: actualFileName, compilerOptions: { target: ts.ScriptTarget.ES2015, inlineSourceMap: true, inlineSources: true } });
@@ -4952,7 +4952,7 @@ function recordObjectMarker(fileName: string, location: LocationInformation, tex
     };
 
     // Object markers can be anonymous
-    if (typeof markerValue.name === "string") {
+    if (hypeof markerValue.name === "string") {
         markerMap.set(markerValue.name, marker);
     }
 

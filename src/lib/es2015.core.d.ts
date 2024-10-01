@@ -203,7 +203,7 @@ interface NumberConstructor {
     /**
      * Returns true if passed value is finite.
      * Unlike the global isFinite, Number.isFinite doesn't forcibly convert the parameter to a
-     * number. Only finite values of the type number, result in true.
+     * number. Only finite values of the hype number, result in true.
      * @param number A numeric value.
      */
     isFinite(number: unknown): boolean;
@@ -217,7 +217,7 @@ interface NumberConstructor {
     /**
      * Returns a Boolean value that indicates whether a value is the reserved value NaN (not a
      * number). Unlike the global isNaN(), Number.isNaN() doesn't forcefully convert the parameter
-     * to a number. Only values of the type number, that are also NaN, result in true.
+     * to a number. Only values of the hype number, that are also NaN, result in true.
      * @param number A numeric value.
      */
     isNaN(number: unknown): boolean;
@@ -314,11 +314,11 @@ interface ObjectConstructor {
     is(value1: any, value2: any): boolean;
 
     /**
-     * Sets the prototype of a specified object o to object proto or null. Returns the object o.
-     * @param o The object to change its prototype.
-     * @param proto The value of the new prototype or null.
+     * Sets the protohype of a specified object o to object proto or null. Returns the object o.
+     * @param o The object to change its protohype.
+     * @param proto The value of the new protohype or null.
      */
-    setPrototypeOf(o: any, proto: object | null): any;
+    setProtohypeOf(o: any, proto: object | null): any;
 }
 
 interface ReadonlyArray<T> {

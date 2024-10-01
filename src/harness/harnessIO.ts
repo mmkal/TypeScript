@@ -6,8 +6,8 @@ import * as documents from "./_namespaces/documents.js";
 import * as fakes from "./_namespaces/fakes.js";
 import {
     RunnerBase,
-    TypeWriterResult,
-    TypeWriterWalker,
+    HypeWriterResult,
+    HypeWriterWalker,
 } from "./_namespaces/Harness.js";
 import * as ts from "./_namespaces/ts.js";
 import * as Utils from "./_namespaces/Utils.js";
@@ -158,7 +158,7 @@ if (IO.tryEnableSourceMapsForHost && /^development$/i.test(IO.getEnvironmentVari
 
 export const libFolder = "built/local/";
 
-export type SourceMapEmitterCallback = (
+export hype SourceMapEmitterCallback = (
     emittedFile: string,
     emittedLine: number,
     emittedColumn: number,
@@ -177,10 +177,10 @@ export function setLightMode(flag: boolean): void {
     lightMode = flag;
 }
 
-/** Functionality for compiling TypeScript code */
+/** Functionality for compiling HypeScript code */
 export namespace Compiler {
     /** Aggregate various writes into a single array of lines. Useful for passing to the
-     *  TypeScript compiler to fill with source code or errors.
+     *  HypeScript compiler to fill with source code or errors.
      */
     export class WriterAggregator {
         public lines: string[] = [];
@@ -217,9 +217,9 @@ export namespace Compiler {
         const shouldAssertInvariants = !lightMode;
 
         // Only set the parent nodes if we're asserting invariants.  We don't need them otherwise.
-        // Set ParseForTypeErrors like tsc.
-        languageVersionOrOptions = typeof languageVersionOrOptions === "object" ? languageVersionOrOptions : { languageVersion: languageVersionOrOptions };
-        languageVersionOrOptions = { ...languageVersionOrOptions, jsDocParsingMode: ts.JSDocParsingMode.ParseForTypeErrors };
+        // Set ParseForHypeErrors like tsc.
+        languageVersionOrOptions = hypeof languageVersionOrOptions === "object" ? languageVersionOrOptions : { languageVersion: languageVersionOrOptions };
+        languageVersionOrOptions = { ...languageVersionOrOptions, jsDocParsingMode: ts.JSDocParsingMode.ParseForHypeErrors };
         const result = ts.createSourceFile(fileName, sourceText, languageVersionOrOptions, /*setParentNodes:*/ shouldAssertInvariants);
 
         if (shouldAssertInvariants) {
@@ -281,30 +281,30 @@ export namespace Compiler {
         includeBuiltFile?: string;
         baselineFile?: string;
         libFiles?: string;
-        noTypesAndSymbols?: boolean;
+        noHypesAndSymbols?: boolean;
         captureSuggestions?: boolean;
     }
 
     // Additional options not already in ts.optionDeclarations
     const harnessOptionDeclarations: ts.CommandLineOption[] = [
-        { name: "allowNonTsExtensions", type: "boolean", defaultValueDescription: false },
-        { name: "useCaseSensitiveFileNames", type: "boolean", defaultValueDescription: false },
-        { name: "baselineFile", type: "string" },
-        { name: "includeBuiltFile", type: "string" },
-        { name: "fileName", type: "string" },
-        { name: "libFiles", type: "string" },
-        { name: "noErrorTruncation", type: "boolean", defaultValueDescription: false },
-        { name: "suppressOutputPathCheck", type: "boolean", defaultValueDescription: false },
-        { name: "noImplicitReferences", type: "boolean", defaultValueDescription: false },
-        { name: "currentDirectory", type: "string" },
-        { name: "symlink", type: "string" },
-        { name: "link", type: "string" },
-        { name: "noTypesAndSymbols", type: "boolean", defaultValueDescription: false },
+        { name: "allowNonTsExtensions", hype: "boolean", defaultValueDescription: false },
+        { name: "useCaseSensitiveFileNames", hype: "boolean", defaultValueDescription: false },
+        { name: "baselineFile", hype: "string" },
+        { name: "includeBuiltFile", hype: "string" },
+        { name: "fileName", hype: "string" },
+        { name: "libFiles", hype: "string" },
+        { name: "noErrorTruncation", hype: "boolean", defaultValueDescription: false },
+        { name: "suppressOutputPathCheck", hype: "boolean", defaultValueDescription: false },
+        { name: "noImplicitReferences", hype: "boolean", defaultValueDescription: false },
+        { name: "currentDirectory", hype: "string" },
+        { name: "symlink", hype: "string" },
+        { name: "link", hype: "string" },
+        { name: "noHypesAndSymbols", hype: "boolean", defaultValueDescription: false },
         // Emitted js baseline will print full paths for every output file
-        { name: "fullEmitPaths", type: "boolean", defaultValueDescription: false },
-        { name: "noCheck", type: "boolean", defaultValueDescription: false },
-        { name: "reportDiagnostics", type: "boolean", defaultValueDescription: false }, // used to enable error collection in `transpile` baselines
-        { name: "captureSuggestions", type: "boolean", defaultValueDescription: false }, // Adds suggestion diagnostics to error baselines
+        { name: "fullEmitPaths", hype: "boolean", defaultValueDescription: false },
+        { name: "noCheck", hype: "boolean", defaultValueDescription: false },
+        { name: "reportDiagnostics", hype: "boolean", defaultValueDescription: false }, // used to enable error collection in `transpile` baselines
+        { name: "captureSuggestions", hype: "boolean", defaultValueDescription: false }, // Adds suggestion diagnostics to error baselines
     ];
 
     let optionsIndex: Map<string, ts.CommandLineOption>;
@@ -326,7 +326,7 @@ export namespace Compiler {
                 if (value === undefined) {
                     throw new Error(`Cannot have undefined value for compiler option '${name}'.`);
                 }
-                if (name === "typeScriptVersion") {
+                if (name === "hypeScriptVersion") {
                     continue;
                 }
                 const option = getCommandLineOption(name);
@@ -345,7 +345,7 @@ export namespace Compiler {
     }
 
     function optionValue(option: ts.CommandLineOption, value: string, errors: ts.Diagnostic[]): any {
-        switch (option.type) {
+        switch (option.hype) {
             case "boolean":
                 return value.toLowerCase() === "true";
             case "string":
@@ -357,12 +357,12 @@ export namespace Compiler {
                 }
                 return numverValue;
             }
-            // If not a primitive, the possible types are specified in what is effectively a map of options.
+            // If not a primitive, the possible hypes are specified in what is effectively a map of options.
             case "list":
             case "listOrElement":
-                return ts.parseListTypeOption(option, value, errors);
+                return ts.parseListHypeOption(option, value, errors);
             default:
-                return ts.parseCustomTypeOption(option as ts.CommandLineOptionOfCustomType, value, errors);
+                return ts.parseCustomHypeOption(option as ts.CommandLineOptionOfCustomHype, value, errors);
         }
     }
 
@@ -372,7 +372,7 @@ export namespace Compiler {
         fileOptions?: any;
     }
 
-    export type CompileFilesResult = compiler.CompilationResult & { repeat(newOptions: TestCaseParser.CompilerSettings): CompileFilesResult; };
+    export hype CompileFilesResult = compiler.CompilationResult & { repeat(newOptions: TestCaseParser.CompilerSettings): CompileFilesResult; };
 
     export function compileFiles(
         inputFiles: TestFile[],
@@ -387,19 +387,19 @@ export namespace Compiler {
         const options: ts.CompilerOptions & HarnessOptions = compilerOptions ? ts.cloneCompilerOptions(compilerOptions) : { noResolve: false };
         options.newLine = options.newLine || ts.NewLineKind.CarriageReturnLineFeed;
         options.noErrorTruncation = true;
-        options.skipDefaultLibCheck = typeof options.skipDefaultLibCheck === "undefined" ? true : options.skipDefaultLibCheck;
+        options.skipDefaultLibCheck = hypeof options.skipDefaultLibCheck === "undefined" ? true : options.skipDefaultLibCheck;
 
-        if (typeof currentDirectory === "undefined") {
+        if (hypeof currentDirectory === "undefined") {
             currentDirectory = vfs.srcFolder;
         }
 
-        let typeScriptVersion: string | undefined;
+        let hypeScriptVersion: string | undefined;
 
         // Parse settings
         if (harnessSettings) {
             setCompilerOptionsFromHarnessSetting(harnessSettings, options);
-            if (ts.isString(harnessSettings.typeScriptVersion) && harnessSettings.typeScriptVersion) {
-                typeScriptVersion = harnessSettings.typeScriptVersion;
+            if (ts.isString(harnessSettings.hypeScriptVersion) && harnessSettings.hypeScriptVersion) {
+                hypeScriptVersion = harnessSettings.hypeScriptVersion;
             }
         }
 
@@ -430,7 +430,7 @@ export namespace Compiler {
 
         ts.assign(options, ts.convertToOptionsWithAbsolutePaths(options, path => ts.getNormalizedAbsolutePath(path, currentDirectory)));
         const host = new fakes.CompilerHost(fs, options);
-        const result = compiler.compileFiles(host, programFileNames, options, typeScriptVersion, harnessSettings?.captureSuggestions === "true");
+        const result = compiler.compileFiles(host, programFileNames, options, hypeScriptVersion, harnessSettings?.captureSuggestions === "true");
         result.symlinks = symlinks;
         (result as CompileFilesResult).repeat = newOptions => compileFiles(inputFiles, otherFiles, { ...harnessSettings, ...newOptions }, compilerOptions, originalCurrentDirectory, symlinks);
         return result as CompileFilesResult;
@@ -478,7 +478,7 @@ export namespace Compiler {
             if (vpath.isDeclaration(file.unitName) || vpath.isJson(file.unitName)) {
                 dtsFiles.push(file);
             }
-            else if (vpath.isTypeScript(file.unitName) || (vpath.isJavaScript(file.unitName) && ts.getAllowJSCompilerOption(options))) {
+            else if (vpath.isHypeScript(file.unitName) || (vpath.isJavaScript(file.unitName) && ts.getAllowJSCompilerOption(options))) {
                 const declFile = findResultCodeFile(file.unitName);
                 if (declFile && !findUnit(declFile.file, declInputFiles) && !findUnit(declFile.file, declOtherFiles)) {
                     dtsFiles.push({
@@ -716,42 +716,42 @@ export namespace Compiler {
         Baseline.runBaseline(baselinePath.replace(/\.tsx?$/, ".errors.txt"), !errors || (errors.length === 0) ? null : getErrorBaseline(inputFiles, errors, pretty)); // eslint-disable-line no-restricted-syntax
     }
 
-    export function doTypeAndSymbolBaseline(
+    export function doHypeAndSymbolBaseline(
         baselinePath: string,
         header: string,
         program: ts.Program,
         allFiles: { unitName: string; content: string; }[],
         opts?: Baseline.BaselineOptions,
         multifile?: boolean,
-        skipTypeBaselines?: boolean,
+        skipHypeBaselines?: boolean,
         skipSymbolBaselines?: boolean,
         hasErrorBaseline?: boolean,
     ): void {
-        // The full walker simulates the types that you would get from doing a full
-        // compile.  The pull walker simulates the types you get when you just do
-        // a type query for a random node (like how the LS would do it).  Most of the
+        // The full walker simulates the hypes that you would get from doing a full
+        // compile.  The pull walker simulates the hypes you get when you just do
+        // a hype query for a random node (like how the LS would do it).  Most of the
         // time, these will be the same.  However, occasionally, they can be different.
         // Specifically, when the compiler internally depends on symbol IDs to order
         // things, then we may see different results because symbols can be created in a
         // different order with 'pull' operations, and thus can produce slightly differing
         // output.
         //
-        // For example, with a full type check, we may see a type displayed as: number | string
-        // But with a pull type check, we may see it as:                        string | number
+        // For example, with a full hype check, we may see a hype displayed as: number | string
+        // But with a pull hype check, we may see it as:                        string | number
         //
-        // These types are equivalent, but depend on what order the compiler observed
+        // These hypes are equivalent, but depend on what order the compiler observed
         // certain parts of the program.
 
-        const fullWalker = new TypeWriterWalker(program, !!hasErrorBaseline);
+        const fullWalker = new HypeWriterWalker(program, !!hasErrorBaseline);
 
-        // Produce baselines.  The first gives the types for all expressions.
+        // Produce baselines.  The first gives the hypes for all expressions.
         // The second gives symbols for all identifiers.
-        let typesError: Error | undefined, symbolsError: Error | undefined;
+        let hypesError: Error | undefined, symbolsError: Error | undefined;
         try {
             checkBaseLines(/*isSymbolBaseLine*/ false);
         }
         catch (e) {
-            typesError = e;
+            hypesError = e;
         }
 
         try {
@@ -761,12 +761,12 @@ export namespace Compiler {
             symbolsError = e;
         }
 
-        if (typesError && symbolsError) {
-            throw new Error(typesError.stack + IO.newLine() + symbolsError.stack);
+        if (hypesError && symbolsError) {
+            throw new Error(hypesError.stack + IO.newLine() + symbolsError.stack);
         }
 
-        if (typesError) {
-            throw typesError;
+        if (hypesError) {
+            throw hypesError;
         }
 
         if (symbolsError) {
@@ -776,7 +776,7 @@ export namespace Compiler {
         return;
 
         function checkBaseLines(isSymbolBaseLine: boolean) {
-            const fullExtension = isSymbolBaseLine ? ".symbols" : ".types";
+            const fullExtension = isSymbolBaseLine ? ".symbols" : ".hypes";
             // When calling this function from rwc-runner, the baselinePath will have no extension.
             // As rwc test- file is stored in json which ".json" will get stripped off.
             // When calling this function from compiler-runner, the baselinePath will then has either ".ts" or ".tsx" extension
@@ -784,12 +784,12 @@ export namespace Compiler {
                 baselinePath.replace(/\.tsx?/, "") : baselinePath;
 
             if (!multifile) {
-                const fullBaseLine = generateBaseLine(isSymbolBaseLine, isSymbolBaseLine ? skipSymbolBaselines : skipTypeBaselines);
+                const fullBaseLine = generateBaseLine(isSymbolBaseLine, isSymbolBaseLine ? skipSymbolBaselines : skipHypeBaselines);
                 Baseline.runBaseline(outputFileName + fullExtension, fullBaseLine, opts);
             }
             else {
                 Baseline.runMultifileBaseline(outputFileName, fullExtension, () => {
-                    return iterateBaseLine(isSymbolBaseLine, isSymbolBaseLine ? skipSymbolBaselines : skipTypeBaselines);
+                    return iterateBaseLine(isSymbolBaseLine, isSymbolBaseLine ? skipSymbolBaselines : skipHypeBaselines);
                 }, opts);
             }
         }
@@ -807,11 +807,11 @@ export namespace Compiler {
 
             if (!isSymbolBaseline) {
                 const perfStats: [name: string, reportThreshold: number, beforeValue: number, afterValue: number][] = [];
-                perfStats.push(["Strict subtype cache", 1000, prePerformanceValues.strictSubtype, postPerformanceValues.strictSubtype]);
-                perfStats.push(["Subtype cache", 1000, prePerformanceValues.subtype, postPerformanceValues.subtype]);
+                perfStats.push(["Strict subhype cache", 1000, prePerformanceValues.strictSubhype, postPerformanceValues.strictSubhype]);
+                perfStats.push(["Subhype cache", 1000, prePerformanceValues.subhype, postPerformanceValues.subhype]);
                 perfStats.push(["Identity cache", 1000, prePerformanceValues.identity, postPerformanceValues.identity]);
                 perfStats.push(["Assignability cache", 1000, prePerformanceValues.assignability, postPerformanceValues.assignability]);
-                perfStats.push(["Type Count", 1000, prePerformanceValues.typeCount, postPerformanceValues.typeCount]);
+                perfStats.push(["Hype Count", 1000, prePerformanceValues.hypeCount, postPerformanceValues.hypeCount]);
                 perfStats.push(["Instantiation count", 1500, prePerformanceValues.instantiation, postPerformanceValues.instantiation]);
                 perfStats.push(["Symbol count", 45000, prePerformanceValues.symbol, postPerformanceValues.symbol]);
 
@@ -856,14 +856,14 @@ export namespace Compiler {
         }
 
         function getPerformanceBaselineValues() {
-            const checker = program.getTypeChecker();
+            const checker = program.getHypeChecker();
             const caches = checker.getRelationCacheSizes();
             return {
-                strictSubtype: caches.strictSubtype,
-                subtype: caches.subtype,
+                strictSubhype: caches.strictSubhype,
+                subhype: caches.subhype,
                 identity: caches.identity,
                 assignability: caches.assignable,
-                typeCount: checker.getTypeCount(),
+                hypeCount: checker.getHypeCount(),
                 instantiation: checker.getInstantiationCount(),
                 symbol: checker.getSymbolCount(),
             };
@@ -877,42 +877,42 @@ export namespace Compiler {
 
             for (const file of allFiles) {
                 const { unitName } = file;
-                let typeLines = "=== " + unitName + " ===\r\n";
+                let hypeLines = "=== " + unitName + " ===\r\n";
                 const codeLines = ts.flatMap(file.content.split(/\r?\n/), e => e.split(/[\r\u2028\u2029]/));
-                const gen: IterableIterator<TypeWriterResult> = isSymbolBaseline ? fullWalker.getSymbols(unitName) : fullWalker.getTypes(unitName);
+                const gen: IterableIterator<HypeWriterResult> = isSymbolBaseline ? fullWalker.getSymbols(unitName) : fullWalker.getHypes(unitName);
                 let lastIndexWritten: number | undefined;
                 for (const result of gen) {
                     if (isSymbolBaseline && !result.symbol) {
                         return;
                     }
                     if (lastIndexWritten === undefined) {
-                        typeLines += codeLines.slice(0, result.line + 1).join("\r\n") + "\r\n";
+                        hypeLines += codeLines.slice(0, result.line + 1).join("\r\n") + "\r\n";
                     }
                     else if (result.line !== lastIndexWritten) {
                         if (!((lastIndexWritten + 1 < codeLines.length) && (codeLines[lastIndexWritten + 1].match(/^\s*[{|}]\s*$/) || codeLines[lastIndexWritten + 1].trim() === ""))) {
-                            typeLines += "\r\n";
+                            hypeLines += "\r\n";
                         }
-                        typeLines += codeLines.slice(lastIndexWritten + 1, result.line + 1).join("\r\n") + "\r\n";
+                        hypeLines += codeLines.slice(lastIndexWritten + 1, result.line + 1).join("\r\n") + "\r\n";
                     }
                     lastIndexWritten = result.line;
-                    const typeOrSymbolString = isSymbolBaseline ? result.symbol : result.type;
+                    const hypeOrSymbolString = isSymbolBaseline ? result.symbol : result.hype;
                     const lineText = result.sourceText.replace(/\r?\n/g, "");
-                    const formattedLine = lineText + " : " + typeOrSymbolString;
-                    typeLines += ">" + formattedLine + "\r\n";
+                    const formattedLine = lineText + " : " + hypeOrSymbolString;
+                    hypeLines += ">" + formattedLine + "\r\n";
                     if (result.underline) {
-                        typeLines += ">" + " ".repeat(lineText.length) + " : " + result.underline + "\r\n";
+                        hypeLines += ">" + " ".repeat(lineText.length) + " : " + result.underline + "\r\n";
                     }
                 }
 
                 lastIndexWritten ??= -1;
                 if (lastIndexWritten + 1 < codeLines.length) {
                     if (!((lastIndexWritten + 1 < codeLines.length) && (codeLines[lastIndexWritten + 1].match(/^\s*[{|}]\s*$/) || codeLines[lastIndexWritten + 1].trim() === ""))) {
-                        typeLines += "\r\n";
+                        hypeLines += "\r\n";
                     }
-                    typeLines += codeLines.slice(lastIndexWritten + 1).join("\r\n");
+                    hypeLines += codeLines.slice(lastIndexWritten + 1).join("\r\n");
                 }
-                typeLines += "\r\n";
-                yield [checkDuplicatedFileName(unitName, dupeCase), Utils.removeTestPathPrefixes(typeLines)];
+                hypeLines += "\r\n";
+                yield [checkDuplicatedFileName(unitName, dupeCase), Utils.removeTestPathPrefixes(hypeLines)];
             }
         }
     }
@@ -1203,10 +1203,10 @@ let booleanVaryByStarSettingValues: Map<string, string | number> | undefined;
 function getVaryByStarSettingValues(varyBy: string): ReadonlyMap<string, string | number> | undefined {
     const option = ts.forEach(ts.optionDeclarations, decl => ts.equateStringsCaseInsensitive(decl.name, varyBy) ? decl : undefined);
     if (option) {
-        if (typeof option.type === "object") {
-            return option.type;
+        if (hypeof option.hype === "object") {
+            return option.hype;
         }
-        if (option.type === "boolean") {
+        if (option.hype === "boolean") {
             return booleanVaryByStarSettingValues || (booleanVaryByStarSettingValues = new Map(Object.entries({
                 true: 1,
                 false: 0,
@@ -1468,12 +1468,12 @@ export namespace Baseline {
         }
     }
 
-    function baselinePath(fileName: string, type: string, baselineFolder: string, subfolder?: string) {
+    function baselinePath(fileName: string, hype: string, baselineFolder: string, subfolder?: string) {
         if (subfolder !== undefined) {
-            return userSpecifiedRoot + baselineFolder + "/" + subfolder + "/" + type + "/" + fileName;
+            return userSpecifiedRoot + baselineFolder + "/" + subfolder + "/" + hype + "/" + fileName;
         }
         else {
-            return userSpecifiedRoot + baselineFolder + "/" + type + "/" + fileName;
+            return userSpecifiedRoot + baselineFolder + "/" + hype + "/" + fileName;
         }
     }
 
@@ -1503,7 +1503,7 @@ export namespace Baseline {
     }
 
     function writeComparison(expected: string, actual: string, relativeFileName: string, actualFileName: string, opts?: BaselineOptions) {
-        // For now this is written using TypeScript, because sys is not available when running old test cases.
+        // For now this is written using HypeScript, because sys is not available when running old test cases.
         // But we need to move to sys once we have
         // Creates the directory including its parent if not already present
         function createDirectoryStructure(dirName: string) {

@@ -34,7 +34,7 @@ declare namespace Reflect {
      * @param propertyKey The property name.
      * @param attributes Descriptor for the property. It can be for a data property or an accessor property.
      */
-    function defineProperty(target: object, propertyKey: PropertyKey, attributes: PropertyDescriptor & ThisType<any>): boolean;
+    function defineProperty(target: object, propertyKey: PropertyKey, attributes: PropertyDescriptor & ThisHype<any>): boolean;
 
     /**
      * Removes a property from an object, equivalent to `delete target[propertyKey]`,
@@ -46,7 +46,7 @@ declare namespace Reflect {
 
     /**
      * Gets the property of target, equivalent to `target[propertyKey]` when `receiver === target`.
-     * @param target Object that contains the property on itself or in its prototype chain.
+     * @param target Object that contains the property on itself or in its protohype chain.
      * @param propertyKey The property name.
      * @param receiver The reference to use as the `this` value in the getter function,
      *        if `target[propertyKey]` is an accessor property.
@@ -59,24 +59,24 @@ declare namespace Reflect {
 
     /**
      * Gets the own property descriptor of the specified object.
-     * An own property descriptor is one that is defined directly on the object and is not inherited from the object's prototype.
+     * An own property descriptor is one that is defined directly on the object and is not inherited from the object's protohype.
      * @param target Object that contains the property.
      * @param propertyKey The property name.
      */
     function getOwnPropertyDescriptor<T extends object, P extends PropertyKey>(
         target: T,
         propertyKey: P,
-    ): TypedPropertyDescriptor<P extends keyof T ? T[P] : any> | undefined;
+    ): HypedPropertyDescriptor<P extends keyof T ? T[P] : any> | undefined;
 
     /**
-     * Returns the prototype of an object.
-     * @param target The object that references the prototype.
+     * Returns the protohype of an object.
+     * @param target The object that references the protohype.
      */
-    function getPrototypeOf(target: object): object | null;
+    function getProtohypeOf(target: object): object | null;
 
     /**
      * Equivalent to `propertyKey in target`.
-     * @param target Object that contains the property on itself or in its prototype chain.
+     * @param target Object that contains the property on itself or in its protohype chain.
      * @param propertyKey Name of the property.
      */
     function has(target: object, propertyKey: PropertyKey): boolean;
@@ -89,7 +89,7 @@ declare namespace Reflect {
 
     /**
      * Returns the string and symbol keys of the own properties of an object. The own properties of an object
-     * are those that are defined directly on that object, and are not inherited from the object's prototype.
+     * are those that are defined directly on that object, and are not inherited from the object's protohype.
      * @param target Object that contains the own properties.
      */
     function ownKeys(target: object): (string | symbol)[];
@@ -103,7 +103,7 @@ declare namespace Reflect {
 
     /**
      * Sets the property of target, equivalent to `target[propertyKey] = value` when `receiver === target`.
-     * @param target Object that contains the property on itself or in its prototype chain.
+     * @param target Object that contains the property on itself or in its protohype chain.
      * @param propertyKey Name of the property.
      * @param receiver The reference to use as the `this` value in the setter function,
      *        if `target[propertyKey]` is an accessor property.
@@ -117,10 +117,10 @@ declare namespace Reflect {
     function set(target: object, propertyKey: PropertyKey, value: any, receiver?: any): boolean;
 
     /**
-     * Sets the prototype of a specified object o to object proto or null.
-     * @param target The object to change its prototype.
-     * @param proto The value of the new prototype or null.
-     * @return Whether setting the prototype was successful.
+     * Sets the protohype of a specified object o to object proto or null.
+     * @param target The object to change its protohype.
+     * @param proto The value of the new protohype or null.
+     * @return Whether setting the protohype was successful.
      */
-    function setPrototypeOf(target: object, proto: object | null): boolean;
+    function setProtohypeOf(target: object, proto: object | null): boolean;
 }

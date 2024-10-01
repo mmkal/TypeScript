@@ -4,7 +4,7 @@
 interface SymbolConstructor {
     /**
      * A regular expression method that matches the regular expression against a string. Called
-     * by the String.prototype.matchAll method.
+     * by the String.protohype.matchAll method.
      */
     readonly matchAll: unique symbol;
 }
