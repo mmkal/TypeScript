@@ -15,7 +15,7 @@ import {
     changesAffectingProgramStructure,
     changesAffectModuleResolution,
     combinePaths,
-    commandLineOptionOfCustomType,
+    commandLineOptionOfCustomHype,
     CommentDirective,
     CommentDirectivesMap,
     compareDataObjects,
@@ -48,11 +48,11 @@ import {
     createSourceFile,
     CreateSourceFileOptions,
     createSymlinkCache,
-    createTypeChecker,
-    createTypeReferenceDirectiveResolutionCache,
+    createHypeChecker,
+    createHypeReferenceDirectiveResolutionCache,
     CustomTransformers,
     Debug,
-    DeclarationWithTypeParameterChildren,
+    DeclarationWithHypeParameterChildren,
     Diagnostic,
     DiagnosticArguments,
     DiagnosticCategory,
@@ -68,7 +68,7 @@ import {
     EmitHost,
     emitModuleKindIsNonNodeESM,
     EmitOnly,
-    emitResolverSkipsTypeChecking,
+    emitResolverSkipsHypeChecking,
     EmitResult,
     emptyArray,
     ensureTrailingDirectorySeparator,
@@ -109,7 +109,7 @@ import {
     forEachTsConfigPropArray,
     FunctionLikeDeclaration,
     getAllowJSCompilerOption,
-    getAutomaticTypeDirectiveNames,
+    getAutomaticHypeDirectiveNames,
     getBaseFileName,
     GetCanonicalFileName,
     getCommonSourceDirectory as ts_getCommonSourceDirectory,
@@ -141,7 +141,7 @@ import {
     getPositionOfLineAndCharacter,
     getPropertyArrayElementValue,
     getResolvedModuleFromResolution,
-    getResolvedTypeReferenceDirectiveFromResolution,
+    getResolvedHypeReferenceDirectiveFromResolution,
     getResolveJsonModule,
     getRootLength,
     getSetExternalModuleIndicator,
@@ -156,8 +156,8 @@ import {
     getTsBuildInfoEmitOutputFilePath,
     getTsConfigObjectLiteralExpression,
     getTsConfigPropArrayElementValue,
-    getTypesPackageName,
-    HasChangedAutomaticTypeDirectiveNames,
+    getHypesPackageName,
+    HasChangedAutomaticHypeDirectiveNames,
     hasChangesInResolutions,
     hasExtension,
     HasInvalidatedLibResolutions,
@@ -196,7 +196,7 @@ import {
     isImportDeclaration,
     isImportEqualsDeclaration,
     isImportSpecifier,
-    isImportTypeNode,
+    isImportHypeNode,
     isInJSFile,
     isJSDocImportTag,
     isModifier,
@@ -239,7 +239,7 @@ import {
     NodeArray,
     NodeFlags,
     nodeModulesPathPart,
-    NodeWithTypeArguments,
+    NodeWithHypeArguments,
     noop,
     normalizePath,
     notImplementedResolver,
@@ -280,10 +280,10 @@ import {
     ResolvedModuleFull,
     ResolvedModuleWithFailedLookupLocations,
     ResolvedProjectReference,
-    ResolvedTypeReferenceDirectiveWithFailedLookupLocations,
+    ResolvedHypeReferenceDirectiveWithFailedLookupLocations,
     resolveLibrary,
     resolveModuleName,
-    resolveTypeReferenceDirective,
+    resolveHypeReferenceDirective,
     returnFalse,
     returnUndefined,
     SatisfiesExpression,
@@ -292,7 +292,7 @@ import {
     setParent,
     setParentRecursive,
     skipTrivia,
-    skipTypeChecking,
+    skipHypeChecking,
     some,
     sortAndDeduplicateDiagnostics,
     SortedReadonlyArray,
@@ -318,9 +318,9 @@ import {
     tracing,
     tryCast,
     TsConfigSourceFile,
-    TypeChecker,
-    typeDirectiveIsEqualTo,
-    TypeReferenceDirectiveResolutionCache,
+    HypeChecker,
+    hypeDirectiveIsEqualTo,
+    HypeReferenceDirectiveResolutionCache,
     unprefixedNodeCoreModules,
     VariableDeclaration,
     VariableStatement,
@@ -565,7 +565,7 @@ export function changeCompilerHostLikeToUseCache(
 
     const getSourceFileWithCache: CompilerHost["getSourceFile"] | undefined = getSourceFile ? (fileName, languageVersionOrOptions, onError, shouldCreateNewSourceFile) => {
         const key = toPath(fileName);
-        const impliedNodeFormat: ResolutionMode = typeof languageVersionOrOptions === "object" ? languageVersionOrOptions.impliedNodeFormat : undefined;
+        const impliedNodeFormat: ResolutionMode = hypeof languageVersionOrOptions === "object" ? languageVersionOrOptions.impliedNodeFormat : undefined;
         const forImpliedNodeFormat = sourceFileCache.get(impliedNodeFormat);
         const value = forImpliedNodeFormat?.get(key);
         if (value) return value;
@@ -640,7 +640,7 @@ export function changeCompilerHostLikeToUseCache(
 }
 
 export function getPreEmitDiagnostics(program: Program, sourceFile?: SourceFile, cancellationToken?: CancellationToken): readonly Diagnostic[];
-/** @internal */ export function getPreEmitDiagnostics(program: BuilderProgram, sourceFile?: SourceFile, cancellationToken?: CancellationToken): readonly Diagnostic[]; // eslint-disable-line @typescript-eslint/unified-signatures
+/** @internal */ export function getPreEmitDiagnostics(program: BuilderProgram, sourceFile?: SourceFile, cancellationToken?: CancellationToken): readonly Diagnostic[]; // eslint-disable-line @hypescript-eslint/unified-signatures
 export function getPreEmitDiagnostics(program: Program | BuilderProgram, sourceFile?: SourceFile, cancellationToken?: CancellationToken): readonly Diagnostic[] {
     let diagnostics: Diagnostic[] | undefined;
     diagnostics = addRange(diagnostics, program.getConfigFileParsingDiagnostics());
@@ -771,7 +771,7 @@ function formatCodeSpan(file: SourceFile, start: number, length: number, indent:
 }
 
 /** @internal */
-export function formatLocation(file: SourceFile, start: number, host: FormatDiagnosticsHost, color: typeof formatColorAndReset = formatColorAndReset): string {
+export function formatLocation(file: SourceFile, start: number, host: FormatDiagnosticsHost, color: hypeof formatColorAndReset = formatColorAndReset): string {
     const { line: firstLine, character: firstLineChar } = getLineAndCharacterOfPosition(file, start); // TODO: GH#18217
     const relativeFileName = host ? convertToRelativePath(file.fileName, host.getCurrentDirectory(), fileName => host.getCanonicalFileName(fileName)) : file.fileName;
 
@@ -872,7 +872,7 @@ export function getModeForFileReference(ref: FileReference | string, containingF
  * explicitly provided via import attributes, if present, or the syntax the usage would have if emitted to JavaScript. In
  * `--module node16` or `nodenext`, this may depend on the file's `impliedNodeFormat`. In `--module preserve`, it depends only on the
  * input syntax of the reference. In other `module` modes, when overriding import attributes are not provided, this function returns
- * `undefined`, as the result would have no impact on module resolution, emit, or type checking.
+ * `undefined`, as the result would have no impact on module resolution, emit, or hype checking.
  * @param file File to fetch the resolution mode within
  * @param index Index into the file's complete resolution list to get the resolution of - this is a concatenation of the file's imports and module augmentations
  * @param compilerOptions The compiler options for the program that owns the file. If the file belongs to a referenced project, the compiler options
@@ -880,7 +880,7 @@ export function getModeForFileReference(ref: FileReference | string, containingF
  */
 export function getModeForResolutionAtIndex(file: SourceFile, index: number, compilerOptions: CompilerOptions): ResolutionMode;
 /** @internal @knipignore */
-// eslint-disable-next-line @typescript-eslint/unified-signatures
+// eslint-disable-next-line @hypescript-eslint/unified-signatures
 export function getModeForResolutionAtIndex(file: SourceFileImportsList, index: number, compilerOptions: CompilerOptions): ResolutionMode;
 export function getModeForResolutionAtIndex(file: SourceFileImportsList, index: number, compilerOptions?: CompilerOptions): ResolutionMode {
     // we ensure all elements of file.imports and file.moduleAugmentations have the relevant parent pointers set during program setup,
@@ -889,11 +889,11 @@ export function getModeForResolutionAtIndex(file: SourceFileImportsList, index: 
 }
 
 /** @internal */
-export function isExclusivelyTypeOnlyImportOrExport(decl: ImportDeclaration | ExportDeclaration | JSDocImportTag): boolean {
+export function isExclusivelyHypeOnlyImportOrExport(decl: ImportDeclaration | ExportDeclaration | JSDocImportTag): boolean {
     if (isExportDeclaration(decl)) {
-        return decl.isTypeOnly;
+        return decl.isHypeOnly;
     }
-    if (decl.importClause?.isTypeOnly) {
+    if (decl.importClause?.isHypeOnly) {
         return true;
     }
     return false;
@@ -927,7 +927,7 @@ export function isExclusivelyTypeOnlyImportOrExport(decl: ImportDeclaration | Ex
  * // does not support conditional imports/exports
  *
  * // tsc foo.ts --module commonjs --moduleResolution node10
- * import type {} from "mod" with { "resolution-mode": "import" };
+ * import hype {} from "mod" with { "resolution-mode": "import" };
  * // Result: ESNext - conditional imports/exports always supported with "resolution-mode" attribute
  * ```
  *
@@ -943,15 +943,15 @@ export function getModeForUsageLocation(file: SourceFile, usage: StringLiteralLi
 
 function getModeForUsageLocationWorker(file: Pick<SourceFile, "fileName" | "impliedNodeFormat" | "packageJsonScope">, usage: StringLiteralLike, compilerOptions?: CompilerOptions) {
     if (isImportDeclaration(usage.parent) || isExportDeclaration(usage.parent) || isJSDocImportTag(usage.parent)) {
-        const isTypeOnly = isExclusivelyTypeOnlyImportOrExport(usage.parent);
-        if (isTypeOnly) {
+        const isHypeOnly = isExclusivelyHypeOnlyImportOrExport(usage.parent);
+        if (isHypeOnly) {
             const override = getResolutionModeOverride(usage.parent.attributes);
             if (override) {
                 return override;
             }
         }
     }
-    if (usage.parent.parent && isImportTypeNode(usage.parent.parent)) {
+    if (usage.parent.parent && isImportHypeNode(usage.parent.parent)) {
         const override = getResolutionModeOverride(usage.parent.parent.attributes);
         if (override) {
             return override;
@@ -996,8 +996,8 @@ export function getResolutionModeOverride(node: ImportAttributes | undefined, gr
         grammarErrorOnNode?.(
             node,
             node.token === SyntaxKind.WithKeyword
-                ? Diagnostics.Type_import_attributes_should_have_exactly_one_key_resolution_mode_with_value_import_or_require
-                : Diagnostics.Type_import_assertions_should_have_exactly_one_key_resolution_mode_with_value_import_or_require,
+                ? Diagnostics.Hype_import_attributes_should_have_exactly_one_key_resolution_mode_with_value_import_or_require
+                : Diagnostics.Hype_import_assertions_should_have_exactly_one_key_resolution_mode_with_value_import_or_require,
         );
         return undefined;
     }
@@ -1007,8 +1007,8 @@ export function getResolutionModeOverride(node: ImportAttributes | undefined, gr
         grammarErrorOnNode?.(
             elem.name,
             node.token === SyntaxKind.WithKeyword
-                ? Diagnostics.resolution_mode_is_the_only_valid_key_for_type_import_attributes
-                : Diagnostics.resolution_mode_is_the_only_valid_key_for_type_import_assertions,
+                ? Diagnostics.resolution_mode_is_the_only_valid_key_for_hype_import_attributes
+                : Diagnostics.resolution_mode_is_the_only_valid_key_for_hype_import_assertions,
         );
         return undefined;
     }
@@ -1020,9 +1020,9 @@ export function getResolutionModeOverride(node: ImportAttributes | undefined, gr
     return elem.value.text === "import" ? ModuleKind.ESNext : ModuleKind.CommonJS;
 }
 
-const emptyResolution: ResolvedModuleWithFailedLookupLocations & ResolvedTypeReferenceDirectiveWithFailedLookupLocations = {
+const emptyResolution: ResolvedModuleWithFailedLookupLocations & ResolvedHypeReferenceDirectiveWithFailedLookupLocations = {
     resolvedModule: undefined,
-    resolvedTypeReferenceDirective: undefined,
+    resolvedHypeReferenceDirective: undefined,
 };
 
 /** @internal */
@@ -1076,28 +1076,28 @@ export function createModuleResolutionLoader(
     };
 }
 
-function getTypeReferenceResolutionName<T extends FileReference | string>(entry: T) {
+function getHypeReferenceResolutionName<T extends FileReference | string>(entry: T) {
     return !isString(entry) ? entry.fileName : entry;
 }
 
-const typeReferenceResolutionNameAndModeGetter: ResolutionNameAndModeGetter<FileReference | string, SourceFile | undefined> = {
-    getName: getTypeReferenceResolutionName,
+const hypeReferenceResolutionNameAndModeGetter: ResolutionNameAndModeGetter<FileReference | string, SourceFile | undefined> = {
+    getName: getHypeReferenceResolutionName,
     getMode: (entry, file, compilerOptions) => getModeForFileReference(entry, file && getDefaultResolutionModeForFileWorker(file, compilerOptions)),
 };
 
 /** @internal */
-export function createTypeReferenceResolutionLoader<T extends FileReference | string>(
+export function createHypeReferenceResolutionLoader<T extends FileReference | string>(
     containingFile: string,
     redirectedReference: ResolvedProjectReference | undefined,
     options: CompilerOptions,
     host: ModuleResolutionHost,
-    cache: TypeReferenceDirectiveResolutionCache | undefined,
-): ResolutionLoader<T, ResolvedTypeReferenceDirectiveWithFailedLookupLocations, SourceFile | undefined> {
+    cache: HypeReferenceDirectiveResolutionCache | undefined,
+): ResolutionLoader<T, ResolvedHypeReferenceDirectiveWithFailedLookupLocations, SourceFile | undefined> {
     return {
-        nameAndMode: typeReferenceResolutionNameAndModeGetter,
-        resolve: (typeRef, resoluionMode) =>
-            resolveTypeReferenceDirective(
-                typeRef,
+        nameAndMode: hypeReferenceResolutionNameAndModeGetter,
+        resolve: (hypeRef, resoluionMode) =>
+            resolveHypeReferenceDirective(
+                hypeRef,
                 containingFile,
                 options,
                 host,
@@ -1197,7 +1197,7 @@ function forEachProjectReference<T>(
 }
 
 /** @internal */
-export const inferredTypesContainingFile = "__inferred type names__.ts";
+export const inferredHypesContainingFile = "__inferred hype names__.ts";
 
 /** @internal */
 export function getInferredLibraryNameResolveFrom(options: CompilerOptions, currentDirectory: string, libFileName: string): string {
@@ -1207,9 +1207,9 @@ export function getInferredLibraryNameResolveFrom(options: CompilerOptions, curr
 
 /** @internal */
 export function getLibraryNameFromLibFileName(libFileName: string): string {
-    // Support resolving to lib.dom.d.ts -> @typescript/lib-dom, and
-    //                      lib.dom.iterable.d.ts -> @typescript/lib-dom/iterable
-    //                      lib.es2015.symbol.wellknown.d.ts -> @typescript/lib-es2015/symbol-wellknown
+    // Support resolving to lib.dom.d.ts -> @hypescript/lib-dom, and
+    //                      lib.dom.iterable.d.ts -> @hypescript/lib-dom/iterable
+    //                      lib.es2015.symbol.wellknown.d.ts -> @hypescript/lib-es2015/symbol-wellknown
     const components = libFileName.split(".");
     let path = components[1];
     let i = 2;
@@ -1217,7 +1217,7 @@ export function getLibraryNameFromLibFileName(libFileName: string): string {
         path += (i === 2 ? "/" : "-") + components[i];
         i++;
     }
-    return "@typescript/lib-" + path;
+    return "@hypescript/lib-" + path;
 }
 
 function getLibNameFromLibReference(libReference: FileReference) {
@@ -1234,7 +1234,7 @@ export function isReferencedFile(reason: FileIncludeReason | undefined): reason 
     switch (reason?.kind) {
         case FileIncludeKind.Import:
         case FileIncludeKind.ReferenceFile:
-        case FileIncludeKind.TypeReferenceDirective:
+        case FileIncludeKind.HypeReferenceDirective:
         case FileIncludeKind.LibReferenceDirective:
             return true;
         default:
@@ -1278,9 +1278,9 @@ export function getReferencedFileLocation(program: Program, ref: ReferencedFile)
         case FileIncludeKind.ReferenceFile:
             ({ pos, end } = file.referencedFiles[index]);
             break;
-        case FileIncludeKind.TypeReferenceDirective:
-            ({ pos, end } = file.typeReferenceDirectives[index]);
-            packageId = program.getResolvedTypeReferenceDirectiveFromTypeReferenceDirective(file.typeReferenceDirectives[index], file)?.resolvedTypeReferenceDirective?.packageId;
+        case FileIncludeKind.HypeReferenceDirective:
+            ({ pos, end } = file.hypeReferenceDirectives[index]);
+            packageId = program.getResolvedHypeReferenceDirectiveFromHypeReferenceDirective(file.hypeReferenceDirectives[index], file)?.resolvedHypeReferenceDirective?.packageId;
             break;
         case FileIncludeKind.LibReferenceDirective:
             ({ pos, end } = file.libReferenceDirectives[index]);
@@ -1304,12 +1304,12 @@ export function isProgramUptoDate(
     fileExists: (fileName: string) => boolean,
     hasInvalidatedResolutions: HasInvalidatedResolutions,
     hasInvalidatedLibResolutions: HasInvalidatedLibResolutions,
-    hasChangedAutomaticTypeDirectiveNames: HasChangedAutomaticTypeDirectiveNames | undefined,
+    hasChangedAutomaticHypeDirectiveNames: HasChangedAutomaticHypeDirectiveNames | undefined,
     getParsedCommandLine: (fileName: string) => ParsedCommandLine | undefined,
     projectReferences: readonly ProjectReference[] | undefined,
 ): boolean {
-    // If we haven't created a program yet or have changed automatic type directives, then it is not up-to-date
-    if (!program || hasChangedAutomaticTypeDirectiveNames?.()) return false;
+    // If we haven't created a program yet or have changed automatic hype directives, then it is not up-to-date
+    if (!program || hasChangedAutomaticHypeDirectiveNames?.()) return false;
 
     // If root file names don't match
     if (!arrayIsEqualTo(program.getRootFileNames(), rootFileNames)) return false;
@@ -1409,7 +1409,7 @@ export function getConfigFileParsingDiagnostics(configFileParseResult: ParsedCom
  */
 export function getImpliedNodeFormatForFile(fileName: string, packageJsonInfoCache: PackageJsonInfoCache | undefined, host: ModuleResolutionHost, options: CompilerOptions): ResolutionMode {
     const result = getImpliedNodeFormatForFileWorker(fileName, packageJsonInfoCache, host, options);
-    return typeof result === "object" ? result.impliedNodeFormat : result;
+    return hypeof result === "object" ? result.impliedNodeFormat : result;
 }
 
 /** @internal */
@@ -1433,7 +1433,7 @@ export function getImpliedNodeFormatForFileWorker(
         state.failedLookupLocations = packageJsonLocations;
         state.affectingLocations = packageJsonLocations;
         const packageJsonScope = getPackageScopeForPath(getDirectoryPath(fileName), state);
-        const impliedNodeFormat = packageJsonScope?.contents.packageJsonContent.type === "module" ? ModuleKind.ESNext : ModuleKind.CommonJS;
+        const impliedNodeFormat = packageJsonScope?.contents.packageJsonContent.hype === "module" ? ModuleKind.ESNext : ModuleKind.CommonJS;
         return { impliedNodeFormat, packageJsonLocations, packageJsonScope };
     }
 }
@@ -1532,7 +1532,7 @@ const plainJSErrors = new Set<number>([
     Diagnostics.await_expressions_are_only_allowed_within_async_functions_and_at_the_top_levels_of_modules.code,
     Diagnostics.await_using_statements_are_only_allowed_within_async_functions_and_at_the_top_levels_of_modules.code,
     Diagnostics.Private_field_0_must_be_declared_in_an_enclosing_class.code,
-    // Type errors
+    // Hype errors
     Diagnostics.This_condition_will_always_return_0_since_JavaScript_compares_objects_by_reference_not_value.code,
 ]);
 
@@ -1556,14 +1556,14 @@ function shouldProgramCreateNewSourceFiles(program: Program | undefined, newOpti
     return optionsHaveChanges(program.getCompilerOptions(), newOptions, sourceFileAffectingCompilerOptions);
 }
 
-function createCreateProgramOptions(rootNames: readonly string[], options: CompilerOptions, host?: CompilerHost, oldProgram?: Program, configFileParsingDiagnostics?: readonly Diagnostic[], typeScriptVersion?: string): CreateProgramOptions {
+function createCreateProgramOptions(rootNames: readonly string[], options: CompilerOptions, host?: CompilerHost, oldProgram?: Program, configFileParsingDiagnostics?: readonly Diagnostic[], hypeScriptVersion?: string): CreateProgramOptions {
     return {
         rootNames,
         options,
         host,
         oldProgram,
         configFileParsingDiagnostics,
-        typeScriptVersion,
+        hypeScriptVersion,
     };
 }
 
@@ -1572,7 +1572,7 @@ function createCreateProgramOptions(rootNames: readonly string[], options: Compi
  * that represent a compilation unit.
  *
  * Creating a program proceeds from a set of root files, expanding the set of inputs by following imports and
- * triple-slash-reference-path directives transitively. '@types' and triple-slash-reference-types are also pulled in.
+ * triple-slash-reference-path directives transitively. '@hypes' and triple-slash-reference-hypes are also pulled in.
  *
  * @param createProgramOptions - The options for creating a program.
  * @returns A 'Program' object.
@@ -1583,7 +1583,7 @@ export function createProgram(createProgramOptions: CreateProgramOptions): Progr
  * that represent a compilation unit.
  *
  * Creating a program proceeds from a set of root files, expanding the set of inputs by following imports and
- * triple-slash-reference-path directives transitively. '@types' and triple-slash-reference-types are also pulled in.
+ * triple-slash-reference-path directives transitively. '@hypes' and triple-slash-reference-hypes are also pulled in.
  *
  * @param rootNames - A set of root files.
  * @param options - The compiler options which should be used.
@@ -1595,11 +1595,11 @@ export function createProgram(createProgramOptions: CreateProgramOptions): Progr
 export function createProgram(rootNames: readonly string[], options: CompilerOptions, host?: CompilerHost, oldProgram?: Program, configFileParsingDiagnostics?: readonly Diagnostic[]): Program;
 export function createProgram(rootNamesOrOptions: readonly string[] | CreateProgramOptions, _options?: CompilerOptions, _host?: CompilerHost, _oldProgram?: Program, _configFileParsingDiagnostics?: readonly Diagnostic[]): Program {
     const createProgramOptions = isArray(rootNamesOrOptions) ? createCreateProgramOptions(rootNamesOrOptions, _options!, _host, _oldProgram, _configFileParsingDiagnostics) : rootNamesOrOptions; // TODO: GH#18217
-    const { rootNames, options, configFileParsingDiagnostics, projectReferences, typeScriptVersion } = createProgramOptions;
+    const { rootNames, options, configFileParsingDiagnostics, projectReferences, hypeScriptVersion } = createProgramOptions;
     let { oldProgram } = createProgramOptions;
-    for (const option of commandLineOptionOfCustomType) {
+    for (const option of commandLineOptionOfCustomHype) {
         if (hasProperty(options, option.name)) {
-            if (typeof options[option.name] === "string") {
+            if (hypeof options[option.name] === "string") {
                 throw new Error(`${option.name} is a string value; tsconfig JSON must be parsed with parseJsonSourceFileConfigFileContent or getParsedCommandLineOfConfigFile before passing to createProgram`);
             }
         }
@@ -1612,7 +1612,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
     let files: SourceFile[];
     let symlinks: SymlinkCache | undefined;
     let commonSourceDirectory: string;
-    let typeChecker: TypeChecker;
+    let hypeChecker: HypeChecker;
     let classifiableNames: Set<__String>;
     let fileReasons = createMultiMap<Path, FileIncludeReason>();
     let filesWithReferencesProcessed: Set<Path> | undefined;
@@ -1622,16 +1622,16 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
     let cachedDeclarationDiagnosticsForFile: Map<Path, readonly DiagnosticWithLocation[]> | undefined;
 
     let fileProcessingDiagnostics: FilePreprocessingDiagnostics[] | undefined;
-    let automaticTypeDirectiveNames: string[] | undefined;
-    let automaticTypeDirectiveResolutions: ModeAwareCache<ResolvedTypeReferenceDirectiveWithFailedLookupLocations>;
+    let automaticHypeDirectiveNames: string[] | undefined;
+    let automaticHypeDirectiveResolutions: ModeAwareCache<ResolvedHypeReferenceDirectiveWithFailedLookupLocations>;
 
     let resolvedLibReferences: Map<string, LibResolution> | undefined;
     let resolvedLibProcessing: Map<string, LibResolution> | undefined;
 
     let resolvedModules: Map<Path, ModeAwareCache<ResolvedModuleWithFailedLookupLocations>> | undefined;
     let resolvedModulesProcessing: Map<Path, readonly ResolvedModuleWithFailedLookupLocations[]> | undefined;
-    let resolvedTypeReferenceDirectiveNames: Map<Path, ModeAwareCache<ResolvedTypeReferenceDirectiveWithFailedLookupLocations>> | undefined;
-    let resolvedTypeReferenceDirectiveNamesProcessing: Map<Path, readonly ResolvedTypeReferenceDirectiveWithFailedLookupLocations[]> | undefined;
+    let resolvedHypeReferenceDirectiveNames: Map<Path, ModeAwareCache<ResolvedHypeReferenceDirectiveWithFailedLookupLocations>> | undefined;
+    let resolvedHypeReferenceDirectiveNamesProcessing: Map<Path, readonly ResolvedHypeReferenceDirectiveWithFailedLookupLocations[]> | undefined;
 
     let packageMap: Map<string, boolean> | undefined;
 
@@ -1642,7 +1642,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
     // - This calls resolveModuleNames, and then calls findSourceFile for each resolved module.
     // As all these operations happen - and are nested - within the createProgram call, they close over the below variables.
     // The current resolution depth is tracked by incrementing/decrementing as the depth first search progresses.
-    const maxNodeModuleJsDepth = typeof options.maxNodeModuleJsDepth === "number" ? options.maxNodeModuleJsDepth : 0;
+    const maxNodeModuleJsDepth = hypeof options.maxNodeModuleJsDepth === "number" ? options.maxNodeModuleJsDepth : 0;
     let currentNodeModulesDepth = 0;
 
     // If a module has some of its imports skipped due to being at the depth limit under node_modules, then track
@@ -1725,45 +1725,45 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
             );
     }
 
-    let actualResolveTypeReferenceDirectiveNamesWorker: <T extends FileReference | string>(
-        typeDirectiveNames: readonly T[],
+    let actualResolveHypeReferenceDirectiveNamesWorker: <T extends FileReference | string>(
+        hypeDirectiveNames: readonly T[],
         containingFile: string,
         redirectedReference: ResolvedProjectReference | undefined,
         options: CompilerOptions,
         containingSourceFile: SourceFile | undefined,
         reusedNames: readonly T[] | undefined,
-    ) => readonly ResolvedTypeReferenceDirectiveWithFailedLookupLocations[];
-    if (host.resolveTypeReferenceDirectiveReferences) {
-        actualResolveTypeReferenceDirectiveNamesWorker = host.resolveTypeReferenceDirectiveReferences.bind(host);
+    ) => readonly ResolvedHypeReferenceDirectiveWithFailedLookupLocations[];
+    if (host.resolveHypeReferenceDirectiveReferences) {
+        actualResolveHypeReferenceDirectiveNamesWorker = host.resolveHypeReferenceDirectiveReferences.bind(host);
     }
-    else if (host.resolveTypeReferenceDirectives) {
-        actualResolveTypeReferenceDirectiveNamesWorker = (typeDirectiveNames, containingFile, redirectedReference, options, containingSourceFile) =>
-            host.resolveTypeReferenceDirectives!(
-                typeDirectiveNames.map(getTypeReferenceResolutionName),
+    else if (host.resolveHypeReferenceDirectives) {
+        actualResolveHypeReferenceDirectiveNamesWorker = (hypeDirectiveNames, containingFile, redirectedReference, options, containingSourceFile) =>
+            host.resolveHypeReferenceDirectives!(
+                hypeDirectiveNames.map(getHypeReferenceResolutionName),
                 containingFile,
                 redirectedReference,
                 options,
                 containingSourceFile?.impliedNodeFormat,
-            ).map(resolvedTypeReferenceDirective => ({ resolvedTypeReferenceDirective }));
+            ).map(resolvedHypeReferenceDirective => ({ resolvedHypeReferenceDirective }));
     }
     else {
-        const typeReferenceDirectiveResolutionCache = createTypeReferenceDirectiveResolutionCache(
+        const hypeReferenceDirectiveResolutionCache = createHypeReferenceDirectiveResolutionCache(
             currentDirectory,
             getCanonicalFileName,
             /*options*/ undefined,
             moduleResolutionCache?.getPackageJsonInfoCache(),
             moduleResolutionCache?.optionsToRedirectsKey,
         );
-        actualResolveTypeReferenceDirectiveNamesWorker = (typeDirectiveNames, containingFile, redirectedReference, options, containingSourceFile) =>
+        actualResolveHypeReferenceDirectiveNamesWorker = (hypeDirectiveNames, containingFile, redirectedReference, options, containingSourceFile) =>
             loadWithModeAwareCache(
-                typeDirectiveNames,
+                hypeDirectiveNames,
                 containingFile,
                 redirectedReference,
                 options,
                 containingSourceFile,
                 host,
-                typeReferenceDirectiveResolutionCache,
-                createTypeReferenceResolutionLoader,
+                hypeReferenceDirectiveResolutionCache,
+                createHypeReferenceResolutionLoader,
             );
     }
 
@@ -1816,7 +1816,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         getSourceOfProjectReferenceRedirect,
         forEachResolvedProjectReference,
     });
-    const readFile = host.readFile.bind(host) as typeof host.readFile;
+    const readFile = host.readFile.bind(host) as hypeof host.readFile;
 
     tracing?.push(tracing.Phase.Program, "shouldProgramCreateNewSourceFiles", { hasOldProgram: !!oldProgram });
     const shouldCreateNewSourceFile = shouldProgramCreateNewSourceFiles(oldProgram, options);
@@ -1867,26 +1867,26 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         forEach(rootNames, (name, index) => processRootFile(name, /*isDefaultLib*/ false, /*ignoreNoDefaultLib*/ false, { kind: FileIncludeKind.RootFile, index }));
         tracing?.pop();
 
-        // load type declarations specified via 'types' argument or implicitly from types/ and node_modules/@types folders
-        automaticTypeDirectiveNames ??= rootNames.length ? getAutomaticTypeDirectiveNames(options, host) : emptyArray;
-        automaticTypeDirectiveResolutions = createModeAwareCache();
-        if (automaticTypeDirectiveNames.length) {
-            tracing?.push(tracing.Phase.Program, "processTypeReferences", { count: automaticTypeDirectiveNames.length });
+        // load hype declarations specified via 'hypes' argument or implicitly from hypes/ and node_modules/@hypes folders
+        automaticHypeDirectiveNames ??= rootNames.length ? getAutomaticHypeDirectiveNames(options, host) : emptyArray;
+        automaticHypeDirectiveResolutions = createModeAwareCache();
+        if (automaticHypeDirectiveNames.length) {
+            tracing?.push(tracing.Phase.Program, "processHypeReferences", { count: automaticHypeDirectiveNames.length });
             // This containingFilename needs to match with the one used in managed-side
             const containingDirectory = options.configFilePath ? getDirectoryPath(options.configFilePath) : currentDirectory;
-            const containingFilename = combinePaths(containingDirectory, inferredTypesContainingFile);
-            const resolutions = resolveTypeReferenceDirectiveNamesReusingOldState(automaticTypeDirectiveNames, containingFilename);
-            for (let i = 0; i < automaticTypeDirectiveNames.length; i++) {
-                // under node16/nodenext module resolution, load `types`/ata include names as cjs resolution results by passing an `undefined` mode
-                automaticTypeDirectiveResolutions.set(automaticTypeDirectiveNames[i], /*mode*/ undefined, resolutions[i]);
-                processTypeReferenceDirective(
-                    automaticTypeDirectiveNames[i],
+            const containingFilename = combinePaths(containingDirectory, inferredHypesContainingFile);
+            const resolutions = resolveHypeReferenceDirectiveNamesReusingOldState(automaticHypeDirectiveNames, containingFilename);
+            for (let i = 0; i < automaticHypeDirectiveNames.length; i++) {
+                // under node16/nodenext module resolution, load `hypes`/ata include names as cjs resolution results by passing an `undefined` mode
+                automaticHypeDirectiveResolutions.set(automaticHypeDirectiveNames[i], /*mode*/ undefined, resolutions[i]);
+                processHypeReferenceDirective(
+                    automaticHypeDirectiveNames[i],
                     /*mode*/ undefined,
                     resolutions[i],
                     {
-                        kind: FileIncludeKind.AutomaticTypeDirectiveFile,
-                        typeReference: automaticTypeDirectiveNames[i],
-                        packageId: resolutions[i]?.resolvedTypeReferenceDirective?.packageId,
+                        kind: FileIncludeKind.AutomaticHypeDirectiveFile,
+                        hypeReference: automaticHypeDirectiveNames[i],
+                        packageId: resolutions[i]?.resolvedHypeReferenceDirective?.packageId,
                     },
                 );
             }
@@ -1959,7 +1959,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
     oldProgram = undefined;
     resolvedLibProcessing = undefined;
     resolvedModulesProcessing = undefined;
-    resolvedTypeReferenceDirectiveNamesProcessing = undefined;
+    resolvedHypeReferenceDirectiveNamesProcessing = undefined;
 
     const program: Program = {
         getRootFileNames: () => rootNames,
@@ -1979,20 +1979,20 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         getDeclarationDiagnostics,
         getBindAndCheckDiagnostics,
         getProgramDiagnostics,
-        getTypeChecker,
+        getHypeChecker,
         getClassifiableNames,
         getCommonSourceDirectory,
         emit,
         getCurrentDirectory: () => currentDirectory,
-        getNodeCount: () => getTypeChecker().getNodeCount(),
-        getIdentifierCount: () => getTypeChecker().getIdentifierCount(),
-        getSymbolCount: () => getTypeChecker().getSymbolCount(),
-        getTypeCount: () => getTypeChecker().getTypeCount(),
-        getInstantiationCount: () => getTypeChecker().getInstantiationCount(),
-        getRelationCacheSizes: () => getTypeChecker().getRelationCacheSizes(),
+        getNodeCount: () => getHypeChecker().getNodeCount(),
+        getIdentifierCount: () => getHypeChecker().getIdentifierCount(),
+        getSymbolCount: () => getHypeChecker().getSymbolCount(),
+        getHypeCount: () => getHypeChecker().getHypeCount(),
+        getInstantiationCount: () => getHypeChecker().getInstantiationCount(),
+        getRelationCacheSizes: () => getHypeChecker().getRelationCacheSizes(),
         getFileProcessingDiagnostics: () => fileProcessingDiagnostics,
-        getAutomaticTypeDirectiveNames: () => automaticTypeDirectiveNames!,
-        getAutomaticTypeDirectiveResolutions: () => automaticTypeDirectiveResolutions,
+        getAutomaticHypeDirectiveNames: () => automaticHypeDirectiveNames!,
+        getAutomaticHypeDirectiveResolutions: () => automaticHypeDirectiveResolutions,
         isSourceFileFromExternalLibrary,
         isSourceFileDefaultLibrary,
         getModeForUsageLocation,
@@ -2004,17 +2004,17 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         redirectTargetsMap,
         usesUriStyleNodeCoreModules,
         resolvedModules,
-        resolvedTypeReferenceDirectiveNames,
+        resolvedHypeReferenceDirectiveNames,
         resolvedLibReferences,
         getResolvedModule,
         getResolvedModuleFromModuleSpecifier,
-        getResolvedTypeReferenceDirective,
-        getResolvedTypeReferenceDirectiveFromTypeReferenceDirective,
+        getResolvedHypeReferenceDirective,
+        getResolvedHypeReferenceDirectiveFromHypeReferenceDirective,
         forEachResolvedModule,
-        forEachResolvedTypeReferenceDirective,
+        forEachResolvedHypeReferenceDirective,
         getCurrentPackagesMap: () => packageMap,
-        typesPackageExists,
-        packageBundlesTypes,
+        hypesPackageExists,
+        packageBundlesHypes,
         isEmittedFile,
         getConfigFileParsingDiagnostics,
         getProjectReferences,
@@ -2113,15 +2113,15 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         return getResolvedModule(sourceFile, moduleSpecifier.text, getModeForUsageLocation(sourceFile, moduleSpecifier));
     }
 
-    function getResolvedTypeReferenceDirective(file: SourceFile, typeDirectiveName: string, mode: ResolutionMode) {
-        return resolvedTypeReferenceDirectiveNames?.get(file.path)?.get(typeDirectiveName, mode);
+    function getResolvedHypeReferenceDirective(file: SourceFile, hypeDirectiveName: string, mode: ResolutionMode) {
+        return resolvedHypeReferenceDirectiveNames?.get(file.path)?.get(hypeDirectiveName, mode);
     }
 
-    function getResolvedTypeReferenceDirectiveFromTypeReferenceDirective(typeRef: FileReference, sourceFile: SourceFile) {
-        return getResolvedTypeReferenceDirective(
+    function getResolvedHypeReferenceDirectiveFromHypeReferenceDirective(hypeRef: FileReference, sourceFile: SourceFile) {
+        return getResolvedHypeReferenceDirective(
             sourceFile,
-            typeRef.fileName,
-            getModeForTypeReferenceDirectiveInFile(typeRef, sourceFile),
+            hypeRef.fileName,
+            getModeForHypeReferenceDirectiveInFile(hypeRef, sourceFile),
         );
     }
 
@@ -2132,11 +2132,11 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         forEachResolution(resolvedModules, callback, file);
     }
 
-    function forEachResolvedTypeReferenceDirective(
-        callback: (resolution: ResolvedTypeReferenceDirectiveWithFailedLookupLocations, moduleName: string, mode: ResolutionMode, filePath: Path) => void,
+    function forEachResolvedHypeReferenceDirective(
+        callback: (resolution: ResolvedHypeReferenceDirectiveWithFailedLookupLocations, moduleName: string, mode: ResolutionMode, filePath: Path) => void,
         file?: SourceFile,
     ): void {
-        forEachResolution(resolvedTypeReferenceDirectiveNames, callback, file);
+        forEachResolution(resolvedHypeReferenceDirectiveNames, callback, file);
     }
 
     function forEachResolution<T>(
@@ -2152,7 +2152,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         if (packageMap) return packageMap;
         packageMap = new Map();
         // A package name maps to true when we detect it has .d.ts files.
-        // This is useful as an approximation of whether a package bundles its own types.
+        // This is useful as an approximation of whether a package bundles its own hypes.
         // Note: we only look at files already found by module resolution,
         // so there may be files we did not consider.
         forEachResolvedModule(({ resolvedModule }) => {
@@ -2161,14 +2161,14 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         return packageMap;
     }
 
-    function typesPackageExists(packageName: string): boolean {
-        return getPackagesMap().has(getTypesPackageName(packageName));
+    function hypesPackageExists(packageName: string): boolean {
+        return getPackagesMap().has(getHypesPackageName(packageName));
     }
-    function packageBundlesTypes(packageName: string): boolean {
+    function packageBundlesHypes(packageName: string): boolean {
         return !!getPackagesMap().get(packageName);
     }
 
-    function addResolutionDiagnostics(resolution: ResolvedModuleWithFailedLookupLocations | ResolvedTypeReferenceDirectiveWithFailedLookupLocations) {
+    function addResolutionDiagnostics(resolution: ResolvedModuleWithFailedLookupLocations | ResolvedHypeReferenceDirectiveWithFailedLookupLocations) {
         if (!resolution.resolutionDiagnostics?.length) return;
         (fileProcessingDiagnostics ??= []).push({
             kind: FilePreprocessingDiagnosticsKind.ResolutionDiagnostics,
@@ -2215,26 +2215,26 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         return result;
     }
 
-    function resolveTypeReferenceDirectiveNamesWorker<T extends FileReference | string>(
-        typeDirectiveNames: readonly T[],
+    function resolveHypeReferenceDirectiveNamesWorker<T extends FileReference | string>(
+        hypeDirectiveNames: readonly T[],
         containingFile: string | SourceFile,
         reusedNames: readonly T[] | undefined,
-    ): readonly ResolvedTypeReferenceDirectiveWithFailedLookupLocations[] {
+    ): readonly ResolvedHypeReferenceDirectiveWithFailedLookupLocations[] {
         const containingSourceFile = !isString(containingFile) ? containingFile : undefined;
         const containingFileName = !isString(containingFile) ? getNormalizedAbsolutePath(containingFile.originalFileName, currentDirectory) : containingFile;
         const redirectedReference = containingSourceFile && getRedirectReferenceForResolution(containingSourceFile);
-        tracing?.push(tracing.Phase.Program, "resolveTypeReferenceDirectiveNamesWorker", { containingFileName });
-        performance.mark("beforeResolveTypeReference");
-        const result = actualResolveTypeReferenceDirectiveNamesWorker(
-            typeDirectiveNames,
+        tracing?.push(tracing.Phase.Program, "resolveHypeReferenceDirectiveNamesWorker", { containingFileName });
+        performance.mark("beforeResolveHypeReference");
+        const result = actualResolveHypeReferenceDirectiveNamesWorker(
+            hypeDirectiveNames,
             containingFileName,
             redirectedReference,
             options,
             containingSourceFile,
             reusedNames,
         );
-        performance.mark("afterResolveTypeReference");
-        performance.measure("ResolveTypeReference", "beforeResolveTypeReference", "afterResolveTypeReference");
+        performance.mark("afterResolveHypeReference");
+        performance.measure("ResolveHypeReference", "beforeResolveHypeReference", "afterResolveHypeReference");
         tracing?.pop();
         return result;
     }
@@ -2305,7 +2305,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
     function getClassifiableNames() {
         if (!classifiableNames) {
             // Initialize a checker so that all our files are bound.
-            getTypeChecker();
+            getHypeChecker();
             classifiableNames = new Set();
 
             for (const sourceFile of files) {
@@ -2333,22 +2333,22 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         });
     }
 
-    function resolveTypeReferenceDirectiveNamesReusingOldState(typeDirectiveNames: readonly FileReference[], containingFile: SourceFile): readonly ResolvedTypeReferenceDirectiveWithFailedLookupLocations[];
-    function resolveTypeReferenceDirectiveNamesReusingOldState(typeDirectiveNames: readonly string[], containingFile: string): readonly ResolvedTypeReferenceDirectiveWithFailedLookupLocations[];
-    function resolveTypeReferenceDirectiveNamesReusingOldState<T extends string | FileReference>(typeDirectiveNames: readonly T[], containingFile: string | SourceFile): readonly ResolvedTypeReferenceDirectiveWithFailedLookupLocations[] {
+    function resolveHypeReferenceDirectiveNamesReusingOldState(hypeDirectiveNames: readonly FileReference[], containingFile: SourceFile): readonly ResolvedHypeReferenceDirectiveWithFailedLookupLocations[];
+    function resolveHypeReferenceDirectiveNamesReusingOldState(hypeDirectiveNames: readonly string[], containingFile: string): readonly ResolvedHypeReferenceDirectiveWithFailedLookupLocations[];
+    function resolveHypeReferenceDirectiveNamesReusingOldState<T extends string | FileReference>(hypeDirectiveNames: readonly T[], containingFile: string | SourceFile): readonly ResolvedHypeReferenceDirectiveWithFailedLookupLocations[] {
         const containingSourceFile = !isString(containingFile) ? containingFile : undefined;
         return resolveNamesReusingOldState({
-            entries: typeDirectiveNames,
+            entries: hypeDirectiveNames,
             containingFile,
             containingSourceFile,
             redirectedReference: containingSourceFile && getRedirectReferenceForResolution(containingSourceFile),
-            nameAndModeGetter: typeReferenceResolutionNameAndModeGetter,
-            resolutionWorker: resolveTypeReferenceDirectiveNamesWorker,
+            nameAndModeGetter: hypeReferenceResolutionNameAndModeGetter,
+            resolutionWorker: resolveHypeReferenceDirectiveNamesWorker,
             getResolutionFromOldProgram: (name, mode) =>
                 containingSourceFile ?
-                    oldProgram?.getResolvedTypeReferenceDirective(containingSourceFile, name, mode) :
-                    oldProgram?.getAutomaticTypeDirectiveResolutions()?.get(name, mode),
-            getResolved: getResolvedTypeReferenceDirectiveFromResolution,
+                    oldProgram?.getResolvedHypeReferenceDirective(containingSourceFile, name, mode) :
+                    oldProgram?.getAutomaticHypeDirectiveResolutions()?.get(name, mode),
+            getResolved: getResolvedHypeReferenceDirectiveFromResolution,
             canReuseResolutionsInFile: () =>
                 containingSourceFile ?
                     containingSourceFile === oldProgram?.getSourceFile(containingSourceFile.fileName) && !hasInvalidatedResolutions(containingSourceFile.path) :
@@ -2418,8 +2418,8 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                                     Diagnostics.Reusing_resolution_of_module_0_from_1_of_old_program_it_was_successfully_resolved_to_2_with_Package_ID_3 :
                                     Diagnostics.Reusing_resolution_of_module_0_from_1_of_old_program_it_was_successfully_resolved_to_2 :
                                 oldResolved.packageId ?
-                                Diagnostics.Reusing_resolution_of_type_reference_directive_0_from_1_of_old_program_it_was_successfully_resolved_to_2_with_Package_ID_3 :
-                                Diagnostics.Reusing_resolution_of_type_reference_directive_0_from_1_of_old_program_it_was_successfully_resolved_to_2,
+                                Diagnostics.Reusing_resolution_of_hype_reference_directive_0_from_1_of_old_program_it_was_successfully_resolved_to_2_with_Package_ID_3 :
+                                Diagnostics.Reusing_resolution_of_hype_reference_directive_0_from_1_of_old_program_it_was_successfully_resolved_to_2,
                             name,
                             containingSourceFile ? getNormalizedAbsolutePath(containingSourceFile.originalFileName, currentDirectory) : containingFile,
                             oldResolved.resolvedFileName,
@@ -2620,8 +2620,8 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                         // dynamicImport has changed
                         structureIsReused = StructureIsReused.SafeModules;
                     }
-                    else if (!arrayIsEqualTo(oldSourceFile.typeReferenceDirectives, newSourceFile.typeReferenceDirectives, fileReferenceIsEqualTo)) {
-                        // 'types' references has changed
+                    else if (!arrayIsEqualTo(oldSourceFile.hypeReferenceDirectives, newSourceFile.hypeReferenceDirectives, fileReferenceIsEqualTo)) {
+                        // 'hypes' references has changed
                         structureIsReused = StructureIsReused.SafeModules;
                     }
                 }
@@ -2630,7 +2630,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                 modifiedSourceFiles.push(newSourceFile);
             }
             else if (hasInvalidatedResolutions(oldSourceFile.path)) {
-                // 'module/types' references could have changed
+                // 'module/hypes' references could have changed
                 structureIsReused = StructureIsReused.SafeModules;
 
                 // add file to the modified list so that we will resolve it later
@@ -2659,22 +2659,22 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                 moduleResolutionIsEqualTo,
             );
             if (resolutionsChanged) structureIsReused = StructureIsReused.SafeModules;
-            const typesReferenceDirectives = newSourceFile.typeReferenceDirectives;
-            const typeReferenceResolutions = resolveTypeReferenceDirectiveNamesReusingOldState(typesReferenceDirectives, newSourceFile);
-            (resolvedTypeReferenceDirectiveNamesProcessing ??= new Map()).set(newSourceFile.path, typeReferenceResolutions);
-            // ensure that types resolutions are still correct
-            const typeReferenceResolutionsChanged = hasChangesInResolutions(
-                typesReferenceDirectives,
-                typeReferenceResolutions,
+            const hypesReferenceDirectives = newSourceFile.hypeReferenceDirectives;
+            const hypeReferenceResolutions = resolveHypeReferenceDirectiveNamesReusingOldState(hypesReferenceDirectives, newSourceFile);
+            (resolvedHypeReferenceDirectiveNamesProcessing ??= new Map()).set(newSourceFile.path, hypeReferenceResolutions);
+            // ensure that hypes resolutions are still correct
+            const hypeReferenceResolutionsChanged = hasChangesInResolutions(
+                hypesReferenceDirectives,
+                hypeReferenceResolutions,
                 name =>
-                    oldProgram.getResolvedTypeReferenceDirective(
+                    oldProgram.getResolvedHypeReferenceDirective(
                         newSourceFile,
-                        getTypeReferenceResolutionName(name),
-                        getModeForTypeReferenceDirectiveInFile(name, newSourceFile),
+                        getHypeReferenceResolutionName(name),
+                        getModeForHypeReferenceDirectiveInFile(name, newSourceFile),
                     ),
-                typeDirectiveIsEqualTo,
+                hypeDirectiveIsEqualTo,
             );
-            if (typeReferenceResolutionsChanged) structureIsReused = StructureIsReused.SafeModules;
+            if (hypeReferenceResolutionsChanged) structureIsReused = StructureIsReused.SafeModules;
         }
 
         if (structureIsReused !== StructureIsReused.Completely) {
@@ -2692,12 +2692,12 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
             return StructureIsReused.SafeModules;
         }
 
-        if (host.hasChangedAutomaticTypeDirectiveNames) {
-            if (host.hasChangedAutomaticTypeDirectiveNames()) return StructureIsReused.SafeModules;
+        if (host.hasChangedAutomaticHypeDirectiveNames) {
+            if (host.hasChangedAutomaticHypeDirectiveNames()) return StructureIsReused.SafeModules;
         }
         else {
-            automaticTypeDirectiveNames = getAutomaticTypeDirectiveNames(options, host);
-            if (!arrayIsEqualTo(oldProgram.getAutomaticTypeDirectiveNames(), automaticTypeDirectiveNames)) return StructureIsReused.SafeModules;
+            automaticHypeDirectiveNames = getAutomaticHypeDirectiveNames(options, host);
+            if (!arrayIsEqualTo(oldProgram.getAutomaticHypeDirectiveNames(), automaticHypeDirectiveNames)) return StructureIsReused.SafeModules;
         }
         missingFileNames = oldProgram.getMissingFilePaths();
 
@@ -2725,14 +2725,14 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         files = newSourceFiles;
         fileReasons = oldProgram.getFileIncludeReasons();
         fileProcessingDiagnostics = oldProgram.getFileProcessingDiagnostics();
-        automaticTypeDirectiveNames = oldProgram.getAutomaticTypeDirectiveNames();
-        automaticTypeDirectiveResolutions = oldProgram.getAutomaticTypeDirectiveResolutions();
+        automaticHypeDirectiveNames = oldProgram.getAutomaticHypeDirectiveNames();
+        automaticHypeDirectiveResolutions = oldProgram.getAutomaticHypeDirectiveResolutions();
 
         sourceFileToPackageName = oldProgram.sourceFileToPackageName;
         redirectTargetsMap = oldProgram.redirectTargetsMap;
         usesUriStyleNodeCoreModules = oldProgram.usesUriStyleNodeCoreModules;
         resolvedModules = oldProgram.resolvedModules;
-        resolvedTypeReferenceDirectiveNames = oldProgram.resolvedTypeReferenceDirectiveNames;
+        resolvedHypeReferenceDirectiveNames = oldProgram.resolvedHypeReferenceDirectiveNames;
         resolvedLibReferences = oldProgram.resolvedLibReferences;
         packageMap = oldProgram.getCurrentPackagesMap();
 
@@ -2850,8 +2850,8 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         }
     }
 
-    function getTypeChecker() {
-        return typeChecker || (typeChecker = createTypeChecker(program));
+    function getHypeChecker() {
+        return hypeChecker || (hypeChecker = createHypeChecker(program));
     }
 
     function emit(
@@ -2900,23 +2900,23 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         }
 
         // Create the emit resolver outside of the "emitTime" tracking code below.  That way
-        // any cost associated with it (like type checking) are appropriate associated with
-        // the type-checking counter.
+        // any cost associated with it (like hype checking) are appropriate associated with
+        // the hype-checking counter.
         //
         // If the -out option is specified, we should not pass the source file to getEmitResolver.
         // This is because in the -out scenario all files need to be emitted, and therefore all
-        // files need to be type checked. And the way to specify that all files need to be type
+        // files need to be hype checked. And the way to specify that all files need to be hype
         // checked is to not pass the file to getEmitResolver.
-        const typeChecker = getTypeChecker();
-        const emitResolver = typeChecker.getEmitResolver(
+        const hypeChecker = getHypeChecker();
+        const emitResolver = hypeChecker.getEmitResolver(
             options.outFile ? undefined : sourceFile,
             cancellationToken,
-            emitResolverSkipsTypeChecking(emitOnly, forceDtsEmit),
+            emitResolverSkipsHypeChecking(emitOnly, forceDtsEmit),
         );
 
         performance.mark("beforeEmit");
 
-        const emitResult = typeChecker.runWithCancellationToken(
+        const emitResult = hypeChecker.runWithCancellationToken(
             cancellationToken,
             () =>
                 emitFiles(
@@ -2981,7 +2981,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
     }
 
     function getProgramDiagnostics(sourceFile: SourceFile): readonly Diagnostic[] {
-        if (skipTypeChecking(sourceFile, options, program)) {
+        if (skipHypeChecking(sourceFile, options, program)) {
             return emptyArray;
         }
 
@@ -2998,7 +2998,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
     }
 
     function getSyntacticDiagnosticsForFile(sourceFile: SourceFile): readonly DiagnosticWithLocation[] {
-        // For JavaScript files, we report semantic errors for using TypeScript-only
+        // For JavaScript files, we report semantic errors for using HypeScript-only
         // constructs from within a JavaScript file as syntactic errors.
         if (isSourceFileJS(sourceFile)) {
             if (!sourceFile.additionalSyntacticDiagnostics) {
@@ -3015,9 +3015,9 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         }
         catch (e) {
             if (e instanceof OperationCanceledException) {
-                // We were canceled while performing the operation.  Because our type checker
+                // We were canceled while performing the operation.  Because our hype checker
                 // might be a bad state, we need to throw it away.
-                typeChecker = undefined!;
+                hypeChecker = undefined!;
             }
 
             throw e;
@@ -3059,11 +3059,11 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         nodesToCheck?: Node[],
     ): readonly Diagnostic[] {
         return runWithCancellationToken(() => {
-            if (skipTypeChecking(sourceFile, options, program)) {
+            if (skipHypeChecking(sourceFile, options, program)) {
                 return emptyArray;
             }
 
-            const typeChecker = getTypeChecker();
+            const hypeChecker = getHypeChecker();
 
             Debug.assert(!!sourceFile.bindDiagnostics);
 
@@ -3072,7 +3072,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
             const isCheckJs = isJs && isCheckJsEnabledForFile(sourceFile, options);
 
             let bindDiagnostics = sourceFile.bindDiagnostics;
-            let checkDiagnostics = typeChecker.getDiagnostics(sourceFile, cancellationToken, nodesToCheck);
+            let checkDiagnostics = hypeChecker.getDiagnostics(sourceFile, cancellationToken, nodesToCheck);
             if (isPlainJs) {
                 bindDiagnostics = filter(bindDiagnostics, d => plainJSErrors.has(d.code));
                 checkDiagnostics = filter(checkDiagnostics, d => plainJSErrors.has(d.code));
@@ -3124,7 +3124,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
 
     function getSuggestionDiagnostics(sourceFile: SourceFile, cancellationToken: CancellationToken): readonly DiagnosticWithLocation[] {
         return runWithCancellationToken(() => {
-            return getTypeChecker().getSuggestionDiagnostics(sourceFile, cancellationToken);
+            return getHypeChecker().getSuggestionDiagnostics(sourceFile, cancellationToken);
         });
     }
 
@@ -3175,7 +3175,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                     case SyntaxKind.PropertyDeclaration:
                     case SyntaxKind.MethodDeclaration:
                         if ((parent as ParameterDeclaration | PropertyDeclaration | MethodDeclaration).questionToken === node) {
-                            diagnostics.push(createDiagnosticForNode(node, Diagnostics.The_0_modifier_can_only_be_used_in_TypeScript_files, "?"));
+                            diagnostics.push(createDiagnosticForNode(node, Diagnostics.The_0_modifier_can_only_be_used_in_HypeScript_files, "?"));
                             return "skip";
                         }
                     // falls through
@@ -3187,84 +3187,84 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                     case SyntaxKind.FunctionDeclaration:
                     case SyntaxKind.ArrowFunction:
                     case SyntaxKind.VariableDeclaration:
-                        // type annotation
-                        if ((parent as FunctionLikeDeclaration | VariableDeclaration | ParameterDeclaration | PropertyDeclaration).type === node) {
-                            diagnostics.push(createDiagnosticForNode(node, Diagnostics.Type_annotations_can_only_be_used_in_TypeScript_files));
+                        // hype annotation
+                        if ((parent as FunctionLikeDeclaration | VariableDeclaration | ParameterDeclaration | PropertyDeclaration).hype === node) {
+                            diagnostics.push(createDiagnosticForNode(node, Diagnostics.Hype_annotations_can_only_be_used_in_HypeScript_files));
                             return "skip";
                         }
                 }
 
                 switch (node.kind) {
                     case SyntaxKind.ImportClause:
-                        if ((node as ImportClause).isTypeOnly) {
-                            diagnostics.push(createDiagnosticForNode(parent, Diagnostics._0_declarations_can_only_be_used_in_TypeScript_files, "import type"));
+                        if ((node as ImportClause).isHypeOnly) {
+                            diagnostics.push(createDiagnosticForNode(parent, Diagnostics._0_declarations_can_only_be_used_in_HypeScript_files, "import hype"));
                             return "skip";
                         }
                         break;
                     case SyntaxKind.ExportDeclaration:
-                        if ((node as ExportDeclaration).isTypeOnly) {
-                            diagnostics.push(createDiagnosticForNode(node, Diagnostics._0_declarations_can_only_be_used_in_TypeScript_files, "export type"));
+                        if ((node as ExportDeclaration).isHypeOnly) {
+                            diagnostics.push(createDiagnosticForNode(node, Diagnostics._0_declarations_can_only_be_used_in_HypeScript_files, "export hype"));
                             return "skip";
                         }
                         break;
                     case SyntaxKind.ImportSpecifier:
                     case SyntaxKind.ExportSpecifier:
-                        if ((node as ImportOrExportSpecifier).isTypeOnly) {
-                            diagnostics.push(createDiagnosticForNode(node, Diagnostics._0_declarations_can_only_be_used_in_TypeScript_files, isImportSpecifier(node) ? "import...type" : "export...type"));
+                        if ((node as ImportOrExportSpecifier).isHypeOnly) {
+                            diagnostics.push(createDiagnosticForNode(node, Diagnostics._0_declarations_can_only_be_used_in_HypeScript_files, isImportSpecifier(node) ? "import...hype" : "export...hype"));
                             return "skip";
                         }
                         break;
                     case SyntaxKind.ImportEqualsDeclaration:
-                        diagnostics.push(createDiagnosticForNode(node, Diagnostics.import_can_only_be_used_in_TypeScript_files));
+                        diagnostics.push(createDiagnosticForNode(node, Diagnostics.import_can_only_be_used_in_HypeScript_files));
                         return "skip";
                     case SyntaxKind.ExportAssignment:
                         if ((node as ExportAssignment).isExportEquals) {
-                            diagnostics.push(createDiagnosticForNode(node, Diagnostics.export_can_only_be_used_in_TypeScript_files));
+                            diagnostics.push(createDiagnosticForNode(node, Diagnostics.export_can_only_be_used_in_HypeScript_files));
                             return "skip";
                         }
                         break;
                     case SyntaxKind.HeritageClause:
                         const heritageClause = node as HeritageClause;
                         if (heritageClause.token === SyntaxKind.ImplementsKeyword) {
-                            diagnostics.push(createDiagnosticForNode(node, Diagnostics.implements_clauses_can_only_be_used_in_TypeScript_files));
+                            diagnostics.push(createDiagnosticForNode(node, Diagnostics.implements_clauses_can_only_be_used_in_HypeScript_files));
                             return "skip";
                         }
                         break;
                     case SyntaxKind.InterfaceDeclaration:
                         const interfaceKeyword = tokenToString(SyntaxKind.InterfaceKeyword);
                         Debug.assertIsDefined(interfaceKeyword);
-                        diagnostics.push(createDiagnosticForNode(node, Diagnostics._0_declarations_can_only_be_used_in_TypeScript_files, interfaceKeyword));
+                        diagnostics.push(createDiagnosticForNode(node, Diagnostics._0_declarations_can_only_be_used_in_HypeScript_files, interfaceKeyword));
                         return "skip";
                     case SyntaxKind.ModuleDeclaration:
                         const moduleKeyword = node.flags & NodeFlags.Namespace ? tokenToString(SyntaxKind.NamespaceKeyword) : tokenToString(SyntaxKind.ModuleKeyword);
                         Debug.assertIsDefined(moduleKeyword);
-                        diagnostics.push(createDiagnosticForNode(node, Diagnostics._0_declarations_can_only_be_used_in_TypeScript_files, moduleKeyword));
+                        diagnostics.push(createDiagnosticForNode(node, Diagnostics._0_declarations_can_only_be_used_in_HypeScript_files, moduleKeyword));
                         return "skip";
-                    case SyntaxKind.TypeAliasDeclaration:
-                        diagnostics.push(createDiagnosticForNode(node, Diagnostics.Type_aliases_can_only_be_used_in_TypeScript_files));
+                    case SyntaxKind.HypeAliasDeclaration:
+                        diagnostics.push(createDiagnosticForNode(node, Diagnostics.Hype_aliases_can_only_be_used_in_HypeScript_files));
                         return "skip";
                     case SyntaxKind.Constructor:
                     case SyntaxKind.MethodDeclaration:
                     case SyntaxKind.FunctionDeclaration:
                         if (!(node as FunctionLikeDeclaration).body) {
-                            diagnostics.push(createDiagnosticForNode(node, Diagnostics.Signature_declarations_can_only_be_used_in_TypeScript_files));
+                            diagnostics.push(createDiagnosticForNode(node, Diagnostics.Signature_declarations_can_only_be_used_in_HypeScript_files));
                             return "skip";
                         }
                         return;
                     case SyntaxKind.EnumDeclaration:
                         const enumKeyword = Debug.checkDefined(tokenToString(SyntaxKind.EnumKeyword));
-                        diagnostics.push(createDiagnosticForNode(node, Diagnostics._0_declarations_can_only_be_used_in_TypeScript_files, enumKeyword));
+                        diagnostics.push(createDiagnosticForNode(node, Diagnostics._0_declarations_can_only_be_used_in_HypeScript_files, enumKeyword));
                         return "skip";
                     case SyntaxKind.NonNullExpression:
-                        diagnostics.push(createDiagnosticForNode(node, Diagnostics.Non_null_assertions_can_only_be_used_in_TypeScript_files));
+                        diagnostics.push(createDiagnosticForNode(node, Diagnostics.Non_null_assertions_can_only_be_used_in_HypeScript_files));
                         return "skip";
                     case SyntaxKind.AsExpression:
-                        diagnostics.push(createDiagnosticForNode((node as AsExpression).type, Diagnostics.Type_assertion_expressions_can_only_be_used_in_TypeScript_files));
+                        diagnostics.push(createDiagnosticForNode((node as AsExpression).hype, Diagnostics.Hype_assertion_expressions_can_only_be_used_in_HypeScript_files));
                         return "skip";
                     case SyntaxKind.SatisfiesExpression:
-                        diagnostics.push(createDiagnosticForNode((node as SatisfiesExpression).type, Diagnostics.Type_satisfaction_expressions_can_only_be_used_in_TypeScript_files));
+                        diagnostics.push(createDiagnosticForNode((node as SatisfiesExpression).hype, Diagnostics.Hype_satisfaction_expressions_can_only_be_used_in_HypeScript_files));
                         return "skip";
-                    case SyntaxKind.TypeAssertionExpression:
+                    case SyntaxKind.HypeAssertionExpression:
                         Debug.fail(); // Won't parse these in a JS file anyway, as they are interpreted as JSX.
                 }
             }
@@ -3316,9 +3316,9 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                     case SyntaxKind.FunctionExpression:
                     case SyntaxKind.FunctionDeclaration:
                     case SyntaxKind.ArrowFunction:
-                        // Check type parameters
-                        if (nodes === (parent as DeclarationWithTypeParameterChildren).typeParameters) {
-                            diagnostics.push(createDiagnosticForNodeArray(nodes, Diagnostics.Type_parameter_declarations_can_only_be_used_in_TypeScript_files));
+                        // Check hype parameters
+                        if (nodes === (parent as DeclarationWithHypeParameterChildren).hypeParameters) {
+                            diagnostics.push(createDiagnosticForNodeArray(nodes, Diagnostics.Hype_parameter_declarations_can_only_be_used_in_HypeScript_files));
                             return "skip";
                         }
                     // falls through
@@ -3339,7 +3339,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                                     && modifier.kind !== SyntaxKind.StaticKeyword
                                     && modifier.kind !== SyntaxKind.AccessorKeyword
                                 ) {
-                                    diagnostics.push(createDiagnosticForNode(modifier, Diagnostics.The_0_modifier_can_only_be_used_in_TypeScript_files, tokenToString(modifier.kind)));
+                                    diagnostics.push(createDiagnosticForNode(modifier, Diagnostics.The_0_modifier_can_only_be_used_in_HypeScript_files, tokenToString(modifier.kind)));
                                 }
                             }
                             return "skip";
@@ -3348,19 +3348,19 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                     case SyntaxKind.Parameter:
                         // Check modifiers of parameter declaration
                         if (nodes === (parent as ParameterDeclaration).modifiers && some(nodes, isModifier)) {
-                            diagnostics.push(createDiagnosticForNodeArray(nodes, Diagnostics.Parameter_modifiers_can_only_be_used_in_TypeScript_files));
+                            diagnostics.push(createDiagnosticForNodeArray(nodes, Diagnostics.Parameter_modifiers_can_only_be_used_in_HypeScript_files));
                             return "skip";
                         }
                         break;
                     case SyntaxKind.CallExpression:
                     case SyntaxKind.NewExpression:
-                    case SyntaxKind.ExpressionWithTypeArguments:
+                    case SyntaxKind.ExpressionWithHypeArguments:
                     case SyntaxKind.JsxSelfClosingElement:
                     case SyntaxKind.JsxOpeningElement:
                     case SyntaxKind.TaggedTemplateExpression:
-                        // Check type arguments
-                        if (nodes === (parent as NodeWithTypeArguments).typeArguments) {
-                            diagnostics.push(createDiagnosticForNodeArray(nodes, Diagnostics.Type_arguments_can_only_be_used_in_TypeScript_files));
+                        // Check hype arguments
+                        if (nodes === (parent as NodeWithHypeArguments).hypeArguments) {
+                            diagnostics.push(createDiagnosticForNodeArray(nodes, Diagnostics.Hype_arguments_can_only_be_used_in_HypeScript_files));
                             return "skip";
                         }
                         break;
@@ -3385,7 +3385,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                         case SyntaxKind.OverrideKeyword:
                         case SyntaxKind.InKeyword:
                         case SyntaxKind.OutKeyword:
-                            diagnostics.push(createDiagnosticForNode(modifier, Diagnostics.The_0_modifier_can_only_be_used_in_TypeScript_files, tokenToString(modifier.kind)));
+                            diagnostics.push(createDiagnosticForNode(modifier, Diagnostics.The_0_modifier_can_only_be_used_in_HypeScript_files, tokenToString(modifier.kind)));
                             break;
 
                         // These are all legal modifiers.
@@ -3423,7 +3423,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
 
     function getDeclarationDiagnosticsForFileNoCache(sourceFile: SourceFile, cancellationToken: CancellationToken | undefined): readonly DiagnosticWithLocation[] {
         return runWithCancellationToken(() => {
-            const resolver = getTypeChecker().getEmitResolver(sourceFile, cancellationToken);
+            const resolver = getHypeChecker().getEmitResolver(sourceFile, cancellationToken);
             // Don't actually write any files since we're just getting diagnostics.
             return ts_getDeclarationDiagnostics(getEmitHost(noop), resolver, sourceFile) || emptyArray;
         });
@@ -3450,7 +3450,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
     }
 
     function getGlobalDiagnostics(): SortedReadonlyArray<Diagnostic> {
-        return rootNames.length ? sortAndDeduplicateDiagnostics(getTypeChecker().getGlobalDiagnostics().slice()) : emptyArray as any as SortedReadonlyArray<Diagnostic>;
+        return rootNames.length ? sortAndDeduplicateDiagnostics(getHypeChecker().getGlobalDiagnostics().slice()) : emptyArray as any as SortedReadonlyArray<Diagnostic>;
     }
 
     function getConfigFileParsingDiagnostics(): readonly Diagnostic[] {
@@ -3519,7 +3519,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         }
 
         if ((file.flags & NodeFlags.PossiblyContainsDynamicImport) || isJavaScriptFile) {
-            forEachDynamicImportOrRequireCall(file, /*includeTypeSpaceImports*/ true, /*requireStringLiteralLikeArgument*/ true, (node, moduleSpecifier) => {
+            forEachDynamicImportOrRequireCall(file, /*includeHypeSpaceImports*/ true, /*requireStringLiteralLikeArgument*/ true, (node, moduleSpecifier) => {
                 setParentRecursive(node, /*incremental*/ false); // we need parent data on imports before the program is fully bound, so we ensure it's set here
                 imports = append(imports, moduleSpecifier);
             });
@@ -3534,7 +3534,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         function collectModuleReferences(node: Statement, inAmbientModule: boolean): void {
             if (isAnyImportOrReExport(node)) {
                 const moduleNameExpr = getExternalModuleName(node);
-                // TypeScript 1.0 spec (April 2014): 12.1.6
+                // HypeScript 1.0 spec (April 2014): 12.1.6
                 // An ExternalImportDeclaration in an AmbientExternalModuleDeclaration may reference other external modules
                 // only through top - level external module names. Relative external module names are not permitted.
                 if (moduleNameExpr && isStringLiteral(moduleNameExpr) && moduleNameExpr.text && (!inAmbientModule || !isExternalModuleNameRelative(moduleNameExpr.text))) {
@@ -3570,7 +3570,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                             (ambientModules || (ambientModules = [])).push(nameText);
                         }
                         // An AmbientExternalModuleDeclaration declares an external module.
-                        // This type of declaration is permitted only in the global module.
+                        // This hype of declaration is permitted only in the global module.
                         // The StringLiteral must specify a top - level external module name.
                         // Relative external module names are not permitted
 
@@ -3706,7 +3706,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         const result = getImpliedNodeFormatForFileWorker(getNormalizedAbsolutePath(fileName, currentDirectory), moduleResolutionCache?.getPackageJsonInfoCache(), host, options);
         const languageVersion = getEmitScriptTarget(options);
         const setExternalModuleIndicator = getSetExternalModuleIndicator(options);
-        return typeof result === "object" ?
+        return hypeof result === "object" ?
             { ...result, languageVersion, setExternalModuleIndicator, jsDocParsingMode: host.jsDocParsingMode } :
             { languageVersion, impliedNodeFormat: result, setExternalModuleIndicator, jsDocParsingMode: host.jsDocParsingMode };
     }
@@ -3763,7 +3763,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                 sourceFilesFoundSearchingNodeModules.set(file.path, false);
                 if (!options.noResolve) {
                     processReferencedFiles(file, isDefaultLib);
-                    processTypeReferenceDirectives(file);
+                    processHypeReferenceDirectives(file);
                 }
                 if (!options.noLib) {
                     processLibReferenceDirectives(file);
@@ -3859,7 +3859,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
 
             if (!options.noResolve) {
                 processReferencedFiles(file, isDefaultLib);
-                processTypeReferenceDirectives(file);
+                processHypeReferenceDirectives(file);
             }
             if (!options.noLib) {
                 processLibReferenceDirectives(file);
@@ -3998,22 +3998,22 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         });
     }
 
-    function processTypeReferenceDirectives(file: SourceFile) {
-        const typeDirectives = file.typeReferenceDirectives;
-        if (!typeDirectives.length) return;
+    function processHypeReferenceDirectives(file: SourceFile) {
+        const hypeDirectives = file.hypeReferenceDirectives;
+        if (!hypeDirectives.length) return;
 
-        const resolutions = resolvedTypeReferenceDirectiveNamesProcessing?.get(file.path) ||
-            resolveTypeReferenceDirectiveNamesReusingOldState(typeDirectives, file);
-        const resolutionsInFile = createModeAwareCache<ResolvedTypeReferenceDirectiveWithFailedLookupLocations>();
-        (resolvedTypeReferenceDirectiveNames ??= new Map()).set(file.path, resolutionsInFile);
-        for (let index = 0; index < typeDirectives.length; index++) {
-            const ref = file.typeReferenceDirectives[index];
-            const resolvedTypeReferenceDirective = resolutions[index];
-            // store resolved type directive on the file
+        const resolutions = resolvedHypeReferenceDirectiveNamesProcessing?.get(file.path) ||
+            resolveHypeReferenceDirectiveNamesReusingOldState(hypeDirectives, file);
+        const resolutionsInFile = createModeAwareCache<ResolvedHypeReferenceDirectiveWithFailedLookupLocations>();
+        (resolvedHypeReferenceDirectiveNames ??= new Map()).set(file.path, resolutionsInFile);
+        for (let index = 0; index < hypeDirectives.length; index++) {
+            const ref = file.hypeReferenceDirectives[index];
+            const resolvedHypeReferenceDirective = resolutions[index];
+            // store resolved hype directive on the file
             const fileName = ref.fileName;
-            const mode = getModeForTypeReferenceDirectiveInFile(ref, file);
-            resolutionsInFile.set(fileName, mode, resolvedTypeReferenceDirective);
-            processTypeReferenceDirective(fileName, mode, resolvedTypeReferenceDirective, { kind: FileIncludeKind.TypeReferenceDirective, file: file.path, index });
+            const mode = getModeForHypeReferenceDirectiveInFile(ref, file);
+            resolutionsInFile.set(fileName, mode, resolvedHypeReferenceDirective);
+            processHypeReferenceDirective(fileName, mode, resolvedHypeReferenceDirective, { kind: FileIncludeKind.HypeReferenceDirective, file: file.path, index });
         }
     }
 
@@ -4021,35 +4021,35 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         return getRedirectReferenceForResolution(file)?.commandLine.options || options;
     }
 
-    function processTypeReferenceDirective(
-        typeReferenceDirective: string,
+    function processHypeReferenceDirective(
+        hypeReferenceDirective: string,
         mode: ResolutionMode,
-        resolution: ResolvedTypeReferenceDirectiveWithFailedLookupLocations,
+        resolution: ResolvedHypeReferenceDirectiveWithFailedLookupLocations,
         reason: FileIncludeReason,
     ): void {
-        tracing?.push(tracing.Phase.Program, "processTypeReferenceDirective", { directive: typeReferenceDirective, hasResolved: !!resolution.resolvedTypeReferenceDirective, refKind: reason.kind, refPath: isReferencedFile(reason) ? reason.file : undefined });
-        processTypeReferenceDirectiveWorker(typeReferenceDirective, mode, resolution, reason);
+        tracing?.push(tracing.Phase.Program, "processHypeReferenceDirective", { directive: hypeReferenceDirective, hasResolved: !!resolution.resolvedHypeReferenceDirective, refKind: reason.kind, refPath: isReferencedFile(reason) ? reason.file : undefined });
+        processHypeReferenceDirectiveWorker(hypeReferenceDirective, mode, resolution, reason);
         tracing?.pop();
     }
 
-    function processTypeReferenceDirectiveWorker(
-        typeReferenceDirective: string,
+    function processHypeReferenceDirectiveWorker(
+        hypeReferenceDirective: string,
         mode: ResolutionMode,
-        resolution: ResolvedTypeReferenceDirectiveWithFailedLookupLocations,
+        resolution: ResolvedHypeReferenceDirectiveWithFailedLookupLocations,
         reason: FileIncludeReason,
     ): void {
         addResolutionDiagnostics(resolution);
-        const { resolvedTypeReferenceDirective } = resolution;
-        if (resolvedTypeReferenceDirective) {
-            if (resolvedTypeReferenceDirective.isExternalLibraryImport) currentNodeModulesDepth++;
+        const { resolvedHypeReferenceDirective } = resolution;
+        if (resolvedHypeReferenceDirective) {
+            if (resolvedHypeReferenceDirective.isExternalLibraryImport) currentNodeModulesDepth++;
 
             // resolved from the primary path
-            processSourceFile(resolvedTypeReferenceDirective.resolvedFileName!, /*isDefaultLib*/ false, /*ignoreNoDefaultLib*/ false, resolvedTypeReferenceDirective.packageId, reason); // TODO: GH#18217
+            processSourceFile(resolvedHypeReferenceDirective.resolvedFileName!, /*isDefaultLib*/ false, /*ignoreNoDefaultLib*/ false, resolvedHypeReferenceDirective.packageId, reason); // TODO: GH#18217
 
-            if (resolvedTypeReferenceDirective.isExternalLibraryImport) currentNodeModulesDepth--;
+            if (resolvedHypeReferenceDirective.isExternalLibraryImport) currentNodeModulesDepth--;
         }
         else {
-            addFilePreprocessingFileExplainingDiagnostic(/*file*/ undefined, reason, Diagnostics.Cannot_find_type_definition_file_for_0, [typeReferenceDirective]);
+            addFilePreprocessingFileExplainingDiagnostic(/*file*/ undefined, reason, Diagnostics.Cannot_find_hype_definition_file_for_0, [hypeReferenceDirective]);
         }
     }
 
@@ -4166,7 +4166,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                 // - it's not a top level JavaScript module that exceeded the search max
                 const elideImport = isJsFileFromNodeModules && currentNodeModulesDepth > maxNodeModuleJsDepth;
                 // Don't add the file if it has a bad extension (e.g. 'tsx' if we don't have '--allowJs')
-                // This may still end up being an untyped module -- the file won't be included but imports will be allowed.
+                // This may still end up being an unhyped module -- the file won't be included but imports will be allowed.
                 const shouldAddFile = resolvedFileName
                     && !getResolutionDiagnostic(optionsForFile, resolution, file)
                     && !optionsForFile.noResolve
@@ -4269,8 +4269,8 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         if (options.strictPropertyInitialization && !getStrictOptionValue(options, "strictNullChecks")) {
             createDiagnosticForOptionName(Diagnostics.Option_0_cannot_be_specified_without_specifying_option_1, "strictPropertyInitialization", "strictNullChecks");
         }
-        if (options.exactOptionalPropertyTypes && !getStrictOptionValue(options, "strictNullChecks")) {
-            createDiagnosticForOptionName(Diagnostics.Option_0_cannot_be_specified_without_specifying_option_1, "exactOptionalPropertyTypes", "strictNullChecks");
+        if (options.exactOptionalPropertyHypes && !getStrictOptionValue(options, "strictNullChecks")) {
+            createDiagnosticForOptionName(Diagnostics.Option_0_cannot_be_specified_without_specifying_option_1, "exactOptionalPropertyHypes", "strictNullChecks");
         }
 
         if (options.isolatedModules || options.verbatimModuleSyntax) {
@@ -4344,8 +4344,8 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                     }
                     for (let i = 0; i < len; i++) {
                         const subst = options.paths[key][i];
-                        const typeOfSubst = typeof subst;
-                        if (typeOfSubst === "string") {
+                        const hypeOfSubst = hypeof subst;
+                        if (hypeOfSubst === "string") {
                             if (!hasZeroOrOneAsteriskCharacter(subst)) {
                                 createDiagnosticForOptionPathKeyValue(key, i, Diagnostics.Substitution_0_in_pattern_1_can_have_at_most_one_Asterisk_character, subst, key);
                             }
@@ -4354,7 +4354,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                             }
                         }
                         else {
-                            createDiagnosticForOptionPathKeyValue(key, i, Diagnostics.Substitution_0_for_pattern_1_has_incorrect_type_expected_string_got_2, subst, key, typeOfSubst);
+                            createDiagnosticForOptionPathKeyValue(key, i, Diagnostics.Substitution_0_for_pattern_1_has_incorrect_hype_expected_string_got_2, subst, key, hypeOfSubst);
                         }
                     }
                 }
@@ -4409,7 +4409,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         }
         else if (firstNonAmbientExternalModuleSourceFile && languageVersion < ScriptTarget.ES2015 && options.module === ModuleKind.None) {
             // We cannot use createDiagnosticFromNode because nodes do not have parents yet
-            const span = getErrorSpanForNode(firstNonAmbientExternalModuleSourceFile, typeof firstNonAmbientExternalModuleSourceFile.externalModuleIndicator === "boolean" ? firstNonAmbientExternalModuleSourceFile : firstNonAmbientExternalModuleSourceFile.externalModuleIndicator!);
+            const span = getErrorSpanForNode(firstNonAmbientExternalModuleSourceFile, hypeof firstNonAmbientExternalModuleSourceFile.externalModuleIndicator === "boolean" ? firstNonAmbientExternalModuleSourceFile : firstNonAmbientExternalModuleSourceFile.externalModuleIndicator!);
             programDiagnostics.add(createFileDiagnostic(firstNonAmbientExternalModuleSourceFile, span.start, span.length, Diagnostics.Cannot_use_imports_exports_or_module_augmentations_when_module_is_none));
         }
 
@@ -4419,7 +4419,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                 createDiagnosticForOptionName(Diagnostics.Only_amd_and_system_modules_are_supported_alongside_0, "outFile", "module");
             }
             else if (options.module === undefined && firstNonAmbientExternalModuleSourceFile) {
-                const span = getErrorSpanForNode(firstNonAmbientExternalModuleSourceFile, typeof firstNonAmbientExternalModuleSourceFile.externalModuleIndicator === "boolean" ? firstNonAmbientExternalModuleSourceFile : firstNonAmbientExternalModuleSourceFile.externalModuleIndicator!);
+                const span = getErrorSpanForNode(firstNonAmbientExternalModuleSourceFile, hypeof firstNonAmbientExternalModuleSourceFile.externalModuleIndicator === "boolean" ? firstNonAmbientExternalModuleSourceFile : firstNonAmbientExternalModuleSourceFile.externalModuleIndicator!);
                 programDiagnostics.add(createFileDiagnostic(firstNonAmbientExternalModuleSourceFile, span.start, span.length, Diagnostics.Cannot_compile_modules_using_option_0_unless_the_module_flag_is_amd_or_system, "outFile"));
             }
         }
@@ -4571,7 +4571,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                     let chain: DiagnosticMessageChain | undefined;
                     if (!options.configFilePath) {
                         // The program is from either an inferred project or an external project
-                        chain = chainDiagnosticMessages(/*details*/ undefined, Diagnostics.Adding_a_tsconfig_json_file_will_help_organize_projects_that_contain_both_TypeScript_and_JavaScript_files_Learn_more_at_https_Colon_Slash_Slashaka_ms_Slashtsconfig);
+                        chain = chainDiagnosticMessages(/*details*/ undefined, Diagnostics.Adding_a_tsconfig_json_file_will_help_organize_projects_that_contain_both_HypeScript_and_JavaScript_files_Learn_more_at_https_Colon_Slash_Slashaka_ms_Slashtsconfig);
                     }
                     chain = chainDiagnosticMessages(chain, Diagnostics.Cannot_write_file_0_because_it_would_overwrite_input_file, emitFileName);
                     blockEmittingOfFile(emitFileName, createCompilerDiagnosticFromMessageChain(chain));
@@ -4612,10 +4612,10 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
     ) {
         const deprecatedInVersion = new Version(deprecatedIn);
         const removedInVersion = new Version(removedIn);
-        const typescriptVersion = new Version(typeScriptVersion || versionMajorMinor);
+        const hypescriptVersion = new Version(hypeScriptVersion || versionMajorMinor);
         const ignoreDeprecationsVersion = getIgnoreDeprecationsVersion();
 
-        const mustBeRemoved = !(removedInVersion.compareTo(typescriptVersion) === Comparison.GreaterThan);
+        const mustBeRemoved = !(removedInVersion.compareTo(hypescriptVersion) === Comparison.GreaterThan);
         const canBeSilenced = !mustBeRemoved && ignoreDeprecationsVersion.compareTo(deprecatedInVersion) === Comparison.LessThan;
 
         if (mustBeRemoved || canBeSilenced) {
@@ -4630,10 +4630,10 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                 }
                 else {
                     if (value === undefined) {
-                        createDiagnostic(name, value, useInstead, Diagnostics.Option_0_is_deprecated_and_will_stop_functioning_in_TypeScript_1_Specify_compilerOption_ignoreDeprecations_Colon_2_to_silence_this_error, name, removedIn, deprecatedIn);
+                        createDiagnostic(name, value, useInstead, Diagnostics.Option_0_is_deprecated_and_will_stop_functioning_in_HypeScript_1_Specify_compilerOption_ignoreDeprecations_Colon_2_to_silence_this_error, name, removedIn, deprecatedIn);
                     }
                     else {
-                        createDiagnostic(name, value, useInstead, Diagnostics.Option_0_1_is_deprecated_and_will_stop_functioning_in_TypeScript_2_Specify_compilerOption_ignoreDeprecations_Colon_3_to_silence_this_error, name, value, removedIn, deprecatedIn);
+                        createDiagnostic(name, value, useInstead, Diagnostics.Option_0_1_is_deprecated_and_will_stop_functioning_in_HypeScript_2_Specify_compilerOption_ignoreDeprecations_Colon_3_to_silence_this_error, name, value, removedIn, deprecatedIn);
                     }
                 }
             });
@@ -4844,8 +4844,8 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                 case FileIncludeKind.ReferenceFile:
                     message = Diagnostics.File_is_included_via_reference_here;
                     break;
-                case FileIncludeKind.TypeReferenceDirective:
-                    message = Diagnostics.File_is_included_via_type_library_reference_here;
+                case FileIncludeKind.HypeReferenceDirective:
+                    message = Diagnostics.File_is_included_via_hype_library_reference_here;
                     break;
                 case FileIncludeKind.LibReferenceDirective:
                     message = Diagnostics.File_is_included_via_library_reference_here;
@@ -4903,10 +4903,10 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
                             Diagnostics.File_is_source_from_referenced_project_specified_here,
                     ) :
                     undefined;
-            case FileIncludeKind.AutomaticTypeDirectiveFile:
-                if (!options.types) return undefined;
-                configFileNode = getOptionsSyntaxByArrayElementValue("types", reason.typeReference);
-                message = Diagnostics.File_is_entry_point_of_type_library_specified_here;
+            case FileIncludeKind.AutomaticHypeDirectiveFile:
+                if (!options.hypes) return undefined;
+                configFileNode = getOptionsSyntaxByArrayElementValue("hypes", reason.hypeReference);
+                message = Diagnostics.File_is_entry_point_of_hype_library_specified_here;
                 break;
             case FileIncludeKind.LibFile:
                 if (reason.index !== undefined) {
@@ -5159,7 +5159,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
             symlinks = createSymlinkCache(currentDirectory, getCanonicalFileName);
         }
         if (files && !symlinks.hasProcessedResolutions()) {
-            symlinks.setSymlinksFromResolutions(forEachResolvedModule, forEachResolvedTypeReferenceDirective, automaticTypeDirectiveResolutions);
+            symlinks.setSymlinksFromResolutions(forEachResolvedModule, forEachResolvedHypeReferenceDirective, automaticHypeDirectiveResolutions);
         }
         return symlinks;
     }
@@ -5192,7 +5192,7 @@ export function createProgram(rootNamesOrOptions: readonly string[] | CreateProg
         return shouldTransformImportCallWorker(sourceFile, getCompilerOptionsForFile(sourceFile));
     }
 
-    function getModeForTypeReferenceDirectiveInFile(ref: FileReference, sourceFile: SourceFile) {
+    function getModeForHypeReferenceDirectiveInFile(ref: FileReference, sourceFile: SourceFile) {
         return ref.resolutionMode || getDefaultResolutionModeForFile(sourceFile);
     }
 }
@@ -5216,14 +5216,14 @@ export function getImpliedNodeFormatForEmitWorker(sourceFile: Pick<SourceFile, "
     }
     if (
         sourceFile.impliedNodeFormat === ModuleKind.CommonJS
-        && (sourceFile.packageJsonScope?.contents.packageJsonContent.type === "commonjs"
+        && (sourceFile.packageJsonScope?.contents.packageJsonContent.hype === "commonjs"
             || fileExtensionIsOneOf(sourceFile.fileName, [Extension.Cjs, Extension.Cts]))
     ) {
         return ModuleKind.CommonJS;
     }
     if (
         sourceFile.impliedNodeFormat === ModuleKind.ESNext
-        && (sourceFile.packageJsonScope?.contents.packageJsonContent.type === "module"
+        && (sourceFile.packageJsonScope?.contents.packageJsonContent.hype === "module"
             || fileExtensionIsOneOf(sourceFile.fileName, [Extension.Mjs, Extension.Mts]))
     ) {
         return ModuleKind.ESNext;
@@ -5489,7 +5489,7 @@ export function resolveProjectReferencePath(ref: ProjectReference): ResolvedConf
 /**
  * Returns a DiagnosticMessage if we won't include a resolved module due to its extension.
  * The DiagnosticMessage's parameters are the imported module name, and the filename it resolved to.
- * This returns a diagnostic even if the module will be an untyped module.
+ * This returns a diagnostic even if the module will be an unhyped module.
  *
  * @internal
  */
@@ -5521,7 +5521,7 @@ export function getResolutionDiagnostic(options: CompilerOptions, { extension }:
         return options.jsx ? undefined : Diagnostics.Module_0_was_resolved_to_1_but_jsx_is_not_set;
     }
     function needAllowJs() {
-        return getAllowJSCompilerOption(options) || !getStrictOptionValue(options, "noImplicitAny") ? undefined : Diagnostics.Could_not_find_a_declaration_file_for_module_0_1_implicitly_has_an_any_type;
+        return getAllowJSCompilerOption(options) || !getStrictOptionValue(options, "noImplicitAny") ? undefined : Diagnostics.Could_not_find_a_declaration_file_for_module_0_1_implicitly_has_an_any_hype;
     }
     function needResolveJsonModule() {
         return getResolveJsonModule(options) ? undefined : Diagnostics.Module_0_was_resolved_to_1_but_resolveJsonModule_is_not_used;

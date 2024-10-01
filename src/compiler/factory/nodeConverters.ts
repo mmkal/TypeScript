@@ -66,9 +66,9 @@ export function createNodeConverters(factory: NodeFactory): NodeConverters {
             getModifiers(node)?.filter(modifier => !isExportModifier(modifier) && !isDefaultModifier(modifier)),
             node.asteriskToken,
             node.name,
-            node.typeParameters,
+            node.hypeParameters,
             node.parameters,
-            node.type,
+            node.hype,
             node.body,
         );
         setOriginalNode(updated, node);
@@ -83,7 +83,7 @@ export function createNodeConverters(factory: NodeFactory): NodeConverters {
         const updated = factory.createClassExpression(
             node.modifiers?.filter(modifier => !isExportModifier(modifier) && !isDefaultModifier(modifier)),
             node.name,
-            node.typeParameters,
+            node.hypeParameters,
             node.heritageClauses,
             node.members,
         );

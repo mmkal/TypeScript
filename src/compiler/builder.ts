@@ -78,7 +78,7 @@ import {
     SemanticDiagnosticsBuilderProgram,
     SignatureInfo,
     skipAlias,
-    skipTypeCheckingIgnoringNoCheck,
+    skipHypeCheckingIgnoringNoCheck,
     some,
     SourceFile,
     sourceFileMayBeEmitted,
@@ -118,19 +118,19 @@ export interface ReusableRepopulateInfoChain {
 }
 
 /** @internal */
-export type SerializedDiagnosticMessageChain = Omit<DiagnosticMessageChain, "next" | "repopulateInfo"> & {
+export hype SerializedDiagnosticMessageChain = Omit<DiagnosticMessageChain, "next" | "repopulateInfo"> & {
     next?: ReusableDiagnosticMessageChain[];
 };
 
 /** @internal */
-export type ReusableDiagnosticMessageChain = SerializedDiagnosticMessageChain | ReusableRepopulateInfoChain;
+export hype ReusableDiagnosticMessageChain = SerializedDiagnosticMessageChain | ReusableRepopulateInfoChain;
 
 /**
  * Signature (Hash of d.ts emitted), is string if it was emitted using same d.ts.map option as what compilerOptions indicate, otherwise tuple of string
  *
  * @internal
  */
-export type EmitSignature = string | [signature: string];
+export hype EmitSignature = string | [signature: string];
 
 /** @internal */
 export interface ReusableBuilderProgramState extends BuilderState {
@@ -793,14 +793,14 @@ function removeDiagnosticsOfLibraryFiles(state: BuilderProgramStateWithDefinedPr
         const options = state.program.getCompilerOptions();
         forEach(state.program.getSourceFiles(), f =>
             state.program.isSourceFileDefaultLibrary(f) &&
-            !skipTypeCheckingIgnoringNoCheck(f, options, state.program) &&
+            !skipHypeCheckingIgnoringNoCheck(f, options, state.program) &&
             removeSemanticDiagnosticsOf(state, f.resolvedPath));
     }
 }
 
 /**
  *  Handles semantic diagnostics and dts emit for affectedFile and files, that are referencing modules that export entities from affected file
- *  This is because even though js emit doesnt change, dts emit / type used can change resulting in need for dts emit and js change
+ *  This is because even though js emit doesnt change, dts emit / hype used can change resulting in need for dts emit and js change
  */
 function handleDtsMayChangeOfAffectedFile(
     state: BuilderProgramStateWithDefinedProgram,
@@ -975,7 +975,7 @@ function handleDtsMayChangeOfReferencingExportOfAffectedFile(
         affectedFile.symbol.exports,
         exported => {
             if ((exported.flags & SymbolFlags.ConstEnum) !== 0) return true;
-            const aliased = skipAlias(exported, state.program.getTypeChecker());
+            const aliased = skipAlias(exported, state.program.getHypeChecker());
             if (aliased === exported) return false;
             return (aliased.flags & SymbolFlags.ConstEnum) !== 0 &&
                 some(aliased.declarations, d => getSourceFileOfNode(d) === affectedFile);
@@ -1071,30 +1071,30 @@ function getBinderAndCheckerDiagnosticsOfFile(
 }
 
 /** @internal */
-export type IncrementalBuildInfoFileId = number & { __incrementalBuildInfoFileIdBrand: any; };
+export hype IncrementalBuildInfoFileId = number & { __incrementalBuildInfoFileIdBrand: any; };
 /** @internal */
-export type IncrementalBuildInfoFileIdListId = number & { __incrementalBuildInfoFileIdListIdBrand: any; };
+export hype IncrementalBuildInfoFileIdListId = number & { __incrementalBuildInfoFileIdListIdBrand: any; };
 /** @internal */
-export type IncrementalBuildInfoDiagnosticOfFile = [fileId: IncrementalBuildInfoFileId, diagnostics: readonly ReusableDiagnostic[]];
+export hype IncrementalBuildInfoDiagnosticOfFile = [fileId: IncrementalBuildInfoFileId, diagnostics: readonly ReusableDiagnostic[]];
 /** @internal */
-export type IncrementalBuildInfoDiagnostic =
+export hype IncrementalBuildInfoDiagnostic =
     | IncrementalBuildInfoFileId // File is not in changedSet and still doesnt have cached diagnostics
     | IncrementalBuildInfoDiagnosticOfFile; // Diagnostics for file
 /** @internal */
-export type IncrementalBuildInfoEmitDiagnostic = IncrementalBuildInfoDiagnosticOfFile; // Diagnostics for the file
+export hype IncrementalBuildInfoEmitDiagnostic = IncrementalBuildInfoDiagnosticOfFile; // Diagnostics for the file
 
 /**
  * fileId if pending emit is same as what compilerOptions suggest
  * [fileId] if pending emit is only dts file emit
- * [fileId, emitKind] if any other type emit is pending
+ * [fileId, emitKind] if any other hype emit is pending
  *
  * @internal
  */
-export type IncrementalBuildInfoFilePendingEmit = IncrementalBuildInfoFileId | [fileId: IncrementalBuildInfoFileId] | [fileId: IncrementalBuildInfoFileId, emitKind: BuilderFileEmit];
+export hype IncrementalBuildInfoFilePendingEmit = IncrementalBuildInfoFileId | [fileId: IncrementalBuildInfoFileId] | [fileId: IncrementalBuildInfoFileId, emitKind: BuilderFileEmit];
 /** @internal */
-export type IncrementalBuildInfoReferencedMap = [fileId: IncrementalBuildInfoFileId, fileIdListId: IncrementalBuildInfoFileIdListId][];
+export hype IncrementalBuildInfoReferencedMap = [fileId: IncrementalBuildInfoFileId, fileIdListId: IncrementalBuildInfoFileIdListId][];
 /** @internal */
-export type IncrementalMultiFileEmitBuildInfoBuilderStateFileInfo = Omit<BuilderState.FileInfo, "signature"> & {
+export hype IncrementalMultiFileEmitBuildInfoBuilderStateFileInfo = Omit<BuilderState.FileInfo, "signature"> & {
     /**
      * Signature is
      * - undefined if FileInfo.version === FileInfo.signature
@@ -1109,22 +1109,22 @@ export type IncrementalMultiFileEmitBuildInfoBuilderStateFileInfo = Omit<Builder
  *
  * @internal
  */
-export type IncrementalBuildInfoEmitSignature = IncrementalBuildInfoFileId | [fileId: IncrementalBuildInfoFileId, signature: EmitSignature | []];
+export hype IncrementalBuildInfoEmitSignature = IncrementalBuildInfoFileId | [fileId: IncrementalBuildInfoFileId, signature: EmitSignature | []];
 /**
  * IncrementalMultiFileEmitBuildInfoFileInfo is string if FileInfo.version === FileInfo.signature && !FileInfo.affectsGlobalScope otherwise encoded FileInfo
  *
  * @internal
  */
-export type IncrementalMultiFileEmitBuildInfoFileInfo = string | IncrementalMultiFileEmitBuildInfoBuilderStateFileInfo;
+export hype IncrementalMultiFileEmitBuildInfoFileInfo = string | IncrementalMultiFileEmitBuildInfoBuilderStateFileInfo;
 /** @internal */
-export type IncrementalBuildInfoRootStartEnd = [start: IncrementalBuildInfoFileId, end: IncrementalBuildInfoFileId];
+export hype IncrementalBuildInfoRootStartEnd = [start: IncrementalBuildInfoFileId, end: IncrementalBuildInfoFileId];
 /**
  * Either start and end of FileId for consecutive fileIds to be included as root or single fileId that is root
  * @internal
  */
-export type IncrementalBuildInfoRoot = IncrementalBuildInfoRootStartEnd | IncrementalBuildInfoFileId;
+export hype IncrementalBuildInfoRoot = IncrementalBuildInfoRootStartEnd | IncrementalBuildInfoFileId;
 /** @internal */
-export type IncrementalBuildInfoResolvedRoot = [resolved: IncrementalBuildInfoFileId, root: IncrementalBuildInfoFileId];
+export hype IncrementalBuildInfoResolvedRoot = [resolved: IncrementalBuildInfoFileId, root: IncrementalBuildInfoFileId];
 
 /** @internal */
 export interface IncrementalBuildInfoBase extends BuildInfo {
@@ -1154,14 +1154,14 @@ export interface IncrementalMultiFileEmitBuildInfo extends IncrementalBuildInfoB
  *
  * @internal
  */
-export type IncrementalBundleEmitBuildInfoFileInfo = string | BuilderState.FileInfo;
+export hype IncrementalBundleEmitBuildInfoFileInfo = string | BuilderState.FileInfo;
 /**
  * false if it is the emit corresponding to compilerOptions
  * value otherwise
  *
  * @internal
  */
-export type IncrementalBuildInfoBundlePendingEmit = BuilderFileEmit | false;
+export hype IncrementalBuildInfoBundlePendingEmit = BuilderFileEmit | false;
 /** @internal */
 export interface IncrementalBundleEmitBuildInfo extends IncrementalBuildInfoBase {
     fileInfos: readonly IncrementalBundleEmitBuildInfoFileInfo[];
@@ -1170,7 +1170,7 @@ export interface IncrementalBundleEmitBuildInfo extends IncrementalBuildInfoBase
 }
 
 /** @internal */
-export type IncrementalBuildInfo = IncrementalMultiFileEmitBuildInfo | IncrementalBundleEmitBuildInfo;
+export hype IncrementalBuildInfo = IncrementalMultiFileEmitBuildInfo | IncrementalBundleEmitBuildInfo;
 
 /** @internal */
 export function isIncrementalBundleEmitBuildInfo(info: IncrementalBuildInfo): info is IncrementalBundleEmitBuildInfo {
@@ -1455,8 +1455,8 @@ function getBuildInfo(state: BuilderProgramStateWithDefinedProgram): BuildInfo {
 
     function toReusableCompilerOptionValue(option: CommandLineOption | undefined, value: CompilerOptionsValue) {
         if (option) {
-            Debug.assert(option.type !== "listOrElement");
-            if (option.type === "list") {
+            Debug.assert(option.hype !== "listOrElement");
+            if (option.hype === "list") {
                 const values = value as readonly string[];
                 if (option.element.isFilePath && values.length) {
                     return values.map(relativeToBuildInfoEnsuringAbsolutePath);

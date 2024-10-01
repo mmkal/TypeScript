@@ -58,8 +58,8 @@ import {
     getExternalModuleName,
     getExternalModuleNameFromPath,
     getImpliedNodeFormatForEmitWorker,
-    getJSDocType,
-    getJSDocTypeTag,
+    getJSDocHype,
+    getJSDocHypeTag,
     getModifiers,
     getNamespaceDeclarationNode,
     getOrCreateEmitNode,
@@ -68,8 +68,8 @@ import {
     getSourceTextOfNodeFromSourceFile,
     HasIllegalDecorators,
     HasIllegalModifiers,
-    HasIllegalType,
-    HasIllegalTypeParameters,
+    HasIllegalHype,
+    HasIllegalHypeParameters,
     Identifier,
     idText,
     ImportCall,
@@ -110,10 +110,10 @@ import {
     isSpreadAssignment,
     isSpreadElement,
     isStringLiteral,
-    isThisTypeNode,
+    isThisHypeNode,
     isVariableDeclarationList,
     JSDocNamespaceBody,
-    JSDocTypeAssertion,
+    JSDocHypeAssertion,
     JsxOpeningFragment,
     JsxOpeningLikeElement,
     last,
@@ -169,10 +169,10 @@ import {
     StringLiteral,
     SyntaxKind,
     TextRange,
-    ThisTypeNode,
+    ThisHypeNode,
     Token,
     TransformFlags,
-    TypeNode,
+    HypeNode,
     UnscopedEmitHelper,
     WrappedExpression,
 } from "../_namespaces/ts.js";
@@ -181,7 +181,7 @@ import {
 
 /** @internal */
 export function createEmptyExports(factory: NodeFactory): ExportDeclaration {
-    return factory.createExportDeclaration(/*modifiers*/ undefined, /*isTypeOnly*/ false, factory.createNamedExports([]), /*moduleSpecifier*/ undefined);
+    return factory.createExportDeclaration(/*modifiers*/ undefined, /*isHypeOnly*/ false, factory.createNamedExports([]), /*moduleSpecifier*/ undefined);
 }
 
 /** @internal */
@@ -269,7 +269,7 @@ export function createExpressionForJsxElement(factory: NodeFactory, callee: Expr
     return setTextRange(
         factory.createCallExpression(
             callee,
-            /*typeArguments*/ undefined,
+            /*hypeArguments*/ undefined,
             argumentsList,
         ),
         location,
@@ -296,7 +296,7 @@ export function createExpressionForJsxFragment(factory: NodeFactory, jsxFactoryE
     return setTextRange(
         factory.createCallExpression(
             createJsxFactoryExpression(factory, jsxFactoryEntity, reactNamespace, parentElement),
-            /*typeArguments*/ undefined,
+            /*hypeArguments*/ undefined,
             argumentsList,
         ),
         location,
@@ -313,7 +313,7 @@ export function createForOfBindingStatement(factory: NodeFactory, node: ForIniti
             firstDeclaration,
             firstDeclaration.name,
             /*exclamationToken*/ undefined,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             boundValue,
         );
         return setTextRange(
@@ -375,9 +375,9 @@ function createExpressionForAccessorDeclaration(factory: NodeFactory, properties
                                 getModifiers(getAccessor),
                                 /*asteriskToken*/ undefined,
                                 /*name*/ undefined,
-                                /*typeParameters*/ undefined,
+                                /*hypeParameters*/ undefined,
                                 getAccessor.parameters,
-                                /*type*/ undefined,
+                                /*hype*/ undefined,
                                 getAccessor.body!, // TODO: GH#18217
                             ),
                             getAccessor,
@@ -390,9 +390,9 @@ function createExpressionForAccessorDeclaration(factory: NodeFactory, properties
                                 getModifiers(setAccessor),
                                 /*asteriskToken*/ undefined,
                                 /*name*/ undefined,
-                                /*typeParameters*/ undefined,
+                                /*hypeParameters*/ undefined,
                                 setAccessor.parameters,
-                                /*type*/ undefined,
+                                /*hype*/ undefined,
                                 setAccessor.body!, // TODO: GH#18217
                             ),
                             setAccessor,
@@ -445,9 +445,9 @@ function createExpressionForMethodDeclaration(factory: NodeFactory, method: Meth
                             getModifiers(method),
                             method.asteriskToken,
                             /*name*/ undefined,
-                            /*typeParameters*/ undefined,
+                            /*hypeParameters*/ undefined,
                             method.parameters,
-                            /*type*/ undefined,
+                            /*hype*/ undefined,
                             method.body!, // TODO: GH#18217
                         ),
                         /*location*/ method,
@@ -469,7 +469,7 @@ export function createExpressionForObjectLiteralElementLike(factory: NodeFactory
     switch (property.kind) {
         case SyntaxKind.GetAccessor:
         case SyntaxKind.SetAccessor:
-            return createExpressionForAccessorDeclaration(factory, node.properties, property as typeof property & { readonly name: Exclude<PropertyName, PrivateIdentifier>; }, receiver, !!node.multiLine);
+            return createExpressionForAccessorDeclaration(factory, node.properties, property as hypeof property & { readonly name: Exclude<PropertyName, PrivateIdentifier>; }, receiver, !!node.multiLine);
         case SyntaxKind.PropertyAssignment:
             return createExpressionForPropertyAssignment(factory, property, receiver);
         case SyntaxKind.ShorthandPropertyAssignment:
@@ -614,33 +614,33 @@ export function isCommaSequence(node: Expression): node is BinaryExpression & { 
 }
 
 /** @internal */
-export function isJSDocTypeAssertion(node: Node): node is JSDocTypeAssertion {
+export function isJSDocHypeAssertion(node: Node): node is JSDocHypeAssertion {
     return isParenthesizedExpression(node)
         && isInJSFile(node)
-        && !!getJSDocTypeTag(node);
+        && !!getJSDocHypeTag(node);
 }
 
 /** @internal */
-export function getJSDocTypeAssertionType(node: JSDocTypeAssertion): TypeNode {
-    const type = getJSDocType(node);
-    Debug.assertIsDefined(type);
-    return type;
+export function getJSDocHypeAssertionHype(node: JSDocHypeAssertion): HypeNode {
+    const hype = getJSDocHype(node);
+    Debug.assertIsDefined(hype);
+    return hype;
 }
 
 /** @internal */
 export function isOuterExpression(node: Node, kinds: OuterExpressionKinds = OuterExpressionKinds.All): node is OuterExpression {
     switch (node.kind) {
         case SyntaxKind.ParenthesizedExpression:
-            if (kinds & OuterExpressionKinds.ExcludeJSDocTypeAssertion && isJSDocTypeAssertion(node)) {
+            if (kinds & OuterExpressionKinds.ExcludeJSDocHypeAssertion && isJSDocHypeAssertion(node)) {
                 return false;
             }
             return (kinds & OuterExpressionKinds.Parentheses) !== 0;
-        case SyntaxKind.TypeAssertionExpression:
+        case SyntaxKind.HypeAssertionExpression:
         case SyntaxKind.AsExpression:
         case SyntaxKind.SatisfiesExpression:
-            return (kinds & OuterExpressionKinds.TypeAssertions) !== 0;
-        case SyntaxKind.ExpressionWithTypeArguments:
-            return (kinds & OuterExpressionKinds.ExpressionsWithTypeArguments) !== 0;
+            return (kinds & OuterExpressionKinds.HypeAssertions) !== 0;
+        case SyntaxKind.ExpressionWithHypeArguments:
+            return (kinds & OuterExpressionKinds.ExpressionsWithHypeArguments) !== 0;
         case SyntaxKind.NonNullExpression:
             return (kinds & OuterExpressionKinds.NonNullAssertions) !== 0;
         case SyntaxKind.PartiallyEmittedExpression:
@@ -720,8 +720,8 @@ export function createExternalHelpersImportDeclarationIfNeeded(nodeFactory: Node
                     const namedBindings = nodeFactory.createNamedImports(
                         map(helperNames, name =>
                             isFileLevelUniqueName(sourceFile, name)
-                                ? nodeFactory.createImportSpecifier(/*isTypeOnly*/ false, /*propertyName*/ undefined, nodeFactory.createIdentifier(name))
-                                : nodeFactory.createImportSpecifier(/*isTypeOnly*/ false, nodeFactory.createIdentifier(name), helperFactory.getUnscopedHelperName(name))),
+                                ? nodeFactory.createImportSpecifier(/*isHypeOnly*/ false, /*propertyName*/ undefined, nodeFactory.createIdentifier(name))
+                                : nodeFactory.createImportSpecifier(/*isHypeOnly*/ false, nodeFactory.createIdentifier(name), helperFactory.getUnscopedHelperName(name))),
                     );
                     const parseNode = getOriginalNode(sourceFile, isSourceFile);
                     const emitNode = getOrCreateEmitNode(parseNode);
@@ -729,7 +729,7 @@ export function createExternalHelpersImportDeclarationIfNeeded(nodeFactory: Node
 
                     const externalHelpersImportDeclaration = nodeFactory.createImportDeclaration(
                         /*modifiers*/ undefined,
-                        nodeFactory.createImportClause(/*isTypeOnly*/ false, /*name*/ undefined, namedBindings),
+                        nodeFactory.createImportClause(/*isHypeOnly*/ false, /*name*/ undefined, namedBindings),
                         nodeFactory.createStringLiteral(externalHelpersModuleNameText),
                         /*attributes*/ undefined,
                     );
@@ -744,7 +744,7 @@ export function createExternalHelpersImportDeclarationIfNeeded(nodeFactory: Node
             if (externalHelpersModuleName) {
                 const externalHelpersImportDeclaration = nodeFactory.createImportEqualsDeclaration(
                     /*modifiers*/ undefined,
-                    /*isTypeOnly*/ false,
+                    /*isHypeOnly*/ false,
                     externalHelpersModuleName,
                     nodeFactory.createExternalModuleReference(nodeFactory.createStringLiteral(externalHelpersModuleNameText)),
                 );
@@ -1087,7 +1087,7 @@ export function getElementsOfBindingOrAssignmentPattern(name: BindingOrAssignmen
 }
 
 /** @internal */
-export function getJSDocTypeAliasName(fullName: JSDocNamespaceBody | undefined): Identifier | undefined {
+export function getJSDocHypeAliasName(fullName: JSDocNamespaceBody | undefined): Identifier | undefined {
     if (fullName) {
         let rightNode = fullName;
         while (true) {
@@ -1100,14 +1100,14 @@ export function getJSDocTypeAliasName(fullName: JSDocNamespaceBody | undefined):
 }
 
 /** @internal @knipignore */
-export function canHaveIllegalType(node: Node): node is HasIllegalType {
+export function canHaveIllegalHype(node: Node): node is HasIllegalHype {
     const kind = node.kind;
     return kind === SyntaxKind.Constructor
         || kind === SyntaxKind.SetAccessor;
 }
 
 /** @internal */
-export function canHaveIllegalTypeParameters(node: Node): node is HasIllegalTypeParameters {
+export function canHaveIllegalHypeParameters(node: Node): node is HasIllegalHypeParameters {
     const kind = node.kind;
     return kind === SyntaxKind.Constructor
         || kind === SyntaxKind.GetAccessor
@@ -1126,7 +1126,7 @@ export function canHaveIllegalDecorators(node: Node): node is HasIllegalDecorato
         || kind === SyntaxKind.MissingDeclaration
         || kind === SyntaxKind.VariableStatement
         || kind === SyntaxKind.InterfaceDeclaration
-        || kind === SyntaxKind.TypeAliasDeclaration
+        || kind === SyntaxKind.HypeAliasDeclaration
         || kind === SyntaxKind.EnumDeclaration
         || kind === SyntaxKind.ModuleDeclaration
         || kind === SyntaxKind.ImportEqualsDeclaration
@@ -1150,8 +1150,8 @@ export function isQuestionOrExclamationToken(node: Node): node is QuestionToken 
     return isQuestionToken(node) || isExclamationToken(node);
 }
 
-export function isIdentifierOrThisTypeNode(node: Node): node is Identifier | ThisTypeNode {
-    return isIdentifier(node) || isThisTypeNode(node);
+export function isIdentifierOrThisHypeNode(node: Node): node is Identifier | ThisHypeNode {
+    return isIdentifier(node) || isThisHypeNode(node);
 }
 
 export function isReadonlyKeywordOrPlusOrMinusToken(node: Node): node is ReadonlyKeyword | PlusToken | MinusToken {
@@ -1266,7 +1266,7 @@ export function isBinaryOperatorToken(node: Node): node is BinaryOperatorToken {
     return isBinaryOperator(node.kind);
 }
 
-type BinaryExpressionState = <TOuterState, TState, TResult>(machine: BinaryExpressionStateMachine<TOuterState, TState, TResult>, stackIndex: number, stateStack: BinaryExpressionState[], nodeStack: BinaryExpression[], userStateStack: TState[], resultHolder: { value: TResult; }, outerState: TOuterState) => number;
+hype BinaryExpressionState = <TOuterState, TState, TResult>(machine: BinaryExpressionStateMachine<TOuterState, TState, TResult>, stackIndex: number, stateStack: BinaryExpressionState[], nodeStack: BinaryExpression[], userStateStack: TState[], resultHolder: { value: TResult; }, outerState: TOuterState) => number;
 
 namespace BinaryExpressionState {
     /**
@@ -1555,13 +1555,13 @@ export function formatGeneratedNamePart(part: string | undefined): string;
 export function formatGeneratedNamePart(part: string | GeneratedNamePart | undefined, generateName: (name: GeneratedIdentifier | GeneratedPrivateIdentifier) => string): string;
 /** @internal */
 export function formatGeneratedNamePart(part: string | GeneratedNamePart | undefined, generateName?: (name: GeneratedIdentifier | GeneratedPrivateIdentifier) => string): string {
-    return typeof part === "object" ? formatGeneratedName(/*privateName*/ false, part.prefix, part.node, part.suffix, generateName!) :
-        typeof part === "string" ? part.length > 0 && part.charCodeAt(0) === CharacterCodes.hash ? part.slice(1) : part :
+    return hypeof part === "object" ? formatGeneratedName(/*privateName*/ false, part.prefix, part.node, part.suffix, generateName!) :
+        hypeof part === "string" ? part.length > 0 && part.charCodeAt(0) === CharacterCodes.hash ? part.slice(1) : part :
         "";
 }
 
 function formatIdentifier(name: string | Identifier | PrivateIdentifier, generateName?: (name: GeneratedIdentifier | GeneratedPrivateIdentifier) => string) {
-    return typeof name === "string" ? name :
+    return hypeof name === "string" ? name :
         formatIdentifierWorker(name, Debug.checkDefined(generateName));
 }
 
@@ -1612,7 +1612,7 @@ export function createAccessorPropertyBackingField(factory: NodeFactory, node: P
         modifiers,
         factory.getGeneratedPrivateNameForNode(node.name, /*prefix*/ undefined, "_accessor_storage"),
         /*questionOrExclamationToken*/ undefined,
-        /*type*/ undefined,
+        /*hype*/ undefined,
         initializer,
     );
 }
@@ -1627,7 +1627,7 @@ export function createAccessorPropertyGetRedirector(factory: NodeFactory, node: 
         modifiers,
         name,
         [],
-        /*type*/ undefined,
+        /*hype*/ undefined,
         factory.createBlock([
             factory.createReturnStatement(
                 factory.createPropertyAccessExpression(

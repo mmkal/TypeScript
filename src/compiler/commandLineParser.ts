@@ -11,8 +11,8 @@ import {
     CharacterCodes,
     combinePaths,
     CommandLineOption,
-    CommandLineOptionOfCustomType,
-    CommandLineOptionOfListType,
+    CommandLineOptionOfCustomHype,
+    CommandLineOptionOfListHype,
     CompilerOptions,
     CompilerOptionsValue,
     computedOptions,
@@ -115,7 +115,7 @@ import {
     tracing,
     TsConfigOnlyOption,
     TsConfigSourceFile,
-    TypeAcquisition,
+    HypeAcquisition,
     unescapeLeadingUnderscores,
     WatchDirectoryFlags,
     WatchDirectoryKind,
@@ -125,7 +125,7 @@ import {
 
 const compileOnSaveCommandLineOption: CommandLineOption = {
     name: "compileOnSave",
-    type: "boolean",
+    hype: "boolean",
     defaultValueDescription: false,
 };
 
@@ -142,7 +142,7 @@ export const inverseJsxOptionMap: Map<string, string> = new Map(mapIterator(jsxO
 
 // NOTE: The order here is important to default lib ordering as entries will have the same
 //       order in the generated program (see `getDefaultLibPriority` in program.ts). This
-//       order also affects overload resolution when a type declared in one lib is
+//       order also affects overload resolution when a hype declared in one lib is
 //       augmented in another lib.
 // NOTE: We must reevaluate the target for upcoming features when each successive TC39 edition is ratified in
 //       June of each year. This includes changes to `LanguageFeatureMinimumTarget`, `ScriptTarget`,
@@ -191,7 +191,7 @@ const libEntries: [string, string][] = [
     ["es2017.sharedmemory", "lib.es2017.sharedmemory.d.ts"],
     ["es2017.string", "lib.es2017.string.d.ts"],
     ["es2017.intl", "lib.es2017.intl.d.ts"],
-    ["es2017.typedarrays", "lib.es2017.typedarrays.d.ts"],
+    ["es2017.hypedarrays", "lib.es2017.hypedarrays.d.ts"],
     ["es2018.asyncgenerator", "lib.es2018.asyncgenerator.d.ts"],
     ["es2018.asynciterable", "lib.es2018.asynciterable.d.ts"],
     ["es2018.intl", "lib.es2018.intl.d.ts"],
@@ -253,7 +253,7 @@ const libEntries: [string, string][] = [
 /**
  * An array of supported "lib" reference file names used to determine the order for inclusion
  * when referenced, as well as for spelling suggestions. This ensures the correct ordering for
- * overload resolution when a type declared in one lib is extended by another.
+ * overload resolution when a hype declared in one lib is extended by another.
  *
  * @internal
  */
@@ -274,7 +274,7 @@ export const libMap: Map<string, string> = new Map(libEntries);
 export const optionsForWatch: CommandLineOption[] = [
     {
         name: "watchFile",
-        type: new Map(Object.entries({
+        hype: new Map(Object.entries({
             fixedpollinginterval: WatchFileKind.FixedPollingInterval,
             prioritypollinginterval: WatchFileKind.PriorityPollingInterval,
             dynamicprioritypolling: WatchFileKind.DynamicPriorityPolling,
@@ -283,12 +283,12 @@ export const optionsForWatch: CommandLineOption[] = [
             usefseventsonparentdirectory: WatchFileKind.UseFsEventsOnParentDirectory,
         })),
         category: Diagnostics.Watch_and_Build_Modes,
-        description: Diagnostics.Specify_how_the_TypeScript_watch_mode_works,
+        description: Diagnostics.Specify_how_the_HypeScript_watch_mode_works,
         defaultValueDescription: WatchFileKind.UseFsEvents,
     },
     {
         name: "watchDirectory",
-        type: new Map(Object.entries({
+        hype: new Map(Object.entries({
             usefsevents: WatchDirectoryKind.UseFsEvents,
             fixedpollinginterval: WatchDirectoryKind.FixedPollingInterval,
             dynamicprioritypolling: WatchDirectoryKind.DynamicPriorityPolling,
@@ -300,7 +300,7 @@ export const optionsForWatch: CommandLineOption[] = [
     },
     {
         name: "fallbackPolling",
-        type: new Map(Object.entries({
+        hype: new Map(Object.entries({
             fixedinterval: PollingWatchKind.FixedInterval,
             priorityinterval: PollingWatchKind.PriorityInterval,
             dynamicpriority: PollingWatchKind.DynamicPriority,
@@ -312,17 +312,17 @@ export const optionsForWatch: CommandLineOption[] = [
     },
     {
         name: "synchronousWatchDirectory",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Watch_and_Build_Modes,
         description: Diagnostics.Synchronously_call_callbacks_and_update_the_state_of_directory_watchers_on_platforms_that_don_t_support_recursive_watching_natively,
         defaultValueDescription: false,
     },
     {
         name: "excludeDirectories",
-        type: "list",
+        hype: "list",
         element: {
             name: "excludeDirectory",
-            type: "string",
+            hype: "string",
             isFilePath: true,
             extraValidation: specToDiagnostic,
         },
@@ -332,10 +332,10 @@ export const optionsForWatch: CommandLineOption[] = [
     },
     {
         name: "excludeFiles",
-        type: "list",
+        hype: "list",
         element: {
             name: "excludeFile",
-            type: "string",
+            hype: "string",
             isFilePath: true,
             extraValidation: specToDiagnostic,
         },
@@ -350,7 +350,7 @@ export const commonOptionsWithBuild: CommandLineOption[] = [
     {
         name: "help",
         shortName: "h",
-        type: "boolean",
+        hype: "boolean",
         showInSimplifiedHelpView: true,
         isCommandLineOnly: true,
         category: Diagnostics.Command_line_Options,
@@ -360,7 +360,7 @@ export const commonOptionsWithBuild: CommandLineOption[] = [
     {
         name: "help",
         shortName: "?",
-        type: "boolean",
+        hype: "boolean",
         isCommandLineOnly: true,
         category: Diagnostics.Command_line_Options,
         defaultValueDescription: false,
@@ -368,7 +368,7 @@ export const commonOptionsWithBuild: CommandLineOption[] = [
     {
         name: "watch",
         shortName: "w",
-        type: "boolean",
+        hype: "boolean",
         showInSimplifiedHelpView: true,
         isCommandLineOnly: true,
         category: Diagnostics.Command_line_Options,
@@ -377,7 +377,7 @@ export const commonOptionsWithBuild: CommandLineOption[] = [
     },
     {
         name: "preserveWatchOutput",
-        type: "boolean",
+        hype: "boolean",
         showInSimplifiedHelpView: false,
         category: Diagnostics.Output_Formatting,
         description: Diagnostics.Disable_wiping_the_console_in_watch_mode,
@@ -385,75 +385,75 @@ export const commonOptionsWithBuild: CommandLineOption[] = [
     },
     {
         name: "listFiles",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Compiler_Diagnostics,
         description: Diagnostics.Print_all_of_the_files_read_during_the_compilation,
         defaultValueDescription: false,
     },
     {
         name: "explainFiles",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Compiler_Diagnostics,
         description: Diagnostics.Print_files_read_during_the_compilation_including_why_it_was_included,
         defaultValueDescription: false,
     },
     {
         name: "listEmittedFiles",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Compiler_Diagnostics,
         description: Diagnostics.Print_the_names_of_emitted_files_after_a_compilation,
         defaultValueDescription: false,
     },
     {
         name: "pretty",
-        type: "boolean",
+        hype: "boolean",
         showInSimplifiedHelpView: true,
         category: Diagnostics.Output_Formatting,
-        description: Diagnostics.Enable_color_and_formatting_in_TypeScript_s_output_to_make_compiler_errors_easier_to_read,
+        description: Diagnostics.Enable_color_and_formatting_in_HypeScript_s_output_to_make_compiler_errors_easier_to_read,
         defaultValueDescription: true,
     },
     {
         name: "traceResolution",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Compiler_Diagnostics,
         description: Diagnostics.Log_paths_used_during_the_moduleResolution_process,
         defaultValueDescription: false,
     },
     {
         name: "diagnostics",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Compiler_Diagnostics,
         description: Diagnostics.Output_compiler_performance_information_after_building,
         defaultValueDescription: false,
     },
     {
         name: "extendedDiagnostics",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Compiler_Diagnostics,
         description: Diagnostics.Output_more_detailed_compiler_performance_information_after_building,
         defaultValueDescription: false,
     },
     {
         name: "generateCpuProfile",
-        type: "string",
+        hype: "string",
         isFilePath: true,
-        paramType: Diagnostics.FILE_OR_DIRECTORY,
+        paramHype: Diagnostics.FILE_OR_DIRECTORY,
         category: Diagnostics.Compiler_Diagnostics,
         description: Diagnostics.Emit_a_v8_CPU_profile_of_the_compiler_run_for_debugging,
         defaultValueDescription: "profile.cpuprofile",
     },
     {
         name: "generateTrace",
-        type: "string",
+        hype: "string",
         isFilePath: true,
-        paramType: Diagnostics.DIRECTORY,
+        paramHype: Diagnostics.DIRECTORY,
         category: Diagnostics.Compiler_Diagnostics,
-        description: Diagnostics.Generates_an_event_trace_and_a_list_of_types,
+        description: Diagnostics.Generates_an_event_trace_and_a_list_of_hypes,
     },
     {
         name: "incremental",
         shortName: "i",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Projects,
         description: Diagnostics.Save_tsbuildinfo_files_to_allow_for_incremental_compilation_of_projects,
         transpileOptionValue: undefined,
@@ -462,18 +462,18 @@ export const commonOptionsWithBuild: CommandLineOption[] = [
     {
         name: "declaration",
         shortName: "d",
-        type: "boolean",
+        hype: "boolean",
         // Not setting affectsEmit because we calculate this flag might not affect full emit
         affectsBuildInfo: true,
         showInSimplifiedHelpView: true,
         category: Diagnostics.Emit,
         transpileOptionValue: undefined,
-        description: Diagnostics.Generate_d_ts_files_from_TypeScript_and_JavaScript_files_in_your_project,
+        description: Diagnostics.Generate_d_ts_files_from_HypeScript_and_JavaScript_files_in_your_project,
         defaultValueDescription: Diagnostics.false_unless_composite_is_set,
     },
     {
         name: "declarationMap",
-        type: "boolean",
+        hype: "boolean",
         // Not setting affectsEmit because we calculate this flag might not affect full emit
         affectsBuildInfo: true,
         showInSimplifiedHelpView: true,
@@ -483,7 +483,7 @@ export const commonOptionsWithBuild: CommandLineOption[] = [
     },
     {
         name: "emitDeclarationOnly",
-        type: "boolean",
+        hype: "boolean",
         // Not setting affectsEmit because we calculate this flag might not affect full emit
         affectsBuildInfo: true,
         showInSimplifiedHelpView: true,
@@ -494,7 +494,7 @@ export const commonOptionsWithBuild: CommandLineOption[] = [
     },
     {
         name: "sourceMap",
-        type: "boolean",
+        hype: "boolean",
         // Not setting affectsEmit because we calculate this flag might not affect full emit
         affectsBuildInfo: true,
         showInSimplifiedHelpView: true,
@@ -504,7 +504,7 @@ export const commonOptionsWithBuild: CommandLineOption[] = [
     },
     {
         name: "inlineSourceMap",
-        type: "boolean",
+        hype: "boolean",
         // Not setting affectsEmit because we calculate this flag might not affect full emit
         affectsBuildInfo: true,
         category: Diagnostics.Emit,
@@ -513,17 +513,17 @@ export const commonOptionsWithBuild: CommandLineOption[] = [
     },
     {
         name: "noCheck",
-        type: "boolean",
+        hype: "boolean",
         showInSimplifiedHelpView: false,
         category: Diagnostics.Compiler_Diagnostics,
-        description: Diagnostics.Disable_full_type_checking_only_critical_parse_and_emit_errors_will_be_reported,
+        description: Diagnostics.Disable_full_hype_checking_only_critical_parse_and_emit_errors_will_be_reported,
         transpileOptionValue: true,
         defaultValueDescription: false,
         // Not setting affectsSemanticDiagnostics or affectsBuildInfo because we dont want all diagnostics to go away, its handled in builder
     },
     {
         name: "noEmit",
-        type: "boolean",
+        hype: "boolean",
         showInSimplifiedHelpView: true,
         category: Diagnostics.Emit,
         description: Diagnostics.Disable_emitting_files_from_a_compilation,
@@ -532,7 +532,7 @@ export const commonOptionsWithBuild: CommandLineOption[] = [
     },
     {
         name: "assumeChangesOnlyAffectDirectDependencies",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsEmit: true,
         affectsBuildInfo: true,
@@ -542,19 +542,19 @@ export const commonOptionsWithBuild: CommandLineOption[] = [
     },
     {
         name: "locale",
-        type: "string",
+        hype: "string",
         category: Diagnostics.Command_line_Options,
         isCommandLineOnly: true,
-        description: Diagnostics.Set_the_language_of_the_messaging_from_TypeScript_This_does_not_affect_emit,
+        description: Diagnostics.Set_the_language_of_the_messaging_from_HypeScript_This_does_not_affect_emit,
         defaultValueDescription: Diagnostics.Platform_specific,
     },
 ];
 
 /** @internal */
-export const targetOptionDeclaration: CommandLineOptionOfCustomType = {
+export const targetOptionDeclaration: CommandLineOptionOfCustomHype = {
     name: "target",
     shortName: "t",
-    type: new Map(Object.entries({
+    hype: new Map(Object.entries({
         es3: ScriptTarget.ES3,
         es5: ScriptTarget.ES5,
         es6: ScriptTarget.ES2015,
@@ -575,7 +575,7 @@ export const targetOptionDeclaration: CommandLineOptionOfCustomType = {
     affectsEmit: true,
     affectsBuildInfo: true,
     deprecatedKeys: new Set(["es3"]),
-    paramType: Diagnostics.VERSION,
+    paramHype: Diagnostics.VERSION,
     showInSimplifiedHelpView: true,
     category: Diagnostics.Language_and_Environment,
     description: Diagnostics.Set_the_JavaScript_language_version_for_emitted_JavaScript_and_include_compatible_library_declarations,
@@ -583,10 +583,10 @@ export const targetOptionDeclaration: CommandLineOptionOfCustomType = {
 };
 
 /** @internal */
-export const moduleOptionDeclaration: CommandLineOptionOfCustomType = {
+export const moduleOptionDeclaration: CommandLineOptionOfCustomHype = {
     name: "module",
     shortName: "m",
-    type: new Map(Object.entries({
+    hype: new Map(Object.entries({
         none: ModuleKind.None,
         commonjs: ModuleKind.CommonJS,
         amd: ModuleKind.AMD,
@@ -605,7 +605,7 @@ export const moduleOptionDeclaration: CommandLineOptionOfCustomType = {
     affectsModuleResolution: true,
     affectsEmit: true,
     affectsBuildInfo: true,
-    paramType: Diagnostics.KIND,
+    paramHype: Diagnostics.KIND,
     showInSimplifiedHelpView: true,
     category: Diagnostics.Modules,
     description: Diagnostics.Specify_what_module_code_is_generated,
@@ -616,7 +616,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     // CommandLine only options
     {
         name: "all",
-        type: "boolean",
+        hype: "boolean",
         showInSimplifiedHelpView: true,
         category: Diagnostics.Command_line_Options,
         description: Diagnostics.Show_all_compiler_options,
@@ -625,7 +625,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     {
         name: "version",
         shortName: "v",
-        type: "boolean",
+        hype: "boolean",
         showInSimplifiedHelpView: true,
         category: Diagnostics.Command_line_Options,
         description: Diagnostics.Print_the_compiler_s_version,
@@ -633,25 +633,25 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "init",
-        type: "boolean",
+        hype: "boolean",
         showInSimplifiedHelpView: true,
         category: Diagnostics.Command_line_Options,
-        description: Diagnostics.Initializes_a_TypeScript_project_and_creates_a_tsconfig_json_file,
+        description: Diagnostics.Initializes_a_HypeScript_project_and_creates_a_tsconfig_json_file,
         defaultValueDescription: false,
     },
     {
         name: "project",
         shortName: "p",
-        type: "string",
+        hype: "string",
         isFilePath: true,
         showInSimplifiedHelpView: true,
         category: Diagnostics.Command_line_Options,
-        paramType: Diagnostics.FILE_OR_DIRECTORY,
+        paramHype: Diagnostics.FILE_OR_DIRECTORY,
         description: Diagnostics.Compile_the_project_given_the_path_to_its_configuration_file_or_to_a_folder_with_a_tsconfig_json,
     },
     {
         name: "showConfig",
-        type: "boolean",
+        hype: "boolean",
         showInSimplifiedHelpView: true,
         category: Diagnostics.Command_line_Options,
         isCommandLineOnly: true,
@@ -660,7 +660,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "listFilesOnly",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Command_line_Options,
         isCommandLineOnly: true,
         description: Diagnostics.Print_names_of_files_that_are_part_of_the_compilation_and_then_stop_processing,
@@ -672,10 +672,10 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     moduleOptionDeclaration,
     {
         name: "lib",
-        type: "list",
+        hype: "list",
         element: {
             name: "lib",
-            type: libMap,
+            hype: libMap,
             defaultValueDescription: undefined,
         },
         affectsProgramStructure: true,
@@ -686,7 +686,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "allowJs",
-        type: "boolean",
+        hype: "boolean",
         allowJsFlag: true,
         affectsBuildInfo: true,
         showInSimplifiedHelpView: true,
@@ -696,18 +696,18 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "checkJs",
-        type: "boolean",
+        hype: "boolean",
         affectsModuleResolution: true,
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         showInSimplifiedHelpView: true,
         category: Diagnostics.JavaScript_Support,
-        description: Diagnostics.Enable_error_reporting_in_type_checked_JavaScript_files,
+        description: Diagnostics.Enable_error_reporting_in_hype_checked_JavaScript_files,
         defaultValueDescription: false,
     },
     {
         name: "jsx",
-        type: jsxOptionMap,
+        hype: jsxOptionMap,
         affectsSourceFile: true,
         affectsEmit: true,
         affectsBuildInfo: true,
@@ -716,7 +716,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
         // This is effectively a semantic error, so mark this option as affecting semantic diagnostics
         // so we know to refresh errors when this option is changed.
         affectsSemanticDiagnostics: true,
-        paramType: Diagnostics.KIND,
+        paramHype: Diagnostics.KIND,
         showInSimplifiedHelpView: true,
         category: Diagnostics.Language_and_Environment,
         description: Diagnostics.Specify_what_JSX_code_is_generated,
@@ -724,12 +724,12 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "outFile",
-        type: "string",
+        hype: "string",
         affectsEmit: true,
         affectsBuildInfo: true,
         affectsDeclarationPath: true,
         isFilePath: true,
-        paramType: Diagnostics.FILE,
+        paramHype: Diagnostics.FILE,
         showInSimplifiedHelpView: true,
         category: Diagnostics.Emit,
         description: Diagnostics.Specify_a_file_that_bundles_all_outputs_into_one_JavaScript_file_If_declaration_is_true_also_designates_a_file_that_bundles_all_d_ts_output,
@@ -737,46 +737,46 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "outDir",
-        type: "string",
+        hype: "string",
         affectsEmit: true,
         affectsBuildInfo: true,
         affectsDeclarationPath: true,
         isFilePath: true,
-        paramType: Diagnostics.DIRECTORY,
+        paramHype: Diagnostics.DIRECTORY,
         showInSimplifiedHelpView: true,
         category: Diagnostics.Emit,
         description: Diagnostics.Specify_an_output_folder_for_all_emitted_files,
     },
     {
         name: "rootDir",
-        type: "string",
+        hype: "string",
         affectsEmit: true,
         affectsBuildInfo: true,
         affectsDeclarationPath: true,
         isFilePath: true,
-        paramType: Diagnostics.LOCATION,
+        paramHype: Diagnostics.LOCATION,
         category: Diagnostics.Modules,
         description: Diagnostics.Specify_the_root_folder_within_your_source_files,
         defaultValueDescription: Diagnostics.Computed_from_the_list_of_input_files,
     },
     {
         name: "composite",
-        type: "boolean",
+        hype: "boolean",
         // Not setting affectsEmit because we calculate this flag might not affect full emit
         affectsBuildInfo: true,
         isTSConfigOnly: true,
         category: Diagnostics.Projects,
         transpileOptionValue: undefined,
         defaultValueDescription: false,
-        description: Diagnostics.Enable_constraints_that_allow_a_TypeScript_project_to_be_used_with_project_references,
+        description: Diagnostics.Enable_constraints_that_allow_a_HypeScript_project_to_be_used_with_project_references,
     },
     {
         name: "tsBuildInfoFile",
-        type: "string",
+        hype: "string",
         affectsEmit: true,
         affectsBuildInfo: true,
         isFilePath: true,
-        paramType: Diagnostics.FILE,
+        paramHype: Diagnostics.FILE,
         category: Diagnostics.Projects,
         transpileOptionValue: undefined,
         defaultValueDescription: ".tsbuildinfo",
@@ -784,7 +784,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "removeComments",
-        type: "boolean",
+        hype: "boolean",
         affectsEmit: true,
         affectsBuildInfo: true,
         showInSimplifiedHelpView: true,
@@ -794,7 +794,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "importHelpers",
-        type: "boolean",
+        hype: "boolean",
         affectsEmit: true,
         affectsBuildInfo: true,
         affectsSourceFile: true,
@@ -804,7 +804,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "importsNotUsedAsValues",
-        type: new Map(Object.entries({
+        hype: new Map(Object.entries({
             remove: ImportsNotUsedAsValues.Remove,
             preserve: ImportsNotUsedAsValues.Preserve,
             error: ImportsNotUsedAsValues.Error,
@@ -813,12 +813,12 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         category: Diagnostics.Backwards_Compatibility,
-        description: Diagnostics.Specify_emit_Slashchecking_behavior_for_imports_that_are_only_used_for_types,
+        description: Diagnostics.Specify_emit_Slashchecking_behavior_for_imports_that_are_only_used_for_hypes,
         defaultValueDescription: ImportsNotUsedAsValues.Remove,
     },
     {
         name: "downlevelIteration",
-        type: "boolean",
+        hype: "boolean",
         affectsEmit: true,
         affectsBuildInfo: true,
         category: Diagnostics.Emit,
@@ -827,7 +827,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "isolatedModules",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Interop_Constraints,
         description: Diagnostics.Ensure_that_each_file_can_be_safely_transpiled_without_relying_on_other_imports,
         transpileOptionValue: true,
@@ -835,17 +835,17 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "verbatimModuleSyntax",
-        type: "boolean",
+        hype: "boolean",
         affectsEmit: true,
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         category: Diagnostics.Interop_Constraints,
-        description: Diagnostics.Do_not_transform_or_elide_any_imports_or_exports_not_marked_as_type_only_ensuring_they_are_written_in_the_output_file_s_format_based_on_the_module_setting,
+        description: Diagnostics.Do_not_transform_or_elide_any_imports_or_exports_not_marked_as_hype_only_ensuring_they_are_written_in_the_output_file_s_format_based_on_the_module_setting,
         defaultValueDescription: false,
     },
     {
         name: "isolatedDeclarations",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Interop_Constraints,
         description: Diagnostics.Require_sufficient_annotation_on_exports_so_other_tools_can_trivially_generate_declaration_files,
         defaultValueDescription: false,
@@ -853,108 +853,108 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
         affectsSemanticDiagnostics: true,
     },
 
-    // Strict Type Checks
+    // Strict Hype Checks
     {
         name: "strict",
-        type: "boolean",
+        hype: "boolean",
         // Though this affects semantic diagnostics, affectsSemanticDiagnostics is not set here
         // The value of each strictFlag depends on own strictFlag value or this and never accessed directly.
         // But we need to store `strict` in builf info, even though it won't be examined directly, so that the
         // flags it controls (e.g. `strictNullChecks`) will be retrieved correctly
         affectsBuildInfo: true,
         showInSimplifiedHelpView: true,
-        category: Diagnostics.Type_Checking,
-        description: Diagnostics.Enable_all_strict_type_checking_options,
+        category: Diagnostics.Hype_Checking,
+        description: Diagnostics.Enable_all_strict_hype_checking_options,
         defaultValueDescription: false,
     },
     {
         name: "noImplicitAny",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         strictFlag: true,
-        category: Diagnostics.Type_Checking,
-        description: Diagnostics.Enable_error_reporting_for_expressions_and_declarations_with_an_implied_any_type,
+        category: Diagnostics.Hype_Checking,
+        description: Diagnostics.Enable_error_reporting_for_expressions_and_declarations_with_an_implied_any_hype,
         defaultValueDescription: Diagnostics.false_unless_strict_is_set,
     },
     {
         name: "strictNullChecks",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         strictFlag: true,
-        category: Diagnostics.Type_Checking,
-        description: Diagnostics.When_type_checking_take_into_account_null_and_undefined,
+        category: Diagnostics.Hype_Checking,
+        description: Diagnostics.When_hype_checking_take_into_account_null_and_undefined,
         defaultValueDescription: Diagnostics.false_unless_strict_is_set,
     },
     {
-        name: "strictFunctionTypes",
-        type: "boolean",
+        name: "strictFunctionHypes",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         strictFlag: true,
-        category: Diagnostics.Type_Checking,
-        description: Diagnostics.When_assigning_functions_check_to_ensure_parameters_and_the_return_values_are_subtype_compatible,
+        category: Diagnostics.Hype_Checking,
+        description: Diagnostics.When_assigning_functions_check_to_ensure_parameters_and_the_return_values_are_subhype_compatible,
         defaultValueDescription: Diagnostics.false_unless_strict_is_set,
     },
     {
         name: "strictBindCallApply",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         strictFlag: true,
-        category: Diagnostics.Type_Checking,
+        category: Diagnostics.Hype_Checking,
         description: Diagnostics.Check_that_the_arguments_for_bind_call_and_apply_methods_match_the_original_function,
         defaultValueDescription: Diagnostics.false_unless_strict_is_set,
     },
     {
         name: "strictPropertyInitialization",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         strictFlag: true,
-        category: Diagnostics.Type_Checking,
+        category: Diagnostics.Hype_Checking,
         description: Diagnostics.Check_for_class_properties_that_are_declared_but_not_set_in_the_constructor,
         defaultValueDescription: Diagnostics.false_unless_strict_is_set,
     },
     {
         name: "strictBuiltinIteratorReturn",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         strictFlag: true,
-        category: Diagnostics.Type_Checking,
-        description: Diagnostics.Built_in_iterators_are_instantiated_with_a_TReturn_type_of_undefined_instead_of_any,
+        category: Diagnostics.Hype_Checking,
+        description: Diagnostics.Built_in_iterators_are_instantiated_with_a_TReturn_hype_of_undefined_instead_of_any,
         defaultValueDescription: Diagnostics.false_unless_strict_is_set,
     },
     {
         name: "noImplicitThis",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         strictFlag: true,
-        category: Diagnostics.Type_Checking,
-        description: Diagnostics.Enable_error_reporting_when_this_is_given_the_type_any,
+        category: Diagnostics.Hype_Checking,
+        description: Diagnostics.Enable_error_reporting_when_this_is_given_the_hype_any,
         defaultValueDescription: Diagnostics.false_unless_strict_is_set,
     },
     {
         name: "useUnknownInCatchVariables",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         strictFlag: true,
-        category: Diagnostics.Type_Checking,
+        category: Diagnostics.Hype_Checking,
         description: Diagnostics.Default_catch_clause_variables_as_unknown_instead_of_any,
         defaultValueDescription: Diagnostics.false_unless_strict_is_set,
     },
     {
         name: "alwaysStrict",
-        type: "boolean",
+        hype: "boolean",
         affectsSourceFile: true,
         affectsEmit: true,
         affectsBuildInfo: true,
         strictFlag: true,
-        category: Diagnostics.Type_Checking,
+        category: Diagnostics.Hype_Checking,
         description: Diagnostics.Ensure_use_strict_is_always_emitted,
         defaultValueDescription: Diagnostics.false_unless_strict_is_set,
     },
@@ -962,83 +962,83 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     // Additional Checks
     {
         name: "noUnusedLocals",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
-        category: Diagnostics.Type_Checking,
+        category: Diagnostics.Hype_Checking,
         description: Diagnostics.Enable_error_reporting_when_local_variables_aren_t_read,
         defaultValueDescription: false,
     },
     {
         name: "noUnusedParameters",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
-        category: Diagnostics.Type_Checking,
+        category: Diagnostics.Hype_Checking,
         description: Diagnostics.Raise_an_error_when_a_function_parameter_isn_t_read,
         defaultValueDescription: false,
     },
     {
-        name: "exactOptionalPropertyTypes",
-        type: "boolean",
+        name: "exactOptionalPropertyHypes",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
-        category: Diagnostics.Type_Checking,
-        description: Diagnostics.Interpret_optional_property_types_as_written_rather_than_adding_undefined,
+        category: Diagnostics.Hype_Checking,
+        description: Diagnostics.Interpret_optional_property_hypes_as_written_rather_than_adding_undefined,
         defaultValueDescription: false,
     },
     {
         name: "noImplicitReturns",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
-        category: Diagnostics.Type_Checking,
+        category: Diagnostics.Hype_Checking,
         description: Diagnostics.Enable_error_reporting_for_codepaths_that_do_not_explicitly_return_in_a_function,
         defaultValueDescription: false,
     },
     {
         name: "noFallthroughCasesInSwitch",
-        type: "boolean",
+        hype: "boolean",
         affectsBindDiagnostics: true,
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
-        category: Diagnostics.Type_Checking,
+        category: Diagnostics.Hype_Checking,
         description: Diagnostics.Enable_error_reporting_for_fallthrough_cases_in_switch_statements,
         defaultValueDescription: false,
     },
     {
         name: "noUncheckedIndexedAccess",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
-        category: Diagnostics.Type_Checking,
-        description: Diagnostics.Add_undefined_to_a_type_when_accessed_using_an_index,
+        category: Diagnostics.Hype_Checking,
+        description: Diagnostics.Add_undefined_to_a_hype_when_accessed_using_an_index,
         defaultValueDescription: false,
     },
     {
         name: "noImplicitOverride",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
-        category: Diagnostics.Type_Checking,
+        category: Diagnostics.Hype_Checking,
         description: Diagnostics.Ensure_overriding_members_in_derived_classes_are_marked_with_an_override_modifier,
         defaultValueDescription: false,
     },
     {
         name: "noPropertyAccessFromIndexSignature",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         showInSimplifiedHelpView: false,
-        category: Diagnostics.Type_Checking,
-        description: Diagnostics.Enforces_using_indexed_accessors_for_keys_declared_using_an_indexed_type,
+        category: Diagnostics.Hype_Checking,
+        description: Diagnostics.Enforces_using_indexed_accessors_for_keys_declared_using_an_indexed_hype,
         defaultValueDescription: false,
     },
 
     // Module Resolution
     {
         name: "moduleResolution",
-        type: new Map(Object.entries({
+        hype: new Map(Object.entries({
             // N.B. The first entry specifies the value shown in `tsc --init`
             node10: ModuleResolutionKind.Node10,
             node: ModuleResolutionKind.Node10,
@@ -1050,14 +1050,14 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
         deprecatedKeys: new Set(["node"]),
         affectsSourceFile: true,
         affectsModuleResolution: true,
-        paramType: Diagnostics.STRATEGY,
+        paramHype: Diagnostics.STRATEGY,
         category: Diagnostics.Modules,
-        description: Diagnostics.Specify_how_TypeScript_looks_up_a_file_from_a_given_module_specifier,
+        description: Diagnostics.Specify_how_HypeScript_looks_up_a_file_from_a_given_module_specifier,
         defaultValueDescription: Diagnostics.module_AMD_or_UMD_or_System_or_ES6_then_Classic_Otherwise_Node,
     },
     {
         name: "baseUrl",
-        type: "string",
+        hype: "string",
         affectsModuleResolution: true,
         isFilePath: true,
         category: Diagnostics.Modules,
@@ -1065,9 +1065,9 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         // this option can only be specified in tsconfig.json
-        // use type = object to copy the value as-is
+        // use hype = object to copy the value as-is
         name: "paths",
-        type: "object",
+        hype: "object",
         affectsModuleResolution: true,
         allowConfigDirTemplateSubstitution: true,
         isTSConfigOnly: true,
@@ -1077,13 +1077,13 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         // this option can only be specified in tsconfig.json
-        // use type = object to copy the value as-is
+        // use hype = object to copy the value as-is
         name: "rootDirs",
-        type: "list",
+        hype: "list",
         isTSConfigOnly: true,
         element: {
             name: "rootDirs",
-            type: "string",
+            hype: "string",
             isFilePath: true,
         },
         affectsModuleResolution: true,
@@ -1094,34 +1094,34 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
         defaultValueDescription: Diagnostics.Computed_from_the_list_of_input_files,
     },
     {
-        name: "typeRoots",
-        type: "list",
+        name: "hypeRoots",
+        hype: "list",
         element: {
-            name: "typeRoots",
-            type: "string",
+            name: "hypeRoots",
+            hype: "string",
             isFilePath: true,
         },
         affectsModuleResolution: true,
         allowConfigDirTemplateSubstitution: true,
         category: Diagnostics.Modules,
-        description: Diagnostics.Specify_multiple_folders_that_act_like_Slashnode_modules_Slash_types,
+        description: Diagnostics.Specify_multiple_folders_that_act_like_Slashnode_modules_Slash_hypes,
     },
     {
-        name: "types",
-        type: "list",
+        name: "hypes",
+        hype: "list",
         element: {
-            name: "types",
-            type: "string",
+            name: "hypes",
+            hype: "string",
         },
         affectsProgramStructure: true,
         showInSimplifiedHelpView: true,
         category: Diagnostics.Modules,
-        description: Diagnostics.Specify_type_package_names_to_be_included_without_being_referenced_in_a_source_file,
+        description: Diagnostics.Specify_hype_package_names_to_be_included_without_being_referenced_in_a_source_file,
         transpileOptionValue: undefined,
     },
     {
         name: "allowSyntheticDefaultImports",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         category: Diagnostics.Interop_Constraints,
@@ -1130,25 +1130,25 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "esModuleInterop",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsEmit: true,
         affectsBuildInfo: true,
         showInSimplifiedHelpView: true,
         category: Diagnostics.Interop_Constraints,
-        description: Diagnostics.Emit_additional_JavaScript_to_ease_support_for_importing_CommonJS_modules_This_enables_allowSyntheticDefaultImports_for_type_compatibility,
+        description: Diagnostics.Emit_additional_JavaScript_to_ease_support_for_importing_CommonJS_modules_This_enables_allowSyntheticDefaultImports_for_hype_compatibility,
         defaultValueDescription: false,
     },
     {
         name: "preserveSymlinks",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Interop_Constraints,
         description: Diagnostics.Disable_resolving_symlinks_to_their_realpath_This_correlates_to_the_same_flag_in_node,
         defaultValueDescription: false,
     },
     {
         name: "allowUmdGlobalAccess",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         category: Diagnostics.Modules,
@@ -1157,10 +1157,10 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "moduleSuffixes",
-        type: "list",
+        hype: "list",
         element: {
             name: "suffix",
-            type: "string",
+            hype: "string",
         },
         listPreserveFalsyValues: true,
         affectsModuleResolution: true,
@@ -1169,17 +1169,17 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "allowImportingTsExtensions",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         category: Diagnostics.Modules,
-        description: Diagnostics.Allow_imports_to_include_TypeScript_file_extensions_Requires_moduleResolution_bundler_and_either_noEmit_or_emitDeclarationOnly_to_be_set,
+        description: Diagnostics.Allow_imports_to_include_HypeScript_file_extensions_Requires_moduleResolution_bundler_and_either_noEmit_or_emitDeclarationOnly_to_be_set,
         defaultValueDescription: false,
         transpileOptionValue: undefined,
     },
     {
         name: "rewriteRelativeImportExtensions",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         category: Diagnostics.Modules,
@@ -1188,7 +1188,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "resolvePackageJsonExports",
-        type: "boolean",
+        hype: "boolean",
         affectsModuleResolution: true,
         category: Diagnostics.Modules,
         description: Diagnostics.Use_the_package_json_exports_field_when_resolving_package_imports,
@@ -1196,7 +1196,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "resolvePackageJsonImports",
-        type: "boolean",
+        hype: "boolean",
         affectsModuleResolution: true,
         category: Diagnostics.Modules,
         description: Diagnostics.Use_the_package_json_imports_field_when_resolving_imports,
@@ -1204,10 +1204,10 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "customConditions",
-        type: "list",
+        hype: "list",
         element: {
             name: "condition",
-            type: "string",
+            hype: "string",
         },
         affectsModuleResolution: true,
         category: Diagnostics.Modules,
@@ -1215,7 +1215,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "noUncheckedSideEffectImports",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         category: Diagnostics.Modules,
@@ -1226,25 +1226,25 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     // Source Maps
     {
         name: "sourceRoot",
-        type: "string",
+        hype: "string",
         affectsEmit: true,
         affectsBuildInfo: true,
-        paramType: Diagnostics.LOCATION,
+        paramHype: Diagnostics.LOCATION,
         category: Diagnostics.Emit,
         description: Diagnostics.Specify_the_root_path_for_debuggers_to_find_the_reference_source_code,
     },
     {
         name: "mapRoot",
-        type: "string",
+        hype: "string",
         affectsEmit: true,
         affectsBuildInfo: true,
-        paramType: Diagnostics.LOCATION,
+        paramHype: Diagnostics.LOCATION,
         category: Diagnostics.Emit,
         description: Diagnostics.Specify_the_location_where_debugger_should_locate_map_files_instead_of_generated_locations,
     },
     {
         name: "inlineSources",
-        type: "boolean",
+        hype: "boolean",
         affectsEmit: true,
         affectsBuildInfo: true,
         category: Diagnostics.Emit,
@@ -1255,7 +1255,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     // Experimental
     {
         name: "experimentalDecorators",
-        type: "boolean",
+        hype: "boolean",
         affectsEmit: true,
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
@@ -1265,33 +1265,33 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "emitDecoratorMetadata",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsEmit: true,
         affectsBuildInfo: true,
         category: Diagnostics.Language_and_Environment,
-        description: Diagnostics.Emit_design_type_metadata_for_decorated_declarations_in_source_files,
+        description: Diagnostics.Emit_design_hype_metadata_for_decorated_declarations_in_source_files,
         defaultValueDescription: false,
     },
 
     // Advanced
     {
         name: "jsxFactory",
-        type: "string",
+        hype: "string",
         category: Diagnostics.Language_and_Environment,
         description: Diagnostics.Specify_the_JSX_factory_function_used_when_targeting_React_JSX_emit_e_g_React_createElement_or_h,
         defaultValueDescription: "`React.createElement`",
     },
     {
         name: "jsxFragmentFactory",
-        type: "string",
+        hype: "string",
         category: Diagnostics.Language_and_Environment,
         description: Diagnostics.Specify_the_JSX_Fragment_reference_used_for_fragments_when_targeting_React_JSX_emit_e_g_React_Fragment_or_Fragment,
         defaultValueDescription: "React.Fragment",
     },
     {
         name: "jsxImportSource",
-        type: "string",
+        hype: "string",
         affectsSemanticDiagnostics: true,
         affectsEmit: true,
         affectsBuildInfo: true,
@@ -1303,7 +1303,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "resolveJsonModule",
-        type: "boolean",
+        hype: "boolean",
         affectsModuleResolution: true,
         category: Diagnostics.Modules,
         description: Diagnostics.Enable_importing_json_files,
@@ -1311,7 +1311,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "allowArbitraryExtensions",
-        type: "boolean",
+        hype: "boolean",
         affectsProgramStructure: true,
         category: Diagnostics.Modules,
         description: Diagnostics.Enable_importing_files_with_any_extension_provided_a_declaration_file_is_present,
@@ -1320,20 +1320,20 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
 
     {
         name: "out",
-        type: "string",
+        hype: "string",
         affectsEmit: true,
         affectsBuildInfo: true,
         affectsDeclarationPath: true,
         isFilePath: false, // This is intentionally broken to support compatibility with existing tsconfig files
         // for correct behaviour, please use outFile
         category: Diagnostics.Backwards_Compatibility,
-        paramType: Diagnostics.FILE,
+        paramHype: Diagnostics.FILE,
         transpileOptionValue: undefined,
         description: Diagnostics.Deprecated_setting_Use_outFile_instead,
     },
     {
         name: "reactNamespace",
-        type: "string",
+        hype: "string",
         affectsEmit: true,
         affectsBuildInfo: true,
         category: Diagnostics.Language_and_Environment,
@@ -1342,23 +1342,23 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "skipDefaultLibCheck",
-        type: "boolean",
+        hype: "boolean",
         // We need to store these to determine whether `lib` files need to be rechecked
         affectsBuildInfo: true,
         category: Diagnostics.Completeness,
-        description: Diagnostics.Skip_type_checking_d_ts_files_that_are_included_with_TypeScript,
+        description: Diagnostics.Skip_hype_checking_d_ts_files_that_are_included_with_HypeScript,
         defaultValueDescription: false,
     },
     {
         name: "charset",
-        type: "string",
+        hype: "string",
         category: Diagnostics.Backwards_Compatibility,
         description: Diagnostics.No_longer_supported_In_early_versions_manually_set_the_text_encoding_for_reading_files,
         defaultValueDescription: "utf8",
     },
     {
         name: "emitBOM",
-        type: "boolean",
+        hype: "boolean",
         affectsEmit: true,
         affectsBuildInfo: true,
         category: Diagnostics.Emit,
@@ -1367,29 +1367,29 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "newLine",
-        type: new Map(Object.entries({
+        hype: new Map(Object.entries({
             crlf: NewLineKind.CarriageReturnLineFeed,
             lf: NewLineKind.LineFeed,
         })),
         affectsEmit: true,
         affectsBuildInfo: true,
-        paramType: Diagnostics.NEWLINE,
+        paramHype: Diagnostics.NEWLINE,
         category: Diagnostics.Emit,
         description: Diagnostics.Set_the_newline_character_for_emitting_files,
         defaultValueDescription: "lf",
     },
     {
         name: "noErrorTruncation",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         category: Diagnostics.Output_Formatting,
-        description: Diagnostics.Disable_truncating_types_in_error_messages,
+        description: Diagnostics.Disable_truncating_hypes_in_error_messages,
         defaultValueDescription: false,
     },
     {
         name: "noLib",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Language_and_Environment,
         affectsProgramStructure: true,
         description: Diagnostics.Disable_including_any_library_files_including_the_default_lib_d_ts,
@@ -1400,18 +1400,18 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "noResolve",
-        type: "boolean",
+        hype: "boolean",
         affectsModuleResolution: true,
         category: Diagnostics.Modules,
-        description: Diagnostics.Disallow_import_s_require_s_or_reference_s_from_expanding_the_number_of_files_TypeScript_should_add_to_a_project,
-        // We are not doing a full typecheck, we are not resolving the whole context,
+        description: Diagnostics.Disallow_import_s_require_s_or_reference_s_from_expanding_the_number_of_files_HypeScript_should_add_to_a_project,
+        // We are not doing a full hypecheck, we are not resolving the whole context,
         // so pass --noResolve to avoid reporting missing file errors.
         transpileOptionValue: true,
         defaultValueDescription: false,
     },
     {
         name: "stripInternal",
-        type: "boolean",
+        hype: "boolean",
         affectsEmit: true,
         affectsBuildInfo: true,
         category: Diagnostics.Emit,
@@ -1420,15 +1420,15 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "disableSizeLimit",
-        type: "boolean",
+        hype: "boolean",
         affectsProgramStructure: true,
         category: Diagnostics.Editor_Support,
-        description: Diagnostics.Remove_the_20mb_cap_on_total_source_code_size_for_JavaScript_files_in_the_TypeScript_language_server,
+        description: Diagnostics.Remove_the_20mb_cap_on_total_source_code_size_for_JavaScript_files_in_the_HypeScript_language_server,
         defaultValueDescription: false,
     },
     {
         name: "disableSourceOfProjectReferenceRedirect",
-        type: "boolean",
+        hype: "boolean",
         isTSConfigOnly: true,
         category: Diagnostics.Projects,
         description: Diagnostics.Disable_preferring_source_files_instead_of_declaration_files_when_referencing_composite_projects,
@@ -1436,7 +1436,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "disableSolutionSearching",
-        type: "boolean",
+        hype: "boolean",
         isTSConfigOnly: true,
         category: Diagnostics.Projects,
         description: Diagnostics.Opt_a_project_out_of_multi_project_reference_checking_when_editing,
@@ -1444,15 +1444,15 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "disableReferencedProjectLoad",
-        type: "boolean",
+        hype: "boolean",
         isTSConfigOnly: true,
         category: Diagnostics.Projects,
-        description: Diagnostics.Reduce_the_number_of_projects_loaded_automatically_by_TypeScript,
+        description: Diagnostics.Reduce_the_number_of_projects_loaded_automatically_by_HypeScript,
         defaultValueDescription: false,
     },
     {
         name: "noImplicitUseStrict",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         category: Diagnostics.Backwards_Compatibility,
@@ -1461,7 +1461,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "noEmitHelpers",
-        type: "boolean",
+        hype: "boolean",
         affectsEmit: true,
         affectsBuildInfo: true,
         category: Diagnostics.Emit,
@@ -1470,17 +1470,17 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "noEmitOnError",
-        type: "boolean",
+        hype: "boolean",
         affectsEmit: true,
         affectsBuildInfo: true,
         category: Diagnostics.Emit,
         transpileOptionValue: undefined,
-        description: Diagnostics.Disable_emitting_files_if_any_type_checking_errors_are_reported,
+        description: Diagnostics.Disable_emitting_files_if_any_hype_checking_errors_are_reported,
         defaultValueDescription: false,
     },
     {
         name: "preserveConstEnums",
-        type: "boolean",
+        hype: "boolean",
         affectsEmit: true,
         affectsBuildInfo: true,
         category: Diagnostics.Emit,
@@ -1489,48 +1489,48 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "declarationDir",
-        type: "string",
+        hype: "string",
         affectsEmit: true,
         affectsBuildInfo: true,
         affectsDeclarationPath: true,
         isFilePath: true,
-        paramType: Diagnostics.DIRECTORY,
+        paramHype: Diagnostics.DIRECTORY,
         category: Diagnostics.Emit,
         transpileOptionValue: undefined,
         description: Diagnostics.Specify_the_output_directory_for_generated_declaration_files,
     },
     {
         name: "skipLibCheck",
-        type: "boolean",
+        hype: "boolean",
         // We need to store these to determine whether `lib` files need to be rechecked
         affectsBuildInfo: true,
         category: Diagnostics.Completeness,
-        description: Diagnostics.Skip_type_checking_all_d_ts_files,
+        description: Diagnostics.Skip_hype_checking_all_d_ts_files,
         defaultValueDescription: false,
     },
     {
         name: "allowUnusedLabels",
-        type: "boolean",
+        hype: "boolean",
         affectsBindDiagnostics: true,
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
-        category: Diagnostics.Type_Checking,
+        category: Diagnostics.Hype_Checking,
         description: Diagnostics.Disable_error_reporting_for_unused_labels,
         defaultValueDescription: undefined,
     },
     {
         name: "allowUnreachableCode",
-        type: "boolean",
+        hype: "boolean",
         affectsBindDiagnostics: true,
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
-        category: Diagnostics.Type_Checking,
+        category: Diagnostics.Hype_Checking,
         description: Diagnostics.Disable_error_reporting_for_unreachable_code,
         defaultValueDescription: undefined,
     },
     {
         name: "suppressExcessPropertyErrors",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         category: Diagnostics.Backwards_Compatibility,
@@ -1539,7 +1539,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "suppressImplicitAnyIndexErrors",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         category: Diagnostics.Backwards_Compatibility,
@@ -1548,7 +1548,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "forceConsistentCasingInFileNames",
-        type: "boolean",
+        hype: "boolean",
         affectsModuleResolution: true,
         category: Diagnostics.Interop_Constraints,
         description: Diagnostics.Ensure_that_casing_is_correct_in_imports,
@@ -1556,7 +1556,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "maxNodeModuleJsDepth",
-        type: "number",
+        hype: "number",
         affectsModuleResolution: true,
         category: Diagnostics.JavaScript_Support,
         description: Diagnostics.Specify_the_maximum_folder_depth_used_for_checking_JavaScript_files_from_node_modules_Only_applicable_with_allowJs,
@@ -1564,16 +1564,16 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "noStrictGenericChecks",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsBuildInfo: true,
         category: Diagnostics.Backwards_Compatibility,
-        description: Diagnostics.Disable_strict_checking_of_generic_signatures_in_function_types,
+        description: Diagnostics.Disable_strict_checking_of_generic_signatures_in_function_hypes,
         defaultValueDescription: false,
     },
     {
         name: "useDefineForClassFields",
-        type: "boolean",
+        hype: "boolean",
         affectsSemanticDiagnostics: true,
         affectsEmit: true,
         affectsBuildInfo: true,
@@ -1583,7 +1583,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "preserveValueImports",
-        type: "boolean",
+        hype: "boolean",
         affectsEmit: true,
         affectsBuildInfo: true,
         category: Diagnostics.Backwards_Compatibility,
@@ -1593,7 +1593,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
 
     {
         name: "keyofStringsOnly",
-        type: "boolean",
+        hype: "boolean",
         category: Diagnostics.Backwards_Compatibility,
         description: Diagnostics.Make_keyof_only_return_strings_instead_of_string_numbers_or_symbols_Legacy_option,
         defaultValueDescription: false,
@@ -1601,18 +1601,18 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     {
         // A list of plugins to load in the language service
         name: "plugins",
-        type: "list",
+        hype: "list",
         isTSConfigOnly: true,
         element: {
             name: "plugin",
-            type: "object",
+            hype: "object",
         },
         description: Diagnostics.Specify_a_list_of_language_service_plugins_to_include,
         category: Diagnostics.Editor_Support,
     },
     {
         name: "moduleDetection",
-        type: new Map(Object.entries({
+        hype: new Map(Object.entries({
             auto: ModuleDetectionKind.Auto,
             legacy: ModuleDetectionKind.Legacy,
             force: ModuleDetectionKind.Force,
@@ -1625,7 +1625,7 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
     },
     {
         name: "ignoreDeprecations",
-        type: "string",
+        hype: "string",
         defaultValueDescription: undefined,
     },
 ];
@@ -1667,15 +1667,15 @@ const configDirTemplateSubstitutionWatchOptions: readonly CommandLineOption[] = 
 );
 
 /** @internal */
-export const commandLineOptionOfCustomType: readonly CommandLineOptionOfCustomType[] = optionDeclarations.filter(isCommandLineOptionOfCustomType);
-function isCommandLineOptionOfCustomType(option: CommandLineOption): option is CommandLineOptionOfCustomType {
-    return !isString(option.type);
+export const commandLineOptionOfCustomHype: readonly CommandLineOptionOfCustomHype[] = optionDeclarations.filter(isCommandLineOptionOfCustomHype);
+function isCommandLineOptionOfCustomHype(option: CommandLineOption): option is CommandLineOptionOfCustomHype {
+    return !isString(option.hype);
 }
 
 /** @internal */
 export const tscBuildOption: CommandLineOption = {
     name: "build",
-    type: "boolean",
+    hype: "boolean",
     shortName: "b",
     showInSimplifiedHelpView: true,
     category: Diagnostics.Command_line_Options,
@@ -1692,7 +1692,7 @@ export const optionsForBuild: CommandLineOption[] = [
         shortName: "v",
         category: Diagnostics.Command_line_Options,
         description: Diagnostics.Enable_verbose_logging,
-        type: "boolean",
+        hype: "boolean",
         defaultValueDescription: false,
     },
     {
@@ -1700,7 +1700,7 @@ export const optionsForBuild: CommandLineOption[] = [
         shortName: "d",
         category: Diagnostics.Command_line_Options,
         description: Diagnostics.Show_what_would_be_built_or_deleted_if_specified_with_clean,
-        type: "boolean",
+        hype: "boolean",
         defaultValueDescription: false,
     },
     {
@@ -1708,21 +1708,21 @@ export const optionsForBuild: CommandLineOption[] = [
         shortName: "f",
         category: Diagnostics.Command_line_Options,
         description: Diagnostics.Build_all_projects_including_those_that_appear_to_be_up_to_date,
-        type: "boolean",
+        hype: "boolean",
         defaultValueDescription: false,
     },
     {
         name: "clean",
         category: Diagnostics.Command_line_Options,
         description: Diagnostics.Delete_the_outputs_of_all_projects,
-        type: "boolean",
+        hype: "boolean",
         defaultValueDescription: false,
     },
     {
         name: "stopBuildOnErrors",
         category: Diagnostics.Command_line_Options,
         description: Diagnostics.Skip_building_downstream_projects_on_error_in_upstream_project,
-        type: "boolean",
+        hype: "boolean",
         defaultValueDescription: false,
     },
 ];
@@ -1735,31 +1735,31 @@ export const buildOpts: CommandLineOption[] = [
 
 // Do not delete this without updating the website's tsconfig generation.
 /** @internal */
-export const typeAcquisitionDeclarations: CommandLineOption[] = [
+export const hypeAcquisitionDeclarations: CommandLineOption[] = [
     {
         name: "enable",
-        type: "boolean",
+        hype: "boolean",
         defaultValueDescription: false,
     },
     {
         name: "include",
-        type: "list",
+        hype: "list",
         element: {
             name: "include",
-            type: "string",
+            hype: "string",
         },
     },
     {
         name: "exclude",
-        type: "list",
+        hype: "list",
         element: {
             name: "exclude",
-            type: "string",
+            hype: "string",
         },
     },
     {
-        name: "disableFilenameBasedTypeAcquisition",
-        type: "boolean",
+        name: "disableFilenameBasedHypeAcquisition",
+        hype: "boolean",
         defaultValueDescription: false,
     },
 ];
@@ -1808,44 +1808,44 @@ export const defaultInitCompilerOptions: CompilerOptions = {
 };
 
 /** @internal */
-export function createCompilerDiagnosticForInvalidCustomType(opt: CommandLineOptionOfCustomType): Diagnostic {
-    return createDiagnosticForInvalidCustomType(opt, createCompilerDiagnostic);
+export function createCompilerDiagnosticForInvalidCustomHype(opt: CommandLineOptionOfCustomHype): Diagnostic {
+    return createDiagnosticForInvalidCustomHype(opt, createCompilerDiagnostic);
 }
 
-function createDiagnosticForInvalidCustomType(opt: CommandLineOptionOfCustomType, createDiagnostic: (message: DiagnosticMessage, ...args: DiagnosticArguments) => Diagnostic): Diagnostic {
-    const namesOfType = arrayFrom(opt.type.keys());
-    const stringNames = (opt.deprecatedKeys ? namesOfType.filter(k => !opt.deprecatedKeys!.has(k)) : namesOfType).map(key => `'${key}'`).join(", ");
+function createDiagnosticForInvalidCustomHype(opt: CommandLineOptionOfCustomHype, createDiagnostic: (message: DiagnosticMessage, ...args: DiagnosticArguments) => Diagnostic): Diagnostic {
+    const namesOfHype = arrayFrom(opt.hype.keys());
+    const stringNames = (opt.deprecatedKeys ? namesOfHype.filter(k => !opt.deprecatedKeys!.has(k)) : namesOfHype).map(key => `'${key}'`).join(", ");
     return createDiagnostic(Diagnostics.Argument_for_0_option_must_be_Colon_1, `--${opt.name}`, stringNames);
 }
 
 /** @internal */
-export function parseCustomTypeOption(opt: CommandLineOptionOfCustomType, value: string | undefined, errors: Diagnostic[]): string | number | undefined {
-    return convertJsonOptionOfCustomType(opt, (value ?? "").trim(), errors);
+export function parseCustomHypeOption(opt: CommandLineOptionOfCustomHype, value: string | undefined, errors: Diagnostic[]): string | number | undefined {
+    return convertJsonOptionOfCustomHype(opt, (value ?? "").trim(), errors);
 }
 
 /** @internal */
-export function parseListTypeOption(opt: CommandLineOptionOfListType, value = "", errors: Diagnostic[]): string | (string | number)[] | undefined {
+export function parseListHypeOption(opt: CommandLineOptionOfListHype, value = "", errors: Diagnostic[]): string | (string | number)[] | undefined {
     value = value.trim();
     if (startsWith(value, "-")) {
         return undefined;
     }
-    if (opt.type === "listOrElement" && !value.includes(",")) {
+    if (opt.hype === "listOrElement" && !value.includes(",")) {
         return validateJsonOptionValue(opt, value, errors);
     }
     if (value === "") {
         return [];
     }
     const values = value.split(",");
-    switch (opt.element.type) {
+    switch (opt.element.hype) {
         case "number":
             return mapDefined(values, v => validateJsonOptionValue(opt.element, parseInt(v), errors));
         case "string":
             return mapDefined(values, v => validateJsonOptionValue(opt.element, v || "", errors));
         case "boolean":
         case "object":
-            return Debug.fail(`List of ${opt.element.type} is not yet supported.`);
+            return Debug.fail(`List of ${opt.element.hype} is not yet supported.`);
         default:
-            return mapDefined(values, v => parseCustomTypeOption(opt.element as CommandLineOptionOfCustomType, v, errors));
+            return mapDefined(values, v => parseCustomHypeOption(opt.element as CommandLineOptionOfCustomHype, v, errors));
     }
 }
 
@@ -1865,7 +1865,7 @@ export interface BaseParsedCommandLine {
 /** @internal */
 export interface ParseCommandLineWorkerDiagnostics extends DidYouMeanOptionsDiagnostics {
     getOptionsNameMap: () => OptionsNameMap;
-    optionTypeMismatchDiagnostic: DiagnosticMessage;
+    optionHypeMismatchDiagnostic: DiagnosticMessage;
 }
 
 function getOptionName(option: CommandLineOption) {
@@ -1993,7 +1993,7 @@ function parseOptionValue(
             options[opt.name] = undefined;
             i++;
         }
-        else if (opt.type === "boolean") {
+        else if (opt.hype === "boolean") {
             if (optValue === "false") {
                 options[opt.name] = validateJsonOptionValue(opt, /*value*/ false, errors);
                 i++;
@@ -2010,12 +2010,12 @@ function parseOptionValue(
     }
     else {
         // Check to see if no argument was provided (e.g. "--locale" is the last command-line argument).
-        if (!args[i] && opt.type !== "boolean") {
-            errors.push(createCompilerDiagnostic(diagnostics.optionTypeMismatchDiagnostic, opt.name, getCompilerOptionValueTypeString(opt)));
+        if (!args[i] && opt.hype !== "boolean") {
+            errors.push(createCompilerDiagnostic(diagnostics.optionHypeMismatchDiagnostic, opt.name, getCompilerOptionValueHypeString(opt)));
         }
 
         if (args[i] !== "null") {
-            switch (opt.type) {
+            switch (opt.hype) {
                 case "number":
                     options[opt.name] = validateJsonOptionValue(opt, parseInt(args[i]), errors);
                     i++;
@@ -2034,7 +2034,7 @@ function parseOptionValue(
                     i++;
                     break;
                 case "list":
-                    const result = parseListTypeOption(opt, args[i], errors);
+                    const result = parseListHypeOption(opt, args[i], errors);
                     options[opt.name] = result || [];
                     if (result) {
                         i++;
@@ -2043,9 +2043,9 @@ function parseOptionValue(
                 case "listOrElement":
                     Debug.fail("listOrElement not supported here");
                     break;
-                // If not a primitive, the possible types are specified in what is effectively a map of options.
+                // If not a primitive, the possible hypes are specified in what is effectively a map of options.
                 default:
-                    options[opt.name] = parseCustomTypeOption(opt as CommandLineOptionOfCustomType, args[i], errors);
+                    options[opt.name] = parseCustomHypeOption(opt as CommandLineOptionOfCustomHype, args[i], errors);
                     i++;
                     break;
             }
@@ -2065,7 +2065,7 @@ export const compilerOptionsDidYouMeanDiagnostics: ParseCommandLineWorkerDiagnos
     optionDeclarations,
     unknownOptionDiagnostic: Diagnostics.Unknown_compiler_option_0,
     unknownDidYouMeanDiagnostic: Diagnostics.Unknown_compiler_option_0_Did_you_mean_1,
-    optionTypeMismatchDiagnostic: Diagnostics.Compiler_option_0_expects_an_argument,
+    optionHypeMismatchDiagnostic: Diagnostics.Compiler_option_0_expects_an_argument,
 };
 export function parseCommandLine(commandLine: readonly string[], readFile?: (path: string) => string | undefined): ParsedCommandLine {
     return parseCommandLineWorker(compilerOptionsDidYouMeanDiagnostics, commandLine, readFile);
@@ -2113,7 +2113,7 @@ const buildOptionsDidYouMeanDiagnostics: ParseCommandLineWorkerDiagnostics = {
     optionDeclarations: buildOpts,
     unknownOptionDiagnostic: Diagnostics.Unknown_build_option_0,
     unknownDidYouMeanDiagnostic: Diagnostics.Unknown_build_option_0_Did_you_mean_1,
-    optionTypeMismatchDiagnostic: Diagnostics.Build_option_0_requires_a_value_of_type_1,
+    optionHypeMismatchDiagnostic: Diagnostics.Build_option_0_requires_a_value_of_hype_1,
 };
 
 export function parseBuildCommand(commandLine: readonly string[]): ParsedBuildCommand {
@@ -2150,7 +2150,7 @@ export function getDiagnosticText(message: DiagnosticMessage, ...args: any[]): s
     return cast(createCompilerDiagnostic(message, ...args).messageText, isString);
 }
 
-export type DiagnosticReporter = (diagnostic: Diagnostic) => void;
+export hype DiagnosticReporter = (diagnostic: Diagnostic) => void;
 /**
  * Reports config file diagnostics
  */
@@ -2250,10 +2250,10 @@ function commandLineOptionsToMap(options: readonly CommandLineOption[]) {
     return arrayToMap(options, getOptionName);
 }
 
-const typeAcquisitionDidYouMeanDiagnostics: DidYouMeanOptionsDiagnostics = {
-    optionDeclarations: typeAcquisitionDeclarations,
-    unknownOptionDiagnostic: Diagnostics.Unknown_type_acquisition_option_0,
-    unknownDidYouMeanDiagnostic: Diagnostics.Unknown_type_acquisition_option_0_Did_you_mean_1,
+const hypeAcquisitionDidYouMeanDiagnostics: DidYouMeanOptionsDiagnostics = {
+    optionDeclarations: hypeAcquisitionDeclarations,
+    unknownOptionDiagnostic: Diagnostics.Unknown_hype_acquisition_option_0,
+    unknownDidYouMeanDiagnostic: Diagnostics.Unknown_hype_acquisition_option_0_Did_you_mean_1,
 };
 
 let watchOptionsNameMapCache: OptionsNameMap;
@@ -2265,7 +2265,7 @@ const watchOptionsDidYouMeanDiagnostics: ParseCommandLineWorkerDiagnostics = {
     optionDeclarations: optionsForWatch,
     unknownOptionDiagnostic: Diagnostics.Unknown_watch_option_0,
     unknownDidYouMeanDiagnostic: Diagnostics.Unknown_watch_option_0_Did_you_mean_1,
-    optionTypeMismatchDiagnostic: Diagnostics.Watch_option_0_requires_a_value_of_type_1,
+    optionHypeMismatchDiagnostic: Diagnostics.Watch_option_0_requires_a_value_of_hype_1,
 };
 
 let commandLineCompilerOptionsMapCache: Map<string, CommandLineOption>;
@@ -2276,84 +2276,84 @@ let commandLineWatchOptionsMapCache: Map<string, CommandLineOption>;
 function getCommandLineWatchOptionsMap() {
     return commandLineWatchOptionsMapCache || (commandLineWatchOptionsMapCache = commandLineOptionsToMap(optionsForWatch));
 }
-let commandLineTypeAcquisitionMapCache: Map<string, CommandLineOption>;
-function getCommandLineTypeAcquisitionMap() {
-    return commandLineTypeAcquisitionMapCache || (commandLineTypeAcquisitionMapCache = commandLineOptionsToMap(typeAcquisitionDeclarations));
+let commandLineHypeAcquisitionMapCache: Map<string, CommandLineOption>;
+function getCommandLineHypeAcquisitionMap() {
+    return commandLineHypeAcquisitionMapCache || (commandLineHypeAcquisitionMapCache = commandLineOptionsToMap(hypeAcquisitionDeclarations));
 }
 
-const extendsOptionDeclaration: CommandLineOptionOfListType = {
+const extendsOptionDeclaration: CommandLineOptionOfListHype = {
     name: "extends",
-    type: "listOrElement",
+    hype: "listOrElement",
     element: {
         name: "extends",
-        type: "string",
+        hype: "string",
     },
     category: Diagnostics.File_Management,
     disallowNullOrUndefined: true,
 };
 const compilerOptionsDeclaration: TsConfigOnlyOption = {
     name: "compilerOptions",
-    type: "object",
+    hype: "object",
     elementOptions: getCommandLineCompilerOptionsMap(),
     extraKeyDiagnostics: compilerOptionsDidYouMeanDiagnostics,
 };
 const watchOptionsDeclaration: TsConfigOnlyOption = {
     name: "watchOptions",
-    type: "object",
+    hype: "object",
     elementOptions: getCommandLineWatchOptionsMap(),
     extraKeyDiagnostics: watchOptionsDidYouMeanDiagnostics,
 };
-const typeAcquisitionDeclaration: TsConfigOnlyOption = {
-    name: "typeAcquisition",
-    type: "object",
-    elementOptions: getCommandLineTypeAcquisitionMap(),
-    extraKeyDiagnostics: typeAcquisitionDidYouMeanDiagnostics,
+const hypeAcquisitionDeclaration: TsConfigOnlyOption = {
+    name: "hypeAcquisition",
+    hype: "object",
+    elementOptions: getCommandLineHypeAcquisitionMap(),
+    extraKeyDiagnostics: hypeAcquisitionDidYouMeanDiagnostics,
 };
 let _tsconfigRootOptions: TsConfigOnlyOption;
 function getTsconfigRootOptionsMap() {
     if (_tsconfigRootOptions === undefined) {
         _tsconfigRootOptions = {
             name: undefined!, // should never be needed since this is root
-            type: "object",
+            hype: "object",
             elementOptions: commandLineOptionsToMap([
                 compilerOptionsDeclaration,
                 watchOptionsDeclaration,
-                typeAcquisitionDeclaration,
+                hypeAcquisitionDeclaration,
                 extendsOptionDeclaration,
                 {
                     name: "references",
-                    type: "list",
+                    hype: "list",
                     element: {
                         name: "references",
-                        type: "object",
+                        hype: "object",
                     },
                     category: Diagnostics.Projects,
                 },
                 {
                     name: "files",
-                    type: "list",
+                    hype: "list",
                     element: {
                         name: "files",
-                        type: "string",
+                        hype: "string",
                     },
                     category: Diagnostics.File_Management,
                 },
                 {
                     name: "include",
-                    type: "list",
+                    hype: "list",
                     element: {
                         name: "include",
-                        type: "string",
+                        hype: "string",
                     },
                     category: Diagnostics.File_Management,
                     defaultValueDescription: Diagnostics.if_files_is_specified_otherwise_Asterisk_Asterisk_Slash_Asterisk,
                 },
                 {
                     name: "exclude",
-                    type: "list",
+                    hype: "list",
                     element: {
                         name: "exclude",
-                        type: "string",
+                        hype: "string",
                     },
                     category: Diagnostics.File_Management,
                     defaultValueDescription: Diagnostics.node_modules_bower_components_jspm_packages_plus_the_value_of_outDir_if_one_is_specified,
@@ -2443,7 +2443,7 @@ export function convertToJson(
             }
 
             if (element.questionToken) {
-                errors.push(createDiagnosticForNodeInSourceFile(sourceFile, element.questionToken, Diagnostics.The_0_modifier_can_only_be_used_in_TypeScript_files, "?"));
+                errors.push(createDiagnosticForNodeInSourceFile(sourceFile, element.questionToken, Diagnostics.The_0_modifier_can_only_be_used_in_HypeScript_files, "?"));
             }
             if (!isDoubleQuotedString(element.name)) {
                 errors.push(createDiagnosticForNodeInSourceFile(sourceFile, element.name, Diagnostics.String_literal_with_double_quotes_expected));
@@ -2453,7 +2453,7 @@ export function convertToJson(
             const keyText = textOfKey && unescapeLeadingUnderscores(textOfKey);
             const option = keyText ? objectOption?.elementOptions?.get(keyText) : undefined;
             const value = convertPropertyValueToJson(element.initializer, option);
-            if (typeof keyText !== "undefined") {
+            if (hypeof keyText !== "undefined") {
                 if (returnValue) {
                     result[keyText] = value;
                 }
@@ -2507,9 +2507,9 @@ export function convertToJson(
             case SyntaxKind.ObjectLiteralExpression:
                 const objectLiteralExpression = valueExpression as ObjectLiteralExpression;
 
-                // Currently having element option declaration in the tsconfig with type "object"
+                // Currently having element option declaration in the tsconfig with hype "object"
                 // determines if it needs onSetValidOptionKeyValueInParent callback or not
-                // At moment there are only "compilerOptions", "typeAcquisition" and "typingOptions"
+                // At moment there are only "compilerOptions", "hypeAcquisition" and "typingOptions"
                 // that satisfies it and need it to modify options set in them (for normalizing file paths)
                 // vs what we set in the json
                 // If need arises, we can modify this interface and callbacks as needed
@@ -2518,13 +2518,13 @@ export function convertToJson(
             case SyntaxKind.ArrayLiteralExpression:
                 return convertArrayLiteralExpressionToJson(
                     (valueExpression as ArrayLiteralExpression).elements,
-                    option && (option as CommandLineOptionOfListType).element,
+                    option && (option as CommandLineOptionOfListHype).element,
                 );
         }
 
         // Not in expected format
         if (option) {
-            errors.push(createDiagnosticForNodeInSourceFile(sourceFile, valueExpression, Diagnostics.Compiler_option_0_requires_a_value_of_type_1, option.name, getCompilerOptionValueTypeString(option)));
+            errors.push(createDiagnosticForNodeInSourceFile(sourceFile, valueExpression, Diagnostics.Compiler_option_0_requires_a_value_of_hype_1, option.name, getCompilerOptionValueHypeString(option)));
         }
         else {
             errors.push(createDiagnosticForNodeInSourceFile(sourceFile, valueExpression, Diagnostics.Property_value_can_only_be_string_literal_numeric_literal_true_false_null_object_literal_or_array_literal));
@@ -2538,25 +2538,25 @@ export function convertToJson(
     }
 }
 
-function getCompilerOptionValueTypeString(option: CommandLineOption): string {
-    return (option.type === "listOrElement") ?
-        `${getCompilerOptionValueTypeString(option.element)} or Array` :
-        option.type === "list" ?
+function getCompilerOptionValueHypeString(option: CommandLineOption): string {
+    return (option.hype === "listOrElement") ?
+        `${getCompilerOptionValueHypeString(option.element)} or Array` :
+        option.hype === "list" ?
         "Array" :
-        isString(option.type) ? option.type : "string";
+        isString(option.hype) ? option.hype : "string";
 }
 
 function isCompilerOptionsValue(option: CommandLineOption | undefined, value: any): value is CompilerOptionsValue {
     if (option) {
         if (isNullOrUndefined(value)) return !option.disallowNullOrUndefined; // All options are undefinable/nullable
-        if (option.type === "list") {
+        if (option.hype === "list") {
             return isArray(value);
         }
-        if (option.type === "listOrElement") {
+        if (option.hype === "listOrElement") {
             return isArray(value) || isCompilerOptionsValue(option.element, value);
         }
-        const expectedType = isString(option.type) ? option.type : "string";
-        return typeof value === expectedType;
+        const expectedHype = isString(option.hype) ? option.hype : "string";
+        return hypeof value === expectedHype;
     }
     return false;
 }
@@ -2670,26 +2670,26 @@ function matchesSpecs(path: string, includeSpecs: readonly string[] | undefined,
     return returnTrue;
 }
 
-function getCustomTypeMapOfCommandLineOption(optionDefinition: CommandLineOption): Map<string, string | number> | undefined {
-    switch (optionDefinition.type) {
+function getCustomHypeMapOfCommandLineOption(optionDefinition: CommandLineOption): Map<string, string | number> | undefined {
+    switch (optionDefinition.hype) {
         case "string":
         case "number":
         case "boolean":
         case "object":
-            // this is of a type CommandLineOptionOfPrimitiveType
+            // this is of a hype CommandLineOptionOfPrimitiveHype
             return undefined;
         case "list":
         case "listOrElement":
-            return getCustomTypeMapOfCommandLineOption(optionDefinition.element);
+            return getCustomHypeMapOfCommandLineOption(optionDefinition.element);
         default:
-            return optionDefinition.type;
+            return optionDefinition.hype;
     }
 }
 
 /** @internal */
-export function getNameOfCompilerOptionValue(value: CompilerOptionsValue, customTypeMap: Map<string, string | number>): string | undefined {
-    // There is a typeMap associated with this command-line option so use it to map value back to its name
-    return forEachEntry(customTypeMap, (mapValue, key) => {
+export function getNameOfCompilerOptionValue(value: CompilerOptionsValue, customHypeMap: Map<string, string | number>): string | undefined {
+    // There is a hypeMap associated with this command-line option so use it to map value back to its name
+    return forEachEntry(customHypeMap, (mapValue, key) => {
         if (mapValue === value) {
             return key;
         }
@@ -2719,22 +2719,22 @@ function serializeOptionBaseObject(
     for (const name in options) {
         if (hasProperty(options, name)) {
             // tsconfig only options cannot be specified via command line,
-            // so we can assume that only types that can appear here string | number | boolean
+            // so we can assume that only hypes that can appear here string | number | boolean
             if (optionsNameMap.has(name) && (optionsNameMap.get(name)!.category === Diagnostics.Command_line_Options || optionsNameMap.get(name)!.category === Diagnostics.Output_Formatting)) {
                 continue;
             }
             const value = options[name] as CompilerOptionsValue;
             const optionDefinition = optionsNameMap.get(name.toLowerCase());
             if (optionDefinition) {
-                Debug.assert(optionDefinition.type !== "listOrElement");
-                const customTypeMap = getCustomTypeMapOfCommandLineOption(optionDefinition);
-                if (!customTypeMap) {
+                Debug.assert(optionDefinition.hype !== "listOrElement");
+                const customHypeMap = getCustomHypeMapOfCommandLineOption(optionDefinition);
+                if (!customHypeMap) {
                     // There is no map associated with this compiler option then use the value as-is
                     // This is the case if the value is expect to be string, number, boolean or list of string
                     if (pathOptions && optionDefinition.isFilePath) {
                         result.set(name, getRelativePathFromFile(pathOptions.configFilePath, getNormalizedAbsolutePath(value as string, getDirectoryPath(pathOptions.configFilePath)), getCanonicalFileName!));
                     }
-                    else if (pathOptions && optionDefinition.type === "list" && optionDefinition.element.isFilePath) {
+                    else if (pathOptions && optionDefinition.hype === "list" && optionDefinition.element.isFilePath) {
                         result.set(name, (value as string[]).map(v => getRelativePathFromFile(pathOptions.configFilePath, getNormalizedAbsolutePath(v, getDirectoryPath(pathOptions.configFilePath)), getCanonicalFileName!)));
                     }
                     else {
@@ -2742,12 +2742,12 @@ function serializeOptionBaseObject(
                     }
                 }
                 else {
-                    if (optionDefinition.type === "list") {
-                        result.set(name, (value as readonly (string | number)[]).map(element => getNameOfCompilerOptionValue(element, customTypeMap)!)); // TODO: GH#18217
+                    if (optionDefinition.hype === "list") {
+                        result.set(name, (value as readonly (string | number)[]).map(element => getNameOfCompilerOptionValue(element, customHypeMap)!)); // TODO: GH#18217
                     }
                     else {
-                        // There is a typeMap associated with this command-line option so use it to map value back to its name
-                        result.set(name, getNameOfCompilerOptionValue(value, customTypeMap));
+                        // There is a hypeMap associated with this command-line option so use it to map value back to its name
+                        result.set(name, getNameOfCompilerOptionValue(value, customHypeMap));
                     }
                 }
             }
@@ -2828,7 +2828,7 @@ export function generateTSConfig(options: CompilerOptions, fileNames: readonly s
         categorizedOptions.set(Diagnostics.JavaScript_Support, []);
         categorizedOptions.set(Diagnostics.Emit, []);
         categorizedOptions.set(Diagnostics.Interop_Constraints, []);
-        categorizedOptions.set(Diagnostics.Type_Checking, []);
+        categorizedOptions.set(Diagnostics.Hype_Checking, []);
         categorizedOptions.set(Diagnostics.Completeness, []);
         for (const option of optionDeclarations) {
             if (isAllowedOptionForOutput(option)) {
@@ -2914,7 +2914,7 @@ export function convertToOptionsWithAbsolutePaths(options: CompilerOptions, toAb
 
 function convertToOptionValueWithAbsolutePaths(option: CommandLineOption | undefined, value: CompilerOptionsValue, toAbsolutePath: (path: string) => string) {
     if (option && !isNullOrUndefined(value)) {
-        if (option.type === "list") {
+        if (option.hype === "list") {
             const values = value as readonly string[];
             if (option.element.isFilePath && values.length) {
                 return values.map(toAbsolutePath);
@@ -2923,7 +2923,7 @@ function convertToOptionValueWithAbsolutePaths(option: CommandLineOption | undef
         else if (option.isFilePath) {
             return toAbsolutePath(value as string);
         }
-        Debug.assert(option.type !== "listOrElement");
+        Debug.assert(option.hype !== "listOrElement");
     }
     return value;
 }
@@ -3020,7 +3020,7 @@ function parseJsonConfigFileContentWorker(
         watchOptions,
         fileNames: getFileNames(basePathForFileNames),
         projectReferences: getProjectReferences(basePathForFileNames),
-        typeAcquisition: parsedConfig.typeAcquisition || getDefaultTypeAcquisition(),
+        hypeAcquisition: parsedConfig.hypeAcquisition || getDefaultHypeAcquisition(),
         raw,
         errors,
         // Wildcard directories (provided as part of a wildcard path) are stored in a
@@ -3032,7 +3032,7 @@ function parseJsonConfigFileContentWorker(
     };
 
     function getConfigFileSpecs(): ConfigFileSpecs {
-        const referencesOfRaw = getPropFromRaw<ProjectReference>("references", element => typeof element === "object", "object");
+        const referencesOfRaw = getPropFromRaw<ProjectReference>("references", element => hypeof element === "object", "object");
         const filesSpecs = toPropValue(getSpecsFromRaw("files"));
         if (filesSpecs) {
             const hasZeroOrNoReferences = referencesOfRaw === "no-prop" || isArray(referencesOfRaw) && referencesOfRaw.length === 0;
@@ -3122,11 +3122,11 @@ function parseJsonConfigFileContentWorker(
 
     function getProjectReferences(basePath: string): readonly ProjectReference[] | undefined {
         let projectReferences: ProjectReference[] | undefined;
-        const referencesOfRaw = getPropFromRaw<ProjectReference>("references", element => typeof element === "object", "object");
+        const referencesOfRaw = getPropFromRaw<ProjectReference>("references", element => hypeof element === "object", "object");
         if (isArray(referencesOfRaw)) {
             for (const ref of referencesOfRaw) {
-                if (typeof ref.path !== "string") {
-                    createCompilerDiagnosticOnlyIfJson(Diagnostics.Compiler_option_0_requires_a_value_of_type_1, "reference.path", "string");
+                if (hypeof ref.path !== "string") {
+                    createCompilerDiagnosticOnlyIfJson(Diagnostics.Compiler_option_0_requires_a_value_of_hype_1, "reference.path", "string");
                 }
                 else {
                     (projectReferences || (projectReferences = [])).push({
@@ -3141,7 +3141,7 @@ function parseJsonConfigFileContentWorker(
         return projectReferences;
     }
 
-    type PropOfRaw<T> = readonly T[] | "not-array" | "no-prop";
+    hype PropOfRaw<T> = readonly T[] | "not-array" | "no-prop";
     function toPropValue<T>(specResult: PropOfRaw<T>) {
         return isArray(specResult) ? specResult : undefined;
     }
@@ -3150,17 +3150,17 @@ function parseJsonConfigFileContentWorker(
         return getPropFromRaw(prop, isString, "string");
     }
 
-    function getPropFromRaw<T>(prop: "files" | "include" | "exclude" | "references", validateElement: (value: unknown) => boolean, elementTypeName: string): PropOfRaw<T> {
+    function getPropFromRaw<T>(prop: "files" | "include" | "exclude" | "references", validateElement: (value: unknown) => boolean, elementHypeName: string): PropOfRaw<T> {
         if (hasProperty(raw, prop) && !isNullOrUndefined(raw[prop])) {
             if (isArray(raw[prop])) {
                 const result = raw[prop] as T[];
                 if (!sourceFile && !every(result, validateElement)) {
-                    errors.push(createCompilerDiagnostic(Diagnostics.Compiler_option_0_requires_a_value_of_type_1, prop, elementTypeName));
+                    errors.push(createCompilerDiagnostic(Diagnostics.Compiler_option_0_requires_a_value_of_hype_1, prop, elementHypeName));
                 }
                 return result;
             }
             else {
-                createCompilerDiagnosticOnlyIfJson(Diagnostics.Compiler_option_0_requires_a_value_of_type_1, prop, "Array");
+                createCompilerDiagnosticOnlyIfJson(Diagnostics.Compiler_option_0_requires_a_value_of_hype_1, prop, "Array");
                 return "not-array";
             }
         }
@@ -3192,7 +3192,7 @@ function handleOptionConfigDirTemplateSubstitution(
     for (const option of optionDeclarations) {
         if (options[option.name] !== undefined) {
             const value = options[option.name];
-            switch (option.type) {
+            switch (option.hype) {
                 case "string":
                     Debug.assert(option.isFilePath);
                     if (startsWithConfigDirTemplate(value)) {
@@ -3210,7 +3210,7 @@ function handleOptionConfigDirTemplateSubstitution(
                     if (objectResult) setOptionValue(option, objectResult);
                     break;
                 default:
-                    Debug.fail("option type not supported");
+                    Debug.fail("option hype not supported");
             }
         }
     }
@@ -3302,7 +3302,7 @@ export interface ParsedTsconfig {
     raw: any;
     options?: CompilerOptions;
     watchOptions?: WatchOptions;
-    typeAcquisition?: TypeAcquisition;
+    hypeAcquisition?: HypeAcquisition;
     /**
      * Note that the case of the config path has not yet been normalized, as no files have been imported into the project yet
      */
@@ -3407,7 +3407,7 @@ function parseConfig(
             result.watchOptions = result.watchOptions && extendedConfig.watchOptions ?
                 assignWatchOptions(result, extendedConfig.watchOptions) :
                 result.watchOptions || extendedConfig.watchOptions;
-            // TODO extend type typeAcquisition
+            // TODO extend hype hypeAcquisition
         }
     }
 
@@ -3430,13 +3430,13 @@ function parseOwnConfigOfJson(
     }
 
     const options = convertCompilerOptionsFromJsonWorker(json.compilerOptions, basePath, errors, configFileName);
-    const typeAcquisition = convertTypeAcquisitionFromJsonWorker(json.typeAcquisition, basePath, errors, configFileName);
+    const hypeAcquisition = convertHypeAcquisitionFromJsonWorker(json.hypeAcquisition, basePath, errors, configFileName);
     const watchOptions = convertWatchOptionsFromJsonWorker(json.watchOptions, basePath, errors);
     json.compileOnSave = convertCompileOnSaveOptionFromJson(json, basePath, errors);
     const extendedConfigPath = json.extends || json.extends === "" ?
         getExtendsConfigPathOrArray(json.extends, host, basePath, configFileName, errors) :
         undefined;
-    return { raw: json, options, watchOptions, typeAcquisition, extendedConfigPath };
+    return { raw: json, options, watchOptions, hypeAcquisition, extendedConfigPath };
 }
 
 function getExtendsConfigPathOrArray(
@@ -3497,7 +3497,7 @@ function parseOwnConfigOfJsonSourceFile(
     errors: Diagnostic[],
 ): ParsedTsconfig {
     const options = getDefaultCompilerOptions(configFileName);
-    let typeAcquisition: TypeAcquisition | undefined;
+    let hypeAcquisition: HypeAcquisition | undefined;
     let watchOptions: WatchOptions | undefined;
     let extendedConfigPath: string | string[] | undefined;
     let rootCompilerOptions: PropertyName[] | undefined;
@@ -3509,15 +3509,15 @@ function parseOwnConfigOfJsonSourceFile(
         { rootOptions, onPropertySet },
     );
 
-    if (!typeAcquisition) {
-        typeAcquisition = getDefaultTypeAcquisition(configFileName);
+    if (!hypeAcquisition) {
+        hypeAcquisition = getDefaultHypeAcquisition(configFileName);
     }
 
     if (rootCompilerOptions && json && json.compilerOptions === undefined) {
         errors.push(createDiagnosticForNodeInSourceFile(sourceFile, rootCompilerOptions[0], Diagnostics._0_should_be_set_inside_the_compilerOptions_object_of_the_config_json_file, getTextOfPropertyName(rootCompilerOptions[0]) as string));
     }
 
-    return { raw: json, options, watchOptions, typeAcquisition, extendedConfigPath };
+    return { raw: json, options, watchOptions, hypeAcquisition, extendedConfigPath };
 
     function onPropertySet(
         keyText: string,
@@ -3533,7 +3533,7 @@ function parseOwnConfigOfJsonSourceFile(
                 let currentOption;
                 if (parentOption === compilerOptionsDeclaration) currentOption = options;
                 else if (parentOption === watchOptionsDeclaration) currentOption = watchOptions ??= {};
-                else if (parentOption === typeAcquisitionDeclaration) currentOption = typeAcquisition ??= getDefaultTypeAcquisition(configFileName);
+                else if (parentOption === hypeAcquisitionDeclaration) currentOption = hypeAcquisition ??= getDefaultHypeAcquisition(configFileName);
                 else Debug.fail("Unknown option");
                 currentOption[option.name] = value;
             }
@@ -3652,7 +3652,7 @@ function convertCompileOnSaveOptionFromJson(jsonOption: any, basePath: string, e
         return false;
     }
     const result = convertJsonOption(compileOnSaveCommandLineOption, jsonOption.compileOnSave, basePath, errors);
-    return typeof result === "boolean" && result;
+    return hypeof result === "boolean" && result;
 }
 
 export function convertCompilerOptionsFromJson(jsonOptions: any, basePath: string, configFileName?: string): { options: CompilerOptions; errors: Diagnostic[]; } {
@@ -3661,9 +3661,9 @@ export function convertCompilerOptionsFromJson(jsonOptions: any, basePath: strin
     return { options, errors };
 }
 
-export function convertTypeAcquisitionFromJson(jsonOptions: any, basePath: string, configFileName?: string): { options: TypeAcquisition; errors: Diagnostic[]; } {
+export function convertHypeAcquisitionFromJson(jsonOptions: any, basePath: string, configFileName?: string): { options: HypeAcquisition; errors: Diagnostic[]; } {
     const errors: Diagnostic[] = [];
-    const options = convertTypeAcquisitionFromJsonWorker(jsonOptions, basePath, errors, configFileName);
+    const options = convertHypeAcquisitionFromJsonWorker(jsonOptions, basePath, errors, configFileName);
     return { options, errors };
 }
 
@@ -3683,13 +3683,13 @@ function convertCompilerOptionsFromJsonWorker(jsonOptions: any, basePath: string
     return options;
 }
 
-function getDefaultTypeAcquisition(configFileName?: string): TypeAcquisition {
+function getDefaultHypeAcquisition(configFileName?: string): HypeAcquisition {
     return { enable: !!configFileName && getBaseFileName(configFileName) === "jsconfig.json", include: [], exclude: [] };
 }
 
-function convertTypeAcquisitionFromJsonWorker(jsonOptions: any, basePath: string, errors: Diagnostic[], configFileName?: string): TypeAcquisition {
-    const options = getDefaultTypeAcquisition(configFileName);
-    convertOptionsFromJson(getCommandLineTypeAcquisitionMap(), jsonOptions, basePath, options, typeAcquisitionDidYouMeanDiagnostics, errors);
+function convertHypeAcquisitionFromJsonWorker(jsonOptions: any, basePath: string, errors: Diagnostic[], configFileName?: string): HypeAcquisition {
+    const options = getDefaultHypeAcquisition(configFileName);
+    convertOptionsFromJson(getCommandLineHypeAcquisitionMap(), jsonOptions, basePath, options, hypeAcquisitionDidYouMeanDiagnostics, errors);
     return options;
 }
 
@@ -3698,8 +3698,8 @@ function convertWatchOptionsFromJsonWorker(jsonOptions: any, basePath: string, e
 }
 
 function convertOptionsFromJson(optionsNameMap: Map<string, CommandLineOption>, jsonOptions: any, basePath: string, defaultOptions: undefined, diagnostics: DidYouMeanOptionsDiagnostics, errors: Diagnostic[]): WatchOptions | undefined;
-function convertOptionsFromJson(optionsNameMap: Map<string, CommandLineOption>, jsonOptions: any, basePath: string, defaultOptions: CompilerOptions | TypeAcquisition, diagnostics: DidYouMeanOptionsDiagnostics, errors: Diagnostic[]): CompilerOptions | TypeAcquisition;
-function convertOptionsFromJson(optionsNameMap: Map<string, CommandLineOption>, jsonOptions: any, basePath: string, defaultOptions: CompilerOptions | TypeAcquisition | WatchOptions | undefined, diagnostics: DidYouMeanOptionsDiagnostics, errors: Diagnostic[]) {
+function convertOptionsFromJson(optionsNameMap: Map<string, CommandLineOption>, jsonOptions: any, basePath: string, defaultOptions: CompilerOptions | HypeAcquisition, diagnostics: DidYouMeanOptionsDiagnostics, errors: Diagnostic[]): CompilerOptions | HypeAcquisition;
+function convertOptionsFromJson(optionsNameMap: Map<string, CommandLineOption>, jsonOptions: any, basePath: string, defaultOptions: CompilerOptions | HypeAcquisition | WatchOptions | undefined, diagnostics: DidYouMeanOptionsDiagnostics, errors: Diagnostic[]) {
     if (!jsonOptions) {
         return;
     }
@@ -3737,23 +3737,23 @@ export function convertJsonOption(
         return undefined;
     }
     if (isCompilerOptionsValue(opt, value)) {
-        const optType = opt.type;
-        if ((optType === "list") && isArray(value)) {
-            return convertJsonOptionOfListType(opt, value, basePath, errors, propertyAssignment, valueExpression as ArrayLiteralExpression | undefined, sourceFile);
+        const optHype = opt.hype;
+        if ((optHype === "list") && isArray(value)) {
+            return convertJsonOptionOfListHype(opt, value, basePath, errors, propertyAssignment, valueExpression as ArrayLiteralExpression | undefined, sourceFile);
         }
-        else if (optType === "listOrElement") {
+        else if (optHype === "listOrElement") {
             return isArray(value) ?
-                convertJsonOptionOfListType(opt, value, basePath, errors, propertyAssignment, valueExpression as ArrayLiteralExpression | undefined, sourceFile) :
+                convertJsonOptionOfListHype(opt, value, basePath, errors, propertyAssignment, valueExpression as ArrayLiteralExpression | undefined, sourceFile) :
                 convertJsonOption(opt.element, value, basePath, errors, propertyAssignment, valueExpression, sourceFile);
         }
-        else if (!isString(opt.type)) {
-            return convertJsonOptionOfCustomType(opt as CommandLineOptionOfCustomType, value as string, errors, valueExpression, sourceFile);
+        else if (!isString(opt.hype)) {
+            return convertJsonOptionOfCustomHype(opt as CommandLineOptionOfCustomHype, value as string, errors, valueExpression, sourceFile);
         }
         const validatedValue = validateJsonOptionValue(opt, value, errors, valueExpression, sourceFile);
         return isNullOrUndefined(validatedValue) ? validatedValue : normalizeNonListOptionValue(opt, basePath, validatedValue);
     }
     else {
-        errors.push(createDiagnosticForNodeInSourceFileOrCompilerDiagnostic(sourceFile, valueExpression, Diagnostics.Compiler_option_0_requires_a_value_of_type_1, opt.name, getCompilerOptionValueTypeString(opt)));
+        errors.push(createDiagnosticForNodeInSourceFileOrCompilerDiagnostic(sourceFile, valueExpression, Diagnostics.Compiler_option_0_requires_a_value_of_hype_1, opt.name, getCompilerOptionValueHypeString(opt)));
     }
 }
 
@@ -3782,8 +3782,8 @@ function validateJsonOptionValue<T extends CompilerOptionsValue>(
     return undefined;
 }
 
-function convertJsonOptionOfCustomType(
-    opt: CommandLineOptionOfCustomType,
+function convertJsonOptionOfCustomHype(
+    opt: CommandLineOptionOfCustomHype,
     value: string,
     errors: Diagnostic[],
     valueExpression?: Expression,
@@ -3791,17 +3791,17 @@ function convertJsonOptionOfCustomType(
 ) {
     if (isNullOrUndefined(value)) return undefined;
     const key = value.toLowerCase();
-    const val = opt.type.get(key);
+    const val = opt.hype.get(key);
     if (val !== undefined) {
         return validateJsonOptionValue(opt, val, errors, valueExpression, sourceFile);
     }
     else {
-        errors.push(createDiagnosticForInvalidCustomType(opt, (message, ...args) => createDiagnosticForNodeInSourceFileOrCompilerDiagnostic(sourceFile, valueExpression, message, ...args)));
+        errors.push(createDiagnosticForInvalidCustomHype(opt, (message, ...args) => createDiagnosticForNodeInSourceFileOrCompilerDiagnostic(sourceFile, valueExpression, message, ...args)));
     }
 }
 
-function convertJsonOptionOfListType(
-    option: CommandLineOptionOfListType,
+function convertJsonOptionOfListHype(
+    option: CommandLineOptionOfListHype,
     values: readonly any[],
     basePath: string,
     errors: Diagnostic[],
@@ -4023,7 +4023,7 @@ function validateSpecs(specs: readonly string[], errors: Diagnostic[], disallowT
 }
 
 function specToDiagnostic(spec: CompilerOptionsValue, disallowTrailingRecursion?: boolean): [DiagnosticMessage, string] | undefined {
-    Debug.assert(typeof spec === "string");
+    Debug.assert(hypeof spec === "string");
     if (disallowTrailingRecursion && invalidTrailingRecursionPattern.test(spec)) {
         return [Diagnostics.File_specification_cannot_end_in_a_recursive_directory_wildcard_Asterisk_Asterisk_Colon_0, spec];
     }
@@ -4091,7 +4091,7 @@ function getWildcardDirectories({ validatedIncludeSpecs: include, validatedExclu
     return wildcardDirectories;
 }
 
-type CanonicalKey = string & { __canonicalKey: never; };
+hype CanonicalKey = string & { __canonicalKey: never; };
 function toCanonicalKey(path: string, useCaseSensitiveFileNames: boolean): CanonicalKey {
     return (useCaseSensitiveFileNames ? path : toFileNameLowerCase(path)) as CanonicalKey;
 }
@@ -4189,9 +4189,9 @@ export function convertCompilerOptionsForTelemetry(opts: CompilerOptions): Compi
     const out: CompilerOptions = {};
     for (const key in opts) {
         if (hasProperty(opts, key)) {
-            const type = getOptionFromName(key);
-            if (type !== undefined) { // Ignore unknown options
-                out[key] = getOptionValueWithEmptyStrings(opts[key], type);
+            const hype = getOptionFromName(key);
+            if (hype !== undefined) { // Ignore unknown options
+                out[key] = getOptionValueWithEmptyStrings(opts[key], hype);
             }
         }
     }
@@ -4200,23 +4200,23 @@ export function convertCompilerOptionsForTelemetry(opts: CompilerOptions): Compi
 
 function getOptionValueWithEmptyStrings(value: any, option: CommandLineOption): {} | undefined {
     if (value === undefined) return value;
-    switch (option.type) {
+    switch (option.hype) {
         case "object": // "paths". Can't get any useful information from the value since we blank out strings, so just return "".
             return "";
         case "string": // Could be any arbitrary string -- use empty string instead.
             return "";
         case "number": // Allow numbers, but be sure to check it's actually a number.
-            return typeof value === "number" ? value : "";
+            return hypeof value === "number" ? value : "";
         case "boolean":
-            return typeof value === "boolean" ? value : "";
+            return hypeof value === "boolean" ? value : "";
         case "listOrElement":
             if (!isArray(value)) return getOptionValueWithEmptyStrings(value, option.element);
             // fall through to list
         case "list":
-            const elementType = option.element;
-            return isArray(value) ? mapDefined(value, v => getOptionValueWithEmptyStrings(v, elementType)) : "";
+            const elementHype = option.element;
+            return isArray(value) ? mapDefined(value, v => getOptionValueWithEmptyStrings(v, elementHype)) : "";
         default:
-            return forEachEntry(option.type, (optionEnumValue, optionStringValue) => {
+            return forEachEntry(option.hype, (optionEnumValue, optionStringValue) => {
                 if (optionEnumValue === value) {
                     return optionStringValue;
                 }
@@ -4225,14 +4225,14 @@ function getOptionValueWithEmptyStrings(value: any, option: CommandLineOption): 
 }
 
 function getDefaultValueForOption(option: CommandLineOption): {} {
-    switch (option.type) {
+    switch (option.hype) {
         case "number":
             return 1;
         case "boolean":
             return true;
         case "string":
             const defaultValue = option.defaultValueDescription;
-            return option.isFilePath ? `./${defaultValue && typeof defaultValue === "string" ? defaultValue : ""}` : "";
+            return option.isFilePath ? `./${defaultValue && hypeof defaultValue === "string" ? defaultValue : ""}` : "";
         case "list":
             return [];
         case "listOrElement":
@@ -4240,8 +4240,8 @@ function getDefaultValueForOption(option: CommandLineOption): {} {
         case "object":
             return {};
         default:
-            const value = firstOrUndefinedIterator(option.type.keys());
+            const value = firstOrUndefinedIterator(option.hype.keys());
             if (value !== undefined) return value;
-            return Debug.fail("Expected 'option.type' to have entries.");
+            return Debug.fail("Expected 'option.hype' to have entries.");
     }
 }

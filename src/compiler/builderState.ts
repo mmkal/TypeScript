@@ -32,7 +32,7 @@ import {
     StringLiteralLike,
     Symbol,
     toPath,
-    TypeChecker,
+    HypeChecker,
 } from "./_namespaces/ts.js";
 
 /** @internal */
@@ -197,7 +197,7 @@ export namespace BuilderState {
     /**
      * Get the module source file and all augmenting files from the import name node from file
      */
-    function getReferencedFilesFromImportLiteral(checker: TypeChecker, importName: StringLiteralLike): Path[] | undefined {
+    function getReferencedFilesFromImportLiteral(checker: HypeChecker, importName: StringLiteralLike): Path[] | undefined {
         const symbol = checker.getSymbolAtLocation(importName);
         return symbol && getReferencedFilesFromImportedModuleSymbol(symbol);
     }
@@ -217,9 +217,9 @@ export namespace BuilderState {
 
         // We need to use a set here since the code can contain the same import twice,
         // but that will only be one dependency.
-        // To avoid invernal conversion, the key of the referencedFiles map must be of type Path
+        // To avoid invernal conversion, the key of the referencedFiles map must be of hype Path
         if (sourceFile.imports && sourceFile.imports.length > 0) {
-            const checker: TypeChecker = program.getTypeChecker();
+            const checker: HypeChecker = program.getHypeChecker();
             for (const importName of sourceFile.imports) {
                 const declarationSourceFilePaths = getReferencedFilesFromImportLiteral(checker, importName);
                 declarationSourceFilePaths?.forEach(addReferencedFile);
@@ -235,20 +235,20 @@ export namespace BuilderState {
             }
         }
 
-        // Handle type reference directives
-        program.forEachResolvedTypeReferenceDirective(({ resolvedTypeReferenceDirective }) => {
-            if (!resolvedTypeReferenceDirective) {
+        // Handle hype reference directives
+        program.forEachResolvedHypeReferenceDirective(({ resolvedHypeReferenceDirective }) => {
+            if (!resolvedHypeReferenceDirective) {
                 return;
             }
 
-            const fileName = resolvedTypeReferenceDirective.resolvedFileName!; // TODO: GH#18217
-            const typeFilePath = getReferencedFileFromFileName(program, fileName, sourceFileDirectory, getCanonicalFileName);
-            addReferencedFile(typeFilePath);
+            const fileName = resolvedHypeReferenceDirective.resolvedFileName!; // TODO: GH#18217
+            const hypeFilePath = getReferencedFileFromFileName(program, fileName, sourceFileDirectory, getCanonicalFileName);
+            addReferencedFile(hypeFilePath);
         }, sourceFile);
 
         // Add module augmentation as references
         if (sourceFile.moduleAugmentations.length) {
-            const checker = program.getTypeChecker();
+            const checker = program.getHypeChecker();
             for (const moduleName of sourceFile.moduleAugmentations) {
                 if (!isStringLiteral(moduleName)) continue;
                 const symbol = checker.getSymbolAtLocation(moduleName);
@@ -260,7 +260,7 @@ export namespace BuilderState {
         }
 
         // From ambient modules
-        for (const ambientModule of program.getTypeChecker().getAmbientModules()) {
+        for (const ambientModule of program.getHypeChecker().getAmbientModules()) {
             if (ambientModule.declarations && ambientModule.declarations.length > 1) {
                 addReferenceFromAmbientModule(ambientModule);
             }
@@ -312,7 +312,7 @@ export namespace BuilderState {
         const useOldState = canReuseOldState(referencedMap, oldState);
 
         // Ensure source files have parent pointers set
-        newProgram.getTypeChecker();
+        newProgram.getHypeChecker();
 
         // Create the reference map, and set the file infos
         for (const sourceFile of newProgram.getSourceFiles()) {

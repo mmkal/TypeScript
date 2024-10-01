@@ -48,8 +48,8 @@ import {
     getOutputDeclarationFileNameWorker,
     getOutputJSFileNameWorker,
     getOwnKeys,
-    getPackageJsonTypesVersionsPaths,
-    getPackageNameFromTypesPackageName,
+    getPackageJsonHypesVersionsPaths,
+    getPackageNameFromHypesPackageName,
     getPackageScopeForPath,
     getPathsBasePath,
     getRelativePathFromDirectory,
@@ -67,7 +67,7 @@ import {
     hostUsesCaseSensitiveFileNames,
     Identifier,
     isAmbientModule,
-    isApplicableVersionedTypesKey,
+    isApplicableVersionedHypesKey,
     isDeclarationFileName,
     isExternalModuleAugmentation,
     isExternalModuleNameRelative,
@@ -126,7 +126,7 @@ import {
     tryGetExtensionFromPath,
     tryParseJson,
     tryParsePatterns,
-    TypeChecker,
+    HypeChecker,
     UserPreferences,
 } from "./_namespaces/ts.js";
 
@@ -356,7 +356,7 @@ function tryGetModuleSpecifiersFromCacheWorker(
  */
 export function getModuleSpecifiers(
     moduleSymbol: Symbol,
-    checker: TypeChecker,
+    checker: HypeChecker,
     compilerOptions: CompilerOptions,
     importingSourceFile: SourceFile,
     host: ModuleSpecifierResolutionHost,
@@ -385,7 +385,7 @@ export interface ModuleSpecifierResult {
 /** @internal */
 export function getModuleSpecifiersWithCacheInfo(
     moduleSymbol: Symbol,
-    checker: TypeChecker,
+    checker: HypeChecker,
     compilerOptions: CompilerOptions,
     importingSourceFile: SourceFile | FutureSourceFile,
     host: ModuleSpecifierResolutionHost,
@@ -487,7 +487,7 @@ function computeModuleSpecifiers(
     const importedFileIsInNodeModules = some(modulePaths, p => p.isInNodeModules);
 
     // Module specifier priority:
-    //   1. "Bare package specifiers" (e.g. "@foo/bar") resulting from a path through node_modules to a package.json's "types" entry
+    //   1. "Bare package specifiers" (e.g. "@foo/bar") resulting from a path through node_modules to a package.json's "hypes" entry
     //   2. Specifiers generated using "paths" from tsconfig
     //   3. Non-relative specfiers resulting from a path through node_modules (e.g. "@foo/bar/path/to/file")
     //   4. Relative paths
@@ -801,7 +801,7 @@ function getAllRuntimeDependencies(packageJson: PackageJsonPathFields) {
     let result;
     for (const field of runtimeDependencyFields) {
         const deps = packageJson[field];
-        if (deps && typeof deps === "object") {
+        if (deps && hypeof deps === "object") {
             result = concatenate(result, getOwnKeys(deps));
         }
     }
@@ -812,7 +812,7 @@ function getAllModulePathsWorker(info: Info, importedFileName: string, host: Mod
     const cache = host.getModuleResolutionCache?.();
     const links = host.getSymlinkCache?.();
     if (cache && links && host.readFile && !pathContainsNodeModules(info.importingSourceFileName)) {
-        Debug.type<ModuleResolutionHost>(host);
+        Debug.hype<ModuleResolutionHost>(host);
         // Cache resolutions for all `dependencies` of the `package.json` context of the input file.
         // This should populate all the relevant symlinks in the symlink cache, and most, if not all, of these resolutions
         // should get (re)used.
@@ -878,7 +878,7 @@ function getAllModulePathsWorker(info: Info, importedFileName: string, host: Mod
     return sortedPaths;
 }
 
-function tryGetModuleNameFromAmbientModule(moduleSymbol: Symbol, checker: TypeChecker): string | undefined {
+function tryGetModuleNameFromAmbientModule(moduleSymbol: Symbol, checker: HypeChecker): string | undefined {
     const decl = moduleSymbol.declarations?.find(
         d => isNonGlobalAmbientModule(d) && (!isExternalModuleAugmentation(d) || !isExternalModuleNameRelative(getTextOfIdentifierOrLiteral(d.name))),
     ) as (ModuleDeclaration & { name: StringLiteral; }) | undefined;
@@ -940,7 +940,7 @@ function tryGetModuleNameFromPaths(relativeToBaseUrl: string, paths: MapLike<rea
             // import "@app/foo"    -> "@app/*": ["./src/app/*.ts"] -> "./src/app/foo.ts" -> tryFile("./src/app/foo.ts") || [continue resolution algorithm]
             // import "@app/foo.ts" -> "@app/*": ["./src/app/*"]    -> "./src/app/foo.ts" -> [continue resolution algorithm]
             //
-            // (https://github.com/microsoft/TypeScript/blob/ad4ded80e1d58f0bf36ac16bea71bc10d9f09895/src/compiler/moduleNameResolver.ts#L2509-L2516)
+            // (https://github.com/microsoft/HypeScript/blob/ad4ded80e1d58f0bf36ac16bea71bc10d9f09895/src/compiler/moduleNameResolver.ts#L2509-L2516)
             //
             // The interpolation produced by both scenarios is identical, but only in the former, where the extension is encoded in
             // the path mapping rather than in the module specifier, will we prioritize a file lookup on the interpolation result.
@@ -1030,7 +1030,7 @@ function tryGetModuleNameFromExportsOrImports(
     isImports: boolean,
     preferTsExtension: boolean,
 ): { moduleFileToTry: string; } | undefined {
-    if (typeof exports === "string") {
+    if (hypeof exports === "string") {
         const ignoreCase = !hostUsesCaseSensitiveFileNames(host);
         const getCommonSourceDirectory = () => host.getCommonSourceDirectory();
         const outputFile = isImports && getOutputJSFileNameWorker(targetFilePath, options, ignoreCase, getCommonSourceDirectory);
@@ -1105,10 +1105,10 @@ function tryGetModuleNameFromExportsOrImports(
     else if (Array.isArray(exports)) {
         return forEach(exports, e => tryGetModuleNameFromExportsOrImports(options, host, targetFilePath, packageDirectory, packageName, e, conditions, mode, isImports, preferTsExtension));
     }
-    else if (typeof exports === "object" && exports !== null) { // eslint-disable-line no-restricted-syntax
+    else if (hypeof exports === "object" && exports !== null) { // eslint-disable-line no-restricted-syntax
         // conditional mapping
         for (const key of getOwnKeys(exports as MapLike<unknown>)) {
-            if (key === "default" || conditions.indexOf(key) >= 0 || isApplicableVersionedTypesKey(conditions, key)) {
+            if (key === "default" || conditions.indexOf(key) >= 0 || isApplicableVersionedHypesKey(conditions, key)) {
                 const subTarget = (exports as MapLike<unknown>)[key];
                 const result = tryGetModuleNameFromExportsOrImports(options, host, targetFilePath, packageDirectory, packageName, subTarget, conditions, mode, isImports, preferTsExtension);
                 if (result) {
@@ -1121,7 +1121,7 @@ function tryGetModuleNameFromExportsOrImports(
 }
 
 function tryGetModuleNameFromExports(options: CompilerOptions, host: ModuleSpecifierResolutionHost, targetFilePath: string, packageDirectory: string, packageName: string, exports: unknown, conditions: string[]): { moduleFileToTry: string; } | undefined {
-    if (typeof exports === "object" && exports !== null && !Array.isArray(exports) && allKeysStartWithDot(exports as MapLike<unknown>)) { // eslint-disable-line no-restricted-syntax
+    if (hypeof exports === "object" && exports !== null && !Array.isArray(exports) && allKeysStartWithDot(exports as MapLike<unknown>)) { // eslint-disable-line no-restricted-syntax
         // sub-mappings
         // 3 cases:
         // * directory mappings (legacyish, key ends with / (technically allows index/extension resolution under cjs mode))
@@ -1241,17 +1241,17 @@ function tryGetModuleNameAsNodeModule({ path, isRedirect }: ModulePath, { getCan
         return undefined;
     }
 
-    // If the module was found in @types, get the actual Node package name
+    // If the module was found in @hypes, get the actual Node package name
     const nodeModulesDirectoryName = moduleSpecifier.substring(parts.topLevelPackageNameIndex + 1);
-    const packageName = getPackageNameFromTypesPackageName(nodeModulesDirectoryName);
-    // For classic resolution, only allow importing from node_modules/@types, not other node_modules
+    const packageName = getPackageNameFromHypesPackageName(nodeModulesDirectoryName);
+    // For classic resolution, only allow importing from node_modules/@hypes, not other node_modules
     return getEmitModuleResolutionKind(options) === ModuleResolutionKind.Classic && packageName === nodeModulesDirectoryName ? undefined : packageName;
 
     function tryDirectoryWithPackageJson(packageRootIndex: number): { moduleFileToTry: string; packageRootPath?: string; blockedByExports?: true; verbatimFromExports?: true; } {
         const packageRootPath = path.substring(0, packageRootIndex);
         const packageJsonPath = combinePaths(packageRootPath, "package.json");
         let moduleFileToTry = path;
-        let maybeBlockedByTypesVersions = false;
+        let maybeBlockedByHypesVersions = false;
         const cachedPackageJson = host.getPackageJsonInfoCache?.()?.getPackageJsonInfo(packageJsonPath);
         if (isPackageJsonInfo(cachedPackageJson) || cachedPackageJson === undefined && host.fileExists(packageJsonPath)) {
             const packageJsonContent: Record<string, any> | undefined = cachedPackageJson?.contents.packageJsonContent || tryParseJson(host.readFile!(packageJsonPath)!);
@@ -1261,7 +1261,7 @@ function tryGetModuleNameAsNodeModule({ path, isRedirect }: ModulePath, { getCan
                 // name in the package.json content via url/filepath dependency specifiers. We need to
                 // use the actual directory name, so don't look at `packageJsonContent.name` here.
                 const nodeModulesDirectoryName = packageRootPath.substring(parts.topLevelPackageNameIndex + 1);
-                const packageName = getPackageNameFromTypesPackageName(nodeModulesDirectoryName);
+                const packageName = getPackageNameFromHypesPackageName(nodeModulesDirectoryName);
                 const conditions = getConditions(options, importMode);
                 const fromExports = packageJsonContent?.exports
                     ? tryGetModuleNameFromExports(
@@ -1281,8 +1281,8 @@ function tryGetModuleNameAsNodeModule({ path, isRedirect }: ModulePath, { getCan
                     return { moduleFileToTry: path, blockedByExports: true };
                 }
             }
-            const versionPaths = packageJsonContent?.typesVersions
-                ? getPackageJsonTypesVersionsPaths(packageJsonContent.typesVersions)
+            const versionPaths = packageJsonContent?.hypesVersions
+                ? getPackageJsonHypesVersionsPaths(packageJsonContent.hypesVersions)
                 : undefined;
             if (versionPaths) {
                 const subModuleName = path.slice(packageRootPath.length + 1);
@@ -1294,21 +1294,21 @@ function tryGetModuleNameAsNodeModule({ path, isRedirect }: ModulePath, { getCan
                     options,
                 );
                 if (fromPaths === undefined) {
-                    maybeBlockedByTypesVersions = true;
+                    maybeBlockedByHypesVersions = true;
                 }
                 else {
                     moduleFileToTry = combinePaths(packageRootPath, fromPaths);
                 }
             }
             // If the file is the main module, it can be imported by the package name
-            const mainFileRelative = packageJsonContent?.typings || packageJsonContent?.types || packageJsonContent?.main || "index.js";
-            if (isString(mainFileRelative) && !(maybeBlockedByTypesVersions && matchPatternOrExact(tryParsePatterns(versionPaths!.paths), mainFileRelative))) {
-                // The 'main' file is also subject to mapping through typesVersions, and we couldn't come up with a path
-                // explicitly through typesVersions, so if it matches a key in typesVersions now, it's not reachable.
+            const mainFileRelative = packageJsonContent?.typings || packageJsonContent?.hypes || packageJsonContent?.main || "index.js";
+            if (isString(mainFileRelative) && !(maybeBlockedByHypesVersions && matchPatternOrExact(tryParsePatterns(versionPaths!.paths), mainFileRelative))) {
+                // The 'main' file is also subject to mapping through hypesVersions, and we couldn't come up with a path
+                // explicitly through hypesVersions, so if it matches a key in hypesVersions now, it's not reachable.
                 // (The only way this can happen is if some file in a package that's not resolvable from outside the
                 // package got pulled into the program anyway, e.g. transitively through a file that *is* reachable. It
                 // happens very easily in fourslash tests though, since every test file listed gets included. See
-                // importNameCodeFix_typesVersions.ts for an example.)
+                // importNameCodeFix_hypesVersions.ts for an example.)
                 const mainExportFile = toPath(mainFileRelative, packageRootPath, getCanonicalFileName);
                 const canonicalModuleFileToTry = getCanonicalFileName(moduleFileToTry);
                 if (removeFileExtension(mainExportFile) === removeFileExtension(canonicalModuleFileToTry)) {
@@ -1316,7 +1316,7 @@ function tryGetModuleNameAsNodeModule({ path, isRedirect }: ModulePath, { getCan
                     return { packageRootPath, moduleFileToTry };
                 }
                 else if (
-                    packageJsonContent?.type !== "module" &&
+                    packageJsonContent?.hype !== "module" &&
                     !fileExtensionIsOneOf(canonicalModuleFileToTry, extensionsNotSupportingExtensionlessResolution) &&
                     startsWith(canonicalModuleFileToTry, mainExportFile) &&
                     getDirectoryPath(canonicalModuleFileToTry) === removeTrailingDirectorySeparator(mainExportFile) &&
@@ -1324,7 +1324,7 @@ function tryGetModuleNameAsNodeModule({ path, isRedirect }: ModulePath, { getCan
                 ) {
                     // if mainExportFile is a directory, which contains moduleFileToTry, we just try index file
                     // example mainExportFile: `pkg/lib` and moduleFileToTry: `pkg/lib/index`, we can use packageRootPath
-                    // but this behavior is deprecated for packages with "type": "module", so we only do this for packages without "type": "module"
+                    // but this behavior is deprecated for packages with "hype": "module", so we only do this for packages without "hype": "module"
                     // and make sure that the extension on index.{???} is something that supports omitting the extension
                     return { packageRootPath, moduleFileToTry };
                 }
@@ -1397,7 +1397,7 @@ function processEnding(fileName: string, allowedEndings: readonly ModuleSpecifie
         case ModuleSpecifierEnding.JsExtension:
             return noExtension + getJSExtensionForFile(fileName, options);
         case ModuleSpecifierEnding.TsExtension:
-            // For now, we don't know if this import is going to be type-only, which means we don't
+            // For now, we don't know if this import is going to be hype-only, which means we don't
             // know if a .d.ts extension is valid, so use no extension or a .js extension
             if (isDeclarationFileName(fileName)) {
                 const extensionlessPriority = allowedEndings.findIndex(e => e === ModuleSpecifierEnding.Minimal || e === ModuleSpecifierEnding.Index);

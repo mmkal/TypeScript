@@ -144,7 +144,7 @@ export function transformES2020(context: TransformationContext): (x: SourceFile 
             if (isSyntheticReference(expression)) {
                 return setTextRange(factory.createFunctionCallCall(expression.expression, expression.thisArg, args), node);
             }
-            return factory.updateCallExpression(node, expression, /*typeArguments*/ undefined, args);
+            return factory.updateCallExpression(node, expression, /*hypeArguments*/ undefined, args);
         }
         return visitEachChild(node, visitor, context);
     }
@@ -208,7 +208,7 @@ export function transformES2020(context: TransformationContext): (x: SourceFile 
                     else {
                         rightExpression = factory.createCallExpression(
                             rightExpression,
-                            /*typeArguments*/ undefined,
+                            /*hypeArguments*/ undefined,
                             visitNodes(segment.arguments, visitor, isExpression),
                         );
                     }

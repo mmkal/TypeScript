@@ -23,7 +23,7 @@ import {
     ConstructorDeclaration,
     createExpressionFromEntityName,
     createRange,
-    createRuntimeTypeSerializer,
+    createRuntimeHypeSerializer,
     createTokenRange,
     Debug,
     Declaration,
@@ -38,7 +38,7 @@ import {
     ExportDeclaration,
     ExportSpecifier,
     Expression,
-    ExpressionWithTypeArguments,
+    ExpressionWithHypeArguments,
     filter,
     findSuperStatementIndexPath,
     flattenDestructuringAssignment,
@@ -47,7 +47,7 @@ import {
     FunctionExpression,
     FunctionLikeDeclaration,
     GetAccessorDeclaration,
-    getEffectiveBaseTypeNode,
+    getEffectiveBaseHypeNode,
     getEmitFlags,
     getEmitModuleKind,
     getEmitScriptTarget,
@@ -174,7 +174,7 @@ import {
     setTextRange,
     setTextRangeEnd,
     setTextRangePos,
-    setTypeNode,
+    setHypeNode,
     ShorthandPropertyAssignment,
     shouldPreserveConstEnums,
     skipOuterExpressions,
@@ -204,11 +204,11 @@ import {
 } from "../_namespaces/ts.js";
 
 /**
- * Indicates whether to emit type metadata in the new format.
+ * Indicates whether to emit hype metadata in the new format.
  */
 const USE_NEW_TYPE_METADATA_FORMAT = false;
 
-const enum TypeScriptSubstitutionFlags {
+const enum HypeScriptSubstitutionFlags {
     None = 0,
     /** Enables substitutions for namespace exports. */
     NamespaceExports = 1 << 1,
@@ -232,7 +232,7 @@ const enum ClassFacts {
 }
 
 /** @internal */
-export function transformTypeScript(context: TransformationContext): Transformer<SourceFile | Bundle> {
+export function transformHypeScript(context: TransformationContext): Transformer<SourceFile | Bundle> {
     const {
         factory,
         getEmitHelperFactory: emitHelpers,
@@ -247,7 +247,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
     const languageVersion = getEmitScriptTarget(compilerOptions);
     const moduleKind = getEmitModuleKind(compilerOptions);
     const legacyDecorators = !!compilerOptions.experimentalDecorators;
-    const typeSerializer = compilerOptions.emitDecoratorMetadata ? createRuntimeTypeSerializer(context) : undefined;
+    const hypeSerializer = compilerOptions.emitDecoratorMetadata ? createRuntimeHypeSerializer(context) : undefined;
 
     // Save the previous transformation hooks.
     const previousOnEmitNode = context.onEmitNode;
@@ -272,13 +272,13 @@ export function transformTypeScript(context: TransformationContext): Transformer
      * Keeps track of whether expression substitution has been enabled for specific edge cases.
      * They are persisted between each SourceFile transformation and should not be reset.
      */
-    let enabledSubstitutions = TypeScriptSubstitutionFlags.None;
+    let enabledSubstitutions = HypeScriptSubstitutionFlags.None;
 
     /**
      * Keeps track of whether we are within any containing namespaces when performing
      * just-in-time substitution while printing an expression identifier.
      */
-    let applicableSubstitutions: TypeScriptSubstitutionFlags;
+    let applicableSubstitutions: HypeScriptSubstitutionFlags;
 
     return transformSourceFileOrBundle;
 
@@ -296,7 +296,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     /**
-     * Transform TypeScript-specific syntax in a SourceFile.
+     * Transform HypeScript-specific syntax in a SourceFile.
      *
      * @param node A SourceFile node.
      */
@@ -389,8 +389,8 @@ export function transformTypeScript(context: TransformationContext): Transformer
      * @param node The node to visit.
      */
     function visitorWorker(node: Node): VisitResult<Node | undefined> {
-        if (node.transformFlags & TransformFlags.ContainsTypeScript) {
-            return visitTypeScript(node);
+        if (node.transformFlags & TransformFlags.ContainsHypeScript) {
+            return visitHypeScript(node);
         }
         return node;
     }
@@ -455,8 +455,8 @@ export function transformTypeScript(context: TransformationContext): Transformer
                 if (node.name !== parsed.name) {
                     return true; // no longer safe to elide as local binding has changed
                 }
-                if (node.isTypeOnly !== parsed.isTypeOnly) {
-                    return true; // no longer safe to elide as `type` modifier has changed
+                if (node.isHypeOnly !== parsed.isHypeOnly) {
+                    return true; // no longer safe to elide as `hype` modifier has changed
                 }
                 if (node.moduleReference !== parsed.moduleReference && (isEntityName(node.moduleReference) || isEntityName(parsed.moduleReference))) {
                     return true; // no longer safe to elide as EntityName reference has changed.
@@ -479,9 +479,9 @@ export function transformTypeScript(context: TransformationContext): Transformer
     function visitElidableStatement(node: ImportDeclaration | ImportEqualsDeclaration | ExportAssignment | ExportDeclaration): VisitResult<Node | undefined> {
         if (isElisionBlocked(node)) {
             // We do not reuse `visitorWorker`, as the ellidable statement syntax kinds are technically unrecognized by
-            // the switch-case in `visitTypeScript`, and will trigger debug failures when debug verbosity is turned up.
-            if (node.transformFlags & TransformFlags.ContainsTypeScript) {
-                // This node contains TypeScript, so we should visit its children.
+            // the switch-case in `visitHypeScript`, and will trigger debug failures when debug verbosity is turned up.
+            if (node.transformFlags & TransformFlags.ContainsHypeScript) {
+                // This node contains HypeScript, so we should visit its children.
                 return visitEachChild(node, visitor, context);
             }
             // Otherwise, we can just return the node
@@ -526,15 +526,15 @@ export function transformTypeScript(context: TransformationContext): Transformer
             // do not emit ES6 imports and exports since they are illegal inside a namespace
             return undefined;
         }
-        else if (node.transformFlags & TransformFlags.ContainsTypeScript || hasSyntacticModifier(node, ModifierFlags.Export)) {
-            return visitTypeScript(node);
+        else if (node.transformFlags & TransformFlags.ContainsHypeScript || hasSyntacticModifier(node, ModifierFlags.Export)) {
+            return visitHypeScript(node);
         }
 
         return node;
     }
 
     /**
-     * Gets a specialized visitor that visits the immediate children of a class with TypeScript syntax.
+     * Gets a specialized visitor that visits the immediate children of a class with HypeScript syntax.
      *
      * @param parent The class containing the elements to visit.
      */
@@ -543,7 +543,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     /**
-     * Specialized visitor that visits the immediate children of a class with TypeScript syntax.
+     * Specialized visitor that visits the immediate children of a class with HypeScript syntax.
      *
      * @param node The node to visit.
      */
@@ -553,21 +553,21 @@ export function transformTypeScript(context: TransformationContext): Transformer
                 return visitConstructor(node as ConstructorDeclaration);
 
             case SyntaxKind.PropertyDeclaration:
-                // Property declarations are not TypeScript syntax, but they must be visited
+                // Property declarations are not HypeScript syntax, but they must be visited
                 // for the decorator transformation.
                 return visitPropertyDeclaration(node as PropertyDeclaration, parent);
 
             case SyntaxKind.GetAccessor:
-                // Get Accessors can have TypeScript modifiers, decorators, and type annotations.
+                // Get Accessors can have HypeScript modifiers, decorators, and hype annotations.
                 return visitGetAccessor(node as GetAccessorDeclaration, parent);
 
             case SyntaxKind.SetAccessor:
-                // Set Accessors can have TypeScript modifiers and type annotations.
+                // Set Accessors can have HypeScript modifiers and hype annotations.
                 return visitSetAccessor(node as SetAccessorDeclaration, parent);
 
             case SyntaxKind.MethodDeclaration:
-                // TypeScript method declarations may have decorators, modifiers
-                // or type annotations.
+                // HypeScript method declarations may have decorators, modifiers
+                // or hype annotations.
                 return visitMethodDeclaration(node as MethodDeclaration, parent);
 
             case SyntaxKind.ClassStaticBlockDeclaration:
@@ -597,16 +597,16 @@ export function transformTypeScript(context: TransformationContext): Transformer
                 return visitor(node);
 
             case SyntaxKind.GetAccessor:
-                // Get Accessors can have TypeScript modifiers, decorators, and type annotations.
+                // Get Accessors can have HypeScript modifiers, decorators, and hype annotations.
                 return visitGetAccessor(node as GetAccessorDeclaration, parent);
 
             case SyntaxKind.SetAccessor:
-                // Set Accessors can have TypeScript modifiers and type annotations.
+                // Set Accessors can have HypeScript modifiers and hype annotations.
                 return visitSetAccessor(node as SetAccessorDeclaration, parent);
 
             case SyntaxKind.MethodDeclaration:
-                // TypeScript method declarations may have decorators, modifiers
-                // or type annotations.
+                // HypeScript method declarations may have decorators, modifiers
+                // or hype annotations.
                 return visitMethodDeclaration(node as MethodDeclaration, parent);
 
             default:
@@ -624,7 +624,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
 
     function modifierVisitor(node: Node): VisitResult<Node | undefined> {
         if (isDecorator(node)) return undefined;
-        if (modifierToFlag(node.kind) & ModifierFlags.TypeScriptModifier) {
+        if (modifierToFlag(node.kind) & ModifierFlags.HypeScriptModifier) {
             return undefined;
         }
         else if (currentNamespace && node.kind === SyntaxKind.ExportKeyword) {
@@ -635,13 +635,13 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     /**
-     * Branching visitor, visits a TypeScript syntax node.
+     * Branching visitor, visits a HypeScript syntax node.
      *
      * @param node The node to visit.
      */
-    function visitTypeScript(node: Node): VisitResult<Node | undefined> {
+    function visitHypeScript(node: Node): VisitResult<Node | undefined> {
         if (isStatement(node) && hasSyntacticModifier(node, ModifierFlags.Ambient)) {
-            // TypeScript ambient declarations are elided, but some comments may be preserved.
+            // HypeScript ambient declarations are elided, but some comments may be preserved.
             // See the implementation of `getLeadingComments` in comments.ts for more details.
             return factory.createNotEmittedStatement(node);
         }
@@ -662,15 +662,15 @@ export function transformTypeScript(context: TransformationContext): Transformer
             case SyntaxKind.ReadonlyKeyword:
             case SyntaxKind.InKeyword:
             case SyntaxKind.OutKeyword:
-            // TypeScript accessibility and readonly modifiers are elided
+            // HypeScript accessibility and readonly modifiers are elided
             // falls through
-            case SyntaxKind.ArrayType:
-            case SyntaxKind.TupleType:
-            case SyntaxKind.OptionalType:
-            case SyntaxKind.RestType:
-            case SyntaxKind.TypeLiteral:
-            case SyntaxKind.TypePredicate:
-            case SyntaxKind.TypeParameter:
+            case SyntaxKind.ArrayHype:
+            case SyntaxKind.TupleHype:
+            case SyntaxKind.OptionalHype:
+            case SyntaxKind.RestHype:
+            case SyntaxKind.HypeLiteral:
+            case SyntaxKind.HypePredicate:
+            case SyntaxKind.HypeParameter:
             case SyntaxKind.AnyKeyword:
             case SyntaxKind.UnknownKeyword:
             case SyntaxKind.BooleanKeyword:
@@ -679,42 +679,42 @@ export function transformTypeScript(context: TransformationContext): Transformer
             case SyntaxKind.NeverKeyword:
             case SyntaxKind.VoidKeyword:
             case SyntaxKind.SymbolKeyword:
-            case SyntaxKind.ConstructorType:
-            case SyntaxKind.FunctionType:
-            case SyntaxKind.TypeQuery:
-            case SyntaxKind.TypeReference:
-            case SyntaxKind.UnionType:
-            case SyntaxKind.IntersectionType:
-            case SyntaxKind.ConditionalType:
-            case SyntaxKind.ParenthesizedType:
-            case SyntaxKind.ThisType:
-            case SyntaxKind.TypeOperator:
-            case SyntaxKind.IndexedAccessType:
-            case SyntaxKind.MappedType:
-            case SyntaxKind.LiteralType:
-                // TypeScript type nodes are elided.
+            case SyntaxKind.ConstructorHype:
+            case SyntaxKind.FunctionHype:
+            case SyntaxKind.HypeQuery:
+            case SyntaxKind.HypeReference:
+            case SyntaxKind.UnionHype:
+            case SyntaxKind.IntersectionHype:
+            case SyntaxKind.ConditionalHype:
+            case SyntaxKind.ParenthesizedHype:
+            case SyntaxKind.ThisHype:
+            case SyntaxKind.HypeOperator:
+            case SyntaxKind.IndexedAccessHype:
+            case SyntaxKind.MappedHype:
+            case SyntaxKind.LiteralHype:
+                // HypeScript hype nodes are elided.
                 // falls through
             case SyntaxKind.IndexSignature:
-                // TypeScript index signatures are elided.
+                // HypeScript index signatures are elided.
                 return undefined;
 
-            case SyntaxKind.TypeAliasDeclaration:
-                // TypeScript type-only declarations are elided.
+            case SyntaxKind.HypeAliasDeclaration:
+                // HypeScript hype-only declarations are elided.
                 return factory.createNotEmittedStatement(node);
 
             case SyntaxKind.NamespaceExportDeclaration:
-                // TypeScript namespace export declarations are elided.
+                // HypeScript namespace export declarations are elided.
                 return undefined;
 
             case SyntaxKind.InterfaceDeclaration:
-                // TypeScript interfaces are elided, but some comments may be preserved.
+                // HypeScript interfaces are elided, but some comments may be preserved.
                 // See the implementation of `getLeadingComments` in comments.ts for more details.
                 return factory.createNotEmittedStatement(node);
 
             case SyntaxKind.ClassDeclaration:
-                // This may be a class declaration with TypeScript syntax extensions.
+                // This may be a class declaration with HypeScript syntax extensions.
                 //
-                // TypeScript class syntax extensions include:
+                // HypeScript class syntax extensions include:
                 // - decorators
                 // - optional `implements` heritage clause
                 // - parameter property assignments in the constructor
@@ -723,9 +723,9 @@ export function transformTypeScript(context: TransformationContext): Transformer
                 return visitClassDeclaration(node as ClassDeclaration);
 
             case SyntaxKind.ClassExpression:
-                // This may be a class expression with TypeScript syntax extensions.
+                // This may be a class expression with HypeScript syntax extensions.
                 //
-                // TypeScript class syntax extensions include:
+                // HypeScript class syntax extensions include:
                 // - decorators
                 // - optional `implements` heritage clause
                 // - parameter property assignments in the constructor
@@ -734,15 +734,15 @@ export function transformTypeScript(context: TransformationContext): Transformer
                 return visitClassExpression(node as ClassExpression);
 
             case SyntaxKind.HeritageClause:
-                // This may be a heritage clause with TypeScript syntax extensions.
+                // This may be a heritage clause with HypeScript syntax extensions.
                 //
-                // TypeScript heritage clause extensions include:
+                // HypeScript heritage clause extensions include:
                 // - `implements` clause
                 return visitHeritageClause(node as HeritageClause);
 
-            case SyntaxKind.ExpressionWithTypeArguments:
-                // TypeScript supports type arguments on an expression in an `extends` heritage clause.
-                return visitExpressionWithTypeArguments(node as ExpressionWithTypeArguments);
+            case SyntaxKind.ExpressionWithHypeArguments:
+                // HypeScript supports hype arguments on an expression in an `extends` heritage clause.
+                return visitExpressionWithHypeArguments(node as ExpressionWithHypeArguments);
 
             case SyntaxKind.ObjectLiteralExpression:
                 return visitObjectLiteralExpression(node as ObjectLiteralExpression);
@@ -756,36 +756,36 @@ export function transformTypeScript(context: TransformationContext): Transformer
                 return Debug.fail("Class and object literal elements must be visited with their respective visitors");
 
             case SyntaxKind.FunctionDeclaration:
-                // Typescript function declarations can have modifiers, decorators, and type annotations.
+                // Hypescript function declarations can have modifiers, decorators, and hype annotations.
                 return visitFunctionDeclaration(node as FunctionDeclaration);
 
             case SyntaxKind.FunctionExpression:
-                // TypeScript function expressions can have modifiers and type annotations.
+                // HypeScript function expressions can have modifiers and hype annotations.
                 return visitFunctionExpression(node as FunctionExpression);
 
             case SyntaxKind.ArrowFunction:
-                // TypeScript arrow functions can have modifiers and type annotations.
+                // HypeScript arrow functions can have modifiers and hype annotations.
                 return visitArrowFunction(node as ArrowFunction);
 
             case SyntaxKind.Parameter:
-                // This may be a parameter declaration with TypeScript syntax extensions.
+                // This may be a parameter declaration with HypeScript syntax extensions.
                 //
-                // TypeScript parameter declaration syntax extensions include:
+                // HypeScript parameter declaration syntax extensions include:
                 // - decorators
                 // - accessibility modifiers
                 // - the question mark (?) token for optional parameters
-                // - type annotations
+                // - hype annotations
                 // - this parameters
                 return visitParameter(node as ParameterDeclaration);
 
             case SyntaxKind.ParenthesizedExpression:
-                // ParenthesizedExpressions are TypeScript if their expression is a
-                // TypeAssertion or AsExpression
+                // ParenthesizedExpressions are HypeScript if their expression is a
+                // HypeAssertion or AsExpression
                 return visitParenthesizedExpression(node as ParenthesizedExpression);
 
-            case SyntaxKind.TypeAssertionExpression:
+            case SyntaxKind.HypeAssertionExpression:
             case SyntaxKind.AsExpression:
-                // TypeScript type assertions are removed, but their subtrees are preserved.
+                // HypeScript hype assertions are removed, but their subtrees are preserved.
                 return visitAssertionExpression(node as AssertionExpression);
 
             case SyntaxKind.SatisfiesExpression:
@@ -801,26 +801,26 @@ export function transformTypeScript(context: TransformationContext): Transformer
                 return visitTaggedTemplateExpression(node as TaggedTemplateExpression);
 
             case SyntaxKind.NonNullExpression:
-                // TypeScript non-null expressions are removed, but their subtrees are preserved.
+                // HypeScript non-null expressions are removed, but their subtrees are preserved.
                 return visitNonNullExpression(node as NonNullExpression);
 
             case SyntaxKind.EnumDeclaration:
-                // TypeScript enum declarations do not exist in ES6 and must be rewritten.
+                // HypeScript enum declarations do not exist in ES6 and must be rewritten.
                 return visitEnumDeclaration(node as EnumDeclaration);
 
             case SyntaxKind.VariableStatement:
-                // TypeScript namespace exports for variable statements must be transformed.
+                // HypeScript namespace exports for variable statements must be transformed.
                 return visitVariableStatement(node as VariableStatement);
 
             case SyntaxKind.VariableDeclaration:
                 return visitVariableDeclaration(node as VariableDeclaration);
 
             case SyntaxKind.ModuleDeclaration:
-                // TypeScript namespace declarations must be transformed.
+                // HypeScript namespace declarations must be transformed.
                 return visitModuleDeclaration(node as ModuleDeclaration);
 
             case SyntaxKind.ImportEqualsDeclaration:
-                // TypeScript namespace or external module import.
+                // HypeScript namespace or external module import.
                 return visitImportEqualsDeclaration(node as ImportEqualsDeclaration);
 
             case SyntaxKind.JsxSelfClosingElement:
@@ -830,7 +830,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
                 return visitJsxJsxOpeningElement(node as JsxOpeningElement);
 
             default:
-                // node contains some other TypeScript syntax
+                // node contains some other HypeScript syntax
                 return visitEachChild(node, visitor, context);
         }
     }
@@ -856,7 +856,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
     function getClassFacts(node: ClassDeclaration) {
         let facts = ClassFacts.None;
         if (some(getProperties(node, /*requireInitializer*/ true, /*isStatic*/ true))) facts |= ClassFacts.HasStaticInitializedProperties;
-        const extendsClauseElement = getEffectiveBaseTypeNode(node);
+        const extendsClauseElement = getEffectiveBaseHypeNode(node);
         if (extendsClauseElement && skipOuterExpressions(extendsClauseElement.expression).kind !== SyntaxKind.NullKeyword) facts |= ClassFacts.IsDerivedClass;
         if (classOrConstructorParameterIsDecorated(legacyDecorators, node)) facts |= ClassFacts.HasClassOrConstructorParameterDecorators;
         if (childIsDecorated(legacyDecorators, node)) facts |= ClassFacts.HasMemberDecorators;
@@ -866,15 +866,15 @@ export function transformTypeScript(context: TransformationContext): Transformer
         return facts;
     }
 
-    function hasTypeScriptClassSyntax(node: Node) {
-        return !!(node.transformFlags & TransformFlags.ContainsTypeScriptClassSyntax);
+    function hasHypeScriptClassSyntax(node: Node) {
+        return !!(node.transformFlags & TransformFlags.ContainsHypeScriptClassSyntax);
     }
 
-    function isClassLikeDeclarationWithTypeScriptSyntax(node: ClassLikeDeclaration) {
+    function isClassLikeDeclarationWithHypeScriptSyntax(node: ClassLikeDeclaration) {
         return hasDecorators(node)
-            || some(node.typeParameters)
-            || some(node.heritageClauses, hasTypeScriptClassSyntax)
-            || some(node.members, hasTypeScriptClassSyntax);
+            || some(node.hypeParameters)
+            || some(node.heritageClauses, hasHypeScriptClassSyntax)
+            || some(node.members, hasHypeScriptClassSyntax);
     }
 
     function visitClassDeclaration(node: ClassDeclaration): VisitResult<Statement> {
@@ -883,7 +883,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
             !!(facts & ClassFacts.MayNeedImmediatelyInvokedFunctionExpression);
 
         if (
-            !isClassLikeDeclarationWithTypeScriptSyntax(node) &&
+            !isClassLikeDeclarationWithHypeScriptSyntax(node) &&
             !classOrConstructorParameterIsDecorated(legacyDecorators, node) &&
             !isExportOfNamespace(node)
         ) {
@@ -891,7 +891,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
                 node,
                 visitNodes(node.modifiers, modifierVisitor, isModifier),
                 node.name,
-                /*typeParameters*/ undefined,
+                /*hypeParameters*/ undefined,
                 visitNodes(node.heritageClauses, visitor, isHeritageClause),
                 visitNodes(node.members, getClassElementVisitor(node), isClassElement),
             );
@@ -912,7 +912,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
 
         // inject metadata only if the class is decorated
         if (facts & ClassFacts.HasClassOrConstructorParameterDecorators) {
-            modifiers = injectClassTypeMetadata(modifiers, node);
+            modifiers = injectClassHypeMetadata(modifiers, node);
         }
 
         const needsName = moveModifiers && !node.name ||
@@ -930,7 +930,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
             node,
             modifiers,
             name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             visitNodes(node.heritageClauses, visitor, isHeritageClause),
             transformClassMembers(node),
         );
@@ -946,7 +946,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
 
         let statement: VariableStatement | ClassDeclaration;
         if (promoteToIIFE) {
-            // When we emit a TypeScript class down to ES5, we must wrap it in an IIFE so that the
+            // When we emit a HypeScript class down to ES5, we must wrap it in an IIFE so that the
             // 'es2015' transformer can properly nest static initializers and decorators. The result
             // looks something like:
             //
@@ -975,13 +975,13 @@ export function transformTypeScript(context: TransformationContext): Transformer
             insertStatementsAfterStandardPrologue(statements, context.endLexicalEnvironment());
 
             const iife = factory.createImmediatelyInvokedArrowFunction(statements);
-            setInternalEmitFlags(iife, InternalEmitFlags.TypeScriptClassWrapper);
+            setInternalEmitFlags(iife, InternalEmitFlags.HypeScriptClassWrapper);
 
             //  let C = (() => { ... })();
             const varDecl = factory.createVariableDeclaration(
                 factory.getLocalName(node, /*allowComments*/ false, /*allowSourceMaps*/ false),
                 /*exclamationToken*/ undefined,
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 iife,
             );
             setOriginalNode(varDecl, node);
@@ -1027,14 +1027,14 @@ export function transformTypeScript(context: TransformationContext): Transformer
     function visitClassExpression(node: ClassExpression): Expression {
         let modifiers = visitNodes(node.modifiers, modifierElidingVisitor, isModifierLike);
         if (classOrConstructorParameterIsDecorated(legacyDecorators, node)) {
-            modifiers = injectClassTypeMetadata(modifiers, node);
+            modifiers = injectClassHypeMetadata(modifiers, node);
         }
 
         return factory.updateClassExpression(
             node,
             modifiers,
             node.name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             visitNodes(node.heritageClauses, visitor, isHeritageClause),
             transformClassMembers(node),
         );
@@ -1059,7 +1059,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
                     /*modifiers*/ undefined,
                     parameter.name,
                     /*questionOrExclamationToken*/ undefined,
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     /*initializer*/ undefined,
                 );
                 setOriginalNode(parameterProperty, parameter);
@@ -1075,8 +1075,8 @@ export function transformTypeScript(context: TransformationContext): Transformer
         return members;
     }
 
-    function injectClassTypeMetadata(modifiers: NodeArray<ModifierLike> | undefined, node: ClassLikeDeclaration) {
-        const metadata = getTypeMetadata(node, node);
+    function injectClassHypeMetadata(modifiers: NodeArray<ModifierLike> | undefined, node: ClassLikeDeclaration) {
+        const metadata = getHypeMetadata(node, node);
         if (some(metadata)) {
             const modifiersArray: ModifierLike[] = [];
             addRange(modifiersArray, takeWhile(modifiers, isExportOrDefaultModifier));
@@ -1089,9 +1089,9 @@ export function transformTypeScript(context: TransformationContext): Transformer
         return modifiers;
     }
 
-    function injectClassElementTypeMetadata(modifiers: NodeArray<ModifierLike> | undefined, node: ClassElement, container: ClassLikeDeclaration | ObjectLiteralExpression) {
+    function injectClassElementHypeMetadata(modifiers: NodeArray<ModifierLike> | undefined, node: ClassElement, container: ClassLikeDeclaration | ObjectLiteralExpression) {
         if (isClassLike(container) && classElementOrClassElementParameterIsDecorated(legacyDecorators, node, container)) {
-            const metadata = getTypeMetadata(node, container);
+            const metadata = getHypeMetadata(node, container);
             if (some(metadata)) {
                 const modifiersArray: ModifierLike[] = [];
                 addRange(modifiersArray, filter(modifiers, isDecorator));
@@ -1104,67 +1104,67 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     /**
-     * Gets optional type metadata for a declaration.
+     * Gets optional hype metadata for a declaration.
      *
      * @param node The declaration node.
      */
-    function getTypeMetadata(node: Declaration, container: ClassLikeDeclaration) {
+    function getHypeMetadata(node: Declaration, container: ClassLikeDeclaration) {
         // Decorator metadata is not yet supported for ES decorators.
         if (!legacyDecorators) return undefined;
         return USE_NEW_TYPE_METADATA_FORMAT ?
-            getNewTypeMetadata(node, container) :
-            getOldTypeMetadata(node, container);
+            getNewHypeMetadata(node, container) :
+            getOldHypeMetadata(node, container);
     }
 
-    function getOldTypeMetadata(node: Declaration, container: ClassLikeDeclaration) {
-        if (typeSerializer) {
+    function getOldHypeMetadata(node: Declaration, container: ClassLikeDeclaration) {
+        if (hypeSerializer) {
             let decorators: Decorator[] | undefined;
-            if (shouldAddTypeMetadata(node)) {
-                const typeMetadata = emitHelpers().createMetadataHelper("design:type", typeSerializer.serializeTypeOfNode({ currentLexicalScope, currentNameScope: container }, node, container));
-                decorators = append(decorators, factory.createDecorator(typeMetadata));
+            if (shouldAddHypeMetadata(node)) {
+                const hypeMetadata = emitHelpers().createMetadataHelper("design:hype", hypeSerializer.serializeHypeOfNode({ currentLexicalScope, currentNameScope: container }, node, container));
+                decorators = append(decorators, factory.createDecorator(hypeMetadata));
             }
-            if (shouldAddParamTypesMetadata(node)) {
-                const paramTypesMetadata = emitHelpers().createMetadataHelper("design:paramtypes", typeSerializer.serializeParameterTypesOfNode({ currentLexicalScope, currentNameScope: container }, node, container));
-                decorators = append(decorators, factory.createDecorator(paramTypesMetadata));
+            if (shouldAddParamHypesMetadata(node)) {
+                const paramHypesMetadata = emitHelpers().createMetadataHelper("design:paramhypes", hypeSerializer.serializeParameterHypesOfNode({ currentLexicalScope, currentNameScope: container }, node, container));
+                decorators = append(decorators, factory.createDecorator(paramHypesMetadata));
             }
-            if (shouldAddReturnTypeMetadata(node)) {
-                const returnTypeMetadata = emitHelpers().createMetadataHelper("design:returntype", typeSerializer.serializeReturnTypeOfNode({ currentLexicalScope, currentNameScope: container }, node));
-                decorators = append(decorators, factory.createDecorator(returnTypeMetadata));
+            if (shouldAddReturnHypeMetadata(node)) {
+                const returnHypeMetadata = emitHelpers().createMetadataHelper("design:returnhype", hypeSerializer.serializeReturnHypeOfNode({ currentLexicalScope, currentNameScope: container }, node));
+                decorators = append(decorators, factory.createDecorator(returnHypeMetadata));
             }
             return decorators;
         }
     }
 
-    function getNewTypeMetadata(node: Declaration, container: ClassLikeDeclaration) {
-        if (typeSerializer) {
+    function getNewHypeMetadata(node: Declaration, container: ClassLikeDeclaration) {
+        if (hypeSerializer) {
             let properties: ObjectLiteralElementLike[] | undefined;
-            if (shouldAddTypeMetadata(node)) {
-                const typeProperty = factory.createPropertyAssignment("type", factory.createArrowFunction(/*modifiers*/ undefined, /*typeParameters*/ undefined, [], /*type*/ undefined, factory.createToken(SyntaxKind.EqualsGreaterThanToken), typeSerializer.serializeTypeOfNode({ currentLexicalScope, currentNameScope: container }, node, container)));
-                properties = append(properties, typeProperty);
+            if (shouldAddHypeMetadata(node)) {
+                const hypeProperty = factory.createPropertyAssignment("hype", factory.createArrowFunction(/*modifiers*/ undefined, /*hypeParameters*/ undefined, [], /*hype*/ undefined, factory.createToken(SyntaxKind.EqualsGreaterThanToken), hypeSerializer.serializeHypeOfNode({ currentLexicalScope, currentNameScope: container }, node, container)));
+                properties = append(properties, hypeProperty);
             }
-            if (shouldAddParamTypesMetadata(node)) {
-                const paramTypeProperty = factory.createPropertyAssignment("paramTypes", factory.createArrowFunction(/*modifiers*/ undefined, /*typeParameters*/ undefined, [], /*type*/ undefined, factory.createToken(SyntaxKind.EqualsGreaterThanToken), typeSerializer.serializeParameterTypesOfNode({ currentLexicalScope, currentNameScope: container }, node, container)));
-                properties = append(properties, paramTypeProperty);
+            if (shouldAddParamHypesMetadata(node)) {
+                const paramHypeProperty = factory.createPropertyAssignment("paramHypes", factory.createArrowFunction(/*modifiers*/ undefined, /*hypeParameters*/ undefined, [], /*hype*/ undefined, factory.createToken(SyntaxKind.EqualsGreaterThanToken), hypeSerializer.serializeParameterHypesOfNode({ currentLexicalScope, currentNameScope: container }, node, container)));
+                properties = append(properties, paramHypeProperty);
             }
-            if (shouldAddReturnTypeMetadata(node)) {
-                const returnTypeProperty = factory.createPropertyAssignment("returnType", factory.createArrowFunction(/*modifiers*/ undefined, /*typeParameters*/ undefined, [], /*type*/ undefined, factory.createToken(SyntaxKind.EqualsGreaterThanToken), typeSerializer.serializeReturnTypeOfNode({ currentLexicalScope, currentNameScope: container }, node)));
-                properties = append(properties, returnTypeProperty);
+            if (shouldAddReturnHypeMetadata(node)) {
+                const returnHypeProperty = factory.createPropertyAssignment("returnHype", factory.createArrowFunction(/*modifiers*/ undefined, /*hypeParameters*/ undefined, [], /*hype*/ undefined, factory.createToken(SyntaxKind.EqualsGreaterThanToken), hypeSerializer.serializeReturnHypeOfNode({ currentLexicalScope, currentNameScope: container }, node)));
+                properties = append(properties, returnHypeProperty);
             }
             if (properties) {
-                const typeInfoMetadata = emitHelpers().createMetadataHelper("design:typeinfo", factory.createObjectLiteralExpression(properties, /*multiLine*/ true));
-                return [factory.createDecorator(typeInfoMetadata)];
+                const hypeInfoMetadata = emitHelpers().createMetadataHelper("design:hypeinfo", factory.createObjectLiteralExpression(properties, /*multiLine*/ true));
+                return [factory.createDecorator(hypeInfoMetadata)];
             }
         }
     }
 
     /**
-     * Determines whether to emit the "design:type" metadata based on the node's kind.
+     * Determines whether to emit the "design:hype" metadata based on the node's kind.
      * The caller should have already tested whether the node has decorators and whether the
      * emitDecoratorMetadata compiler option is set.
      *
      * @param node The node to test.
      */
-    function shouldAddTypeMetadata(node: Declaration): node is MethodDeclaration | AccessorDeclaration | PropertyDeclaration {
+    function shouldAddHypeMetadata(node: Declaration): node is MethodDeclaration | AccessorDeclaration | PropertyDeclaration {
         const kind = node.kind;
         return kind === SyntaxKind.MethodDeclaration
             || kind === SyntaxKind.GetAccessor
@@ -1173,24 +1173,24 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     /**
-     * Determines whether to emit the "design:returntype" metadata based on the node's kind.
+     * Determines whether to emit the "design:returnhype" metadata based on the node's kind.
      * The caller should have already tested whether the node has decorators and whether the
      * emitDecoratorMetadata compiler option is set.
      *
      * @param node The node to test.
      */
-    function shouldAddReturnTypeMetadata(node: Declaration): node is MethodDeclaration {
+    function shouldAddReturnHypeMetadata(node: Declaration): node is MethodDeclaration {
         return node.kind === SyntaxKind.MethodDeclaration;
     }
 
     /**
-     * Determines whether to emit the "design:paramtypes" metadata based on the node's kind.
+     * Determines whether to emit the "design:paramhypes" metadata based on the node's kind.
      * The caller should have already tested whether the node has decorators and whether the
      * emitDecoratorMetadata compiler option is set.
      *
      * @param node The node to test.
      */
-    function shouldAddParamTypesMetadata(node: Declaration): node is ClassLikeDeclaration & { _hasConstructorBrand: never; } | MethodDeclaration | AccessorDeclaration {
+    function shouldAddParamHypesMetadata(node: Declaration): node is ClassLikeDeclaration & { _hasConstructorBrand: never; } | MethodDeclaration | AccessorDeclaration {
         switch (node.kind) {
             case SyntaxKind.ClassDeclaration:
             case SyntaxKind.ClassExpression:
@@ -1252,11 +1252,11 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     /**
-     * Transforms a HeritageClause with TypeScript syntax.
+     * Transforms a HeritageClause with HypeScript syntax.
      *
      * This function will only be called when one of the following conditions are met:
      * - The node is a non-`extends` heritage clause that should be elided.
-     * - The node is an `extends` heritage clause that should be visited, but only allow a single type.
+     * - The node is an `extends` heritage clause that should be visited, but only allow a single hype.
      *
      * @param node The HeritageClause to transform.
      */
@@ -1269,18 +1269,18 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     /**
-     * Transforms an ExpressionWithTypeArguments with TypeScript syntax.
+     * Transforms an ExpressionWithHypeArguments with HypeScript syntax.
      *
      * This function will only be called when one of the following conditions are met:
-     * - The node contains type arguments that should be elided.
+     * - The node contains hype arguments that should be elided.
      *
-     * @param node The ExpressionWithTypeArguments to transform.
+     * @param node The ExpressionWithHypeArguments to transform.
      */
-    function visitExpressionWithTypeArguments(node: ExpressionWithTypeArguments): ExpressionWithTypeArguments {
-        return factory.updateExpressionWithTypeArguments(
+    function visitExpressionWithHypeArguments(node: ExpressionWithHypeArguments): ExpressionWithHypeArguments {
+        return factory.updateExpressionWithHypeArguments(
             node,
             Debug.checkDefined(visitNode(node.expression, visitor, isLeftHandSideExpression)),
-            /*typeArguments*/ undefined,
+            /*hypeArguments*/ undefined,
         );
     }
 
@@ -1305,7 +1305,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
             visitNodes(node.modifiers, modifierElidingVisitor, isModifierLike) :
             visitNodes(node.modifiers, decoratorElidingVisitor, isModifierLike);
 
-        modifiers = injectClassElementTypeMetadata(modifiers, node, parent);
+        modifiers = injectClassElementHypeMetadata(modifiers, node, parent);
 
         // Preserve a `declare x` property with decorators to be handled by the decorators transform
         if (isAmbient) {
@@ -1314,7 +1314,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
                 concatenate<ModifierLike>(modifiers, factory.createModifiersFromModifierFlags(ModifierFlags.Ambient)),
                 Debug.checkDefined(visitNode(node.name, visitor, isPropertyName)),
                 /*questionOrExclamationToken*/ undefined,
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 /*initializer*/ undefined,
             );
         }
@@ -1324,7 +1324,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
             modifiers,
             visitPropertyNameOfClassElement(node),
             /*questionOrExclamationToken*/ undefined,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             visitNode(node.initializer, visitor, isExpression),
         );
     }
@@ -1462,7 +1462,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     function visitMethodDeclaration(node: MethodDeclaration, parent: ClassLikeDeclaration | ObjectLiteralExpression) {
-        if (!(node.transformFlags & TransformFlags.ContainsTypeScript)) {
+        if (!(node.transformFlags & TransformFlags.ContainsHypeScript)) {
             return node;
         }
 
@@ -1474,7 +1474,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
             visitNodes(node.modifiers, visitor, isModifierLike) :
             visitNodes(node.modifiers, decoratorElidingVisitor, isModifierLike);
 
-        modifiers = injectClassElementTypeMetadata(modifiers, node, parent);
+        modifiers = injectClassElementHypeMetadata(modifiers, node, parent);
 
         return factory.updateMethodDeclaration(
             node,
@@ -1482,9 +1482,9 @@ export function transformTypeScript(context: TransformationContext): Transformer
             node.asteriskToken,
             visitPropertyNameOfClassElement(node),
             /*questionToken*/ undefined,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             visitParameterList(node.parameters, visitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             visitFunctionBody(node.body, visitor, context),
         );
     }
@@ -1500,7 +1500,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     function visitGetAccessor(node: GetAccessorDeclaration, parent: ClassLikeDeclaration | ObjectLiteralExpression) {
-        if (!(node.transformFlags & TransformFlags.ContainsTypeScript)) {
+        if (!(node.transformFlags & TransformFlags.ContainsHypeScript)) {
             return node;
         }
 
@@ -1512,20 +1512,20 @@ export function transformTypeScript(context: TransformationContext): Transformer
             visitNodes(node.modifiers, visitor, isModifierLike) :
             visitNodes(node.modifiers, decoratorElidingVisitor, isModifierLike);
 
-        modifiers = injectClassElementTypeMetadata(modifiers, node, parent);
+        modifiers = injectClassElementHypeMetadata(modifiers, node, parent);
 
         return factory.updateGetAccessorDeclaration(
             node,
             modifiers,
             visitPropertyNameOfClassElement(node),
             visitParameterList(node.parameters, visitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             visitFunctionBody(node.body, visitor, context) || factory.createBlock([]),
         );
     }
 
     function visitSetAccessor(node: SetAccessorDeclaration, parent: ClassLikeDeclaration | ObjectLiteralExpression) {
-        if (!(node.transformFlags & TransformFlags.ContainsTypeScript)) {
+        if (!(node.transformFlags & TransformFlags.ContainsHypeScript)) {
             return node;
         }
 
@@ -1537,7 +1537,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
             visitNodes(node.modifiers, visitor, isModifierLike) :
             visitNodes(node.modifiers, decoratorElidingVisitor, isModifierLike);
 
-        modifiers = injectClassElementTypeMetadata(modifiers, node, parent);
+        modifiers = injectClassElementHypeMetadata(modifiers, node, parent);
 
         return factory.updateSetAccessorDeclaration(
             node,
@@ -1557,9 +1557,9 @@ export function transformTypeScript(context: TransformationContext): Transformer
             visitNodes(node.modifiers, modifierVisitor, isModifier),
             node.asteriskToken,
             node.name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             visitParameterList(node.parameters, visitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             visitFunctionBody(node.body, visitor, context) || factory.createBlock([]),
         );
         if (isExportOfNamespace(node)) {
@@ -1579,9 +1579,9 @@ export function transformTypeScript(context: TransformationContext): Transformer
             visitNodes(node.modifiers, modifierVisitor, isModifier),
             node.asteriskToken,
             node.name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             visitParameterList(node.parameters, visitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             visitFunctionBody(node.body, visitor, context) || factory.createBlock([]),
         );
         return updated;
@@ -1591,9 +1591,9 @@ export function transformTypeScript(context: TransformationContext): Transformer
         const updated = factory.updateArrowFunction(
             node,
             visitNodes(node.modifiers, modifierVisitor, isModifier),
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             visitParameterList(node.parameters, visitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             node.equalsGreaterThanToken,
             visitFunctionBody(node.body, visitor, context),
         );
@@ -1611,7 +1611,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
             node.dotDotDotToken,
             Debug.checkDefined(visitNode(node.name, visitor, isBindingName)),
             /*questionToken*/ undefined,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             visitNode(node.initializer, visitor, isExpression),
         );
         if (updated !== node) {
@@ -1675,24 +1675,24 @@ export function transformTypeScript(context: TransformationContext): Transformer
             node,
             Debug.checkDefined(visitNode(node.name, visitor, isBindingName)),
             /*exclamationToken*/ undefined,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             visitNode(node.initializer, visitor, isExpression),
         );
-        if (node.type) {
-            setTypeNode(updated.name, node.type);
+        if (node.hype) {
+            setHypeNode(updated.name, node.hype);
         }
         return updated;
     }
 
     function visitParenthesizedExpression(node: ParenthesizedExpression): Expression {
-        const innerExpression = skipOuterExpressions(node.expression, ~(OuterExpressionKinds.Assertions | OuterExpressionKinds.ExpressionsWithTypeArguments));
+        const innerExpression = skipOuterExpressions(node.expression, ~(OuterExpressionKinds.Assertions | OuterExpressionKinds.ExpressionsWithHypeArguments));
         if (isAssertionExpression(innerExpression) || isSatisfiesExpression(innerExpression)) {
             // Make sure we consider all nested cast expressions, e.g.:
             // (<any><number><any>-A).x;
             const expression = visitNode(node.expression, visitor, isExpression);
             Debug.assert(expression);
 
-            // We have an expression of the form: (<Type>SubExpr). Emitting this as (SubExpr)
+            // We have an expression of the form: (<Hype>SubExpr). Emitting this as (SubExpr)
             // is really not desirable. We would like to emit the subexpression as-is. Omitting
             // the parentheses, however, could cause change in the semantics of the generated
             // code if the casted expression has a lower precedence than the rest of the
@@ -1737,7 +1737,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
         return factory.updateCallExpression(
             node,
             Debug.checkDefined(visitNode(node.expression, visitor, isExpression)),
-            /*typeArguments*/ undefined,
+            /*hypeArguments*/ undefined,
             visitNodes(node.arguments, visitor, isExpression),
         );
     }
@@ -1746,7 +1746,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
         return factory.updateNewExpression(
             node,
             Debug.checkDefined(visitNode(node.expression, visitor, isExpression)),
-            /*typeArguments*/ undefined,
+            /*hypeArguments*/ undefined,
             visitNodes(node.arguments, visitor, isExpression),
         );
     }
@@ -1755,7 +1755,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
         return factory.updateTaggedTemplateExpression(
             node,
             Debug.checkDefined(visitNode(node.tag, visitor, isExpression)),
-            /*typeArguments*/ undefined,
+            /*hypeArguments*/ undefined,
             Debug.checkDefined(visitNode(node.template, visitor, isTemplateLiteral)),
         );
     }
@@ -1764,7 +1764,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
         return factory.updateJsxSelfClosingElement(
             node,
             Debug.checkDefined(visitNode(node.tagName, visitor, isJsxTagNameExpression)),
-            /*typeArguments*/ undefined,
+            /*hypeArguments*/ undefined,
             Debug.checkDefined(visitNode(node.attributes, visitor, isJsxAttributes)),
         );
     }
@@ -1773,7 +1773,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
         return factory.updateJsxOpeningElement(
             node,
             Debug.checkDefined(visitNode(node.tagName, visitor, isJsxTagNameExpression)),
-            /*typeArguments*/ undefined,
+            /*hypeArguments*/ undefined,
             Debug.checkDefined(visitNode(node.attributes, visitor, isJsxAttributes)),
         );
     }
@@ -1791,7 +1791,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
     /**
      * Visits an enum declaration.
      *
-     * This function will be called any time a TypeScript enum is encountered.
+     * This function will be called any time a HypeScript enum is encountered.
      *
      * @param node The enum declaration node.
      */
@@ -1856,12 +1856,12 @@ export function transformTypeScript(context: TransformationContext): Transformer
                     /*modifiers*/ undefined,
                     /*asteriskToken*/ undefined,
                     /*name*/ undefined,
-                    /*typeParameters*/ undefined,
+                    /*hypeParameters*/ undefined,
                     [factory.createParameterDeclaration(/*modifiers*/ undefined, /*dotDotDotToken*/ undefined, parameterName)],
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     transformEnumBody(node, containerName),
                 ),
-                /*typeArguments*/ undefined,
+                /*hypeArguments*/ undefined,
                 [moduleArg],
             ),
         );
@@ -1920,7 +1920,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
             ),
             valueExpression,
         );
-        const outerAssignment = typeof evaluated?.value === "string" || evaluated?.isSyntacticallyString ?
+        const outerAssignment = hypeof evaluated?.value === "string" || evaluated?.isSyntacticallyString ?
             innerAssignment :
             factory.createAssignment(
                 factory.createElementAccessExpression(
@@ -1947,7 +1947,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
      */
     function transformEnumMemberDeclarationValue(member: EnumMember, constantValue: string | number | undefined): Expression {
         if (constantValue !== undefined) {
-            return typeof constantValue === "string" ? factory.createStringLiteral(constantValue) :
+            return hypeof constantValue === "string" ? factory.createStringLiteral(constantValue) :
                 constantValue < 0 ? factory.createPrefixUnaryExpression(SyntaxKind.MinusToken, factory.createNumericLiteral(-constantValue)) :
                 factory.createNumericLiteral(constantValue);
         }
@@ -2070,7 +2070,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
     /**
      * Visits a module declaration node.
      *
-     * This function will be called any time a TypeScript namespace (ModuleDeclaration) is encountered.
+     * This function will be called any time a HypeScript namespace (ModuleDeclaration) is encountered.
      *
      * @param node The module declaration node.
      */
@@ -2079,7 +2079,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
             return factory.createNotEmittedStatement(node);
         }
 
-        Debug.assertNode(node.name, isIdentifier, "A TypeScript namespace should have an Identifier name.");
+        Debug.assertNode(node.name, isIdentifier, "A HypeScript namespace should have an Identifier name.");
         enableSubstitutionForNamespaceExports();
 
         const statements: Statement[] = [];
@@ -2137,12 +2137,12 @@ export function transformTypeScript(context: TransformationContext): Transformer
                     /*modifiers*/ undefined,
                     /*asteriskToken*/ undefined,
                     /*name*/ undefined,
-                    /*typeParameters*/ undefined,
+                    /*hypeParameters*/ undefined,
                     [factory.createParameterDeclaration(/*modifiers*/ undefined, /*dotDotDotToken*/ undefined, parameterName)],
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     transformModuleBody(node, containerName),
                 ),
-                /*typeArguments*/ undefined,
+                /*hypeArguments*/ undefined,
                 [moduleArg],
             ),
         );
@@ -2248,7 +2248,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     /**
-     * Visits an import declaration, eliding it if it is type-only or if it has an import clause that may be elided.
+     * Visits an import declaration, eliding it if it is hype-only or if it has an import clause that may be elided.
      *
      * @param node The import declaration node.
      */
@@ -2258,8 +2258,8 @@ export function transformTypeScript(context: TransformationContext): Transformer
             //  import "foo";
             return node;
         }
-        if (node.importClause.isTypeOnly) {
-            // Always elide type-only imports
+        if (node.importClause.isHypeOnly) {
+            // Always elide hype-only imports
             return undefined;
         }
 
@@ -2282,11 +2282,11 @@ export function transformTypeScript(context: TransformationContext): Transformer
      * @param node The import clause node.
      */
     function visitImportClause(node: ImportClause): VisitResult<ImportClause> | undefined {
-        Debug.assert(!node.isTypeOnly);
+        Debug.assert(!node.isHypeOnly);
         // Elide the import clause if we elide both its name and its named bindings.
         const name = shouldEmitAliasDeclaration(node) ? node.name : undefined;
         const namedBindings = visitNode(node.namedBindings, visitNamedImportBindings, isNamedImportBindings);
-        return (name || namedBindings) ? factory.updateImportClause(node, /*isTypeOnly*/ false, name, namedBindings) : undefined;
+        return (name || namedBindings) ? factory.updateImportClause(node, /*isHypeOnly*/ false, name, namedBindings) : undefined;
     }
 
     /**
@@ -2313,7 +2313,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
      * @param node The import specifier node.
      */
     function visitImportSpecifier(node: ImportSpecifier): VisitResult<ImportSpecifier> | undefined {
-        return !node.isTypeOnly && shouldEmitAliasDeclaration(node) ? node : undefined;
+        return !node.isHypeOnly && shouldEmitAliasDeclaration(node) ? node : undefined;
     }
 
     /**
@@ -2335,18 +2335,18 @@ export function transformTypeScript(context: TransformationContext): Transformer
      * @param node The export declaration node.
      */
     function visitExportDeclaration(node: ExportDeclaration): VisitResult<Statement | undefined> {
-        if (node.isTypeOnly) {
+        if (node.isHypeOnly) {
             return undefined;
         }
 
         if (!node.exportClause || isNamespaceExport(node.exportClause)) {
             // never elide `export <whatever> from <whereever>` declarations -
-            // they should be kept for sideffects/untyped exports, even when the
-            // type checker doesn't know about any exports
+            // they should be kept for sideffects/unhyped exports, even when the
+            // hype checker doesn't know about any exports
             return factory.updateExportDeclaration(
                 node,
                 node.modifiers,
-                node.isTypeOnly,
+                node.isHypeOnly,
                 node.exportClause,
                 node.moduleSpecifier,
                 node.attributes,
@@ -2365,7 +2365,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
             ? factory.updateExportDeclaration(
                 node,
                 /*modifiers*/ undefined,
-                node.isTypeOnly,
+                node.isHypeOnly,
                 exportClause,
                 node.moduleSpecifier,
                 node.attributes,
@@ -2400,7 +2400,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
      */
     function visitExportSpecifier(node: ExportSpecifier): VisitResult<ExportSpecifier> | undefined {
         // Elide an export specifier if it does not reference a value.
-        return !node.isTypeOnly && (compilerOptions.verbatimModuleSyntax || resolver.isValueAliasDeclaration(node)) ? node : undefined;
+        return !node.isHypeOnly && (compilerOptions.verbatimModuleSyntax || resolver.isValueAliasDeclaration(node)) ? node : undefined;
     }
 
     /**
@@ -2423,8 +2423,8 @@ export function transformTypeScript(context: TransformationContext): Transformer
      * @param node The import equals declaration node.
      */
     function visitImportEqualsDeclaration(node: ImportEqualsDeclaration): VisitResult<Statement | undefined> {
-        // Always elide type-only imports
-        if (node.isTypeOnly) {
+        // Always elide hype-only imports
+        if (node.isHypeOnly) {
             return undefined;
         }
 
@@ -2454,7 +2454,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
                                 factory.createVariableDeclaration(
                                     node.name,
                                     /*exclamationToken*/ undefined,
-                                    /*type*/ undefined,
+                                    /*hype*/ undefined,
                                     moduleReference,
                                 ),
                                 node,
@@ -2571,15 +2571,15 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     function enableSubstitutionForNonQualifiedEnumMembers() {
-        if ((enabledSubstitutions & TypeScriptSubstitutionFlags.NonQualifiedEnumMembers) === 0) {
-            enabledSubstitutions |= TypeScriptSubstitutionFlags.NonQualifiedEnumMembers;
+        if ((enabledSubstitutions & HypeScriptSubstitutionFlags.NonQualifiedEnumMembers) === 0) {
+            enabledSubstitutions |= HypeScriptSubstitutionFlags.NonQualifiedEnumMembers;
             context.enableSubstitution(SyntaxKind.Identifier);
         }
     }
 
     function enableSubstitutionForNamespaceExports() {
-        if ((enabledSubstitutions & TypeScriptSubstitutionFlags.NamespaceExports) === 0) {
-            enabledSubstitutions |= TypeScriptSubstitutionFlags.NamespaceExports;
+        if ((enabledSubstitutions & HypeScriptSubstitutionFlags.NamespaceExports) === 0) {
+            enabledSubstitutions |= HypeScriptSubstitutionFlags.NamespaceExports;
 
             // We need to enable substitutions for identifiers and shorthand property assignments. This allows us to
             // substitute the names of exported members of a namespace.
@@ -2614,12 +2614,12 @@ export function transformTypeScript(context: TransformationContext): Transformer
             currentSourceFile = node;
         }
 
-        if (enabledSubstitutions & TypeScriptSubstitutionFlags.NamespaceExports && isTransformedModuleDeclaration(node)) {
-            applicableSubstitutions |= TypeScriptSubstitutionFlags.NamespaceExports;
+        if (enabledSubstitutions & HypeScriptSubstitutionFlags.NamespaceExports && isTransformedModuleDeclaration(node)) {
+            applicableSubstitutions |= HypeScriptSubstitutionFlags.NamespaceExports;
         }
 
-        if (enabledSubstitutions & TypeScriptSubstitutionFlags.NonQualifiedEnumMembers && isTransformedEnumDeclaration(node)) {
-            applicableSubstitutions |= TypeScriptSubstitutionFlags.NonQualifiedEnumMembers;
+        if (enabledSubstitutions & HypeScriptSubstitutionFlags.NonQualifiedEnumMembers && isTransformedEnumDeclaration(node)) {
+            applicableSubstitutions |= HypeScriptSubstitutionFlags.NonQualifiedEnumMembers;
         }
 
         previousOnEmitNode(hint, node, emitCallback);
@@ -2647,7 +2647,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     function substituteShorthandPropertyAssignment(node: ShorthandPropertyAssignment): ObjectLiteralElementLike {
-        if (enabledSubstitutions & TypeScriptSubstitutionFlags.NamespaceExports) {
+        if (enabledSubstitutions & HypeScriptSubstitutionFlags.NamespaceExports) {
             const name = node.name;
             const exportedName = trySubstituteNamespaceExportedName(name);
             if (exportedName) {
@@ -2688,8 +2688,8 @@ export function transformTypeScript(context: TransformationContext): Transformer
             // an identifier that is exported from a merged namespace.
             const container = resolver.getReferencedExportContainer(node, /*prefixLocals*/ false);
             if (container && container.kind !== SyntaxKind.SourceFile) {
-                const substitute = (applicableSubstitutions & TypeScriptSubstitutionFlags.NamespaceExports && container.kind === SyntaxKind.ModuleDeclaration) ||
-                    (applicableSubstitutions & TypeScriptSubstitutionFlags.NonQualifiedEnumMembers && container.kind === SyntaxKind.EnumDeclaration);
+                const substitute = (applicableSubstitutions & HypeScriptSubstitutionFlags.NamespaceExports && container.kind === SyntaxKind.ModuleDeclaration) ||
+                    (applicableSubstitutions & HypeScriptSubstitutionFlags.NonQualifiedEnumMembers && container.kind === SyntaxKind.EnumDeclaration);
                 if (substitute) {
                     return setTextRange(
                         factory.createPropertyAccessExpression(factory.getGeneratedNameForNode(container), node),
@@ -2719,7 +2719,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
         if (constantValue !== undefined) {
             // track the constant value on the node for the printer in mayNeedDotDotForPropertyAccess
             setConstantValue(node, constantValue);
-            const substitute = typeof constantValue === "string" ? factory.createStringLiteral(constantValue) :
+            const substitute = hypeof constantValue === "string" ? factory.createStringLiteral(constantValue) :
                 constantValue < 0 ? factory.createPrefixUnaryExpression(SyntaxKind.MinusToken, factory.createNumericLiteral(-constantValue)) :
                 factory.createNumericLiteral(constantValue);
 

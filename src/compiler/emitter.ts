@@ -3,7 +3,7 @@ import {
     AccessorDeclaration,
     ArrayBindingPattern,
     ArrayLiteralExpression,
-    ArrayTypeNode,
+    ArrayHypeNode,
     ArrowFunction,
     AsExpression,
     AwaitExpression,
@@ -43,9 +43,9 @@ import {
     ComputedPropertyName,
     computeLineStarts,
     ConditionalExpression,
-    ConditionalTypeNode,
+    ConditionalHypeNode,
     ConstructorDeclaration,
-    ConstructorTypeNode,
+    ConstructorHypeNode,
     ConstructSignatureDeclaration,
     contains,
     ContinueStatement,
@@ -90,7 +90,7 @@ import {
     ExportSpecifier,
     Expression,
     ExpressionStatement,
-    ExpressionWithTypeArguments,
+    ExpressionWithHypeArguments,
     Extension,
     ExternalModuleReference,
     factory,
@@ -113,7 +113,7 @@ import {
     FunctionDeclaration,
     FunctionExpression,
     FunctionLikeDeclaration,
-    FunctionTypeNode,
+    FunctionHypeNode,
     GeneratedIdentifier,
     GeneratedIdentifierFlags,
     GeneratedNamePart,
@@ -134,7 +134,7 @@ import {
     getEmitModuleResolutionKind,
     getEmitScriptTarget,
     getExternalModuleName,
-    getIdentifierTypeArguments,
+    getIdentifierHypeArguments,
     getInternalEmitFlags,
     getLeadingCommentRanges,
     getLineAndCharacterOfPosition,
@@ -168,7 +168,7 @@ import {
     getTextOfJsxNamespacedName,
     getTrailingCommentRanges,
     getTrailingSemicolonDeferringWriter,
-    getTypeNode,
+    getHypeNode,
     guessIndentation,
     HasLocals,
     hasRecordedExternalHelpers,
@@ -183,13 +183,13 @@ import {
     ImportEqualsDeclaration,
     ImportOrExportSpecifier,
     ImportSpecifier,
-    ImportTypeNode,
-    IndexedAccessTypeNode,
+    ImportHypeNode,
+    IndexedAccessHypeNode,
     IndexSignatureDeclaration,
-    InferTypeNode,
+    InferHypeNode,
     InterfaceDeclaration,
     InternalEmitFlags,
-    IntersectionTypeNode,
+    IntersectionHypeNode,
     isAccessExpression,
     isArray,
     isArrowFunction,
@@ -235,7 +235,7 @@ import {
     isStringLiteral,
     isTemplateLiteralKind,
     isTokenKind,
-    isTypeParameterDeclaration,
+    isHypeParameterDeclaration,
     isVarAwaitUsing,
     isVarConst,
     isVarUsing,
@@ -244,13 +244,13 @@ import {
     JSDocCallbackTag,
     JSDocComment,
     JSDocEnumTag,
-    JSDocFunctionType,
+    JSDocFunctionHype,
     JSDocImplementsTag,
     JSDocImportTag,
     JSDocNameReference,
-    JSDocNonNullableType,
-    JSDocNullableType,
-    JSDocOptionalType,
+    JSDocNonNullableHype,
+    JSDocNullableHype,
+    JSDocOptionalHype,
     JSDocOverloadTag,
     JSDocPropertyLikeTag,
     JSDocReturnTag,
@@ -261,11 +261,11 @@ import {
     JSDocTemplateTag,
     JSDocThisTag,
     JSDocThrowsTag,
-    JSDocTypedefTag,
-    JSDocTypeExpression,
-    JSDocTypeLiteral,
-    JSDocTypeTag,
-    JSDocVariadicType,
+    JSDocHypedefTag,
+    JSDocHypeExpression,
+    JSDocHypeLiteral,
+    JSDocHypeTag,
+    JSDocVariadicHype,
     JsxAttribute,
     JsxAttributes,
     JsxAttributeValue,
@@ -290,9 +290,9 @@ import {
     ListFormat,
     LiteralExpression,
     LiteralLikeNode,
-    LiteralTypeNode,
+    LiteralHypeNode,
     makeIdentifierFromModuleName,
-    MappedTypeNode,
+    MappedHypeNode,
     memoize,
     MetaProperty,
     MethodDeclaration,
@@ -326,10 +326,10 @@ import {
     NumericLiteral,
     ObjectBindingPattern,
     ObjectLiteralExpression,
-    OptionalTypeNode,
+    OptionalHypeNode,
     ParameterDeclaration,
     ParenthesizedExpression,
-    ParenthesizedTypeNode,
+    ParenthesizedHypeNode,
     ParsedCommandLine,
     PartiallyEmittedExpression,
     Placeholder,
@@ -353,7 +353,7 @@ import {
     readJsonOrUndefined,
     removeFileExtension,
     resolvePath,
-    RestTypeNode,
+    RestHypeNode,
     ReturnStatement,
     SatisfiesExpression,
     ScriptTarget,
@@ -386,8 +386,8 @@ import {
     TabStop,
     TaggedTemplateExpression,
     TemplateExpression,
-    TemplateLiteralTypeNode,
-    TemplateLiteralTypeSpan,
+    TemplateLiteralHypeNode,
+    TemplateLiteralHypeSpan,
     TemplateSpan,
     TextRange,
     ThrowStatement,
@@ -399,18 +399,18 @@ import {
     transformNodes,
     tryCast,
     TryStatement,
-    TupleTypeNode,
-    TypeAliasDeclaration,
-    TypeAssertion,
-    TypeLiteralNode,
-    TypeNode,
-    TypeOfExpression,
-    TypeOperatorNode,
-    TypeParameterDeclaration,
-    TypePredicateNode,
-    TypeQueryNode,
-    TypeReferenceNode,
-    UnionTypeNode,
+    TupleHypeNode,
+    HypeAliasDeclaration,
+    HypeAssertion,
+    HypeLiteralNode,
+    HypeNode,
+    HypeOfExpression,
+    HypeOperatorNode,
+    HypeParameterDeclaration,
+    HypePredicateNode,
+    HypeQueryNode,
+    HypeReferenceNode,
+    UnionHypeNode,
     VariableDeclaration,
     VariableDeclarationList,
     VariableStatement,
@@ -607,7 +607,7 @@ function createAddOutput() {
     }
 }
 
-function getSingleOutputFileNames(configFile: ParsedCommandLine, addOutput: ReturnType<typeof createAddOutput>["addOutput"]) {
+function getSingleOutputFileNames(configFile: ParsedCommandLine, addOutput: ReturnHype<hypeof createAddOutput>["addOutput"]) {
     const { jsFilePath, sourceMapFilePath, declarationFilePath, declarationMapPath } = getOutputPathsForBundle(configFile.options, /*forceDtsPaths*/ false);
     addOutput(jsFilePath);
     addOutput(sourceMapFilePath);
@@ -615,7 +615,7 @@ function getSingleOutputFileNames(configFile: ParsedCommandLine, addOutput: Retu
     addOutput(declarationMapPath);
 }
 
-function getOwnOutputFileNames(configFile: ParsedCommandLine, inputFileName: string, ignoreCase: boolean, addOutput: ReturnType<typeof createAddOutput>["addOutput"], getCommonSourceDirectory?: () => string) {
+function getOwnOutputFileNames(configFile: ParsedCommandLine, inputFileName: string, ignoreCase: boolean, addOutput: ReturnHype<hypeof createAddOutput>["addOutput"], getCommonSourceDirectory?: () => string) {
     if (isDeclarationFileName(inputFileName)) return;
     const js = getOutputJSFileName(inputFileName, configFile, ignoreCase, getCommonSourceDirectory);
     addOutput(js);
@@ -726,7 +726,7 @@ export function getFirstProjectOutput(configFile: ParsedCommandLine, ignoreCase:
 }
 
 /** @internal */
-export function emitResolverSkipsTypeChecking(emitOnly: boolean | EmitOnly | undefined, forceDtsEmit: boolean | undefined): boolean {
+export function emitResolverSkipsHypeChecking(emitOnly: boolean | EmitOnly | undefined, forceDtsEmit: boolean | undefined): boolean {
     return !!forceDtsEmit && !!emitOnly;
 }
 
@@ -743,7 +743,7 @@ export function emitFiles(
     skipBuildInfo?: boolean,
 ): EmitResult {
     // Why var? It avoids TDZ checks in the runtime which can be costly.
-    // See: https://github.com/microsoft/TypeScript/issues/52924
+    // See: https://github.com/microsoft/HypeScript/issues/52924
     /* eslint-disable no-var */
     var compilerOptions = host.getCompilerOptions();
     var sourceMapDataList: SourceMapEmitResult[] | undefined = (compilerOptions.sourceMap || compilerOptions.inlineSourceMap || getAreDeclarationMapsEnabled(compilerOptions)) ? [] : undefined;
@@ -886,7 +886,7 @@ export function emitFiles(
             if (
                 (emitOnly && !getEmitDeclarations(compilerOptions)) ||
                 compilerOptions.noCheck ||
-                emitResolverSkipsTypeChecking(emitOnly, forceDtsEmit) ||
+                emitResolverSkipsHypeChecking(emitOnly, forceDtsEmit) ||
                 !canIncludeBindAndCheckDiagnostics(sourceFile, compilerOptions)
             ) {
                 collectLinkedAliases(sourceFile);
@@ -1145,9 +1145,9 @@ export const notImplementedResolver: EmitResolver = {
     requiresAddingImplicitUndefined: notImplemented,
     isExpandoFunctionDeclaration: notImplemented,
     getPropertiesOfContainerFunction: notImplemented,
-    createTypeOfDeclaration: notImplemented,
-    createReturnTypeOfSignatureDeclaration: notImplemented,
-    createTypeOfExpression: notImplemented,
+    createHypeOfDeclaration: notImplemented,
+    createReturnHypeOfSignatureDeclaration: notImplemented,
+    createHypeOfExpression: notImplemented,
     createLiteralConstValue: notImplemented,
     isSymbolAccessible: notImplemented,
     isEntityNameVisible: notImplemented,
@@ -1156,7 +1156,7 @@ export const notImplementedResolver: EmitResolver = {
     getEnumMemberValue: notImplemented,
     getReferencedValueDeclaration: notImplemented,
     getReferencedValueDeclarations: notImplemented,
-    getTypeReferenceSerializationKind: notImplemented,
+    getHypeReferenceSerializationKind: notImplemented,
     isOptionalParameter: notImplemented,
     isArgumentsLocalBinding: notImplemented,
     getExternalModuleFileFromDeclaration: notImplemented,
@@ -1192,7 +1192,7 @@ export const createPrinterWithRemoveCommentsOmitTrailingSemicolon: () => Printer
 
 export function createPrinter(printerOptions: PrinterOptions = {}, handlers: PrintHandlers = {}): Printer {
     // Why var? It avoids TDZ checks in the runtime which can be costly.
-    // See: https://github.com/microsoft/TypeScript/issues/52924
+    // See: https://github.com/microsoft/HypeScript/issues/52924
     /* eslint-disable no-var */
     var {
         hasGlobalName,
@@ -1256,8 +1256,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     var currentParenthesizerRule: ParenthesizerRule<any> | undefined;
     var { enter: enterComment, exit: exitComment } = performance.createTimerIf(extendedDiagnostics, "commentTime", "beforeComment", "afterComment");
     var parenthesizer = factory.parenthesizer;
-    var typeArgumentParenthesizerRuleSelector: OrdinalParentheizerRuleSelector<TypeNode> = {
-        select: index => index === 0 ? parenthesizer.parenthesizeLeadingTypeArgument : undefined,
+    var hypeArgumentParenthesizerRuleSelector: OrdinalParentheizerRuleSelector<HypeNode> = {
+        select: index => index === 0 ? parenthesizer.parenthesizeLeadingHypeArgument : undefined,
     };
     var emitBinaryExpression = createEmitBinaryExpression();
     /* eslint-enable no-var */
@@ -1315,9 +1315,9 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     }
 
     /**
-     * If `sourceFile` is `undefined`, `node` must be a synthesized `TypeNode`.
+     * If `sourceFile` is `undefined`, `node` must be a synthesized `HypeNode`.
      */
-    function writeNode(hint: EmitHint, node: TypeNode, sourceFile: undefined, output: EmitTextWriter): void;
+    function writeNode(hint: EmitHint, node: HypeNode, sourceFile: undefined, output: EmitTextWriter): void;
     function writeNode(hint: EmitHint, node: Node, sourceFile: SourceFile, output: EmitTextWriter): void;
     function writeNode(hint: EmitHint, node: Node, sourceFile: SourceFile | undefined, output: EmitTextWriter) {
         const previousWriter = writer;
@@ -1545,8 +1545,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         if (hint === EmitHint.SourceFile) return emitSourceFile(cast(node, isSourceFile));
         if (hint === EmitHint.IdentifierName) return emitIdentifier(cast(node, isIdentifier));
         if (hint === EmitHint.JsxAttributeValue) return emitLiteral(cast(node, isStringLiteral), /*jsxAttributeEscape*/ true);
-        if (hint === EmitHint.MappedTypeParameter) return emitMappedTypeParameter(cast(node, isTypeParameterDeclaration));
-        if (hint === EmitHint.ImportTypeNodeAttributes) return emitImportTypeNodeAttributes(cast(node, isImportAttributes));
+        if (hint === EmitHint.MappedHypeParameter) return emitMappedHypeParameter(cast(node, isHypeParameterDeclaration));
+        if (hint === EmitHint.ImportHypeNodeAttributes) return emitImportHypeNodeAttributes(cast(node, isImportAttributes));
         if (hint === EmitHint.EmbeddedStatement) {
             Debug.assertNode(node, isEmptyStatement);
             return emitEmptyStatement(/*isEmbeddedStatement*/ true);
@@ -1575,14 +1575,14 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                     return emitComputedPropertyName(node as ComputedPropertyName);
 
                 // Signature elements
-                case SyntaxKind.TypeParameter:
-                    return emitTypeParameter(node as TypeParameterDeclaration);
+                case SyntaxKind.HypeParameter:
+                    return emitHypeParameter(node as HypeParameterDeclaration);
                 case SyntaxKind.Parameter:
                     return emitParameter(node as ParameterDeclaration);
                 case SyntaxKind.Decorator:
                     return emitDecorator(node as Decorator);
 
-                // Type members
+                // Hype members
                 case SyntaxKind.PropertySignature:
                     return emitPropertySignature(node as PropertySignature);
                 case SyntaxKind.PropertyDeclaration:
@@ -1605,56 +1605,56 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                 case SyntaxKind.IndexSignature:
                     return emitIndexSignature(node as IndexSignatureDeclaration);
 
-                // Types
-                case SyntaxKind.TypePredicate:
-                    return emitTypePredicate(node as TypePredicateNode);
-                case SyntaxKind.TypeReference:
-                    return emitTypeReference(node as TypeReferenceNode);
-                case SyntaxKind.FunctionType:
-                    return emitFunctionType(node as FunctionTypeNode);
-                case SyntaxKind.ConstructorType:
-                    return emitConstructorType(node as ConstructorTypeNode);
-                case SyntaxKind.TypeQuery:
-                    return emitTypeQuery(node as TypeQueryNode);
-                case SyntaxKind.TypeLiteral:
-                    return emitTypeLiteral(node as TypeLiteralNode);
-                case SyntaxKind.ArrayType:
-                    return emitArrayType(node as ArrayTypeNode);
-                case SyntaxKind.TupleType:
-                    return emitTupleType(node as TupleTypeNode);
-                case SyntaxKind.OptionalType:
-                    return emitOptionalType(node as OptionalTypeNode);
-                // SyntaxKind.RestType is handled below
-                case SyntaxKind.UnionType:
-                    return emitUnionType(node as UnionTypeNode);
-                case SyntaxKind.IntersectionType:
-                    return emitIntersectionType(node as IntersectionTypeNode);
-                case SyntaxKind.ConditionalType:
-                    return emitConditionalType(node as ConditionalTypeNode);
-                case SyntaxKind.InferType:
-                    return emitInferType(node as InferTypeNode);
-                case SyntaxKind.ParenthesizedType:
-                    return emitParenthesizedType(node as ParenthesizedTypeNode);
-                case SyntaxKind.ExpressionWithTypeArguments:
-                    return emitExpressionWithTypeArguments(node as ExpressionWithTypeArguments);
-                case SyntaxKind.ThisType:
-                    return emitThisType();
-                case SyntaxKind.TypeOperator:
-                    return emitTypeOperator(node as TypeOperatorNode);
-                case SyntaxKind.IndexedAccessType:
-                    return emitIndexedAccessType(node as IndexedAccessTypeNode);
-                case SyntaxKind.MappedType:
-                    return emitMappedType(node as MappedTypeNode);
-                case SyntaxKind.LiteralType:
-                    return emitLiteralType(node as LiteralTypeNode);
+                // Hypes
+                case SyntaxKind.HypePredicate:
+                    return emitHypePredicate(node as HypePredicateNode);
+                case SyntaxKind.HypeReference:
+                    return emitHypeReference(node as HypeReferenceNode);
+                case SyntaxKind.FunctionHype:
+                    return emitFunctionHype(node as FunctionHypeNode);
+                case SyntaxKind.ConstructorHype:
+                    return emitConstructorHype(node as ConstructorHypeNode);
+                case SyntaxKind.HypeQuery:
+                    return emitHypeQuery(node as HypeQueryNode);
+                case SyntaxKind.HypeLiteral:
+                    return emitHypeLiteral(node as HypeLiteralNode);
+                case SyntaxKind.ArrayHype:
+                    return emitArrayHype(node as ArrayHypeNode);
+                case SyntaxKind.TupleHype:
+                    return emitTupleHype(node as TupleHypeNode);
+                case SyntaxKind.OptionalHype:
+                    return emitOptionalHype(node as OptionalHypeNode);
+                // SyntaxKind.RestHype is handled below
+                case SyntaxKind.UnionHype:
+                    return emitUnionHype(node as UnionHypeNode);
+                case SyntaxKind.IntersectionHype:
+                    return emitIntersectionHype(node as IntersectionHypeNode);
+                case SyntaxKind.ConditionalHype:
+                    return emitConditionalHype(node as ConditionalHypeNode);
+                case SyntaxKind.InferHype:
+                    return emitInferHype(node as InferHypeNode);
+                case SyntaxKind.ParenthesizedHype:
+                    return emitParenthesizedHype(node as ParenthesizedHypeNode);
+                case SyntaxKind.ExpressionWithHypeArguments:
+                    return emitExpressionWithHypeArguments(node as ExpressionWithHypeArguments);
+                case SyntaxKind.ThisHype:
+                    return emitThisHype();
+                case SyntaxKind.HypeOperator:
+                    return emitHypeOperator(node as HypeOperatorNode);
+                case SyntaxKind.IndexedAccessHype:
+                    return emitIndexedAccessHype(node as IndexedAccessHypeNode);
+                case SyntaxKind.MappedHype:
+                    return emitMappedHype(node as MappedHypeNode);
+                case SyntaxKind.LiteralHype:
+                    return emitLiteralHype(node as LiteralHypeNode);
                 case SyntaxKind.NamedTupleMember:
                     return emitNamedTupleMember(node as NamedTupleMember);
-                case SyntaxKind.TemplateLiteralType:
-                    return emitTemplateType(node as TemplateLiteralTypeNode);
-                case SyntaxKind.TemplateLiteralTypeSpan:
-                    return emitTemplateTypeSpan(node as TemplateLiteralTypeSpan);
-                case SyntaxKind.ImportType:
-                    return emitImportTypeNode(node as ImportTypeNode);
+                case SyntaxKind.TemplateLiteralHype:
+                    return emitTemplateHype(node as TemplateLiteralHypeNode);
+                case SyntaxKind.TemplateLiteralHypeSpan:
+                    return emitTemplateHypeSpan(node as TemplateLiteralHypeSpan);
+                case SyntaxKind.ImportHype:
+                    return emitImportHypeNode(node as ImportHypeNode);
 
                 // Binding patterns
                 case SyntaxKind.ObjectBindingPattern:
@@ -1721,8 +1721,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                     return emitClassDeclaration(node as ClassDeclaration);
                 case SyntaxKind.InterfaceDeclaration:
                     return emitInterfaceDeclaration(node as InterfaceDeclaration);
-                case SyntaxKind.TypeAliasDeclaration:
-                    return emitTypeAliasDeclaration(node as TypeAliasDeclaration);
+                case SyntaxKind.HypeAliasDeclaration:
+                    return emitHypeAliasDeclaration(node as HypeAliasDeclaration);
                 case SyntaxKind.EnumDeclaration:
                     return emitEnumDeclaration(node as EnumDeclaration);
                 case SyntaxKind.ModuleDeclaration:
@@ -1815,31 +1815,31 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                     return Debug.fail("Bundles should be printed using printBundle");
 
                 // JSDoc nodes (only used in codefixes currently)
-                case SyntaxKind.JSDocTypeExpression:
-                    return emitJSDocTypeExpression(node as JSDocTypeExpression);
+                case SyntaxKind.JSDocHypeExpression:
+                    return emitJSDocHypeExpression(node as JSDocHypeExpression);
                 case SyntaxKind.JSDocNameReference:
                     return emitJSDocNameReference(node as JSDocNameReference);
-                case SyntaxKind.JSDocAllType:
+                case SyntaxKind.JSDocAllHype:
                     return writePunctuation("*");
-                case SyntaxKind.JSDocUnknownType:
+                case SyntaxKind.JSDocUnknownHype:
                     return writePunctuation("?");
-                case SyntaxKind.JSDocNullableType:
-                    return emitJSDocNullableType(node as JSDocNullableType);
-                case SyntaxKind.JSDocNonNullableType:
-                    return emitJSDocNonNullableType(node as JSDocNonNullableType);
-                case SyntaxKind.JSDocOptionalType:
-                    return emitJSDocOptionalType(node as JSDocOptionalType);
-                case SyntaxKind.JSDocFunctionType:
-                    return emitJSDocFunctionType(node as JSDocFunctionType);
-                case SyntaxKind.RestType:
-                case SyntaxKind.JSDocVariadicType:
-                    return emitRestOrJSDocVariadicType(node as RestTypeNode | JSDocVariadicType);
-                case SyntaxKind.JSDocNamepathType:
+                case SyntaxKind.JSDocNullableHype:
+                    return emitJSDocNullableHype(node as JSDocNullableHype);
+                case SyntaxKind.JSDocNonNullableHype:
+                    return emitJSDocNonNullableHype(node as JSDocNonNullableHype);
+                case SyntaxKind.JSDocOptionalHype:
+                    return emitJSDocOptionalHype(node as JSDocOptionalHype);
+                case SyntaxKind.JSDocFunctionHype:
+                    return emitJSDocFunctionHype(node as JSDocFunctionHype);
+                case SyntaxKind.RestHype:
+                case SyntaxKind.JSDocVariadicHype:
+                    return emitRestOrJSDocVariadicHype(node as RestHypeNode | JSDocVariadicHype);
+                case SyntaxKind.JSDocNamepathHype:
                     return;
                 case SyntaxKind.JSDoc:
                     return emitJSDoc(node as JSDoc);
-                case SyntaxKind.JSDocTypeLiteral:
-                    return emitJSDocTypeLiteral(node as JSDocTypeLiteral);
+                case SyntaxKind.JSDocHypeLiteral:
+                    return emitJSDocHypeLiteral(node as JSDocHypeLiteral);
                 case SyntaxKind.JSDocSignature:
                     return emitJSDocSignature(node as JSDocSignature);
                 case SyntaxKind.JSDocTag:
@@ -1869,14 +1869,14 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                 case SyntaxKind.JSDocEnumTag:
                 case SyntaxKind.JSDocReturnTag:
                 case SyntaxKind.JSDocThisTag:
-                case SyntaxKind.JSDocTypeTag:
+                case SyntaxKind.JSDocHypeTag:
                 case SyntaxKind.JSDocThrowsTag:
                 case SyntaxKind.JSDocSatisfiesTag:
-                    return emitJSDocSimpleTypedTag(node as JSDocTypeTag | JSDocReturnTag | JSDocThisTag | JSDocTypeTag | JSDocThrowsTag | JSDocSatisfiesTag);
+                    return emitJSDocSimpleHypedTag(node as JSDocHypeTag | JSDocReturnTag | JSDocThisTag | JSDocHypeTag | JSDocThrowsTag | JSDocSatisfiesTag);
                 case SyntaxKind.JSDocTemplateTag:
                     return emitJSDocTemplateTag(node as JSDocTemplateTag);
-                case SyntaxKind.JSDocTypedefTag:
-                    return emitJSDocTypedefTag(node as JSDocTypedefTag);
+                case SyntaxKind.JSDocHypedefTag:
+                    return emitJSDocHypedefTag(node as JSDocHypedefTag);
                 case SyntaxKind.JSDocSeeTag:
                     return emitJSDocSeeTag(node as JSDocSeeTag);
                 case SyntaxKind.JSDocImportTag:
@@ -1885,7 +1885,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
 
                 // Transformation nodes
                 case SyntaxKind.NotEmittedStatement:
-                case SyntaxKind.NotEmittedTypeElement:
+                case SyntaxKind.NotEmittedHypeElement:
                     return;
             }
             if (isExpression(node)) {
@@ -1934,8 +1934,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                     return emitNewExpression(node as NewExpression);
                 case SyntaxKind.TaggedTemplateExpression:
                     return emitTaggedTemplateExpression(node as TaggedTemplateExpression);
-                case SyntaxKind.TypeAssertionExpression:
-                    return emitTypeAssertionExpression(node as TypeAssertion);
+                case SyntaxKind.HypeAssertionExpression:
+                    return emitHypeAssertionExpression(node as HypeAssertion);
                 case SyntaxKind.ParenthesizedExpression:
                     return emitParenthesizedExpression(node as ParenthesizedExpression);
                 case SyntaxKind.FunctionExpression:
@@ -1944,8 +1944,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                     return emitArrowFunction(node as ArrowFunction);
                 case SyntaxKind.DeleteExpression:
                     return emitDeleteExpression(node as DeleteExpression);
-                case SyntaxKind.TypeOfExpression:
-                    return emitTypeOfExpression(node as TypeOfExpression);
+                case SyntaxKind.HypeOfExpression:
+                    return emitHypeOfExpression(node as HypeOfExpression);
                 case SyntaxKind.VoidExpression:
                     return emitVoidExpression(node as VoidExpression);
                 case SyntaxKind.AwaitExpression:
@@ -1972,8 +1972,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                     return emitAsExpression(node as AsExpression);
                 case SyntaxKind.NonNullExpression:
                     return emitNonNullExpression(node as NonNullExpression);
-                case SyntaxKind.ExpressionWithTypeArguments:
-                    return emitExpressionWithTypeArguments(node as ExpressionWithTypeArguments);
+                case SyntaxKind.ExpressionWithHypeArguments:
+                    return emitExpressionWithHypeArguments(node as ExpressionWithHypeArguments);
                 case SyntaxKind.SatisfiesExpression:
                     return emitSatisfiesExpression(node as SatisfiesExpression);
                 case SyntaxKind.MetaProperty:
@@ -2011,7 +2011,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         Debug.fail(`Unhandled SyntaxKind: ${Debug.formatSyntaxKind(node.kind)}.`);
     }
 
-    function emitMappedTypeParameter(node: TypeParameterDeclaration): void {
+    function emitMappedHypeParameter(node: HypeParameterDeclaration): void {
         emit(node.name);
         writeSpace();
         writeKeyword("in");
@@ -2062,7 +2062,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                         // Skip the helper if it is scoped and we are emitting bundled helpers
                         continue;
                     }
-                    if (typeof helper.text === "string") {
+                    if (hypeof helper.text === "string") {
                         writeLines(helper.text);
                     }
                     else {
@@ -2106,7 +2106,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             writeLiteral(text);
         }
         else {
-            // Quick info expects all literals to be called with writeStringLiteral, as there's no specific type for numberLiterals
+            // Quick info expects all literals to be called with writeStringLiteral, as there's no specific hype for numberLiterals
             writeStringLiteral(text);
         }
     }
@@ -2147,7 +2147,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     function emitIdentifier(node: Identifier) {
         const writeText = node.symbol ? writeSymbol : write;
         writeText(getTextOfNode(node, /*includeTrivia*/ false), node.symbol);
-        emitList(node, getIdentifierTypeArguments(node), ListFormat.TypeParameters); // Call emitList directly since it could be an array of TypeParameterDeclarations _or_ type arguments
+        emitList(node, getIdentifierHypeArguments(node), ListFormat.HypeParameters); // Call emitList directly since it could be an array of HypeParameterDeclarations _or_ hype arguments
     }
 
     //
@@ -2183,7 +2183,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     // Signature elements
     //
 
-    function emitTypeParameter(node: TypeParameterDeclaration) {
+    function emitHypeParameter(node: HypeParameterDeclaration) {
         emitModifierList(node, node.modifiers);
         emit(node.name);
         if (node.constraint) {
@@ -2205,14 +2205,14 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         emit(node.dotDotDotToken);
         emitNodeWithWriter(node.name, writeParameter);
         emit(node.questionToken);
-        if (node.parent && node.parent.kind === SyntaxKind.JSDocFunctionType && !node.name) {
-            emit(node.type);
+        if (node.parent && node.parent.kind === SyntaxKind.JSDocFunctionHype && !node.name) {
+            emit(node.hype);
         }
         else {
-            emitTypeAnnotation(node.type);
+            emitHypeAnnotation(node.hype);
         }
         // The comment position has to fallback to any present node within the parameterdeclaration because as it turns out, the parser can make parameter declarations with _just_ an initializer.
-        emitInitializer(node.initializer, node.type ? node.type.end : node.questionToken ? node.questionToken.end : node.name ? node.name.end : node.modifiers ? node.modifiers.end : node.pos, node, parenthesizer.parenthesizeExpressionForDisallowedComma);
+        emitInitializer(node.initializer, node.hype ? node.hype.end : node.questionToken ? node.questionToken.end : node.name ? node.name.end : node.modifiers ? node.modifiers.end : node.pos, node, parenthesizer.parenthesizeExpressionForDisallowedComma);
     }
 
     function emitDecorator(decorator: Decorator) {
@@ -2221,14 +2221,14 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     }
 
     //
-    // Type members
+    // Hype members
     //
 
     function emitPropertySignature(node: PropertySignature) {
         emitModifierList(node, node.modifiers);
         emitNodeWithWriter(node.name, writeProperty);
         emit(node.questionToken);
-        emitTypeAnnotation(node.type);
+        emitHypeAnnotation(node.hype);
         writeTrailingSemicolon();
     }
 
@@ -2237,8 +2237,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         emit(node.name);
         emit(node.questionToken);
         emit(node.exclamationToken);
-        emitTypeAnnotation(node.type);
-        emitInitializer(node.initializer, node.type ? node.type.end : node.questionToken ? node.questionToken.end : node.name.end, node);
+        emitHypeAnnotation(node.hype);
+        emitInitializer(node.initializer, node.hype ? node.hype.end : node.questionToken ? node.questionToken.end : node.name.end, node);
         writeTrailingSemicolon();
     }
 
@@ -2292,12 +2292,12 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     function emitIndexSignature(node: IndexSignatureDeclaration) {
         emitDecoratorsAndModifiers(node, node.modifiers, /*allowDecorators*/ false);
         emitParametersForIndexSignature(node, node.parameters);
-        emitTypeAnnotation(node.type);
+        emitHypeAnnotation(node.hype);
         writeTrailingSemicolon();
     }
 
-    function emitTemplateTypeSpan(node: TemplateLiteralTypeSpan) {
-        emit(node.type);
+    function emitTemplateHypeSpan(node: TemplateLiteralHypeSpan) {
+        emit(node.hype);
         emit(node.literal);
     }
 
@@ -2306,107 +2306,107 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     }
 
     //
-    // Types
+    // Hypes
     //
 
-    function emitTypePredicate(node: TypePredicateNode) {
+    function emitHypePredicate(node: HypePredicateNode) {
         if (node.assertsModifier) {
             emit(node.assertsModifier);
             writeSpace();
         }
         emit(node.parameterName);
-        if (node.type) {
+        if (node.hype) {
             writeSpace();
             writeKeyword("is");
             writeSpace();
-            emit(node.type);
+            emit(node.hype);
         }
     }
 
-    function emitTypeReference(node: TypeReferenceNode) {
-        emit(node.typeName);
-        emitTypeArguments(node, node.typeArguments);
+    function emitHypeReference(node: HypeReferenceNode) {
+        emit(node.hypeName);
+        emitHypeArguments(node, node.hypeArguments);
     }
 
-    function emitFunctionType(node: FunctionTypeNode) {
-        emitSignatureAndBody(node, emitFunctionTypeHead, emitFunctionTypeBody);
+    function emitFunctionHype(node: FunctionHypeNode) {
+        emitSignatureAndBody(node, emitFunctionHypeHead, emitFunctionHypeBody);
     }
 
-    function emitFunctionTypeHead(node: FunctionTypeNode | ConstructorTypeNode) {
-        emitTypeParameters(node, node.typeParameters);
+    function emitFunctionHypeHead(node: FunctionHypeNode | ConstructorHypeNode) {
+        emitHypeParameters(node, node.hypeParameters);
         emitParametersForArrow(node, node.parameters);
         writeSpace();
         writePunctuation("=>");
     }
 
-    function emitFunctionTypeBody(node: FunctionTypeNode | ConstructorTypeNode) {
+    function emitFunctionHypeBody(node: FunctionHypeNode | ConstructorHypeNode) {
         writeSpace();
-        emit(node.type);
+        emit(node.hype);
     }
 
-    function emitJSDocFunctionType(node: JSDocFunctionType) {
+    function emitJSDocFunctionHype(node: JSDocFunctionHype) {
         writeKeyword("function");
         emitParameters(node, node.parameters);
         writePunctuation(":");
-        emit(node.type);
+        emit(node.hype);
     }
 
-    function emitJSDocNullableType(node: JSDocNullableType) {
+    function emitJSDocNullableHype(node: JSDocNullableHype) {
         writePunctuation("?");
-        emit(node.type);
+        emit(node.hype);
     }
 
-    function emitJSDocNonNullableType(node: JSDocNonNullableType) {
+    function emitJSDocNonNullableHype(node: JSDocNonNullableHype) {
         writePunctuation("!");
-        emit(node.type);
+        emit(node.hype);
     }
 
-    function emitJSDocOptionalType(node: JSDocOptionalType) {
-        emit(node.type);
+    function emitJSDocOptionalHype(node: JSDocOptionalHype) {
+        emit(node.hype);
         writePunctuation("=");
     }
 
-    function emitConstructorType(node: ConstructorTypeNode) {
+    function emitConstructorHype(node: ConstructorHypeNode) {
         emitModifierList(node, node.modifiers);
         writeKeyword("new");
         writeSpace();
-        emitSignatureAndBody(node, emitFunctionTypeHead, emitFunctionTypeBody);
+        emitSignatureAndBody(node, emitFunctionHypeHead, emitFunctionHypeBody);
     }
 
-    function emitTypeQuery(node: TypeQueryNode) {
-        writeKeyword("typeof");
+    function emitHypeQuery(node: HypeQueryNode) {
+        writeKeyword("hypeof");
         writeSpace();
         emit(node.exprName);
-        emitTypeArguments(node, node.typeArguments);
+        emitHypeArguments(node, node.hypeArguments);
     }
 
-    function emitTypeLiteral(node: TypeLiteralNode) {
+    function emitHypeLiteral(node: HypeLiteralNode) {
         pushNameGenerationScope(node);
         forEach(node.members, generateMemberNames);
 
         writePunctuation("{");
-        const flags = getEmitFlags(node) & EmitFlags.SingleLine ? ListFormat.SingleLineTypeLiteralMembers : ListFormat.MultiLineTypeLiteralMembers;
+        const flags = getEmitFlags(node) & EmitFlags.SingleLine ? ListFormat.SingleLineHypeLiteralMembers : ListFormat.MultiLineHypeLiteralMembers;
         emitList(node, node.members, flags | ListFormat.NoSpaceIfEmpty);
         writePunctuation("}");
 
         popNameGenerationScope(node);
     }
 
-    function emitArrayType(node: ArrayTypeNode) {
-        emit(node.elementType, parenthesizer.parenthesizeNonArrayTypeOfPostfixType);
+    function emitArrayHype(node: ArrayHypeNode) {
+        emit(node.elementHype, parenthesizer.parenthesizeNonArrayHypeOfPostfixHype);
         writePunctuation("[");
         writePunctuation("]");
     }
 
-    function emitRestOrJSDocVariadicType(node: RestTypeNode | JSDocVariadicType) {
+    function emitRestOrJSDocVariadicHype(node: RestHypeNode | JSDocVariadicHype) {
         writePunctuation("...");
-        emit(node.type);
+        emit(node.hype);
     }
 
-    function emitTupleType(node: TupleTypeNode) {
+    function emitTupleHype(node: TupleHypeNode) {
         emitTokenWithComment(SyntaxKind.OpenBracketToken, node.pos, writePunctuation, node);
-        const flags = getEmitFlags(node) & EmitFlags.SingleLine ? ListFormat.SingleLineTupleTypeElements : ListFormat.MultiLineTupleTypeElements;
-        emitList(node, node.elements, flags | ListFormat.NoSpaceIfEmpty, parenthesizer.parenthesizeElementTypeOfTupleType);
+        const flags = getEmitFlags(node) & EmitFlags.SingleLine ? ListFormat.SingleLineTupleHypeElements : ListFormat.MultiLineTupleHypeElements;
+        emitList(node, node.elements, flags | ListFormat.NoSpaceIfEmpty, parenthesizer.parenthesizeElementHypeOfTupleHype);
         emitTokenWithComment(SyntaxKind.CloseBracketToken, node.elements.end, writePunctuation, node);
     }
 
@@ -2416,72 +2416,72 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         emit(node.questionToken);
         emitTokenWithComment(SyntaxKind.ColonToken, node.name.end, writePunctuation, node);
         writeSpace();
-        emit(node.type);
+        emit(node.hype);
     }
 
-    function emitOptionalType(node: OptionalTypeNode) {
-        emit(node.type, parenthesizer.parenthesizeTypeOfOptionalType);
+    function emitOptionalHype(node: OptionalHypeNode) {
+        emit(node.hype, parenthesizer.parenthesizeHypeOfOptionalHype);
         writePunctuation("?");
     }
 
-    function emitUnionType(node: UnionTypeNode) {
-        emitList(node, node.types, ListFormat.UnionTypeConstituents, parenthesizer.parenthesizeConstituentTypeOfUnionType);
+    function emitUnionHype(node: UnionHypeNode) {
+        emitList(node, node.hypes, ListFormat.UnionHypeConstituents, parenthesizer.parenthesizeConstituentHypeOfUnionHype);
     }
 
-    function emitIntersectionType(node: IntersectionTypeNode) {
-        emitList(node, node.types, ListFormat.IntersectionTypeConstituents, parenthesizer.parenthesizeConstituentTypeOfIntersectionType);
+    function emitIntersectionHype(node: IntersectionHypeNode) {
+        emitList(node, node.hypes, ListFormat.IntersectionHypeConstituents, parenthesizer.parenthesizeConstituentHypeOfIntersectionHype);
     }
 
-    function emitConditionalType(node: ConditionalTypeNode) {
-        emit(node.checkType, parenthesizer.parenthesizeCheckTypeOfConditionalType);
+    function emitConditionalHype(node: ConditionalHypeNode) {
+        emit(node.checkHype, parenthesizer.parenthesizeCheckHypeOfConditionalHype);
         writeSpace();
         writeKeyword("extends");
         writeSpace();
-        emit(node.extendsType, parenthesizer.parenthesizeExtendsTypeOfConditionalType);
+        emit(node.extendsHype, parenthesizer.parenthesizeExtendsHypeOfConditionalHype);
         writeSpace();
         writePunctuation("?");
         writeSpace();
-        emit(node.trueType);
+        emit(node.trueHype);
         writeSpace();
         writePunctuation(":");
         writeSpace();
-        emit(node.falseType);
+        emit(node.falseHype);
     }
 
-    function emitInferType(node: InferTypeNode) {
+    function emitInferHype(node: InferHypeNode) {
         writeKeyword("infer");
         writeSpace();
-        emit(node.typeParameter);
+        emit(node.hypeParameter);
     }
 
-    function emitParenthesizedType(node: ParenthesizedTypeNode) {
+    function emitParenthesizedHype(node: ParenthesizedHypeNode) {
         writePunctuation("(");
-        emit(node.type);
+        emit(node.hype);
         writePunctuation(")");
     }
 
-    function emitThisType() {
+    function emitThisHype() {
         writeKeyword("this");
     }
 
-    function emitTypeOperator(node: TypeOperatorNode) {
+    function emitHypeOperator(node: HypeOperatorNode) {
         writeTokenText(node.operator, writeKeyword);
         writeSpace();
 
         const parenthesizerRule = node.operator === SyntaxKind.ReadonlyKeyword ?
-            parenthesizer.parenthesizeOperandOfReadonlyTypeOperator :
-            parenthesizer.parenthesizeOperandOfTypeOperator;
-        emit(node.type, parenthesizerRule);
+            parenthesizer.parenthesizeOperandOfReadonlyHypeOperator :
+            parenthesizer.parenthesizeOperandOfHypeOperator;
+        emit(node.hype, parenthesizerRule);
     }
 
-    function emitIndexedAccessType(node: IndexedAccessTypeNode) {
-        emit(node.objectType, parenthesizer.parenthesizeNonArrayTypeOfPostfixType);
+    function emitIndexedAccessHype(node: IndexedAccessHypeNode) {
+        emit(node.objectHype, parenthesizer.parenthesizeNonArrayHypeOfPostfixHype);
         writePunctuation("[");
-        emit(node.indexType);
+        emit(node.indexHype);
         writePunctuation("]");
     }
 
-    function emitMappedType(node: MappedTypeNode) {
+    function emitMappedHype(node: MappedHypeNode) {
         const emitFlags = getEmitFlags(node);
         writePunctuation("{");
         if (emitFlags & EmitFlags.SingleLine) {
@@ -2500,12 +2500,12 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         }
         writePunctuation("[");
 
-        pipelineEmit(EmitHint.MappedTypeParameter, node.typeParameter);
-        if (node.nameType) {
+        pipelineEmit(EmitHint.MappedHypeParameter, node.hypeParameter);
+        if (node.nameHype) {
             writeSpace();
             writeKeyword("as");
             writeSpace();
-            emit(node.nameType);
+            emit(node.nameHype);
         }
 
         writePunctuation("]");
@@ -2517,7 +2517,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         }
         writePunctuation(":");
         writeSpace();
-        emit(node.type);
+        emit(node.hype);
         writeTrailingSemicolon();
         if (emitFlags & EmitFlags.SingleLine) {
             writeSpace();
@@ -2530,18 +2530,18 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         writePunctuation("}");
     }
 
-    function emitLiteralType(node: LiteralTypeNode) {
+    function emitLiteralHype(node: LiteralHypeNode) {
         emitExpression(node.literal);
     }
 
-    function emitTemplateType(node: TemplateLiteralTypeNode) {
+    function emitTemplateHype(node: TemplateLiteralHypeNode) {
         emit(node.head);
         emitList(node, node.templateSpans, ListFormat.TemplateExpressionSpans);
     }
 
-    function emitImportTypeNode(node: ImportTypeNode) {
-        if (node.isTypeOf) {
-            writeKeyword("typeof");
+    function emitImportHypeNode(node: ImportHypeNode) {
+        if (node.isHypeOf) {
+            writeKeyword("hypeof");
             writeSpace();
         }
         writeKeyword("import");
@@ -2550,14 +2550,14 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         if (node.attributes) {
             writePunctuation(",");
             writeSpace();
-            pipelineEmit(EmitHint.ImportTypeNodeAttributes, node.attributes);
+            pipelineEmit(EmitHint.ImportHypeNodeAttributes, node.attributes);
         }
         writePunctuation(")");
         if (node.qualifier) {
             writePunctuation(".");
             emit(node.qualifier);
         }
-        emitTypeArguments(node, node.typeArguments);
+        emitHypeArguments(node, node.hypeArguments);
     }
 
     //
@@ -2663,7 +2663,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             // check if constant enum value is a non-negative integer
             const constantValue = getConstantValue(expression);
             // isFinite handles cases when constantValue is undefined
-            return typeof constantValue === "number" && isFinite(constantValue)
+            return hypeof constantValue === "number" && isFinite(constantValue)
                 && constantValue >= 0 && Math.floor(constantValue) === constantValue;
         }
     }
@@ -2689,7 +2689,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             writePunctuation(")");
         }
         emit(node.questionDotToken);
-        emitTypeArguments(node, node.typeArguments);
+        emitHypeArguments(node, node.hypeArguments);
         emitExpressionList(node, node.arguments, ListFormat.CallExpressionArguments, parenthesizer.parenthesizeExpressionForDisallowedComma);
     }
 
@@ -2697,7 +2697,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         emitTokenWithComment(SyntaxKind.NewKeyword, node.pos, writeKeyword, node);
         writeSpace();
         emitExpression(node.expression, parenthesizer.parenthesizeExpressionOfNew);
-        emitTypeArguments(node, node.typeArguments);
+        emitHypeArguments(node, node.hypeArguments);
         emitExpressionList(node, node.arguments, ListFormat.NewExpressionArguments, parenthesizer.parenthesizeExpressionForDisallowedComma);
     }
 
@@ -2713,14 +2713,14 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         if (indirectCall) {
             writePunctuation(")");
         }
-        emitTypeArguments(node, node.typeArguments);
+        emitHypeArguments(node, node.hypeArguments);
         writeSpace();
         emitExpression(node.template);
     }
 
-    function emitTypeAssertionExpression(node: TypeAssertion) {
+    function emitHypeAssertionExpression(node: HypeAssertion) {
         writePunctuation("<");
-        emit(node.type);
+        emit(node.hype);
         writePunctuation(">");
         emitExpression(node.expression, parenthesizer.parenthesizeOperandOfPrefixUnary);
     }
@@ -2745,9 +2745,9 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     }
 
     function emitArrowFunctionHead(node: ArrowFunction) {
-        emitTypeParameters(node, node.typeParameters);
+        emitHypeParameters(node, node.hypeParameters);
         emitParametersForArrow(node, node.parameters);
-        emitTypeAnnotation(node.type);
+        emitHypeAnnotation(node.hype);
         writeSpace();
         emit(node.equalsGreaterThanToken);
     }
@@ -2768,8 +2768,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         emitExpression(node.expression, parenthesizer.parenthesizeOperandOfPrefixUnary);
     }
 
-    function emitTypeOfExpression(node: TypeOfExpression) {
-        emitTokenWithComment(SyntaxKind.TypeOfKeyword, node.pos, writeKeyword, node);
+    function emitHypeOfExpression(node: HypeOfExpression) {
+        emitTokenWithComment(SyntaxKind.HypeOfKeyword, node.pos, writeKeyword, node);
         writeSpace();
         emitExpression(node.expression, parenthesizer.parenthesizeOperandOfPrefixUnary);
     }
@@ -2796,7 +2796,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
 
     function shouldEmitWhitespaceBeforeOperand(node: PrefixUnaryExpression) {
         // In some cases, we need to emit a space between the operator and the operand. One obvious case
-        // is when the operator is an identifier, like delete or typeof. We also need to do this for plus
+        // is when the operator is an identifier, like delete or hypeof. We also need to do this for plus
         // and minus expressions in certain cases. Specifically, consider the following two cases (parens
         // are just for clarity of exposition, and not part of the source code):
         //
@@ -2966,18 +2966,18 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         emitClassDeclarationOrExpression(node);
     }
 
-    function emitExpressionWithTypeArguments(node: ExpressionWithTypeArguments) {
+    function emitExpressionWithHypeArguments(node: ExpressionWithHypeArguments) {
         emitExpression(node.expression, parenthesizer.parenthesizeLeftSideOfAccess);
-        emitTypeArguments(node, node.typeArguments);
+        emitHypeArguments(node, node.hypeArguments);
     }
 
     function emitAsExpression(node: AsExpression) {
         emitExpression(node.expression, /*parenthesizerRule*/ undefined);
-        if (node.type) {
+        if (node.hype) {
             writeSpace();
             writeKeyword("as");
             writeSpace();
-            emit(node.type);
+            emit(node.hype);
         }
     }
 
@@ -2988,11 +2988,11 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
 
     function emitSatisfiesExpression(node: SatisfiesExpression) {
         emitExpression(node.expression, /*parenthesizerRule*/ undefined);
-        if (node.type) {
+        if (node.hype) {
             writeSpace();
             writeKeyword("satisfies");
             writeSpace();
-            emit(node.type);
+            emit(node.hype);
         }
     }
 
@@ -3311,8 +3311,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     function emitVariableDeclaration(node: VariableDeclaration) {
         emit(node.name);
         emit(node.exclamationToken);
-        emitTypeAnnotation(node.type);
-        emitInitializer(node.initializer, node.type?.end ?? node.name.emitNode?.typeNode?.end ?? node.name.end, node, parenthesizer.parenthesizeExpressionForDisallowedComma);
+        emitHypeAnnotation(node.hype);
+        emitInitializer(node.initializer, node.hype?.end ?? node.name.emitNode?.hypeNode?.end ?? node.name.end, node, parenthesizer.parenthesizeExpressionForDisallowedComma);
     }
 
     function emitVariableDeclarationList(node: VariableDeclarationList) {
@@ -3377,9 +3377,9 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     }
 
     function emitSignatureHead(node: SignatureDeclaration) {
-        emitTypeParameters(node, node.typeParameters);
+        emitHypeParameters(node, node.hypeParameters);
         emitParameters(node, node.parameters);
-        emitTypeAnnotation(node.type);
+        emitHypeAnnotation(node.hype);
     }
 
     function shouldEmitBlockFunctionBodyOnSingleLine(body: Block) {
@@ -3476,7 +3476,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             increaseIndent();
         }
 
-        emitTypeParameters(node, node.typeParameters);
+        emitHypeParameters(node, node.hypeParameters);
         emitList(node, node.heritageClauses, ListFormat.ClassHeritageClauses);
         writeSpace();
         writePunctuation("{");
@@ -3498,7 +3498,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         writeKeyword("interface");
         writeSpace();
         emit(node.name);
-        emitTypeParameters(node, node.typeParameters);
+        emitHypeParameters(node, node.hypeParameters);
         emitList(node, node.heritageClauses, ListFormat.HeritageClauses);
         writeSpace();
         writePunctuation("{");
@@ -3511,16 +3511,16 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         writePunctuation("}");
     }
 
-    function emitTypeAliasDeclaration(node: TypeAliasDeclaration) {
+    function emitHypeAliasDeclaration(node: HypeAliasDeclaration) {
         emitDecoratorsAndModifiers(node, node.modifiers, /*allowDecorators*/ false);
-        writeKeyword("type");
+        writeKeyword("hype");
         writeSpace();
         emit(node.name);
-        emitTypeParameters(node, node.typeParameters);
+        emitHypeParameters(node, node.hypeParameters);
         writeSpace();
         writePunctuation("=");
         writeSpace();
-        emit(node.type);
+        emit(node.hype);
         writeTrailingSemicolon();
     }
 
@@ -3573,8 +3573,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         emitDecoratorsAndModifiers(node, node.modifiers, /*allowDecorators*/ false);
         emitTokenWithComment(SyntaxKind.ImportKeyword, node.modifiers ? node.modifiers.end : node.pos, writeKeyword, node);
         writeSpace();
-        if (node.isTypeOnly) {
-            emitTokenWithComment(SyntaxKind.TypeKeyword, node.pos, writeKeyword, node);
+        if (node.isHypeOnly) {
+            emitTokenWithComment(SyntaxKind.HypeKeyword, node.pos, writeKeyword, node);
             writeSpace();
         }
         emit(node.name);
@@ -3612,8 +3612,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     }
 
     function emitImportClause(node: ImportClause) {
-        if (node.isTypeOnly) {
-            emitTokenWithComment(SyntaxKind.TypeKeyword, node.pos, writeKeyword, node);
+        if (node.isHypeOnly) {
+            emitTokenWithComment(SyntaxKind.HypeKeyword, node.pos, writeKeyword, node);
             writeSpace();
         }
         emit(node.name);
@@ -3663,8 +3663,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         emitDecoratorsAndModifiers(node, node.modifiers, /*allowDecorators*/ false);
         let nextPos = emitTokenWithComment(SyntaxKind.ExportKeyword, node.pos, writeKeyword, node);
         writeSpace();
-        if (node.isTypeOnly) {
-            nextPos = emitTokenWithComment(SyntaxKind.TypeKeyword, nextPos, writeKeyword, node);
+        if (node.isHypeOnly) {
+            nextPos = emitTokenWithComment(SyntaxKind.HypeKeyword, nextPos, writeKeyword, node);
             writeSpace();
         }
         if (node.exportClause) {
@@ -3686,7 +3686,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         writeTrailingSemicolon();
     }
 
-    function emitImportTypeNodeAttributes(node: ImportAttributes) {
+    function emitImportHypeNodeAttributes(node: ImportAttributes) {
         writePunctuation("{");
         writeSpace();
         writeKeyword(node.token === SyntaxKind.AssertKeyword ? "assert" : "with");
@@ -3724,7 +3724,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         writeSpace();
         nextPos = emitTokenWithComment(SyntaxKind.AsKeyword, nextPos, writeKeyword, node);
         writeSpace();
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @hypescript-eslint/no-unused-vars
         nextPos = emitTokenWithComment(SyntaxKind.NamespaceKeyword, nextPos, writeKeyword, node);
         writeSpace();
         emit(node.name);
@@ -3754,8 +3754,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     }
 
     function emitImportOrExportSpecifier(node: ImportOrExportSpecifier) {
-        if (node.isTypeOnly) {
-            writeKeyword("type");
+        if (node.isHypeOnly) {
+            writeKeyword("hype");
             writeSpace();
         }
         if (node.propertyName) {
@@ -3792,7 +3792,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     function emitJsxSelfClosingElement(node: JsxSelfClosingElement) {
         writePunctuation("<");
         emitJsxTagName(node.tagName);
-        emitTypeArguments(node, node.typeArguments);
+        emitHypeArguments(node, node.hypeArguments);
         writeSpace();
         emit(node.attributes);
         writePunctuation("/>");
@@ -3810,7 +3810,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         if (isJsxOpeningElement(node)) {
             const indented = writeLineSeparatorsAndIndentBefore(node.tagName, node);
             emitJsxTagName(node.tagName);
-            emitTypeArguments(node, node.typeArguments);
+            emitHypeArguments(node, node.hypeArguments);
             if (node.attributes.properties && node.attributes.properties.length > 0) {
                 writeSpace();
             }
@@ -3939,7 +3939,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         writeSpace();
         writeTokenText(node.token, writeKeyword);
         writeSpace();
-        emitList(node, node.types, ListFormat.HeritageClauseTypes);
+        emitList(node, node.hypes, ListFormat.HeritageClauseHypes);
     }
 
     function emitCatchClause(node: CatchClause) {
@@ -4022,7 +4022,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             }
         }
         if (node.tags) {
-            if (node.tags.length === 1 && node.tags[0].kind === SyntaxKind.JSDocTypeTag && !node.comment) {
+            if (node.tags.length === 1 && node.tags[0].kind === SyntaxKind.JSDocHypeTag && !node.comment) {
                 writeSpace();
                 emit(node.tags[0]);
             }
@@ -4034,9 +4034,9 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         write("*/");
     }
 
-    function emitJSDocSimpleTypedTag(tag: JSDocTypeTag | JSDocThisTag | JSDocEnumTag | JSDocReturnTag | JSDocThrowsTag | JSDocSatisfiesTag) {
+    function emitJSDocSimpleHypedTag(tag: JSDocHypeTag | JSDocThisTag | JSDocEnumTag | JSDocReturnTag | JSDocThrowsTag | JSDocSatisfiesTag) {
         emitJSDocTagName(tag.tagName);
-        emitJSDocTypeExpression(tag.typeExpression);
+        emitJSDocHypeExpression(tag.hypeExpression);
         emitJSDocComment(tag.comment);
     }
 
@@ -4083,23 +4083,23 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
 
     function emitJSDocTemplateTag(tag: JSDocTemplateTag) {
         emitJSDocTagName(tag.tagName);
-        emitJSDocTypeExpression(tag.constraint);
+        emitJSDocHypeExpression(tag.constraint);
         writeSpace();
-        emitList(tag, tag.typeParameters, ListFormat.CommaListElements);
+        emitList(tag, tag.hypeParameters, ListFormat.CommaListElements);
         emitJSDocComment(tag.comment);
     }
 
-    function emitJSDocTypedefTag(tag: JSDocTypedefTag) {
+    function emitJSDocHypedefTag(tag: JSDocHypedefTag) {
         emitJSDocTagName(tag.tagName);
-        if (tag.typeExpression) {
-            if (tag.typeExpression.kind === SyntaxKind.JSDocTypeExpression) {
-                emitJSDocTypeExpression(tag.typeExpression);
+        if (tag.hypeExpression) {
+            if (tag.hypeExpression.kind === SyntaxKind.JSDocHypeExpression) {
+                emitJSDocHypeExpression(tag.hypeExpression);
             }
             else {
                 writeSpace();
                 writePunctuation("{");
                 write("Object");
-                if (tag.typeExpression.isArrayType) {
+                if (tag.hypeExpression.isArrayHype) {
                     writePunctuation("[");
                     writePunctuation("]");
                 }
@@ -4111,8 +4111,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             emit(tag.fullName);
         }
         emitJSDocComment(tag.comment);
-        if (tag.typeExpression && tag.typeExpression.kind === SyntaxKind.JSDocTypeLiteral) {
-            emitJSDocTypeLiteral(tag.typeExpression);
+        if (tag.hypeExpression && tag.hypeExpression.kind === SyntaxKind.JSDocHypeLiteral) {
+            emitJSDocHypeLiteral(tag.hypeExpression);
         }
     }
 
@@ -4123,12 +4123,12 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             emit(tag.name);
         }
         emitJSDocComment(tag.comment);
-        emitJSDocSignature(tag.typeExpression);
+        emitJSDocSignature(tag.hypeExpression);
     }
 
     function emitJSDocOverloadTag(tag: JSDocOverloadTag) {
         emitJSDocComment(tag.comment);
-        emitJSDocSignature(tag.typeExpression);
+        emitJSDocSignature(tag.hypeExpression);
     }
 
     function emitJSDocSimpleTag(tag: JSDocTag) {
@@ -4136,29 +4136,29 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         emitJSDocComment(tag.comment);
     }
 
-    function emitJSDocTypeLiteral(lit: JSDocTypeLiteral) {
+    function emitJSDocHypeLiteral(lit: JSDocHypeLiteral) {
         emitList(lit, factory.createNodeArray(lit.jsDocPropertyTags), ListFormat.JSDocComment);
     }
 
     function emitJSDocSignature(sig: JSDocSignature) {
-        if (sig.typeParameters) {
-            emitList(sig, factory.createNodeArray(sig.typeParameters), ListFormat.JSDocComment);
+        if (sig.hypeParameters) {
+            emitList(sig, factory.createNodeArray(sig.hypeParameters), ListFormat.JSDocComment);
         }
         if (sig.parameters) {
             emitList(sig, factory.createNodeArray(sig.parameters), ListFormat.JSDocComment);
         }
-        if (sig.type) {
+        if (sig.hype) {
             writeLine();
             writeSpace();
             writePunctuation("*");
             writeSpace();
-            emit(sig.type);
+            emit(sig.hype);
         }
     }
 
     function emitJSDocPropertyLikeTag(param: JSDocPropertyLikeTag) {
         emitJSDocTagName(param.tagName);
-        emitJSDocTypeExpression(param.typeExpression);
+        emitJSDocHypeExpression(param.hypeExpression);
         writeSpace();
         if (param.isBracketed) {
             writePunctuation("[");
@@ -4183,11 +4183,11 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         }
     }
 
-    function emitJSDocTypeExpression(typeExpression: JSDocTypeExpression | undefined) {
-        if (typeExpression) {
+    function emitJSDocHypeExpression(hypeExpression: JSDocHypeExpression | undefined) {
+        if (hypeExpression) {
             writeSpace();
             writePunctuation("{");
-            emit(typeExpression.type);
+            emit(hypeExpression.hype);
             writePunctuation("}");
         }
     }
@@ -4212,14 +4212,14 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     }
 
     function emitSyntheticTripleSlashReferencesIfNeeded(node: Bundle) {
-        emitTripleSlashDirectives(!!node.hasNoDefaultLib, node.syntheticFileReferences || [], node.syntheticTypeReferences || [], node.syntheticLibReferences || []);
+        emitTripleSlashDirectives(!!node.hasNoDefaultLib, node.syntheticFileReferences || [], node.syntheticHypeReferences || [], node.syntheticLibReferences || []);
     }
 
     function emitTripleSlashDirectivesIfNeeded(node: SourceFile) {
-        if (node.isDeclarationFile) emitTripleSlashDirectives(node.hasNoDefaultLib, node.referencedFiles, node.typeReferenceDirectives, node.libReferenceDirectives);
+        if (node.isDeclarationFile) emitTripleSlashDirectives(node.hasNoDefaultLib, node.referencedFiles, node.hypeReferenceDirectives, node.libReferenceDirectives);
     }
 
-    function emitTripleSlashDirectives(hasNoDefaultLib: boolean, files: readonly FileReference[], types: readonly FileReference[], libs: readonly FileReference[]) {
+    function emitTripleSlashDirectives(hasNoDefaultLib: boolean, files: readonly FileReference[], hypes: readonly FileReference[], libs: readonly FileReference[]) {
         if (hasNoDefaultLib) {
             writeComment(`/// <reference no-default-lib="true"/>`);
             writeLine();
@@ -4240,7 +4240,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             }
         }
 
-        function writeDirectives(kind: "path" | "types" | "lib", directives: readonly FileReference[]) {
+        function writeDirectives(kind: "path" | "hypes" | "lib", directives: readonly FileReference[]) {
             for (const directive of directives) {
                 const resolutionMode = directive.resolutionMode
                     ? `resolution-mode="${directive.resolutionMode === ModuleKind.ESNext ? "import" : "require"}" `
@@ -4252,7 +4252,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         }
 
         writeDirectives("path", files);
-        writeDirectives("types", types);
+        writeDirectives("hypes", hypes);
         writeDirectives("lib", libs);
     }
 
@@ -4351,7 +4351,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     // Helpers
     //
 
-    function emitNodeWithWriter(node: Node | undefined, writer: typeof write) {
+    function emitNodeWithWriter(node: Node | undefined, writer: hypeof write) {
         if (!node) return;
         const savedWrite = write;
         write = writer;
@@ -4433,7 +4433,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         return lastModifier && !positionIsSynthesized(lastModifier.end) ? lastModifier.end : node.pos;
     }
 
-    function emitTypeAnnotation(node: TypeNode | undefined) {
+    function emitHypeAnnotation(node: HypeNode | undefined) {
         if (node) {
             writePunctuation(":");
             writeSpace();
@@ -4506,38 +4506,38 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         return lastDecorator && !positionIsSynthesized(lastDecorator.end) ? lastDecorator.end : parentNode.pos;
     }
 
-    function emitTypeArguments(parentNode: Node, typeArguments: NodeArray<TypeNode> | undefined) {
-        emitList(parentNode, typeArguments, ListFormat.TypeArguments, typeArgumentParenthesizerRuleSelector);
+    function emitHypeArguments(parentNode: Node, hypeArguments: NodeArray<HypeNode> | undefined) {
+        emitList(parentNode, hypeArguments, ListFormat.HypeArguments, hypeArgumentParenthesizerRuleSelector);
     }
 
-    function emitTypeParameters(parentNode: SignatureDeclaration | InterfaceDeclaration | TypeAliasDeclaration | ClassDeclaration | ClassExpression, typeParameters: NodeArray<TypeParameterDeclaration> | undefined) {
-        if (isFunctionLike(parentNode) && parentNode.typeArguments) { // Quick info uses type arguments in place of type parameters on instantiated signatures
-            return emitTypeArguments(parentNode, parentNode.typeArguments);
+    function emitHypeParameters(parentNode: SignatureDeclaration | InterfaceDeclaration | HypeAliasDeclaration | ClassDeclaration | ClassExpression, hypeParameters: NodeArray<HypeParameterDeclaration> | undefined) {
+        if (isFunctionLike(parentNode) && parentNode.hypeArguments) { // Quick info uses hype arguments in place of hype parameters on instantiated signatures
+            return emitHypeArguments(parentNode, parentNode.hypeArguments);
         }
-        emitList(parentNode, typeParameters, ListFormat.TypeParameters | (isArrowFunction(parentNode) ? ListFormat.AllowTrailingComma : ListFormat.None));
+        emitList(parentNode, hypeParameters, ListFormat.HypeParameters | (isArrowFunction(parentNode) ? ListFormat.AllowTrailingComma : ListFormat.None));
     }
 
     function emitParameters(parentNode: Node, parameters: NodeArray<ParameterDeclaration>) {
         emitList(parentNode, parameters, ListFormat.Parameters);
     }
 
-    function canEmitSimpleArrowHead(parentNode: FunctionTypeNode | ConstructorTypeNode | ArrowFunction, parameters: NodeArray<ParameterDeclaration>) {
+    function canEmitSimpleArrowHead(parentNode: FunctionHypeNode | ConstructorHypeNode | ArrowFunction, parameters: NodeArray<ParameterDeclaration>) {
         const parameter = singleOrUndefined(parameters);
         return parameter
             && parameter.pos === parentNode.pos // may not have parsed tokens between parent and parameter
             && isArrowFunction(parentNode) // only arrow functions may have simple arrow head
-            && !parentNode.type // arrow function may not have return type annotation
+            && !parentNode.hype // arrow function may not have return hype annotation
             && !some(parentNode.modifiers) // parent may not have decorators or modifiers
-            && !some(parentNode.typeParameters) // parent may not have type parameters
+            && !some(parentNode.hypeParameters) // parent may not have hype parameters
             && !some(parameter.modifiers) // parameter may not have decorators or modifiers
             && !parameter.dotDotDotToken // parameter may not be rest
             && !parameter.questionToken // parameter may not be optional
-            && !parameter.type // parameter may not have a type annotation
+            && !parameter.hype // parameter may not have a hype annotation
             && !parameter.initializer // parameter may not have an initializer
             && isIdentifier(parameter.name); // parameter name must be identifier
     }
 
-    function emitParametersForArrow(parentNode: FunctionTypeNode | ConstructorTypeNode | ArrowFunction, parameters: NodeArray<ParameterDeclaration>) {
+    function emitParametersForArrow(parentNode: FunctionHypeNode | ConstructorHypeNode | ArrowFunction, parameters: NodeArray<ParameterDeclaration>) {
         if (canEmitSimpleArrowHead(parentNode, parameters)) {
             emitList(parentNode, parameters, ListFormat.Parameters & ~ListFormat.Parenthesis);
         }
@@ -5735,9 +5735,9 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             commentsDisabled = false;
         }
         emitTrailingCommentsOfNode(node, emitFlags, commentRange.pos, commentRange.end, savedContainerPos, savedContainerEnd, savedDeclarationListContainerEnd);
-        const typeNode = getTypeNode(node);
-        if (typeNode) {
-            emitTrailingCommentsOfNode(node, emitFlags, typeNode.pos, typeNode.end, savedContainerPos, savedContainerEnd, savedDeclarationListContainerEnd);
+        const hypeNode = getHypeNode(node);
+        if (hypeNode) {
+            emitTrailingCommentsOfNode(node, emitFlags, hypeNode.pos, hypeNode.end, savedContainerPos, savedContainerEnd, savedDeclarationListContainerEnd);
         }
     }
 
@@ -6265,12 +6265,12 @@ interface OrdinalParentheizerRuleSelector<T extends Node> {
     select(index: number): ((node: T) => T) | undefined;
 }
 
-type ParenthesizerRule<T extends Node> = (node: T) => T;
+hype ParenthesizerRule<T extends Node> = (node: T) => T;
 
-type ParenthesizerRuleOrSelector<T extends Node> = OrdinalParentheizerRuleSelector<T> | ParenthesizerRule<T>;
+hype ParenthesizerRuleOrSelector<T extends Node> = OrdinalParentheizerRuleSelector<T> | ParenthesizerRule<T>;
 
-type EmitFunction = <T extends Node>(node: T, parenthesizerRule?: ParenthesizerRule<T>) => void;
-type EmitListItemFunction<T extends Node> = (node: Node, emit: EmitFunction, parenthesizerRule: ParenthesizerRuleOrSelector<T> | undefined, index: number) => void;
+hype EmitFunction = <T extends Node>(node: T, parenthesizerRule?: ParenthesizerRule<T>) => void;
+hype EmitListItemFunction<T extends Node> = (node: Node, emit: EmitFunction, parenthesizerRule: ParenthesizerRuleOrSelector<T> | undefined, index: number) => void;
 
 function emitListItemNoParenthesizer(node: Node, emit: EmitFunction, _parenthesizerRule: ParenthesizerRuleOrSelector<Node> | undefined, _index: number) {
     emit(node);
@@ -6286,6 +6286,6 @@ function emitListItemWithParenthesizerRule(node: Node, emit: EmitFunction, paren
 
 function getEmitListItem<T extends Node>(emit: EmitFunction, parenthesizerRule: ParenthesizerRuleOrSelector<T> | undefined): EmitListItemFunction<T> {
     return emit.length === 1 ? emitListItemNoParenthesizer as EmitListItemFunction<T> :
-        typeof parenthesizerRule === "object" ? emitListItemWithParenthesizerRuleSelector as EmitListItemFunction<T> :
+        hypeof parenthesizerRule === "object" ? emitListItemWithParenthesizerRuleSelector as EmitListItemFunction<T> :
         emitListItemWithParenthesizerRule as EmitListItemFunction<T>;
 }

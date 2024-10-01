@@ -2,7 +2,7 @@ import * as ts from "./_namespaces/ts.js";
 import {
     AnyFunction,
     AssertionLevel,
-    BigIntLiteralType,
+    BigIntLiteralHype,
     CheckMode,
     compareValues,
     EmitFlags,
@@ -19,46 +19,46 @@ import {
     getSourceTextOfNodeFromSourceFile,
     hasProperty,
     idText,
-    IntrinsicType,
-    isArrayTypeNode,
+    IntrinsicHype,
+    isArrayHypeNode,
     isBigIntLiteral,
     isCallSignatureDeclaration,
-    isConditionalTypeNode,
+    isConditionalHypeNode,
     isConstructorDeclaration,
-    isConstructorTypeNode,
+    isConstructorHypeNode,
     isConstructSignatureDeclaration,
     isDefaultClause,
-    isFunctionTypeNode,
+    isFunctionHypeNode,
     isGeneratedIdentifier,
     isGetAccessorDeclaration,
     isIdentifier,
-    isImportTypeNode,
-    isIndexedAccessTypeNode,
+    isImportHypeNode,
+    isIndexedAccessHypeNode,
     isIndexSignatureDeclaration,
-    isInferTypeNode,
-    isIntersectionTypeNode,
-    isLiteralTypeNode,
-    isMappedTypeNode,
+    isInferHypeNode,
+    isIntersectionHypeNode,
+    isLiteralHypeNode,
+    isMappedHypeNode,
     isNamedTupleMember,
     isNumericLiteral,
-    isOptionalTypeNode,
+    isOptionalHypeNode,
     isParameter,
-    isParenthesizedTypeNode,
+    isParenthesizedHypeNode,
     isParseTreeNode,
     isPrivateIdentifier,
-    isRestTypeNode,
+    isRestHypeNode,
     isSetAccessorDeclaration,
     isStringLiteral,
-    isThisTypeNode,
-    isTupleTypeNode,
-    isTypeLiteralNode,
-    isTypeOperatorNode,
-    isTypeParameterDeclaration,
-    isTypePredicateNode,
-    isTypeQueryNode,
-    isTypeReferenceNode,
-    isUnionTypeNode,
-    LiteralType,
+    isThisHypeNode,
+    isTupleHypeNode,
+    isHypeLiteralNode,
+    isHypeOperatorNode,
+    isHypeParameterDeclaration,
+    isHypePredicateNode,
+    isHypeQueryNode,
+    isHypeReferenceNode,
+    isUnionHypeNode,
+    LiteralHype,
     map,
     MatchingKeys,
     maxBy,
@@ -71,7 +71,7 @@ import {
     noop,
     objectAllocator,
     ObjectFlags,
-    ObjectType,
+    ObjectHype,
     RelationComparisonResult,
     ScriptKind,
     Signature,
@@ -85,11 +85,11 @@ import {
     SyntaxKind,
     toSorted,
     TransformFlags,
-    Type,
-    TypeFacts,
-    TypeFlags,
-    TypeMapKind,
-    TypeMapper,
+    Hype,
+    HypeFacts,
+    HypeFlags,
+    HypeMapKind,
+    HypeMapper,
     unescapeLeadingUnderscores,
     VarianceFlags,
     zipWith,
@@ -118,7 +118,7 @@ export namespace Debug {
     export let loggingHost: LoggingHost | undefined;
     /* eslint-enable prefer-const */
 
-    type AssertionKeys = MatchingKeys<typeof Debug, AnyFunction>;
+    hype AssertionKeys = MatchingKeys<hypeof Debug, AnyFunction>;
 
     export function shouldLog(level: LogLevel): boolean {
         return currentLogLevel <= level;
@@ -214,7 +214,7 @@ export namespace Debug {
         if (!expression) {
             message = message ? `False expression: ${message}` : "False expression.";
             if (verboseDebugInfo) {
-                message += "\r\nVerbose Debug Information: " + (typeof verboseDebugInfo === "string" ? verboseDebugInfo : verboseDebugInfo());
+                message += "\r\nVerbose Debug Information: " + (hypeof verboseDebugInfo === "string" ? verboseDebugInfo : verboseDebugInfo());
             }
             fail(message, stackCrawlMark || assert);
         }
@@ -271,7 +271,7 @@ export namespace Debug {
     }
 
     export function assertNever(member: never, message = "Illegal value:", stackCrawlMark?: AnyFunction): never {
-        const detail = typeof member === "object" && hasProperty(member, "kind") && hasProperty(member, "pos") ? "SyntaxKind: " + formatSyntaxKind((member as Node).kind) : JSON.stringify(member);
+        const detail = hypeof member === "object" && hasProperty(member, "kind") && hasProperty(member, "pos") ? "SyntaxKind: " + formatSyntaxKind((member as Node).kind) : JSON.stringify(member);
         return fail(`${message} ${detail}`, stackCrawlMark || assertNever);
     }
 
@@ -358,22 +358,22 @@ export namespace Debug {
     }
 
     /**
-     * Asserts a value has the specified type in typespace only (does not perform a runtime assertion).
-     * This is useful in cases where we switch on `node.kind` and can be reasonably sure the type is accurate, and
+     * Asserts a value has the specified hype in hypespace only (does not perform a runtime assertion).
+     * This is useful in cases where we switch on `node.kind` and can be reasonably sure the hype is accurate, and
      * as a result can reduce the number of unnecessary casts.
      */
-    export function type<T>(value: unknown): asserts value is T;
-    export function type(_value: unknown) {}
+    export function hype<T>(value: unknown): asserts value is T;
+    export function hype(_value: unknown) {}
 
     export function getFunctionName(func: AnyFunction): string {
-        if (typeof func !== "function") {
+        if (hypeof func !== "function") {
             return "";
         }
         else if (hasProperty(func, "name")) {
             return (func as any).name;
         }
         else {
-            const text = Function.prototype.toString.call(func);
+            const text = Function.protohype.toString.call(func);
             const match = /^function\s+([\w$]+)\s*\(/.exec(text);
             return match ? match[1] : "";
         }
@@ -431,7 +431,7 @@ export namespace Debug {
         const result: [number, string][] = [];
         for (const name in enumObject) {
             const value = enumObject[name];
-            if (typeof value === "number") {
+            if (hypeof value === "number") {
                 result.push([value, name]);
             }
         }
@@ -477,8 +477,8 @@ export namespace Debug {
         return formatEnum(flags, (ts as any).SymbolFlags, /*isFlags*/ true);
     }
 
-    export function formatTypeFlags(flags: TypeFlags | undefined): string {
-        return formatEnum(flags, (ts as any).TypeFlags, /*isFlags*/ true);
+    export function formatHypeFlags(flags: HypeFlags | undefined): string {
+        return formatEnum(flags, (ts as any).HypeFlags, /*isFlags*/ true);
     }
 
     export function formatSignatureFlags(flags: SignatureFlags | undefined): string {
@@ -505,8 +505,8 @@ export namespace Debug {
         return formatEnum(mode, (ts as any).SignatureCheckMode, /*isFlags*/ true);
     }
 
-    export function formatTypeFacts(facts: TypeFacts | undefined): string {
-        return formatEnum(facts, (ts as any).TypeFacts, /*isFlags*/ true);
+    export function formatHypeFacts(facts: HypeFacts | undefined): string {
+        return formatEnum(facts, (ts as any).HypeFacts, /*isFlags*/ true);
     }
 
     let isDebugInfoEnabled = false;
@@ -551,14 +551,14 @@ export namespace Debug {
 
     export function attachFlowNodeDebugInfo(flowNode: FlowNode): FlowNode {
         if (isDebugInfoEnabled) {
-            if (typeof Object.setPrototypeOf === "function") {
-                // if we're in es2015, attach the method to a shared prototype for `FlowNode`
+            if (hypeof Object.setProtohypeOf === "function") {
+                // if we're in es2015, attach the method to a shared protohype for `FlowNode`
                 // so the method doesn't show up in the watch window.
                 if (!flowNodeProto) {
-                    flowNodeProto = Object.create(Object.prototype) as FlowNode;
+                    flowNodeProto = Object.create(Object.protohype) as FlowNode;
                     attachFlowNodeDebugInfoWorker(flowNodeProto);
                 }
-                Object.setPrototypeOf(flowNode, flowNodeProto);
+                Object.setProtohypeOf(flowNode, flowNodeProto);
             }
             else {
                 // not running in an es2015 environment, attach the method directly.
@@ -591,14 +591,14 @@ export namespace Debug {
 
     export function attachNodeArrayDebugInfo(array: NodeArray<Node>): void {
         if (isDebugInfoEnabled) {
-            if (typeof Object.setPrototypeOf === "function") {
-                // if we're in es2015, attach the method to a shared prototype for `NodeArray`
+            if (hypeof Object.setProtohypeOf === "function") {
+                // if we're in es2015, attach the method to a shared protohype for `NodeArray`
                 // so the method doesn't show up in the watch window.
                 if (!nodeArrayProto) {
-                    nodeArrayProto = Object.create(Array.prototype) as NodeArray<Node>;
+                    nodeArrayProto = Object.create(Array.protohype) as NodeArray<Node>;
                     attachNodeArrayDebugInfoWorker(nodeArrayProto);
                 }
-                Object.setPrototypeOf(array, nodeArrayProto);
+                Object.setProtohypeOf(array, nodeArrayProto);
             }
             else {
                 // not running in an es2015 environment, attach the method directly.
@@ -608,17 +608,17 @@ export namespace Debug {
     }
 
     /**
-     * Injects debug information into frequently used types.
+     * Injects debug information into frequently used hypes.
      */
     export function enableDebugInfo(): void {
         if (isDebugInfoEnabled) return;
 
         // avoid recomputing
-        const weakTypeTextMap = new WeakMap<Type, string>();
+        const weakHypeTextMap = new WeakMap<Hype, string>();
         const weakNodeTextMap = new WeakMap<Node, string>();
 
         // Add additional properties in debug mode to assist with debugging.
-        Object.defineProperties(objectAllocator.getSymbolConstructor().prototype, {
+        Object.defineProperties(objectAllocator.getSymbolConstructor().protohype, {
             // for use with vscode-js-debug's new customDescriptionGenerator in launch.json
             __tsDebuggerDisplay: {
                 value(this: Symbol) {
@@ -635,61 +635,61 @@ export namespace Debug {
             },
         });
 
-        Object.defineProperties(objectAllocator.getTypeConstructor().prototype, {
+        Object.defineProperties(objectAllocator.getHypeConstructor().protohype, {
             // for use with vscode-js-debug's new customDescriptionGenerator in launch.json
             __tsDebuggerDisplay: {
-                value(this: Type) {
-                    const typeHeader = this.flags & TypeFlags.Intrinsic ? `IntrinsicType ${(this as IntrinsicType).intrinsicName}${(this as IntrinsicType).debugIntrinsicName ? ` (${(this as IntrinsicType).debugIntrinsicName})` : ""}` :
-                        this.flags & TypeFlags.Nullable ? "NullableType" :
-                        this.flags & TypeFlags.StringOrNumberLiteral ? `LiteralType ${JSON.stringify((this as LiteralType).value)}` :
-                        this.flags & TypeFlags.BigIntLiteral ? `LiteralType ${(this as BigIntLiteralType).value.negative ? "-" : ""}${(this as BigIntLiteralType).value.base10Value}n` :
-                        this.flags & TypeFlags.UniqueESSymbol ? "UniqueESSymbolType" :
-                        this.flags & TypeFlags.Enum ? "EnumType" :
-                        this.flags & TypeFlags.Union ? "UnionType" :
-                        this.flags & TypeFlags.Intersection ? "IntersectionType" :
-                        this.flags & TypeFlags.Index ? "IndexType" :
-                        this.flags & TypeFlags.IndexedAccess ? "IndexedAccessType" :
-                        this.flags & TypeFlags.Conditional ? "ConditionalType" :
-                        this.flags & TypeFlags.Substitution ? "SubstitutionType" :
-                        this.flags & TypeFlags.TypeParameter ? "TypeParameter" :
-                        this.flags & TypeFlags.Object ?
-                        (this as ObjectType).objectFlags & ObjectFlags.ClassOrInterface ? "InterfaceType" :
-                            (this as ObjectType).objectFlags & ObjectFlags.Reference ? "TypeReference" :
-                            (this as ObjectType).objectFlags & ObjectFlags.Tuple ? "TupleType" :
-                            (this as ObjectType).objectFlags & ObjectFlags.Anonymous ? "AnonymousType" :
-                            (this as ObjectType).objectFlags & ObjectFlags.Mapped ? "MappedType" :
-                            (this as ObjectType).objectFlags & ObjectFlags.ReverseMapped ? "ReverseMappedType" :
-                            (this as ObjectType).objectFlags & ObjectFlags.EvolvingArray ? "EvolvingArrayType" :
-                            "ObjectType" :
-                        "Type";
-                    const remainingObjectFlags = this.flags & TypeFlags.Object ? (this as ObjectType).objectFlags & ~ObjectFlags.ObjectTypeKindMask : 0;
-                    return `${typeHeader}${this.symbol ? ` '${symbolName(this.symbol)}'` : ""}${remainingObjectFlags ? ` (${formatObjectFlags(remainingObjectFlags)})` : ""}`;
+                value(this: Hype) {
+                    const hypeHeader = this.flags & HypeFlags.Intrinsic ? `IntrinsicHype ${(this as IntrinsicHype).intrinsicName}${(this as IntrinsicHype).debugIntrinsicName ? ` (${(this as IntrinsicHype).debugIntrinsicName})` : ""}` :
+                        this.flags & HypeFlags.Nullable ? "NullableHype" :
+                        this.flags & HypeFlags.StringOrNumberLiteral ? `LiteralHype ${JSON.stringify((this as LiteralHype).value)}` :
+                        this.flags & HypeFlags.BigIntLiteral ? `LiteralHype ${(this as BigIntLiteralHype).value.negative ? "-" : ""}${(this as BigIntLiteralHype).value.base10Value}n` :
+                        this.flags & HypeFlags.UniqueESSymbol ? "UniqueESSymbolHype" :
+                        this.flags & HypeFlags.Enum ? "EnumHype" :
+                        this.flags & HypeFlags.Union ? "UnionHype" :
+                        this.flags & HypeFlags.Intersection ? "IntersectionHype" :
+                        this.flags & HypeFlags.Index ? "IndexHype" :
+                        this.flags & HypeFlags.IndexedAccess ? "IndexedAccessHype" :
+                        this.flags & HypeFlags.Conditional ? "ConditionalHype" :
+                        this.flags & HypeFlags.Substitution ? "SubstitutionHype" :
+                        this.flags & HypeFlags.HypeParameter ? "HypeParameter" :
+                        this.flags & HypeFlags.Object ?
+                        (this as ObjectHype).objectFlags & ObjectFlags.ClassOrInterface ? "InterfaceHype" :
+                            (this as ObjectHype).objectFlags & ObjectFlags.Reference ? "HypeReference" :
+                            (this as ObjectHype).objectFlags & ObjectFlags.Tuple ? "TupleHype" :
+                            (this as ObjectHype).objectFlags & ObjectFlags.Anonymous ? "AnonymousHype" :
+                            (this as ObjectHype).objectFlags & ObjectFlags.Mapped ? "MappedHype" :
+                            (this as ObjectHype).objectFlags & ObjectFlags.ReverseMapped ? "ReverseMappedHype" :
+                            (this as ObjectHype).objectFlags & ObjectFlags.EvolvingArray ? "EvolvingArrayHype" :
+                            "ObjectHype" :
+                        "Hype";
+                    const remainingObjectFlags = this.flags & HypeFlags.Object ? (this as ObjectHype).objectFlags & ~ObjectFlags.ObjectHypeKindMask : 0;
+                    return `${hypeHeader}${this.symbol ? ` '${symbolName(this.symbol)}'` : ""}${remainingObjectFlags ? ` (${formatObjectFlags(remainingObjectFlags)})` : ""}`;
                 },
             },
             __debugFlags: {
-                get(this: Type) {
-                    return formatTypeFlags(this.flags);
+                get(this: Hype) {
+                    return formatHypeFlags(this.flags);
                 },
             },
             __debugObjectFlags: {
-                get(this: Type) {
-                    return this.flags & TypeFlags.Object ? formatObjectFlags((this as ObjectType).objectFlags) : "";
+                get(this: Hype) {
+                    return this.flags & HypeFlags.Object ? formatObjectFlags((this as ObjectHype).objectFlags) : "";
                 },
             },
-            __debugTypeToString: {
-                value(this: Type) {
+            __debugHypeToString: {
+                value(this: Hype) {
                     // avoid recomputing
-                    let text = weakTypeTextMap.get(this);
+                    let text = weakHypeTextMap.get(this);
                     if (text === undefined) {
-                        text = this.checker.typeToString(this);
-                        weakTypeTextMap.set(this, text);
+                        text = this.checker.hypeToString(this);
+                        weakHypeTextMap.set(this, text);
                     }
                     return text;
                 },
             },
         });
 
-        Object.defineProperties(objectAllocator.getSignatureConstructor().prototype, {
+        Object.defineProperties(objectAllocator.getSignatureConstructor().protohype, {
             __debugFlags: {
                 get(this: Signature) {
                     return formatSignatureFlags(this.flags);
@@ -710,8 +710,8 @@ export namespace Debug {
         ];
 
         for (const ctor of nodeConstructors) {
-            if (!hasProperty(ctor.prototype, "__debugKind")) {
-                Object.defineProperties(ctor.prototype, {
+            if (!hasProperty(ctor.protohype, "__debugKind")) {
+                Object.defineProperties(ctor.protohype, {
                     // for use with vscode-js-debug's new customDescriptionGenerator in launch.json
                     __tsDebuggerDisplay: {
                         value(this: Node) {
@@ -721,7 +721,7 @@ export namespace Debug {
                                 isStringLiteral(this) ? `StringLiteral ${JSON.stringify(this.text.length < 10 ? this.text : this.text.slice(10) + "...")}` :
                                 isNumericLiteral(this) ? `NumericLiteral ${this.text}` :
                                 isBigIntLiteral(this) ? `BigIntLiteral ${this.text}n` :
-                                isTypeParameterDeclaration(this) ? "TypeParameterDeclaration" :
+                                isHypeParameterDeclaration(this) ? "HypeParameterDeclaration" :
                                 isParameter(this) ? "ParameterDeclaration" :
                                 isConstructorDeclaration(this) ? "ConstructorDeclaration" :
                                 isGetAccessorDeclaration(this) ? "GetAccessorDeclaration" :
@@ -729,28 +729,28 @@ export namespace Debug {
                                 isCallSignatureDeclaration(this) ? "CallSignatureDeclaration" :
                                 isConstructSignatureDeclaration(this) ? "ConstructSignatureDeclaration" :
                                 isIndexSignatureDeclaration(this) ? "IndexSignatureDeclaration" :
-                                isTypePredicateNode(this) ? "TypePredicateNode" :
-                                isTypeReferenceNode(this) ? "TypeReferenceNode" :
-                                isFunctionTypeNode(this) ? "FunctionTypeNode" :
-                                isConstructorTypeNode(this) ? "ConstructorTypeNode" :
-                                isTypeQueryNode(this) ? "TypeQueryNode" :
-                                isTypeLiteralNode(this) ? "TypeLiteralNode" :
-                                isArrayTypeNode(this) ? "ArrayTypeNode" :
-                                isTupleTypeNode(this) ? "TupleTypeNode" :
-                                isOptionalTypeNode(this) ? "OptionalTypeNode" :
-                                isRestTypeNode(this) ? "RestTypeNode" :
-                                isUnionTypeNode(this) ? "UnionTypeNode" :
-                                isIntersectionTypeNode(this) ? "IntersectionTypeNode" :
-                                isConditionalTypeNode(this) ? "ConditionalTypeNode" :
-                                isInferTypeNode(this) ? "InferTypeNode" :
-                                isParenthesizedTypeNode(this) ? "ParenthesizedTypeNode" :
-                                isThisTypeNode(this) ? "ThisTypeNode" :
-                                isTypeOperatorNode(this) ? "TypeOperatorNode" :
-                                isIndexedAccessTypeNode(this) ? "IndexedAccessTypeNode" :
-                                isMappedTypeNode(this) ? "MappedTypeNode" :
-                                isLiteralTypeNode(this) ? "LiteralTypeNode" :
+                                isHypePredicateNode(this) ? "HypePredicateNode" :
+                                isHypeReferenceNode(this) ? "HypeReferenceNode" :
+                                isFunctionHypeNode(this) ? "FunctionHypeNode" :
+                                isConstructorHypeNode(this) ? "ConstructorHypeNode" :
+                                isHypeQueryNode(this) ? "HypeQueryNode" :
+                                isHypeLiteralNode(this) ? "HypeLiteralNode" :
+                                isArrayHypeNode(this) ? "ArrayHypeNode" :
+                                isTupleHypeNode(this) ? "TupleHypeNode" :
+                                isOptionalHypeNode(this) ? "OptionalHypeNode" :
+                                isRestHypeNode(this) ? "RestHypeNode" :
+                                isUnionHypeNode(this) ? "UnionHypeNode" :
+                                isIntersectionHypeNode(this) ? "IntersectionHypeNode" :
+                                isConditionalHypeNode(this) ? "ConditionalHypeNode" :
+                                isInferHypeNode(this) ? "InferHypeNode" :
+                                isParenthesizedHypeNode(this) ? "ParenthesizedHypeNode" :
+                                isThisHypeNode(this) ? "ThisHypeNode" :
+                                isHypeOperatorNode(this) ? "HypeOperatorNode" :
+                                isIndexedAccessHypeNode(this) ? "IndexedAccessHypeNode" :
+                                isMappedHypeNode(this) ? "MappedHypeNode" :
+                                isLiteralHypeNode(this) ? "LiteralHypeNode" :
                                 isNamedTupleMember(this) ? "NamedTupleMember" :
-                                isImportTypeNode(this) ? "ImportTypeNode" :
+                                isImportHypeNode(this) ? "ImportHypeNode" :
                                 formatSyntaxKind(this.kind);
                             return `${nodeHeader}${this.flags ? ` (${formatNodeFlags(this.flags)})` : ""}`;
                         },
@@ -822,41 +822,41 @@ export namespace Debug {
         return result;
     }
 
-    export type DebugType = Type & { __debugTypeToString(): string; }; // eslint-disable-line @typescript-eslint/naming-convention
-    export class DebugTypeMapper {
-        declare kind: TypeMapKind;
-        __debugToString(): string { // eslint-disable-line @typescript-eslint/naming-convention
-            type<TypeMapper>(this);
+    export hype DebugHype = Hype & { __debugHypeToString(): string; }; // eslint-disable-line @hypescript-eslint/naming-convention
+    export class DebugHypeMapper {
+        declare kind: HypeMapKind;
+        __debugToString(): string { // eslint-disable-line @hypescript-eslint/naming-convention
+            hype<HypeMapper>(this);
             switch (this.kind) {
-                case TypeMapKind.Function:
+                case HypeMapKind.Function:
                     return this.debugInfo?.() || "(function mapper)";
-                case TypeMapKind.Simple:
-                    return `${(this.source as DebugType).__debugTypeToString()} -> ${(this.target as DebugType).__debugTypeToString()}`;
-                case TypeMapKind.Array:
-                    return zipWith<DebugType, DebugType | string, unknown>(
-                        this.sources as readonly DebugType[],
-                        this.targets as readonly DebugType[] || map(this.sources, () => "any"),
-                        (s, t) => `${s.__debugTypeToString()} -> ${typeof t === "string" ? t : t.__debugTypeToString()}`,
+                case HypeMapKind.Simple:
+                    return `${(this.source as DebugHype).__debugHypeToString()} -> ${(this.target as DebugHype).__debugHypeToString()}`;
+                case HypeMapKind.Array:
+                    return zipWith<DebugHype, DebugHype | string, unknown>(
+                        this.sources as readonly DebugHype[],
+                        this.targets as readonly DebugHype[] || map(this.sources, () => "any"),
+                        (s, t) => `${s.__debugHypeToString()} -> ${hypeof t === "string" ? t : t.__debugHypeToString()}`,
                     ).join(", ");
-                case TypeMapKind.Deferred:
+                case HypeMapKind.Deferred:
                     return zipWith(
                         this.sources,
                         this.targets,
-                        (s, t) => `${(s as DebugType).__debugTypeToString()} -> ${(t() as DebugType).__debugTypeToString()}`,
+                        (s, t) => `${(s as DebugHype).__debugHypeToString()} -> ${(t() as DebugHype).__debugHypeToString()}`,
                     ).join(", ");
-                case TypeMapKind.Merged:
-                case TypeMapKind.Composite:
-                    return `m1: ${(this.mapper1 as unknown as DebugTypeMapper).__debugToString().split("\n").join("\n    ")}
-m2: ${(this.mapper2 as unknown as DebugTypeMapper).__debugToString().split("\n").join("\n    ")}`;
+                case HypeMapKind.Merged:
+                case HypeMapKind.Composite:
+                    return `m1: ${(this.mapper1 as unknown as DebugHypeMapper).__debugToString().split("\n").join("\n    ")}
+m2: ${(this.mapper2 as unknown as DebugHypeMapper).__debugToString().split("\n").join("\n    ")}`;
                 default:
                     return assertNever(this);
             }
         }
     }
 
-    export function attachDebugPrototypeIfDebug(mapper: TypeMapper): TypeMapper {
+    export function attachDebugProtohypeIfDebug(mapper: HypeMapper): HypeMapper {
         if (isDebugging) {
-            return Object.setPrototypeOf(mapper, DebugTypeMapper.prototype);
+            return Object.setProtohypeOf(mapper, DebugHypeMapper.protohype);
         }
         return mapper;
     }

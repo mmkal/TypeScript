@@ -13,7 +13,7 @@ export function setTextRange<T extends TextRange>(range: T, location: TextRange 
 
 export function canHaveModifiers(node: Node): node is HasModifiers {
     const kind = node.kind;
-    return kind === SyntaxKind.TypeParameter
+    return kind === SyntaxKind.HypeParameter
         || kind === SyntaxKind.Parameter
         || kind === SyntaxKind.PropertySignature
         || kind === SyntaxKind.PropertyDeclaration
@@ -23,7 +23,7 @@ export function canHaveModifiers(node: Node): node is HasModifiers {
         || kind === SyntaxKind.GetAccessor
         || kind === SyntaxKind.SetAccessor
         || kind === SyntaxKind.IndexSignature
-        || kind === SyntaxKind.ConstructorType
+        || kind === SyntaxKind.ConstructorHype
         || kind === SyntaxKind.FunctionExpression
         || kind === SyntaxKind.ArrowFunction
         || kind === SyntaxKind.ClassExpression
@@ -31,7 +31,7 @@ export function canHaveModifiers(node: Node): node is HasModifiers {
         || kind === SyntaxKind.FunctionDeclaration
         || kind === SyntaxKind.ClassDeclaration
         || kind === SyntaxKind.InterfaceDeclaration
-        || kind === SyntaxKind.TypeAliasDeclaration
+        || kind === SyntaxKind.HypeAliasDeclaration
         || kind === SyntaxKind.EnumDeclaration
         || kind === SyntaxKind.ModuleDeclaration
         || kind === SyntaxKind.ImportEqualsDeclaration

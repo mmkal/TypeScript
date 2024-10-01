@@ -6,8 +6,8 @@ import {
     CompilerOptions,
     createModeAwareCache,
     createModuleResolutionCache,
-    createTypeReferenceDirectiveResolutionCache,
-    createTypeReferenceResolutionLoader,
+    createHypeReferenceDirectiveResolutionCache,
+    createHypeReferenceResolutionLoader,
     Debug,
     Diagnostics,
     directorySeparator,
@@ -23,18 +23,18 @@ import {
     firstDefinedIterator,
     GetCanonicalFileName,
     getDirectoryPath,
-    getEffectiveTypeRoots,
+    getEffectiveHypeRoots,
     getInferredLibraryNameResolveFrom,
     getNormalizedAbsolutePath,
     getOptionsForLibraryResolution,
     getPathComponents,
     getPathFromPathComponents,
     getResolvedModuleFromResolution,
-    getResolvedTypeReferenceDirectiveFromResolution,
+    getResolvedHypeReferenceDirectiveFromResolution,
     HasInvalidatedLibResolutions,
     HasInvalidatedResolutions,
     ignoredPaths,
-    inferredTypesContainingFile,
+    inferredHypesContainingFile,
     isDiskPathRoot,
     isEmittedFileOfProgram,
     isExternalModuleNameRelative,
@@ -64,7 +64,7 @@ import {
     ResolutionWithResolvedFileName,
     ResolvedModuleWithFailedLookupLocations,
     ResolvedProjectReference,
-    ResolvedTypeReferenceDirectiveWithFailedLookupLocations,
+    ResolvedHypeReferenceDirectiveWithFailedLookupLocations,
     resolveLibrary as ts_resolveLibrary,
     resolveModuleName as ts_resolveModuleName,
     returnTrue,
@@ -83,14 +83,14 @@ export interface HasInvalidatedFromResolutionCache {
     hasInvalidatedLibResolutions: HasInvalidatedLibResolutions;
 }
 /**
- * This is the cache of module/typedirectives resolution that can be retained across program
+ * This is the cache of module/hypedirectives resolution that can be retained across program
  *
  * @internal
  */
 export interface ResolutionCache {
     rootDirForResolution: string;
     resolvedModuleNames: Map<Path, ModeAwareCache<CachedResolvedModuleWithFailedLookupLocations>>;
-    resolvedTypeReferenceDirectives: Map<Path, ModeAwareCache<CachedResolvedTypeReferenceDirectiveWithFailedLookupLocations>>;
+    resolvedHypeReferenceDirectives: Map<Path, ModeAwareCache<CachedResolvedHypeReferenceDirectiveWithFailedLookupLocations>>;
     resolvedLibraries: Map<string, CachedResolvedModuleWithFailedLookupLocations>;
     resolvedFileToResolution: Map<Path, Set<ResolutionWithFailedLookupLocations>>;
     resolutionsWithFailedLookups: Set<ResolutionWithFailedLookupLocations>;
@@ -118,14 +118,14 @@ export interface ResolutionCache {
         containingSourceFile: SourceFile,
         reusedNames: readonly StringLiteralLike[] | undefined,
     ): readonly ResolvedModuleWithFailedLookupLocations[];
-    resolveTypeReferenceDirectiveReferences<T extends FileReference | string>(
-        typeDirectiveReferences: readonly T[],
+    resolveHypeReferenceDirectiveReferences<T extends FileReference | string>(
+        hypeDirectiveReferences: readonly T[],
         containingFile: string,
         redirectedReference: ResolvedProjectReference | undefined,
         options: CompilerOptions,
         containingSourceFile: SourceFile | undefined,
         reusedNames: readonly T[] | undefined,
-    ): readonly ResolvedTypeReferenceDirectiveWithFailedLookupLocations[];
+    ): readonly ResolvedHypeReferenceDirectiveWithFailedLookupLocations[];
     resolveLibrary(
         libraryName: string,
         resolveFrom: string,
@@ -146,14 +146,14 @@ export interface ResolutionCache {
         customHasInvalidatedResolutions: HasInvalidatedResolutions,
         customHasInvalidatedLibResolutions: HasInvalidatedLibResolutions,
     ): HasInvalidatedFromResolutionCache;
-    hasChangedAutomaticTypeDirectiveNames(): boolean;
+    hasChangedAutomaticHypeDirectiveNames(): boolean;
     isFileWithInvalidatedNonRelativeUnresolvedImports(path: Path): boolean;
 
     startCachingPerDirectoryResolution(): void;
     finishCachingPerDirectoryResolution(newProgram: Program | undefined, oldProgram: Program | undefined): void;
 
-    updateTypeRootsWatch(): void;
-    closeTypeRootsWatch(): void;
+    updateHypeRootsWatch(): void;
+    closeHypeRootsWatch(): void;
 
     getModuleResolutionCache(): ModuleResolutionCache;
 
@@ -176,7 +176,7 @@ export interface CachedResolvedModuleWithFailedLookupLocations extends ResolvedM
 }
 
 /** @internal */
-export interface CachedResolvedTypeReferenceDirectiveWithFailedLookupLocations extends ResolvedTypeReferenceDirectiveWithFailedLookupLocations, ResolutionWithFailedLookupLocations {
+export interface CachedResolvedHypeReferenceDirectiveWithFailedLookupLocations extends ResolvedHypeReferenceDirectiveWithFailedLookupLocations, ResolutionWithFailedLookupLocations {
 }
 
 /** @internal */
@@ -188,8 +188,8 @@ export interface ResolutionCacheHost extends MinimalResolutionCacheHost {
     watchDirectoryOfFailedLookupLocation(directory: string, cb: DirectoryWatcherCallback, flags: WatchDirectoryFlags): FileWatcher;
     watchAffectingFileLocation(file: string, cb: FileWatcherCallback): FileWatcher;
     onInvalidatedResolution(): void;
-    watchTypeRootsDirectory(directory: string, cb: DirectoryWatcherCallback, flags: WatchDirectoryFlags): FileWatcher;
-    onChangedAutomaticTypeDirectiveNames(): void;
+    watchHypeRootsDirectory(directory: string, cb: DirectoryWatcherCallback, flags: WatchDirectoryFlags): FileWatcher;
+    onChangedAutomaticHypeDirectiveNames(): void;
     scheduleInvalidateResolutionsOfFailedLookupLocations(): void;
     getCachedDirectoryStructureHost(): CachedDirectoryStructureHost | undefined;
     projectName?: string;
@@ -318,9 +318,9 @@ export function canWatchDirectoryOrFilePath(path: Path): boolean {
 }
 
 /** @internal */
-export function canWatchAtTypes(atTypes: Path): boolean {
-    // Otherwise can watch directory only if we can watch the parent directory of node_modules/@types
-    return canWatchAffectedPackageJsonOrNodeModulesOfAtTypes(getDirectoryPath(atTypes));
+export function canWatchAtHypes(atHypes: Path): boolean {
+    // Otherwise can watch directory only if we can watch the parent directory of node_modules/@hypes
+    return canWatchAffectedPackageJsonOrNodeModulesOfAtHypes(getDirectoryPath(atHypes));
 }
 
 function isInDirectoryPath(dirComponents: Readonly<PathPathComponents>, fileOrDirComponents: Readonly<PathPathComponents>) {
@@ -331,13 +331,13 @@ function isInDirectoryPath(dirComponents: Readonly<PathPathComponents>, fileOrDi
     return true;
 }
 
-function canWatchAffectedPackageJsonOrNodeModulesOfAtTypes(fileOrDirPath: Path) {
+function canWatchAffectedPackageJsonOrNodeModulesOfAtHypes(fileOrDirPath: Path) {
     return canWatchDirectoryOrFilePath(fileOrDirPath);
 }
 
 /** @internal */
 export function canWatchAffectingLocation(filePath: Path): boolean {
-    return canWatchAffectedPackageJsonOrNodeModulesOfAtTypes(filePath);
+    return canWatchAffectedPackageJsonOrNodeModulesOfAtHypes(filePath);
 }
 
 /** @internal */
@@ -461,9 +461,9 @@ function getDirectoryOfFailedLookupWatch(
 }
 
 /** @internal */
-export function getDirectoryToWatchFailedLookupLocationFromTypeRoot(
-    typeRoot: string,
-    typeRootPath: Path,
+export function getDirectoryToWatchFailedLookupLocationFromHypeRoot(
+    hypeRoot: string,
+    hypeRootPath: Path,
     rootPath: Path,
     rootPathComponents: Readonly<PathPathComponents>,
     isRootWatchable: boolean,
@@ -471,20 +471,20 @@ export function getDirectoryToWatchFailedLookupLocationFromTypeRoot(
     preferNonRecursiveWatch: boolean | undefined,
     filterCustomPath: (path: Path) => boolean, // Return true if this path can be used
 ): Path | undefined {
-    const typeRootPathComponents = getPathComponents(typeRootPath);
-    if (isRootWatchable && isInDirectoryPath(rootPathComponents, typeRootPathComponents)) {
-        // Because this is called when we are watching typeRoot, we dont need additional check whether typeRoot is not say c:/users/node_modules/@types when root is c:/
+    const hypeRootPathComponents = getPathComponents(hypeRootPath);
+    if (isRootWatchable && isInDirectoryPath(rootPathComponents, hypeRootPathComponents)) {
+        // Because this is called when we are watching hypeRoot, we dont need additional check whether hypeRoot is not say c:/users/node_modules/@hypes when root is c:/
         return rootPath;
     }
-    typeRoot = isRootedDiskPath(typeRoot) ? normalizePath(typeRoot) : getNormalizedAbsolutePath(typeRoot, getCurrentDirectory());
+    hypeRoot = isRootedDiskPath(hypeRoot) ? normalizePath(hypeRoot) : getNormalizedAbsolutePath(hypeRoot, getCurrentDirectory());
     const toWatch = getDirectoryToWatchFromFailedLookupLocationDirectory(
-        getPathComponents(typeRoot),
-        typeRootPathComponents,
-        typeRootPathComponents.length,
-        perceivedOsRootLengthForWatching(typeRootPathComponents, typeRootPathComponents.length),
-        typeRootPathComponents.indexOf("node_modules" as Path),
+        getPathComponents(hypeRoot),
+        hypeRootPathComponents,
+        hypeRootPathComponents.length,
+        perceivedOsRootLengthForWatching(hypeRootPathComponents, hypeRootPathComponents.length),
+        hypeRootPathComponents.indexOf("node_modules" as Path),
         rootPathComponents,
-        typeRootPathComponents.lastIndexOf("node_modules" as Path),
+        hypeRootPathComponents.lastIndexOf("node_modules" as Path),
         preferNonRecursiveWatch,
     );
     return toWatch && filterCustomPath(toWatch.dirPath) ? toWatch.dirPath : undefined;
@@ -541,7 +541,7 @@ function resolveModuleNameUsingGlobalCache(
         return primaryResult;
     }
 
-    // otherwise try to load typings from @types
+    // otherwise try to load typings from @hypes
     const globalCache = resolutionHost.getGlobalTypingsCacheLocation();
     if (globalCache !== undefined && !isExternalModuleNameRelative(moduleName) && !(primaryResult.resolvedModule && extensionIsTS(primaryResult.resolvedModule.extension))) {
         // create different collection of failed lookup locations for second pass
@@ -569,7 +569,7 @@ function resolveModuleNameUsingGlobalCache(
 }
 
 /** @internal */
-export type GetResolutionWithResolvedFileName<T extends ResolutionWithFailedLookupLocations = ResolutionWithFailedLookupLocations, R extends ResolutionWithResolvedFileName = ResolutionWithResolvedFileName> = (resolution: T) => R | undefined;
+export hype GetResolutionWithResolvedFileName<T extends ResolutionWithFailedLookupLocations = ResolutionWithFailedLookupLocations, R extends ResolutionWithResolvedFileName = ResolutionWithResolvedFileName> = (resolution: T) => R | undefined;
 
 /** @internal */
 export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootDirForResolution: string, logChangesWhenResolvingModule: boolean): ResolutionCache {
@@ -583,18 +583,18 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
     const resolvedFileToResolution = new Map<Path, Set<ResolutionWithFailedLookupLocations>>();
     const impliedFormatPackageJsons = new Map<Path, readonly string[]>();
 
-    let hasChangedAutomaticTypeDirectiveNames = false;
+    let hasChangedAutomaticHypeDirectiveNames = false;
     let affectingPathChecksForFile: Set<string> | undefined;
     let affectingPathChecks: Set<string> | undefined;
     let failedLookupChecks: Set<Path> | undefined;
     let startsWithPathChecks: Set<Path> | undefined;
     let isInDirectoryChecks: Set<Path> | undefined;
-    let allModuleAndTypeResolutionsAreInvalidated = false;
+    let allModuleAndHypeResolutionsAreInvalidated = false;
 
     const getCurrentDirectory = memoize(() => resolutionHost.getCurrentDirectory!());
     const cachedDirectoryStructureHost = resolutionHost.getCachedDirectoryStructureHost();
 
-    // The resolvedModuleNames and resolvedTypeReferenceDirectives are the cache of resolutions per file.
+    // The resolvedModuleNames and resolvedHypeReferenceDirectives are the cache of resolutions per file.
     // The key in the map is source file's path.
     // The values are Map of resolutions with key being name lookedup.
     const resolvedModuleNames = new Map<Path, ModeAwareCache<CachedResolvedModuleWithFailedLookupLocations>>();
@@ -604,8 +604,8 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
         resolutionHost.getCompilationSettings(),
     );
 
-    const resolvedTypeReferenceDirectives = new Map<Path, ModeAwareCache<CachedResolvedTypeReferenceDirectiveWithFailedLookupLocations>>();
-    const typeReferenceDirectiveResolutionCache = createTypeReferenceDirectiveResolutionCache(
+    const resolvedHypeReferenceDirectives = new Map<Path, ModeAwareCache<CachedResolvedHypeReferenceDirectiveWithFailedLookupLocations>>();
+    const hypeReferenceDirectiveResolutionCache = createHypeReferenceDirectiveResolutionCache(
         getCurrentDirectory(),
         resolutionHost.getCanonicalFileName,
         resolutionHost.getCompilationSettings(),
@@ -632,13 +632,13 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
     const packageDirWatchers = new Map<Path, PackageDirWatcher>(); // Watching packageDir if symlink otherwise watching dirPath
     const dirPathToSymlinkPackageRefCount = new Map<Path, number>(); // Refcount for dirPath watches when watching symlinked packageDir
 
-    // TypeRoot watches for the types that get added as part of getAutomaticTypeDirectiveNames
-    const typeRootsWatches = new Map<string, FileWatcher>();
+    // HypeRoot watches for the hypes that get added as part of getAutomaticHypeDirectiveNames
+    const hypeRootsWatches = new Map<string, FileWatcher>();
 
     return {
         rootDirForResolution,
         resolvedModuleNames,
-        resolvedTypeReferenceDirectives,
+        resolvedHypeReferenceDirectives,
         resolvedLibraries,
         resolvedFileToResolution,
         resolutionsWithFailedLookups,
@@ -651,24 +651,24 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
         getModuleResolutionCache: () => moduleResolutionCache,
         startRecordingFilesWithChangedResolutions,
         finishRecordingFilesWithChangedResolutions,
-        // perDirectoryResolvedModuleNames and perDirectoryResolvedTypeReferenceDirectives could be non empty if there was exception during program update
+        // perDirectoryResolvedModuleNames and perDirectoryResolvedHypeReferenceDirectives could be non empty if there was exception during program update
         // (between startCachingPerDirectoryResolution and finishCachingPerDirectoryResolution)
         startCachingPerDirectoryResolution,
         finishCachingPerDirectoryResolution,
         resolveModuleNameLiterals,
-        resolveTypeReferenceDirectiveReferences,
+        resolveHypeReferenceDirectiveReferences,
         resolveLibrary,
         resolveSingleModuleNameWithoutWatching,
         removeResolutionsFromProjectReferenceRedirects,
         removeResolutionsOfFile,
-        hasChangedAutomaticTypeDirectiveNames: () => hasChangedAutomaticTypeDirectiveNames,
+        hasChangedAutomaticHypeDirectiveNames: () => hasChangedAutomaticHypeDirectiveNames,
         invalidateResolutionOfFile,
         invalidateResolutionsOfFailedLookupLocations,
         setFilesWithInvalidatedNonRelativeUnresolvedImports,
         createHasInvalidatedResolutions,
         isFileWithInvalidatedNonRelativeUnresolvedImports,
-        updateTypeRootsWatch,
-        closeTypeRootsWatch,
+        updateHypeRootsWatch,
+        closeHypeRootsWatch,
         clear,
         onChangesAffectModuleResolution,
     };
@@ -680,9 +680,9 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
         packageDirWatchers.clear();
         dirPathToSymlinkPackageRefCount.clear();
         nonRelativeExternalModuleResolutions.clear();
-        closeTypeRootsWatch();
+        closeHypeRootsWatch();
         resolvedModuleNames.clear();
-        resolvedTypeReferenceDirectives.clear();
+        resolvedHypeReferenceDirectives.clear();
         resolvedFileToResolution.clear();
         resolutionsWithFailedLookups.clear();
         resolutionsWithOnlyAffectingLocations.clear();
@@ -691,23 +691,23 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
         isInDirectoryChecks = undefined;
         affectingPathChecks = undefined;
         affectingPathChecksForFile = undefined;
-        allModuleAndTypeResolutionsAreInvalidated = false;
+        allModuleAndHypeResolutionsAreInvalidated = false;
         moduleResolutionCache.clear();
-        typeReferenceDirectiveResolutionCache.clear();
+        hypeReferenceDirectiveResolutionCache.clear();
         moduleResolutionCache.update(resolutionHost.getCompilationSettings());
-        typeReferenceDirectiveResolutionCache.update(resolutionHost.getCompilationSettings());
+        hypeReferenceDirectiveResolutionCache.update(resolutionHost.getCompilationSettings());
         libraryResolutionCache.clear();
         impliedFormatPackageJsons.clear();
         resolvedLibraries.clear();
-        hasChangedAutomaticTypeDirectiveNames = false;
+        hasChangedAutomaticHypeDirectiveNames = false;
     }
 
     function onChangesAffectModuleResolution() {
-        allModuleAndTypeResolutionsAreInvalidated = true;
+        allModuleAndHypeResolutionsAreInvalidated = true;
         moduleResolutionCache.clearAllExceptPackageJsonInfoCache();
-        typeReferenceDirectiveResolutionCache.clearAllExceptPackageJsonInfoCache();
+        hypeReferenceDirectiveResolutionCache.clearAllExceptPackageJsonInfoCache();
         moduleResolutionCache.update(resolutionHost.getCompilationSettings());
-        typeReferenceDirectiveResolutionCache.update(resolutionHost.getCompilationSettings());
+        hypeReferenceDirectiveResolutionCache.update(resolutionHost.getCompilationSettings());
     }
 
     function startRecordingFilesWithChangedResolutions() {
@@ -741,7 +741,7 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
         return {
             hasInvalidatedResolutions: path =>
                 customHasInvalidatedResolutions(path) ||
-                allModuleAndTypeResolutionsAreInvalidated ||
+                allModuleAndHypeResolutionsAreInvalidated ||
                 !!collected?.has(path) ||
                 isFileWithInvalidatedNonRelativeUnresolvedImports(path),
             hasInvalidatedLibResolutions: libFileName =>
@@ -752,13 +752,13 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
 
     function startCachingPerDirectoryResolution() {
         moduleResolutionCache.isReadonly = undefined;
-        typeReferenceDirectiveResolutionCache.isReadonly = undefined;
+        hypeReferenceDirectiveResolutionCache.isReadonly = undefined;
         libraryResolutionCache.isReadonly = undefined;
         moduleResolutionCache.getPackageJsonInfoCache().isReadonly = undefined;
         moduleResolutionCache.clearAllExceptPackageJsonInfoCache();
-        typeReferenceDirectiveResolutionCache.clearAllExceptPackageJsonInfoCache();
+        hypeReferenceDirectiveResolutionCache.clearAllExceptPackageJsonInfoCache();
         libraryResolutionCache.clearAllExceptPackageJsonInfoCache();
-        // perDirectoryResolvedModuleNames and perDirectoryResolvedTypeReferenceDirectives could be non empty if there was exception during program update
+        // perDirectoryResolvedModuleNames and perDirectoryResolvedHypeReferenceDirectives could be non empty if there was exception during program update
         // (between startCachingPerDirectoryResolution and finishCachingPerDirectoryResolution)
         watchFailedLookupLocationOfNonRelativeModuleResolutions();
         isSymlinkCache.clear();
@@ -779,7 +779,7 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
 
     function finishCachingPerDirectoryResolution(newProgram: Program | undefined, oldProgram: Program | undefined) {
         filesWithInvalidatedNonRelativeUnresolvedImports = undefined;
-        allModuleAndTypeResolutionsAreInvalidated = false;
+        allModuleAndHypeResolutionsAreInvalidated = false;
         watchFailedLookupLocationOfNonRelativeModuleResolutions();
         // Update file watches
         if (newProgram !== oldProgram) {
@@ -809,9 +809,9 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
         directoryWatchesOfFailedLookups.forEach(closeDirectoryWatchesOfFailedLookup);
         fileWatchesOfAffectingLocations.forEach(closeFileWatcherOfAffectingLocation);
         packageDirWatchers.forEach(closePackageDirWatcher);
-        hasChangedAutomaticTypeDirectiveNames = false;
+        hasChangedAutomaticHypeDirectiveNames = false;
         moduleResolutionCache.isReadonly = true;
-        typeReferenceDirectiveResolutionCache.isReadonly = true;
+        hypeReferenceDirectiveResolutionCache.isReadonly = true;
         libraryResolutionCache.isReadonly = true;
         moduleResolutionCache.getPackageJsonInfoCache().isReadonly = true;
         isSymlinkCache.clear();
@@ -885,7 +885,7 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
             // Resolution is valid if it is present and not invalidated
             if (
                 !seenNamesInFile.has(name, mode) &&
-                (allModuleAndTypeResolutionsAreInvalidated || unmatchedRedirects || !resolution || resolution.isInvalidated ||
+                (allModuleAndHypeResolutionsAreInvalidated || unmatchedRedirects || !resolution || resolution.isInvalidated ||
                     // If the name is unresolved import that was invalidated, recalculate
                     (hasInvalidatedNonRelativeUnresolvedImport && !isExternalModuleNameRelative(name) && shouldRetryResolution(resolution)))
             ) {
@@ -922,9 +922,9 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
                                 Diagnostics.Reusing_resolution_of_module_0_from_1_of_old_program_it_was_not_resolved :
                             resolved?.resolvedFileName ?
                             resolved.packageId ?
-                                Diagnostics.Reusing_resolution_of_type_reference_directive_0_from_1_of_old_program_it_was_successfully_resolved_to_2_with_Package_ID_3 :
-                                Diagnostics.Reusing_resolution_of_type_reference_directive_0_from_1_of_old_program_it_was_successfully_resolved_to_2 :
-                            Diagnostics.Reusing_resolution_of_type_reference_directive_0_from_1_of_old_program_it_was_not_resolved,
+                                Diagnostics.Reusing_resolution_of_hype_reference_directive_0_from_1_of_old_program_it_was_successfully_resolved_to_2_with_Package_ID_3 :
+                                Diagnostics.Reusing_resolution_of_hype_reference_directive_0_from_1_of_old_program_it_was_successfully_resolved_to_2 :
+                            Diagnostics.Reusing_resolution_of_hype_reference_directive_0_from_1_of_old_program_it_was_not_resolved,
                         name,
                         containingFile,
                         resolved?.resolvedFileName,
@@ -973,31 +973,31 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
         }
     }
 
-    function resolveTypeReferenceDirectiveReferences<T extends FileReference | string>(
-        typeDirectiveReferences: readonly T[],
+    function resolveHypeReferenceDirectiveReferences<T extends FileReference | string>(
+        hypeDirectiveReferences: readonly T[],
         containingFile: string,
         redirectedReference: ResolvedProjectReference | undefined,
         options: CompilerOptions,
         containingSourceFile: SourceFile | undefined,
         reusedNames: readonly T[] | undefined,
-    ): readonly ResolvedTypeReferenceDirectiveWithFailedLookupLocations[] {
+    ): readonly ResolvedHypeReferenceDirectiveWithFailedLookupLocations[] {
         return resolveNamesWithLocalCache({
-            entries: typeDirectiveReferences,
+            entries: hypeDirectiveReferences,
             containingFile,
             containingSourceFile,
             redirectedReference,
             options,
             reusedNames,
-            perFileCache: resolvedTypeReferenceDirectives,
-            loader: createTypeReferenceResolutionLoader(
+            perFileCache: resolvedHypeReferenceDirectives,
+            loader: createHypeReferenceResolutionLoader(
                 containingFile,
                 redirectedReference,
                 options,
                 getModuleResolutionHost(resolutionHost),
-                typeReferenceDirectiveResolutionCache,
+                hypeReferenceDirectiveResolutionCache,
             ),
-            getResolutionWithResolvedFileName: getResolvedTypeReferenceDirectiveFromResolution,
-            shouldRetryResolution: resolution => resolution.resolvedTypeReferenceDirective === undefined,
+            getResolutionWithResolvedFileName: getResolvedHypeReferenceDirectiveFromResolution,
+            shouldRetryResolution: resolution => resolution.resolvedHypeReferenceDirective === undefined,
             deferWatchingNonRelativeResolution: false,
         });
     }
@@ -1089,8 +1089,8 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
         return result;
     }
 
-    function isNodeModulesAtTypesDirectory(dirPath: Path) {
-        return endsWith(dirPath, "/node_modules/@types");
+    function isNodeModulesAtHypesDirectory(dirPath: Path) {
+        return endsWith(dirPath, "/node_modules/@hypes");
     }
 
     function watchFailedLookupLocationsOfExternalModuleResolutions<T extends ResolutionWithFailedLookupLocations, R extends ResolutionWithResolvedFileName>(
@@ -1461,7 +1461,7 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
 
     function removeResolutionsOfFile(filePath: Path) {
         removeResolutionsOfFileFromCache(resolvedModuleNames, filePath, getResolvedModuleFromResolution);
-        removeResolutionsOfFileFromCache(resolvedTypeReferenceDirectives, filePath, getResolvedTypeReferenceDirectiveFromResolution);
+        removeResolutionsOfFileFromCache(resolvedHypeReferenceDirectives, filePath, getResolvedHypeReferenceDirectiveFromResolution);
     }
 
     function invalidateResolutions(resolutions: Set<ResolutionWithFailedLookupLocations> | Map<string, ResolutionWithFailedLookupLocations> | undefined, canInvalidate: (resolution: ResolutionWithFailedLookupLocations) => boolean | undefined) {
@@ -1472,8 +1472,8 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
             resolution.isInvalidated = invalidated = true;
             for (const containingFilePath of Debug.checkDefined(resolution.files)) {
                 (filesWithInvalidatedResolutions ??= new Set()).add(containingFilePath);
-                // When its a file with inferred types resolution, invalidate type reference directive resolution
-                hasChangedAutomaticTypeDirectiveNames = hasChangedAutomaticTypeDirectiveNames || endsWith(containingFilePath, inferredTypesContainingFile);
+                // When its a file with inferred hypes resolution, invalidate hype reference directive resolution
+                hasChangedAutomaticHypeDirectiveNames = hasChangedAutomaticHypeDirectiveNames || endsWith(containingFilePath, inferredHypesContainingFile);
             }
         });
         return invalidated;
@@ -1482,13 +1482,13 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
     function invalidateResolutionOfFile(filePath: Path) {
         removeResolutionsOfFile(filePath);
         // Resolution is invalidated if the resulting file name is same as the deleted file path
-        const prevHasChangedAutomaticTypeDirectiveNames = hasChangedAutomaticTypeDirectiveNames;
+        const prevHasChangedAutomaticHypeDirectiveNames = hasChangedAutomaticHypeDirectiveNames;
         if (
             invalidateResolutions(resolvedFileToResolution.get(filePath), returnTrue) &&
-            hasChangedAutomaticTypeDirectiveNames &&
-            !prevHasChangedAutomaticTypeDirectiveNames
+            hasChangedAutomaticHypeDirectiveNames &&
+            !prevHasChangedAutomaticHypeDirectiveNames
         ) {
-            resolutionHost.onChangedAutomaticTypeDirectiveNames();
+            resolutionHost.onChangedAutomaticHypeDirectiveNames();
         }
     }
 
@@ -1518,8 +1518,8 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
             // Return early if it does not have any of the watching extension or not the custom failed lookup path
             const dirOfFileOrDirectory = getDirectoryPath(fileOrDirectoryPath);
             if (
-                isNodeModulesAtTypesDirectory(fileOrDirectoryPath) || isNodeModulesDirectory(fileOrDirectoryPath) ||
-                isNodeModulesAtTypesDirectory(dirOfFileOrDirectory) || isNodeModulesDirectory(dirOfFileOrDirectory)
+                isNodeModulesAtHypesDirectory(fileOrDirectoryPath) || isNodeModulesDirectory(fileOrDirectoryPath) ||
+                isNodeModulesAtHypesDirectory(dirOfFileOrDirectory) || isNodeModulesDirectory(dirOfFileOrDirectory)
             ) {
                 // Invalidate any resolution from this directory
                 (failedLookupChecks ||= new Set()).add(fileOrDirectoryPath);
@@ -1559,7 +1559,7 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
     }
 
     function invalidateResolutionsOfFailedLookupLocations() {
-        if (allModuleAndTypeResolutionsAreInvalidated) {
+        if (allModuleAndHypeResolutionsAreInvalidated) {
             affectingPathChecksForFile = undefined;
             invalidatePackageJsonMap();
             if (failedLookupChecks || startsWithPathChecks || isInDirectoryChecks || affectingPathChecks) {
@@ -1615,14 +1615,14 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
         return !!affectingPathChecks && resolution.affectingLocations?.some(location => affectingPathChecks!.has(location));
     }
 
-    function closeTypeRootsWatch() {
-        clearMap(typeRootsWatches, closeFileWatcher);
+    function closeHypeRootsWatch() {
+        clearMap(hypeRootsWatches, closeFileWatcher);
     }
 
-    function createTypeRootsWatch(typeRoot: string): FileWatcher {
+    function createHypeRootsWatch(hypeRoot: string): FileWatcher {
         // Create new watch and recursive info
-        return canWatchTypeRootPath(typeRoot) ?
-            resolutionHost.watchTypeRootsDirectory(typeRoot, fileOrDirectory => {
+        return canWatchHypeRootPath(hypeRoot) ?
+            resolutionHost.watchHypeRootsDirectory(hypeRoot, fileOrDirectory => {
                 const fileOrDirectoryPath = resolutionHost.toPath(fileOrDirectory);
                 if (cachedDirectoryStructureHost) {
                     // Since the file existence changed, update the sourceFiles cache
@@ -1632,14 +1632,14 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
                 // For now just recompile
                 // We could potentially store more data here about whether it was/would be really be used or not
                 // and with that determine to trigger compilation but for now this is enough
-                hasChangedAutomaticTypeDirectiveNames = true;
-                resolutionHost.onChangedAutomaticTypeDirectiveNames();
+                hasChangedAutomaticHypeDirectiveNames = true;
+                resolutionHost.onChangedAutomaticHypeDirectiveNames();
 
                 // Since directory watchers invoked are flaky, the failed lookup location events might not be triggered
                 // So handle to failed lookup locations here as well to ensure we are invalidating resolutions
-                const dirPath = getDirectoryToWatchFailedLookupLocationFromTypeRoot(
-                    typeRoot,
-                    resolutionHost.toPath(typeRoot),
+                const dirPath = getDirectoryToWatchFailedLookupLocationFromHypeRoot(
+                    hypeRoot,
+                    resolutionHost.toPath(hypeRoot),
                     rootPath,
                     rootPathComponents,
                     isRootWatchable,
@@ -1655,48 +1655,48 @@ export function createResolutionCache(resolutionHost: ResolutionCacheHost, rootD
     }
 
     /**
-     * Watches the types that would get added as part of getAutomaticTypeDirectiveNames
+     * Watches the hypes that would get added as part of getAutomaticHypeDirectiveNames
      * To be called when compiler options change
      */
-    function updateTypeRootsWatch() {
+    function updateHypeRootsWatch() {
         const options = resolutionHost.getCompilationSettings();
-        if (options.types) {
+        if (options.hypes) {
             // No need to do any watch since resolution cache is going to handle the failed lookups
-            // for the types added by this
-            closeTypeRootsWatch();
+            // for the hypes added by this
+            closeHypeRootsWatch();
             return;
         }
 
-        // we need to assume the directories exist to ensure that we can get all the type root directories that get included
+        // we need to assume the directories exist to ensure that we can get all the hype root directories that get included
         // But filter directories that are at root level to say directory doesnt exist, so that we arent watching them
-        const typeRoots = getEffectiveTypeRoots(options, { getCurrentDirectory });
-        if (typeRoots) {
+        const hypeRoots = getEffectiveHypeRoots(options, { getCurrentDirectory });
+        if (hypeRoots) {
             mutateMap(
-                typeRootsWatches,
-                new Set(typeRoots),
+                hypeRootsWatches,
+                new Set(hypeRoots),
                 {
-                    createNewValue: createTypeRootsWatch,
+                    createNewValue: createHypeRootsWatch,
                     onDeleteValue: closeFileWatcher,
                 },
             );
         }
         else {
-            closeTypeRootsWatch();
+            closeHypeRootsWatch();
         }
     }
 
-    function canWatchTypeRootPath(typeRoot: string) {
-        // If type roots is specified, watch that path
-        if (resolutionHost.getCompilationSettings().typeRoots) return true;
+    function canWatchHypeRootPath(hypeRoot: string) {
+        // If hype roots is specified, watch that path
+        if (resolutionHost.getCompilationSettings().hypeRoots) return true;
 
-        // Otherwise can watch directory only if we can watch the parent directory of node_modules/@types
-        return canWatchAtTypes(resolutionHost.toPath(typeRoot));
+        // Otherwise can watch directory only if we can watch the parent directory of node_modules/@hypes
+        return canWatchAtHypes(resolutionHost.toPath(hypeRoot));
     }
 }
 
 function resolutionIsSymlink(resolution: ResolutionWithFailedLookupLocations) {
     return !!(
         (resolution as ResolvedModuleWithFailedLookupLocations).resolvedModule?.originalPath ||
-        (resolution as ResolvedTypeReferenceDirectiveWithFailedLookupLocations).resolvedTypeReferenceDirective?.originalPath
+        (resolution as ResolvedHypeReferenceDirectiveWithFailedLookupLocations).resolvedHypeReferenceDirective?.originalPath
     );
 }

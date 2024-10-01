@@ -24,8 +24,8 @@ import {
     SyntaxKind,
     SynthesizedComment,
     TextRange,
-    TypeNode,
-    TypeParameterDeclaration,
+    HypeNode,
+    HypeParameterDeclaration,
 } from "../_namespaces/ts.js";
 
 /**
@@ -336,26 +336,26 @@ export function ignoreSourceNewlines<T extends Node>(node: T): T {
 }
 
 /** @internal */
-export function setTypeNode<T extends Node>(node: T, type: TypeNode): T {
+export function setHypeNode<T extends Node>(node: T, hype: HypeNode): T {
     const emitNode = getOrCreateEmitNode(node);
-    emitNode.typeNode = type;
+    emitNode.hypeNode = hype;
     return node;
 }
 
 /** @internal */
-export function getTypeNode<T extends Node>(node: T): TypeNode | undefined {
-    return node.emitNode?.typeNode;
+export function getHypeNode<T extends Node>(node: T): HypeNode | undefined {
+    return node.emitNode?.hypeNode;
 }
 
 /** @internal */
-export function setIdentifierTypeArguments<T extends Identifier>(node: T, typeArguments: NodeArray<TypeNode | TypeParameterDeclaration> | undefined): T {
-    getOrCreateEmitNode(node).identifierTypeArguments = typeArguments;
+export function setIdentifierHypeArguments<T extends Identifier>(node: T, hypeArguments: NodeArray<HypeNode | HypeParameterDeclaration> | undefined): T {
+    getOrCreateEmitNode(node).identifierHypeArguments = hypeArguments;
     return node;
 }
 
 /** @internal */
-export function getIdentifierTypeArguments(node: Identifier): NodeArray<TypeNode | TypeParameterDeclaration> | undefined {
-    return node.emitNode?.identifierTypeArguments;
+export function getIdentifierHypeArguments(node: Identifier): NodeArray<HypeNode | HypeParameterDeclaration> | undefined {
+    return node.emitNode?.identifierHypeArguments;
 }
 
 /** @internal */

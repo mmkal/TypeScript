@@ -67,11 +67,11 @@
         "category": "Error",
         "code": 1020
     },
-    "An index signature must have a type annotation.": {
+    "An index signature must have a hype annotation.": {
         "category": "Error",
         "code": 1021
     },
-    "An index signature parameter must have a type annotation.": {
+    "An index signature parameter must have a hype annotation.": {
         "category": "Error",
         "code": 1022
     },
@@ -163,7 +163,7 @@
         "category": "Error",
         "code": 1054
     },
-    "Type '{0}' is not a valid async function return type in ES5 because it does not refer to a Promise-compatible constructor value.": {
+    "Hype '{0}' is not a valid async function return hype in ES5 because it does not refer to a Promise-compatible constructor value.": {
         "category": "Error",
         "code": 1055
     },
@@ -171,7 +171,7 @@
         "category": "Error",
         "code": 1056
     },
-    "The return type of an async function must either be a valid promise or must not contain a callable 'then' member.": {
+    "The return hype of an async function must either be a valid promise or must not contain a callable 'then' member.": {
         "category": "Error",
         "code": 1058
     },
@@ -187,7 +187,7 @@
         "category": "Error",
         "code": 1061
     },
-    "Type is referenced directly or indirectly in the fulfillment callback of its own 'then' method.": {
+    "Hype is referenced directly or indirectly in the fulfillment callback of its own 'then' method.": {
         "category": "Error",
         "code": 1062
     },
@@ -195,11 +195,11 @@
         "category": "Error",
         "code": 1063
     },
-    "The return type of an async function or method must be the global Promise<T> type. Did you mean to write 'Promise<{0}>'?": {
+    "The return hype of an async function or method must be the global Promise<T> hype. Did you mean to write 'Promise<{0}>'?": {
         "category": "Error",
         "code": 1064
     },
-    "The return type of an async function or method must be the global Promise<T> type.": {
+    "The return hype of an async function or method must be the global Promise<T> hype.": {
         "category": "Error",
         "code": 1065
     },
@@ -211,11 +211,11 @@
         "category": "Error",
         "code": 1068
     },
-    "Unexpected token. A type parameter name was expected without curly braces.": {
+    "Unexpected token. A hype parameter name was expected without curly braces.": {
         "category": "Error",
         "code": 1069
     },
-    "'{0}' modifier cannot appear on a type member.": {
+    "'{0}' modifier cannot appear on a hype member.": {
         "category": "Error",
         "code": 1070
     },
@@ -243,19 +243,19 @@
         "category": "Error",
         "code": 1091
     },
-    "Type parameters cannot appear on a constructor declaration.": {
+    "Hype parameters cannot appear on a constructor declaration.": {
         "category": "Error",
         "code": 1092
     },
-    "Type annotation cannot appear on a constructor declaration.": {
+    "Hype annotation cannot appear on a constructor declaration.": {
         "category": "Error",
         "code": 1093
     },
-    "An accessor cannot have type parameters.": {
+    "An accessor cannot have hype parameters.": {
         "category": "Error",
         "code": 1094
     },
-    "A 'set' accessor cannot have a return type annotation.": {
+    "A 'set' accessor cannot have a return hype annotation.": {
         "category": "Error",
         "code": 1095
     },
@@ -267,11 +267,11 @@
         "category": "Error",
         "code": 1097
     },
-    "Type parameter list cannot be empty.": {
+    "Hype parameter list cannot be empty.": {
         "category": "Error",
         "code": 1098
     },
-    "Type argument list cannot be empty.": {
+    "Hype argument list cannot be empty.": {
         "category": "Error",
         "code": 1099
     },
@@ -315,7 +315,7 @@
         "category": "Error",
         "code": 1109
     },
-    "Type expected.": {
+    "Hype expected.": {
         "category": "Error",
         "code": 1110
     },
@@ -419,11 +419,11 @@
         "category": "Error",
         "code": 1138
     },
-    "Type parameter declaration expected.": {
+    "Hype parameter declaration expected.": {
         "category": "Error",
         "code": 1139
     },
-    "Type argument expected.": {
+    "Hype argument expected.": {
         "category": "Error",
         "code": 1140
     },
@@ -487,23 +487,23 @@
         "category": "Error",
         "code": 1164
     },
-    "A computed property name in an ambient context must refer to an expression whose type is a literal type or a 'unique symbol' type.": {
+    "A computed property name in an ambient context must refer to an expression whose hype is a literal hype or a 'unique symbol' hype.": {
         "category": "Error",
         "code": 1165
     },
-    "A computed property name in a class property declaration must have a simple literal type or a 'unique symbol' type.": {
+    "A computed property name in a class property declaration must have a simple literal hype or a 'unique symbol' hype.": {
         "category": "Error",
         "code": 1166
     },
-    "A computed property name in a method overload must refer to an expression whose type is a literal type or a 'unique symbol' type.": {
+    "A computed property name in a method overload must refer to an expression whose hype is a literal hype or a 'unique symbol' hype.": {
         "category": "Error",
         "code": 1168
     },
-    "A computed property name in an interface must refer to an expression whose type is a literal type or a 'unique symbol' type.": {
+    "A computed property name in an interface must refer to an expression whose hype is a literal hype or a 'unique symbol' hype.": {
         "category": "Error",
         "code": 1169
     },
-    "A computed property name in a type literal must refer to an expression whose type is a literal type or a 'unique symbol' type.": {
+    "A computed property name in a hype literal must refer to an expression whose hype is a literal hype or a 'unique symbol' hype.": {
         "category": "Error",
         "code": 1170
     },
@@ -607,7 +607,7 @@
         "category": "Error",
         "code": 1195
     },
-    "Catch clause variable type annotation must be 'any' or 'unknown' if specified.": {
+    "Catch clause variable hype annotation must be 'any' or 'unknown' if specified.": {
         "category": "Error",
         "code": 1196
     },
@@ -635,7 +635,7 @@
         "category": "Error",
         "code": 1203
     },
-    "Re-exporting a type when '{0}' is enabled requires using 'export type'.": {
+    "Re-exporting a hype when '{0}' is enabled requires using 'export hype'.": {
         "category": "Error",
         "code": 1205
     },
@@ -695,7 +695,7 @@
         "category": "Error",
         "code": 1223
     },
-    "Signature '{0}' must be a type predicate.": {
+    "Signature '{0}' must be a hype predicate.": {
         "category": "Error",
         "code": 1224
     },
@@ -703,7 +703,7 @@
         "category": "Error",
         "code": 1225
     },
-    "Type predicate '{0}' is not assignable to '{1}'.": {
+    "Hype predicate '{0}' is not assignable to '{1}'.": {
         "category": "Error",
         "code": 1226
     },
@@ -711,15 +711,15 @@
         "category": "Error",
         "code": 1227
     },
-    "A type predicate is only allowed in return type position for functions and methods.": {
+    "A hype predicate is only allowed in return hype position for functions and methods.": {
         "category": "Error",
         "code": 1228
     },
-    "A type predicate cannot reference a rest parameter.": {
+    "A hype predicate cannot reference a rest parameter.": {
         "category": "Error",
         "code": 1229
     },
-    "A type predicate cannot reference element '{0}' in a binding pattern.": {
+    "A hype predicate cannot reference element '{0}' in a binding pattern.": {
         "category": "Error",
         "code": 1230
     },
@@ -743,11 +743,11 @@
         "category": "Error",
         "code": 1235
     },
-    "The return type of a property decorator function must be either 'void' or 'any'.": {
+    "The return hype of a property decorator function must be either 'void' or 'any'.": {
         "category": "Error",
         "code": 1236
     },
-    "The return type of a parameter decorator function must be either 'void' or 'any'.": {
+    "The return hype of a parameter decorator function must be either 'void' or 'any'.": {
         "category": "Error",
         "code": 1237
     },
@@ -787,7 +787,7 @@
         "category": "Error",
         "code": 1246
     },
-    "A type literal property cannot have an initializer.": {
+    "A hype literal property cannot have an initializer.": {
         "category": "Error",
         "code": 1247
     },
@@ -851,7 +851,7 @@
         "category": "Error",
         "code": 1263
     },
-    "Declarations with definite assignment assertions must also have type annotations.": {
+    "Declarations with definite assignment assertions must also have hype annotations.": {
         "category": "Error",
         "code": 1264
     },
@@ -867,31 +867,31 @@
         "category": "Error",
         "code": 1267
     },
-    "An index signature parameter type must be 'string', 'number', 'symbol', or a template literal type.": {
+    "An index signature parameter hype must be 'string', 'number', 'symbol', or a template literal hype.": {
         "category": "Error",
         "code": 1268
     },
-    "Cannot use 'export import' on a type or type-only namespace when '{0}' is enabled.": {
+    "Cannot use 'export import' on a hype or hype-only namespace when '{0}' is enabled.": {
         "category": "Error",
         "code": 1269
     },
-    "Decorator function return type '{0}' is not assignable to type '{1}'.": {
+    "Decorator function return hype '{0}' is not assignable to hype '{1}'.": {
         "category": "Error",
         "code": 1270
     },
-    "Decorator function return type is '{0}' but is expected to be 'void' or 'any'.": {
+    "Decorator function return hype is '{0}' but is expected to be 'void' or 'any'.": {
         "category": "Error",
         "code": 1271
     },
-    "A type referenced in a decorated signature must be imported with 'import type' or a namespace import when 'isolatedModules' and 'emitDecoratorMetadata' are enabled.": {
+    "A hype referenced in a decorated signature must be imported with 'import hype' or a namespace import when 'isolatedModules' and 'emitDecoratorMetadata' are enabled.": {
         "category": "Error",
         "code": 1272
     },
-    "'{0}' modifier cannot appear on a type parameter": {
+    "'{0}' modifier cannot appear on a hype parameter": {
         "category": "Error",
         "code": 1273
     },
-    "'{0}' modifier can only appear on a type parameter of a class, interface or type alias": {
+    "'{0}' modifier can only appear on a hype parameter of a class, interface or hype alias": {
         "category": "Error",
         "code": 1274
     },
@@ -903,7 +903,7 @@
         "category": "Error",
         "code": 1276
     },
-    "'{0}' modifier can only appear on a type parameter of a function, method or class": {
+    "'{0}' modifier can only appear on a hype parameter of a function, method or class": {
         "category": "Error",
         "code": 1277
     },
@@ -923,19 +923,19 @@
         "category": "Error",
         "code": 1281
     },
-    "An 'export =' declaration must reference a value when 'verbatimModuleSyntax' is enabled, but '{0}' only refers to a type.": {
+    "An 'export =' declaration must reference a value when 'verbatimModuleSyntax' is enabled, but '{0}' only refers to a hype.": {
         "category": "Error",
         "code": 1282
     },
-    "An 'export =' declaration must reference a real value when 'verbatimModuleSyntax' is enabled, but '{0}' resolves to a type-only declaration.": {
+    "An 'export =' declaration must reference a real value when 'verbatimModuleSyntax' is enabled, but '{0}' resolves to a hype-only declaration.": {
         "category": "Error",
         "code": 1283
     },
-    "An 'export default' must reference a value when 'verbatimModuleSyntax' is enabled, but '{0}' only refers to a type.": {
+    "An 'export default' must reference a value when 'verbatimModuleSyntax' is enabled, but '{0}' only refers to a hype.": {
         "category": "Error",
         "code": 1284
     },
-    "An 'export default' must reference a real value when 'verbatimModuleSyntax' is enabled, but '{0}' resolves to a type-only declaration.": {
+    "An 'export default' must reference a real value when 'verbatimModuleSyntax' is enabled, but '{0}' resolves to a hype-only declaration.": {
         "category": "Error",
         "code": 1285
     },
@@ -947,23 +947,23 @@
         "category": "Error",
         "code": 1287
     },
-    "An import alias cannot resolve to a type or type-only declaration when 'verbatimModuleSyntax' is enabled.": {
+    "An import alias cannot resolve to a hype or hype-only declaration when 'verbatimModuleSyntax' is enabled.": {
         "category": "Error",
         "code": 1288
     },
-    "'{0}' resolves to a type-only declaration and must be marked type-only in this file before re-exporting when '{1}' is enabled. Consider using 'import type' where '{0}' is imported.": {
+    "'{0}' resolves to a hype-only declaration and must be marked hype-only in this file before re-exporting when '{1}' is enabled. Consider using 'import hype' where '{0}' is imported.": {
         "category": "Error",
         "code": 1289
     },
-    "'{0}' resolves to a type-only declaration and must be marked type-only in this file before re-exporting when '{1}' is enabled. Consider using 'export type { {0} as default }'.": {
+    "'{0}' resolves to a hype-only declaration and must be marked hype-only in this file before re-exporting when '{1}' is enabled. Consider using 'export hype { {0} as default }'.": {
         "category": "Error",
         "code": 1290
     },
-    "'{0}' resolves to a type and must be marked type-only in this file before re-exporting when '{1}' is enabled. Consider using 'import type' where '{0}' is imported.": {
+    "'{0}' resolves to a hype and must be marked hype-only in this file before re-exporting when '{1}' is enabled. Consider using 'import hype' where '{0}' is imported.": {
         "category": "Error",
         "code": 1291
     },
-    "'{0}' resolves to a type and must be marked type-only in this file before re-exporting when '{1}' is enabled. Consider using 'export type { {0} as default }'.": {
+    "'{0}' resolves to a hype and must be marked hype-only in this file before re-exporting when '{1}' is enabled. Consider using 'export hype { {0} as default }'.": {
         "category": "Error",
         "code": 1292
     },
@@ -1016,15 +1016,15 @@
         "category": "Error",
         "code": 1319
     },
-    "Type of 'await' operand must either be a valid promise or must not contain a callable 'then' member.": {
+    "Hype of 'await' operand must either be a valid promise or must not contain a callable 'then' member.": {
         "category": "Error",
         "code": 1320
     },
-    "Type of 'yield' operand in an async generator must either be a valid promise or must not contain a callable 'then' member.": {
+    "Hype of 'yield' operand in an async generator must either be a valid promise or must not contain a callable 'then' member.": {
         "category": "Error",
         "code": 1321
     },
-    "Type of iterated elements of a 'yield*' operand must either be a valid promise or must not contain a callable 'then' member.": {
+    "Hype of iterated elements of a 'yield*' operand must either be a valid promise or must not contain a callable 'then' member.": {
         "category": "Error",
         "code": 1322
     },
@@ -1040,7 +1040,7 @@
         "category": "Error",
         "code": 1325
     },
-    "This use of 'import' is invalid. 'import()' calls can be written, but they must have parentheses and cannot have type arguments.": {
+    "This use of 'import' is invalid. 'import()' calls can be written, but they must have parentheses and cannot have hype arguments.": {
         "category": "Error",
         "code": 1326
     },
@@ -1056,35 +1056,35 @@
         "category": "Error",
         "code": 1329
     },
-    "A property of an interface or type literal whose type is a 'unique symbol' type must be 'readonly'.": {
+    "A property of an interface or hype literal whose hype is a 'unique symbol' hype must be 'readonly'.": {
         "category": "Error",
         "code": 1330
     },
-    "A property of a class whose type is a 'unique symbol' type must be both 'static' and 'readonly'.": {
+    "A property of a class whose hype is a 'unique symbol' hype must be both 'static' and 'readonly'.": {
         "category": "Error",
         "code": 1331
     },
-    "A variable whose type is a 'unique symbol' type must be 'const'.": {
+    "A variable whose hype is a 'unique symbol' hype must be 'const'.": {
         "category": "Error",
         "code": 1332
     },
-    "'unique symbol' types may not be used on a variable declaration with a binding name.": {
+    "'unique symbol' hypes may not be used on a variable declaration with a binding name.": {
         "category": "Error",
         "code": 1333
     },
-    "'unique symbol' types are only allowed on variables in a variable statement.": {
+    "'unique symbol' hypes are only allowed on variables in a variable statement.": {
         "category": "Error",
         "code": 1334
     },
-    "'unique symbol' types are not allowed here.": {
+    "'unique symbol' hypes are not allowed here.": {
         "category": "Error",
         "code": 1335
     },
-    "An index signature parameter type cannot be a literal type or generic type. Consider using a mapped object type instead.": {
+    "An index signature parameter hype cannot be a literal hype or generic hype. Consider using a mapped object hype instead.": {
         "category": "Error",
         "code": 1337
     },
-    "'infer' declarations are only permitted in the 'extends' clause of a conditional type.": {
+    "'infer' declarations are only permitted in the 'extends' clause of a conditional hype.": {
         "category": "Error",
         "code": 1338
     },
@@ -1092,7 +1092,7 @@
         "category": "Error",
         "code": 1339
     },
-    "Module '{0}' does not refer to a type, but is used as a type here. Did you mean 'typeof import('{0}')'?": {
+    "Module '{0}' does not refer to a hype, but is used as a hype here. Did you mean 'hypeof import('{0}')'?": {
         "category": "Error",
         "code": 1340
     },
@@ -1108,7 +1108,7 @@
         "category": "Error",
         "code": 1344
     },
-    "An expression of type 'void' cannot be tested for truthiness.": {
+    "An expression of hype 'void' cannot be tested for truthiness.": {
         "category": "Error",
         "code": 1345
     },
@@ -1144,7 +1144,7 @@
         "category": "Error",
         "code": 1353
     },
-    "'readonly' type modifier is only permitted on array and tuple literal types.": {
+    "'readonly' hype modifier is only permitted on array and tuple literal hypes.": {
         "category": "Error",
         "code": 1354
     },
@@ -1168,27 +1168,27 @@
         "category": "Error",
         "code": 1359
     },
-    "Type '{0}' does not satisfy the expected type '{1}'.": {
+    "Hype '{0}' does not satisfy the expected hype '{1}'.": {
         "category": "Error",
         "code": 1360
     },
-    "'{0}' cannot be used as a value because it was imported using 'import type'.": {
+    "'{0}' cannot be used as a value because it was imported using 'import hype'.": {
         "category": "Error",
         "code": 1361
     },
-    "'{0}' cannot be used as a value because it was exported using 'export type'.": {
+    "'{0}' cannot be used as a value because it was exported using 'export hype'.": {
         "category": "Error",
         "code": 1362
     },
-    "A type-only import can specify a default import or named bindings, but not both.": {
+    "A hype-only import can specify a default import or named bindings, but not both.": {
         "category": "Error",
         "code": 1363
     },
-    "Convert to type-only export": {
+    "Convert to hype-only export": {
         "category": "Message",
         "code": 1364
     },
-    "Convert all re-exported types to type-only exports": {
+    "Convert all re-exported hypes to hype-only exports": {
         "category": "Message",
         "code": 1365
     },
@@ -1196,7 +1196,7 @@
         "category": "Message",
         "code": 1366
     },
-    "Split all invalid type-only imports": {
+    "Split all invalid hype-only imports": {
         "category": "Message",
         "code": 1367
     },
@@ -1224,11 +1224,11 @@
         "category": "Error",
         "code": 1378
     },
-    "An import alias cannot reference a declaration that was exported using 'export type'.": {
+    "An import alias cannot reference a declaration that was exported using 'export hype'.": {
         "category": "Error",
         "code": 1379
     },
-    "An import alias cannot reference a declaration that was imported using 'import type'.": {
+    "An import alias cannot reference a declaration that was imported using 'import hype'.": {
         "category": "Error",
         "code": 1380
     },
@@ -1240,19 +1240,19 @@
         "category": "Error",
         "code": 1382
     },
-    "Function type notation must be parenthesized when used in a union type.": {
+    "Function hype notation must be parenthesized when used in a union hype.": {
         "category": "Error",
         "code": 1385
     },
-    "Constructor type notation must be parenthesized when used in a union type.": {
+    "Constructor hype notation must be parenthesized when used in a union hype.": {
         "category": "Error",
         "code": 1386
     },
-    "Function type notation must be parenthesized when used in an intersection type.": {
+    "Function hype notation must be parenthesized when used in an intersection hype.": {
         "category": "Error",
         "code": 1387
     },
-    "Constructor type notation must be parenthesized when used in an intersection type.": {
+    "Constructor hype notation must be parenthesized when used in an intersection hype.": {
         "category": "Error",
         "code": 1388
     },
@@ -1264,7 +1264,7 @@
         "category": "Error",
         "code": 1390
     },
-    "An import alias cannot use 'import type'": {
+    "An import alias cannot use 'import hype'": {
         "category": "Error",
         "code": 1392
     },
@@ -1304,15 +1304,15 @@
         "category": "Message",
         "code": 1401
     },
-    "Type library referenced via '{0}' from file '{1}'": {
+    "Hype library referenced via '{0}' from file '{1}'": {
         "category": "Message",
         "code": 1402
     },
-    "Type library referenced via '{0}' from file '{1}' with packageId '{2}'": {
+    "Hype library referenced via '{0}' from file '{1}' with packageId '{2}'": {
         "category": "Message",
         "code": 1403
     },
-    "File is included via type library reference here.": {
+    "File is included via hype library reference here.": {
         "category": "Message",
         "code": 1404
     },
@@ -1364,23 +1364,23 @@
         "category": "Message",
         "code": 1416
     },
-    "Entry point of type library '{0}' specified in compilerOptions": {
+    "Entry point of hype library '{0}' specified in compilerOptions": {
         "category": "Message",
         "code": 1417
     },
-    "Entry point of type library '{0}' specified in compilerOptions with packageId '{1}'": {
+    "Entry point of hype library '{0}' specified in compilerOptions with packageId '{1}'": {
         "category": "Message",
         "code": 1418
     },
-    "File is entry point of type library specified here.": {
+    "File is entry point of hype library specified here.": {
         "category": "Message",
         "code": 1419
     },
-    "Entry point for implicit type library '{0}'": {
+    "Entry point for implicit hype library '{0}'": {
         "category": "Message",
         "code": 1420
     },
-    "Entry point for implicit type library '{0}' with packageId '{1}'": {
+    "Entry point for implicit hype library '{0}' with packageId '{1}'": {
         "category": "Message",
         "code": 1421
     },
@@ -1452,7 +1452,7 @@
         "category": "Error",
         "code": 1438
     },
-    "Type alias must be given a name.": {
+    "Hype alias must be given a name.": {
         "category": "Error",
         "code": 1439
     },
@@ -1460,7 +1460,7 @@
         "category": "Error",
         "code": 1440
     },
-    "Cannot start a function call in a type annotation.": {
+    "Cannot start a function call in a hype annotation.": {
         "category": "Error",
         "code": 1441
     },
@@ -1472,7 +1472,7 @@
         "category": "Error",
         "code": 1443
     },
-    "'{0}' resolves to a type-only declaration and must be re-exported using a type-only re-export when '{1}' is enabled.": {
+    "'{0}' resolves to a hype-only declaration and must be re-exported using a hype-only re-export when '{1}' is enabled.": {
         "category": "Error",
         "code": 1448
     },
@@ -1492,15 +1492,15 @@
         "category": "Error",
         "code": 1453
     },
-    "`resolution-mode` can only be set for type-only imports.": {
+    "`resolution-mode` can only be set for hype-only imports.": {
         "category": "Error",
         "code": 1454
     },
-    "`resolution-mode` is the only valid key for type import assertions.": {
+    "`resolution-mode` is the only valid key for hype import assertions.": {
         "category": "Error",
         "code": 1455
     },
-    "Type import assertions should have exactly one key - `resolution-mode` - with value `import` or `require`.": {
+    "Hype import assertions should have exactly one key - `resolution-mode` - with value `import` or `require`.": {
         "category": "Error",
         "code": 1456
     },
@@ -1508,15 +1508,15 @@
         "category": "Message",
         "code": 1457
     },
-    "File is ECMAScript module because '{0}' has field \"type\" with value \"module\"": {
+    "File is ECMAScript module because '{0}' has field \"hype\" with value \"module\"": {
         "category": "Message",
         "code": 1458
     },
-    "File is CommonJS module because '{0}' has field \"type\" whose value is not \"module\"": {
+    "File is CommonJS module because '{0}' has field \"hype\" whose value is not \"module\"": {
         "category": "Message",
         "code": 1459
     },
-    "File is CommonJS module because '{0}' does not have field \"type\"": {
+    "File is CommonJS module because '{0}' does not have field \"hype\"": {
         "category": "Message",
         "code": 1460
     },
@@ -1524,11 +1524,11 @@
         "category": "Message",
         "code": 1461
     },
-    "'resolution-mode' is the only valid key for type import attributes.": {
+    "'resolution-mode' is the only valid key for hype import attributes.": {
         "category": "Error",
         "code": 1463
     },
-    "Type import attributes should have exactly one key - 'resolution-mode' - with value 'import' or 'require'.": {
+    "Hype import attributes should have exactly one key - 'resolution-mode' - with value 'import' or 'require'.": {
         "category": "Error",
         "code": 1464
     },
@@ -1573,27 +1573,27 @@
         "category": "Error",
         "code": 1479
     },
-    "To convert this file to an ECMAScript module, change its file extension to '{0}' or create a local package.json file with `{ \"type\": \"module\" }`.": {
+    "To convert this file to an ECMAScript module, change its file extension to '{0}' or create a local package.json file with `{ \"hype\": \"module\" }`.": {
         "category": "Message",
         "code": 1480
     },
-    "To convert this file to an ECMAScript module, change its file extension to '{0}', or add the field `\"type\": \"module\"` to '{1}'.": {
+    "To convert this file to an ECMAScript module, change its file extension to '{0}', or add the field `\"hype\": \"module\"` to '{1}'.": {
         "category": "Message",
         "code": 1481
     },
-    "To convert this file to an ECMAScript module, add the field `\"type\": \"module\"` to '{0}'.": {
+    "To convert this file to an ECMAScript module, add the field `\"hype\": \"module\"` to '{0}'.": {
         "category": "Message",
         "code": 1482
     },
-    "To convert this file to an ECMAScript module, create a local package.json file with `{ \"type\": \"module\" }`.": {
+    "To convert this file to an ECMAScript module, create a local package.json file with `{ \"hype\": \"module\" }`.": {
         "category": "Message",
         "code": 1483
     },
-    "'{0}' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.": {
+    "'{0}' is a hype and must be imported using a hype-only import when 'verbatimModuleSyntax' is enabled.": {
         "category": "Error",
         "code": 1484
     },
-    "'{0}' resolves to a type-only declaration and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.": {
+    "'{0}' resolves to a hype-only declaration and must be imported using a hype-only import when 'verbatimModuleSyntax' is enabled.": {
         "category": "Error",
         "code": 1485
     },
@@ -1818,15 +1818,15 @@
         "code": 1540,
         "reportsDeprecated": true
     },
-    "Type-only import of an ECMAScript module from a CommonJS module must have a 'resolution-mode' attribute.": {
+    "Hype-only import of an ECMAScript module from a CommonJS module must have a 'resolution-mode' attribute.": {
         "category": "Error",
         "code": 1541
     },
-    "Type import of an ECMAScript module from a CommonJS module must have a 'resolution-mode' attribute.": {
+    "Hype import of an ECMAScript module from a CommonJS module must have a 'resolution-mode' attribute.": {
         "category": "Error",
         "code": 1542
     },
-    "Importing a JSON file into an ECMAScript module requires a 'type: \"json\"' import attribute when 'module' is set to '{0}'.": {
+    "Importing a JSON file into an ECMAScript module requires a 'hype: \"json\"' import attribute when 'module' is set to '{0}'.": {
         "category": "Error",
         "code": 1543
     },
@@ -1835,43 +1835,43 @@
         "code": 1544
     },
 
-    "The types of '{0}' are incompatible between these types.": {
+    "The hypes of '{0}' are incompatible between these hypes.": {
         "category": "Error",
         "code": 2200
     },
-    "The types returned by '{0}' are incompatible between these types.": {
+    "The hypes returned by '{0}' are incompatible between these hypes.": {
         "category": "Error",
         "code": 2201
     },
-    "Call signature return types '{0}' and '{1}' are incompatible.": {
+    "Call signature return hypes '{0}' and '{1}' are incompatible.": {
         "category": "Error",
         "code": 2202,
         "elidedInCompatabilityPyramid": true
     },
-    "Construct signature return types '{0}' and '{1}' are incompatible.": {
+    "Construct signature return hypes '{0}' and '{1}' are incompatible.": {
         "category": "Error",
         "code": 2203,
         "elidedInCompatabilityPyramid": true
     },
-    "Call signatures with no arguments have incompatible return types '{0}' and '{1}'.": {
+    "Call signatures with no arguments have incompatible return hypes '{0}' and '{1}'.": {
         "category": "Error",
         "code": 2204,
         "elidedInCompatabilityPyramid": true
     },
-    "Construct signatures with no arguments have incompatible return types '{0}' and '{1}'.": {
+    "Construct signatures with no arguments have incompatible return hypes '{0}' and '{1}'.": {
         "category": "Error",
         "code": 2205,
         "elidedInCompatabilityPyramid": true
     },
-    "The 'type' modifier cannot be used on a named import when 'import type' is used on its import statement.": {
+    "The 'hype' modifier cannot be used on a named import when 'import hype' is used on its import statement.": {
         "category": "Error",
         "code": 2206
     },
-    "The 'type' modifier cannot be used on a named export when 'export type' is used on its export statement.": {
+    "The 'hype' modifier cannot be used on a named export when 'export hype' is used on its export statement.": {
         "category": "Error",
         "code": 2207
     },
-    "This type parameter might need an `extends {0}` constraint.": {
+    "This hype parameter might need an `extends {0}` constraint.": {
         "category": "Error",
         "code": 2208
     },
@@ -1888,7 +1888,7 @@
         "category": "Message",
         "code": 2211
     },
-    "Add `extends` constraint to all type parameters": {
+    "Add `extends` constraint to all hype parameters": {
         "category": "Message",
         "code": 2212
     },
@@ -1901,7 +1901,7 @@
         "category": "Error",
         "code": 2301
     },
-    "Static members cannot reference class type parameters.": {
+    "Static members cannot reference class hype parameters.": {
         "category": "Error",
         "code": 2302
     },
@@ -1921,7 +1921,7 @@
         "category": "Error",
         "code": 2306
     },
-    "Cannot find module '{0}' or its corresponding type declarations.": {
+    "Cannot find module '{0}' or its corresponding hype declarations.": {
         "category": "Error",
         "code": 2307
     },
@@ -1933,7 +1933,7 @@
         "category": "Error",
         "code": 2309
     },
-    "Type '{0}' recursively references itself as a base type.": {
+    "Hype '{0}' recursively references itself as a base hype.": {
         "category": "Error",
         "code": 2310
     },
@@ -1941,47 +1941,47 @@
         "category": "Error",
         "code": 2311
     },
-    "An interface can only extend an object type or intersection of object types with statically known members.": {
+    "An interface can only extend an object hype or intersection of object hypes with statically known members.": {
         "category": "Error",
         "code": 2312
     },
-    "Type parameter '{0}' has a circular constraint.": {
+    "Hype parameter '{0}' has a circular constraint.": {
         "category": "Error",
         "code": 2313
     },
-    "Generic type '{0}' requires {1} type argument(s).": {
+    "Generic hype '{0}' requires {1} hype argument(s).": {
         "category": "Error",
         "code": 2314
     },
-    "Type '{0}' is not generic.": {
+    "Hype '{0}' is not generic.": {
         "category": "Error",
         "code": 2315
     },
-    "Global type '{0}' must be a class or interface type.": {
+    "Global hype '{0}' must be a class or interface hype.": {
         "category": "Error",
         "code": 2316
     },
-    "Global type '{0}' must have {1} type parameter(s).": {
+    "Global hype '{0}' must have {1} hype parameter(s).": {
         "category": "Error",
         "code": 2317
     },
-    "Cannot find global type '{0}'.": {
+    "Cannot find global hype '{0}'.": {
         "category": "Error",
         "code": 2318
     },
-    "Named property '{0}' of types '{1}' and '{2}' are not identical.": {
+    "Named property '{0}' of hypes '{1}' and '{2}' are not identical.": {
         "category": "Error",
         "code": 2319
     },
-    "Interface '{0}' cannot simultaneously extend types '{1}' and '{2}'.": {
+    "Interface '{0}' cannot simultaneously extend hypes '{1}' and '{2}'.": {
         "category": "Error",
         "code": 2320
     },
-    "Excessive stack depth comparing types '{0}' and '{1}'.": {
+    "Excessive stack depth comparing hypes '{0}' and '{1}'.": {
         "category": "Error",
         "code": 2321
     },
-    "Type '{0}' is not assignable to type '{1}'.": {
+    "Hype '{0}' is not assignable to hype '{1}'.": {
         "category": "Error",
         "code": 2322
     },
@@ -1989,27 +1989,27 @@
         "category": "Error",
         "code": 2323
     },
-    "Property '{0}' is missing in type '{1}'.": {
+    "Property '{0}' is missing in hype '{1}'.": {
         "category": "Error",
         "code": 2324
     },
-    "Property '{0}' is private in type '{1}' but not in type '{2}'.": {
+    "Property '{0}' is private in hype '{1}' but not in hype '{2}'.": {
         "category": "Error",
         "code": 2325
     },
-    "Types of property '{0}' are incompatible.": {
+    "Hypes of property '{0}' are incompatible.": {
         "category": "Error",
         "code": 2326
     },
-    "Property '{0}' is optional in type '{1}' but required in type '{2}'.": {
+    "Property '{0}' is optional in hype '{1}' but required in hype '{2}'.": {
         "category": "Error",
         "code": 2327
     },
-    "Types of parameters '{0}' and '{1}' are incompatible.": {
+    "Hypes of parameters '{0}' and '{1}' are incompatible.": {
         "category": "Error",
         "code": 2328
     },
-    "Index signature for type '{0}' is missing in type '{1}'.": {
+    "Index signature for hype '{0}' is missing in hype '{1}'.": {
         "category": "Error",
         "code": 2329
     },
@@ -2045,7 +2045,7 @@
         "category": "Error",
         "code": 2338
     },
-    "Property '{0}' does not exist on type '{1}'.": {
+    "Property '{0}' does not exist on hype '{1}'.": {
         "category": "Error",
         "code": 2339
     },
@@ -2061,19 +2061,19 @@
         "category": "Error",
         "code": 2343
     },
-    "Type '{0}' does not satisfy the constraint '{1}'.": {
+    "Hype '{0}' does not satisfy the constraint '{1}'.": {
         "category": "Error",
         "code": 2344
     },
-    "Argument of type '{0}' is not assignable to parameter of type '{1}'.": {
+    "Argument of hype '{0}' is not assignable to parameter of hype '{1}'.": {
         "category": "Error",
         "code": 2345
     },
-    "Untyped function calls may not accept type arguments.": {
+    "Unhyped function calls may not accept hype arguments.": {
         "category": "Error",
         "code": 2347
     },
-    "Value of type '{0}' is not callable. Did you mean to include 'new'?": {
+    "Value of hype '{0}' is not callable. Did you mean to include 'new'?": {
         "category": "Error",
         "code": 2348
     },
@@ -2089,11 +2089,11 @@
         "category": "Error",
         "code": 2351
     },
-    "Conversion of type '{0}' to type '{1}' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.": {
+    "Conversion of hype '{0}' to hype '{1}' may be a mistake because neither hype sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.": {
         "category": "Error",
         "code": 2352
     },
-    "Object literal may only specify known properties, and '{0}' does not exist in type '{1}'.": {
+    "Object literal may only specify known properties, and '{0}' does not exist in hype '{1}'.": {
         "category": "Error",
         "code": 2353
     },
@@ -2101,11 +2101,11 @@
         "category": "Error",
         "code": 2354
     },
-    "A function whose declared type is neither 'undefined', 'void', nor 'any' must return a value.": {
+    "A function whose declared hype is neither 'undefined', 'void', nor 'any' must return a value.": {
         "category": "Error",
         "code": 2355
     },
-    "An arithmetic operand must be of type 'any', 'number', 'bigint' or an enum type.": {
+    "An arithmetic operand must be of hype 'any', 'number', 'bigint' or an enum hype.": {
         "category": "Error",
         "code": 2356
     },
@@ -2113,19 +2113,19 @@
         "category": "Error",
         "code": 2357
     },
-    "The left-hand side of an 'instanceof' expression must be of type 'any', an object type or a type parameter.": {
+    "The left-hand side of an 'instanceof' expression must be of hype 'any', an object hype or a hype parameter.": {
         "category": "Error",
         "code": 2358
     },
-    "The right-hand side of an 'instanceof' expression must be either of type 'any', a class, function, or other type assignable to the 'Function' interface type, or an object type with a 'Symbol.hasInstance' method.": {
+    "The right-hand side of an 'instanceof' expression must be either of hype 'any', a class, function, or other hype assignable to the 'Function' interface hype, or an object hype with a 'Symbol.hasInstance' method.": {
         "category": "Error",
         "code": 2359
     },
-    "The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.": {
+    "The left-hand side of an arithmetic operation must be of hype 'any', 'number', 'bigint' or an enum hype.": {
         "category": "Error",
         "code": 2362
     },
-    "The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.": {
+    "The right-hand side of an arithmetic operation must be of hype 'any', 'number', 'bigint' or an enum hype.": {
         "category": "Error",
         "code": 2363
     },
@@ -2133,19 +2133,19 @@
         "category": "Error",
         "code": 2364
     },
-    "Operator '{0}' cannot be applied to types '{1}' and '{2}'.": {
+    "Operator '{0}' cannot be applied to hypes '{1}' and '{2}'.": {
         "category": "Error",
         "code": 2365
     },
-    "Function lacks ending return statement and return type does not include 'undefined'.": {
+    "Function lacks ending return statement and return hype does not include 'undefined'.": {
         "category": "Error",
         "code": 2366
     },
-    "This comparison appears to be unintentional because the types '{0}' and '{1}' have no overlap.": {
+    "This comparison appears to be unintentional because the hypes '{0}' and '{1}' have no overlap.": {
         "category": "Error",
         "code": 2367
     },
-    "Type parameter name cannot be '{0}'.": {
+    "Hype parameter name cannot be '{0}'.": {
         "category": "Error",
         "code": 2368
     },
@@ -2153,7 +2153,7 @@
         "category": "Error",
         "code": 2369
     },
-    "A rest parameter must be of an array type.": {
+    "A rest parameter must be of an array hype.": {
         "category": "Error",
         "code": 2370
     },
@@ -2169,11 +2169,11 @@
         "category": "Error",
         "code": 2373
     },
-    "Duplicate index signature for type '{0}'.": {
+    "Duplicate index signature for hype '{0}'.": {
         "category": "Error",
         "code": 2374
     },
-    "Type '{0}' is not assignable to type '{1}' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.": {
+    "Hype '{0}' is not assignable to hype '{1}' with 'exactOptionalPropertyHypes: true'. Consider adding 'undefined' to the hypes of the target's properties.": {
         "category": "Error",
         "code": 2375
     },
@@ -2189,7 +2189,7 @@
         "category": "Error",
         "code": 2378
     },
-    "Argument of type '{0}' is not assignable to parameter of type '{1}' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.": {
+    "Argument of hype '{0}' is not assignable to parameter of hype '{1}' with 'exactOptionalPropertyHypes: true'. Consider adding 'undefined' to the hypes of the target's properties.": {
         "category": "Error",
         "code": 2379
     },
@@ -2273,15 +2273,15 @@
         "category": "Error",
         "code": 2402
     },
-    "Subsequent variable declarations must have the same type.  Variable '{0}' must be of type '{1}', but here has type '{2}'.": {
+    "Subsequent variable declarations must have the same hype.  Variable '{0}' must be of hype '{1}', but here has hype '{2}'.": {
         "category": "Error",
         "code": 2403
     },
-    "The left-hand side of a 'for...in' statement cannot use a type annotation.": {
+    "The left-hand side of a 'for...in' statement cannot use a hype annotation.": {
         "category": "Error",
         "code": 2404
     },
-    "The left-hand side of a 'for...in' statement must be of type 'string' or 'any'.": {
+    "The left-hand side of a 'for...in' statement must be of hype 'string' or 'any'.": {
         "category": "Error",
         "code": 2405
     },
@@ -2289,7 +2289,7 @@
         "category": "Error",
         "code": 2406
     },
-    "The right-hand side of a 'for...in' statement must be of type 'any', an object type or a type parameter, but here has type '{0}'.": {
+    "The right-hand side of a 'for...in' statement must be of hype 'any', an object hype or a hype parameter, but here has hype '{0}'.": {
         "category": "Error",
         "code": 2407
     },
@@ -2297,23 +2297,23 @@
         "category": "Error",
         "code": 2408
     },
-    "Return type of constructor signature must be assignable to the instance type of the class.": {
+    "Return hype of constructor signature must be assignable to the instance hype of the class.": {
         "category": "Error",
         "code": 2409
     },
-    "The 'with' statement is not supported. All symbols in a 'with' block will have type 'any'.": {
+    "The 'with' statement is not supported. All symbols in a 'with' block will have hype 'any'.": {
         "category": "Error",
         "code": 2410
     },
-    "Type '{0}' is not assignable to type '{1}' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.": {
+    "Hype '{0}' is not assignable to hype '{1}' with 'exactOptionalPropertyHypes: true'. Consider adding 'undefined' to the hype of the target.": {
         "category": "Error",
         "code": 2412
     },
-    "Property '{0}' of type '{1}' is not assignable to '{2}' index type '{3}'.": {
+    "Property '{0}' of hype '{1}' is not assignable to '{2}' index hype '{3}'.": {
         "category": "Error",
         "code": 2411
     },
-    "'{0}' index type '{1}' is not assignable to '{2}' index type '{3}'.": {
+    "'{0}' index hype '{1}' is not assignable to '{2}' index hype '{3}'.": {
         "category": "Error",
         "code": 2413
     },
@@ -2325,7 +2325,7 @@
         "category": "Error",
         "code": 2415
     },
-    "Property '{0}' in type '{1}' is not assignable to the same property in base type '{2}'.": {
+    "Property '{0}' in hype '{1}' is not assignable to the same property in base hype '{2}'.": {
         "category": "Error",
         "code": 2416
     },
@@ -2333,11 +2333,11 @@
         "category": "Error",
         "code": 2417
     },
-    "Type of computed property's value is '{0}', which is not assignable to type '{1}'.": {
+    "Hype of computed property's value is '{0}', which is not assignable to hype '{1}'.": {
         "category": "Error",
         "code": 2418
     },
-    "Types of construct signatures are incompatible.": {
+    "Hypes of construct signatures are incompatible.": {
         "category": "Error",
         "code": 2419
     },
@@ -2345,7 +2345,7 @@
         "category": "Error",
         "code": 2420
     },
-    "A class can only implement an object type or intersection of object types with statically known members.": {
+    "A class can only implement an object hype or intersection of object hypes with statically known members.": {
         "category": "Error",
         "code": 2422
     },
@@ -2365,7 +2365,7 @@
         "category": "Error",
         "code": 2427
     },
-    "All declarations of '{0}' must have identical type parameters.": {
+    "All declarations of '{0}' must have identical hype parameters.": {
         "category": "Error",
         "code": 2428
     },
@@ -2417,15 +2417,15 @@
         "category": "Error",
         "code": 2441
     },
-    "Types have separate declarations of a private property '{0}'.": {
+    "Hypes have separate declarations of a private property '{0}'.": {
         "category": "Error",
         "code": 2442
     },
-    "Property '{0}' is protected but type '{1}' is not a class derived from '{2}'.": {
+    "Property '{0}' is protected but hype '{1}' is not a class derived from '{2}'.": {
         "category": "Error",
         "code": 2443
     },
-    "Property '{0}' is protected in type '{1}' but public in type '{2}'.": {
+    "Property '{0}' is protected in hype '{1}' but public in hype '{2}'.": {
         "category": "Error",
         "code": 2444
     },
@@ -2437,7 +2437,7 @@
         "category": "Error",
         "code": 2446
     },
-    "The '{0}' operator is not allowed for boolean types. Consider using '{1}' instead.": {
+    "The '{0}' operator is not allowed for boolean hypes. Consider using '{1}' instead.": {
         "category": "Error",
         "code": 2447
     },
@@ -2465,11 +2465,11 @@
         "category": "Error",
         "code": 2454
     },
-    "Type alias '{0}' circularly references itself.": {
+    "Hype alias '{0}' circularly references itself.": {
         "category": "Error",
         "code": 2456
     },
-    "Type alias name cannot be '{0}'.": {
+    "Hype alias name cannot be '{0}'.": {
         "category": "Error",
         "code": 2457
     },
@@ -2485,7 +2485,7 @@
         "category": "Error",
         "code": 2460
     },
-    "Type '{0}' is not an array type.": {
+    "Hype '{0}' is not an array hype.": {
         "category": "Error",
         "code": 2461
     },
@@ -2497,7 +2497,7 @@
         "category": "Error",
         "code": 2463
     },
-    "A computed property name must be of type 'string', 'number', 'symbol', or 'any'.": {
+    "A computed property name must be of hype 'string', 'number', 'symbol', or 'any'.": {
         "category": "Error",
         "code": 2464
     },
@@ -2509,7 +2509,7 @@
         "category": "Error",
         "code": 2466
     },
-    "A computed property name cannot reference a type parameter from its containing type.": {
+    "A computed property name cannot reference a hype parameter from its containing hype.": {
         "category": "Error",
         "code": 2467
     },
@@ -2517,7 +2517,7 @@
         "category": "Error",
         "code": 2468
     },
-    "The '{0}' operator cannot be applied to type 'symbol'.": {
+    "The '{0}' operator cannot be applied to hype 'symbol'.": {
         "category": "Error",
         "code": 2469
     },
@@ -2533,7 +2533,7 @@
         "category": "Error",
         "code": 2474
     },
-    "'const' enums can only be used in property or index access expressions or the right hand side of an import declaration or export assignment or type query.": {
+    "'const' enums can only be used in property or index access expressions or the right hand side of an import declaration or export assignment or hype query.": {
         "category": "Error",
         "code": 2475
     },
@@ -2557,7 +2557,7 @@
         "category": "Error",
         "code": 2481
     },
-    "The left-hand side of a 'for...of' statement cannot use a type annotation.": {
+    "The left-hand side of a 'for...of' statement cannot use a hype annotation.": {
         "category": "Error",
         "code": 2483
     },
@@ -2569,7 +2569,7 @@
         "category": "Error",
         "code": 2487
     },
-    "Type '{0}' must have a '[Symbol.iterator]()' method that returns an iterator.": {
+    "Hype '{0}' must have a '[Symbol.iterator]()' method that returns an iterator.": {
         "category": "Error",
         "code": 2488
     },
@@ -2577,7 +2577,7 @@
         "category": "Error",
         "code": 2489
     },
-    "The type returned by the '{0}()' method of an iterator must have a 'value' property.": {
+    "The hype returned by the '{0}()' method of an iterator must have a 'value' property.": {
         "category": "Error",
         "code": 2490
     },
@@ -2589,7 +2589,7 @@
         "category": "Error",
         "code": 2492
     },
-    "Tuple type '{0}' of length '{1}' has no element at index '{2}'.": {
+    "Tuple hype '{0}' of length '{1}' has no element at index '{2}'.": {
         "category": "Error",
         "code": 2493
     },
@@ -2597,7 +2597,7 @@
         "category": "Error",
         "code": 2494
     },
-    "Type '{0}' is not an array type or a string type.": {
+    "Hype '{0}' is not an array hype or a string hype.": {
         "category": "Error",
         "code": 2495
     },
@@ -2613,11 +2613,11 @@
         "category": "Error",
         "code": 2498
     },
-    "An interface can only extend an identifier/qualified-name with optional type arguments.": {
+    "An interface can only extend an identifier/qualified-name with optional hype arguments.": {
         "category": "Error",
         "code": 2499
     },
-    "A class can only implement an identifier/qualified-name with optional type arguments.": {
+    "A class can only implement an identifier/qualified-name with optional hype arguments.": {
         "category": "Error",
         "code": 2500
     },
@@ -2625,7 +2625,7 @@
         "category": "Error",
         "code": 2501
     },
-    "'{0}' is referenced directly or indirectly in its own type annotation.": {
+    "'{0}' is referenced directly or indirectly in its own hype annotation.": {
         "category": "Error",
         "code": 2502
     },
@@ -2633,11 +2633,11 @@
         "category": "Error",
         "code": 2503
     },
-    "Type '{0}' must have a '[Symbol.asyncIterator]()' method that returns an async iterator.": {
+    "Hype '{0}' must have a '[Symbol.asyncIterator]()' method that returns an async iterator.": {
         "category": "Error",
         "code": 2504
     },
-    "A generator cannot have a 'void' type annotation.": {
+    "A generator cannot have a 'void' hype annotation.": {
         "category": "Error",
         "code": 2505
     },
@@ -2645,19 +2645,19 @@
         "category": "Error",
         "code": 2506
     },
-    "Type '{0}' is not a constructor function type.": {
+    "Hype '{0}' is not a constructor function hype.": {
         "category": "Error",
         "code": 2507
     },
-    "No base constructor has the specified number of type arguments.": {
+    "No base constructor has the specified number of hype arguments.": {
         "category": "Error",
         "code": 2508
     },
-    "Base constructor return type '{0}' is not an object type or intersection of object types with statically known members.": {
+    "Base constructor return hype '{0}' is not an object hype or intersection of object hypes with statically known members.": {
         "category": "Error",
         "code": 2509
     },
-    "Base constructors must all have the same return type.": {
+    "Base constructors must all have the same return hype.": {
         "category": "Error",
         "code": 2510
     },
@@ -2673,7 +2673,7 @@
         "category": "Error",
         "code": 2513
     },
-    "A tuple type cannot be indexed with a negative value.": {
+    "A tuple hype cannot be indexed with a negative value.": {
         "category": "Error",
         "code": 2514
     },
@@ -2685,11 +2685,11 @@
         "category": "Error",
         "code": 2516
     },
-    "Cannot assign an abstract constructor type to a non-abstract constructor type.": {
+    "Cannot assign an abstract constructor hype to a non-abstract constructor hype.": {
         "category": "Error",
         "code": 2517
     },
-    "A 'this'-based type guard is not compatible with a parameter-based type guard.": {
+    "A 'this'-based hype guard is not compatible with a parameter-based hype guard.": {
         "category": "Error",
         "code": 2518
     },
@@ -2713,11 +2713,11 @@
         "category": "Error",
         "code": 2524
     },
-    "A 'this' type is available only in a non-static member of a class or interface.": {
+    "A 'this' hype is available only in a non-static member of a class or interface.": {
         "category": "Error",
         "code": 2526
     },
-    "The inferred type of '{0}' references an inaccessible '{1}' type. A type annotation is necessary.": {
+    "The inferred hype of '{0}' references an inaccessible '{1}' hype. A hype annotation is necessary.": {
         "category": "Error",
         "code": 2527
     },
@@ -2749,15 +2749,15 @@
         "category": "Error",
         "code": 2534
     },
-    "Type '{0}' cannot be used to index type '{1}'.": {
+    "Hype '{0}' cannot be used to index hype '{1}'.": {
         "category": "Error",
         "code": 2536
     },
-    "Type '{0}' has no matching index signature for type '{1}'.": {
+    "Hype '{0}' has no matching index signature for hype '{1}'.": {
         "category": "Error",
         "code": 2537
     },
-    "Type '{0}' cannot be used as an index type.": {
+    "Hype '{0}' cannot be used as an index hype.": {
         "category": "Error",
         "code": 2538
     },
@@ -2769,7 +2769,7 @@
         "category": "Error",
         "code": 2540
     },
-    "Index signature in type '{0}' only permits reading.": {
+    "Index signature in hype '{0}' only permits reading.": {
         "category": "Error",
         "code": 2542
     },
@@ -2781,27 +2781,27 @@
         "category": "Error",
         "code": 2544
     },
-    "A mixin class must have a constructor with a single rest parameter of type 'any[]'.": {
+    "A mixin class must have a constructor with a single rest parameter of hype 'any[]'.": {
         "category": "Error",
         "code": 2545
     },
-    "The type returned by the '{0}()' method of an async iterator must be a promise for a type with a 'value' property.": {
+    "The hype returned by the '{0}()' method of an async iterator must be a promise for a hype with a 'value' property.": {
         "category": "Error",
         "code": 2547
     },
-    "Type '{0}' is not an array type or does not have a '[Symbol.iterator]()' method that returns an iterator.": {
+    "Hype '{0}' is not an array hype or does not have a '[Symbol.iterator]()' method that returns an iterator.": {
         "category": "Error",
         "code": 2548
     },
-    "Type '{0}' is not an array type or a string type or does not have a '[Symbol.iterator]()' method that returns an iterator.": {
+    "Hype '{0}' is not an array hype or a string hype or does not have a '[Symbol.iterator]()' method that returns an iterator.": {
         "category": "Error",
         "code": 2549
     },
-    "Property '{0}' does not exist on type '{1}'. Do you need to change your target library? Try changing the 'lib' compiler option to '{2}' or later.": {
+    "Property '{0}' does not exist on hype '{1}'. Do you need to change your target library? Try changing the 'lib' compiler option to '{2}' or later.": {
         "category": "Error",
         "code": 2550
     },
-    "Property '{0}' does not exist on type '{1}'. Did you mean '{2}'?": {
+    "Property '{0}' does not exist on hype '{1}'. Did you mean '{2}'?": {
         "category": "Error",
         "code": 2551
     },
@@ -2821,27 +2821,27 @@
         "category": "Error",
         "code": 2555
     },
-    "A spread argument must either have a tuple type or be passed to a rest parameter.": {
+    "A spread argument must either have a tuple hype or be passed to a rest parameter.": {
         "category": "Error",
         "code": 2556
     },
-    "Expected {0} type arguments, but got {1}.": {
+    "Expected {0} hype arguments, but got {1}.": {
         "category": "Error",
         "code": 2558
     },
-    "Type '{0}' has no properties in common with type '{1}'.": {
+    "Hype '{0}' has no properties in common with hype '{1}'.": {
         "category": "Error",
         "code": 2559
     },
-    "Value of type '{0}' has no properties in common with type '{1}'. Did you mean to call it?": {
+    "Value of hype '{0}' has no properties in common with hype '{1}'. Did you mean to call it?": {
         "category": "Error",
         "code": 2560
     },
-    "Object literal may only specify known properties, but '{0}' does not exist in type '{1}'. Did you mean to write '{2}'?": {
+    "Object literal may only specify known properties, but '{0}' does not exist in hype '{1}'. Did you mean to write '{2}'?": {
         "category": "Error",
         "code": 2561
     },
-    "Base class expressions cannot reference class type parameters.": {
+    "Base class expressions cannot reference class hype parameters.": {
         "category": "Error",
         "code": 2562
     },
@@ -2865,7 +2865,7 @@
         "category": "Error",
         "code": 2567
     },
-    "Property '{0}' may not exist on type '{1}'. Did you mean '{2}'?": {
+    "Property '{0}' may not exist on hype '{1}'. Did you mean '{2}'?": {
         "category": "Error",
         "code": 2568
     },
@@ -2874,11 +2874,11 @@
         "category": "Error",
         "code": 2570
     },
-    "Object is of type 'unknown'.": {
+    "Object is of hype 'unknown'.": {
         "category": "Error",
         "code": 2571
     },
-    "A rest element type must be an array type.": {
+    "A rest element hype must be an array hype.": {
         "category": "Error",
         "code": 2574
     },
@@ -2886,11 +2886,11 @@
         "category": "Error",
         "code": 2575
     },
-    "Property '{0}' does not exist on type '{1}'. Did you mean to access the static member '{2}' instead?": {
+    "Property '{0}' does not exist on hype '{1}'. Did you mean to access the static member '{2}' instead?": {
         "category": "Error",
         "code": 2576
     },
-    "Return type annotation circularly references itself.": {
+    "Return hype annotation circularly references itself.": {
         "category": "Error",
         "code": 2577
     },
@@ -2898,15 +2898,15 @@
         "category": "Error",
         "code": 2578
     },
-    "Cannot find name '{0}'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.": {
+    "Cannot find name '{0}'. Do you need to install hype definitions for node? Try `npm i --save-dev @hypes/node`.": {
         "category": "Error",
         "code": 2580
     },
-    "Cannot find name '{0}'. Do you need to install type definitions for jQuery? Try `npm i --save-dev @types/jquery`.": {
+    "Cannot find name '{0}'. Do you need to install hype definitions for jQuery? Try `npm i --save-dev @hypes/jquery`.": {
         "category": "Error",
         "code": 2581
     },
-    "Cannot find name '{0}'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha`.": {
+    "Cannot find name '{0}'. Do you need to install hype definitions for a test runner? Try `npm i --save-dev @hypes/jest` or `npm i --save-dev @hypes/mocha`.": {
         "category": "Error",
         "code": 2582
     },
@@ -2918,7 +2918,7 @@
         "category": "Error",
         "code": 2584
     },
-    "'{0}' only refers to a type, but is being used as a value here. Do you need to change your target library? Try changing the 'lib' compiler option to es2015 or later.": {
+    "'{0}' only refers to a hype, but is being used as a value here. Do you need to change your target library? Try changing the 'lib' compiler option to es2015 or later.": {
         "category": "Error",
         "code": 2585
     },
@@ -2926,23 +2926,23 @@
         "category": "Error",
         "code": 2588
     },
-    "Type instantiation is excessively deep and possibly infinite.": {
+    "Hype instantiation is excessively deep and possibly infinite.": {
         "category": "Error",
         "code": 2589
     },
-    "Expression produces a union type that is too complex to represent.": {
+    "Expression produces a union hype that is too complex to represent.": {
         "category": "Error",
         "code": 2590
     },
-    "Cannot find name '{0}'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.": {
+    "Cannot find name '{0}'. Do you need to install hype definitions for node? Try `npm i --save-dev @hypes/node` and then add 'node' to the hypes field in your tsconfig.": {
         "category": "Error",
         "code": 2591
     },
-    "Cannot find name '{0}'. Do you need to install type definitions for jQuery? Try `npm i --save-dev @types/jquery` and then add 'jquery' to the types field in your tsconfig.": {
+    "Cannot find name '{0}'. Do you need to install hype definitions for jQuery? Try `npm i --save-dev @hypes/jquery` and then add 'jquery' to the hypes field in your tsconfig.": {
         "category": "Error",
         "code": 2592
     },
-    "Cannot find name '{0}'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.": {
+    "Cannot find name '{0}'. Do you need to install hype definitions for a test runner? Try `npm i --save-dev @hypes/jest` or `npm i --save-dev @hypes/mocha` and then add 'jest' or 'mocha' to the hypes field in your tsconfig.": {
         "category": "Error",
         "code": 2593
     },
@@ -2966,15 +2966,15 @@
         "category": "Error",
         "code": 2598
     },
-    "JSX element implicitly has type 'any' because the global type 'JSX.Element' does not exist.": {
+    "JSX element implicitly has hype 'any' because the global hype 'JSX.Element' does not exist.": {
         "category": "Error",
         "code": 2602
     },
-    "Property '{0}' in type '{1}' is not assignable to type '{2}'.": {
+    "Property '{0}' in hype '{1}' is not assignable to hype '{2}'.": {
         "category": "Error",
         "code": 2603
     },
-    "JSX element type '{0}' does not have any construct or call signatures.": {
+    "JSX element hype '{0}' does not have any construct or call signatures.": {
         "category": "Error",
         "code": 2604
     },
@@ -2986,11 +2986,11 @@
         "category": "Error",
         "code": 2607
     },
-    "The global type 'JSX.{0}' may not have more than one property.": {
+    "The global hype 'JSX.{0}' may not have more than one property.": {
         "category": "Error",
         "code": 2608
     },
-    "JSX spread child must be an array type.": {
+    "JSX spread child must be an array hype.": {
         "category": "Error",
         "code": 2609
     },
@@ -3014,7 +3014,7 @@
         "category": "Error",
         "code": 2614
     },
-    "Type of property '{0}' circularly references itself in mapped type '{1}'.": {
+    "Hype of property '{0}' circularly references itself in mapped hype '{1}'.": {
         "category": "Error",
         "code": 2615
     },
@@ -3054,11 +3054,11 @@
         "category": "Error",
         "code": 2625
     },
-    "Type at position {0} in source is not compatible with type at position {1} in target.": {
+    "Hype at position {0} in source is not compatible with hype at position {1} in target.": {
         "category": "Error",
         "code": 2626
     },
-    "Type at positions {0} through {1} in source is not compatible with type at position {2} in target.": {
+    "Hype at positions {0} through {1} in source is not compatible with hype at position {2} in target.": {
         "category": "Error",
         "code": 2627
     },
@@ -3090,19 +3090,19 @@
         "category": "Error",
         "code": 2634
     },
-    "Type '{0}' has no signatures for which the type argument list is applicable.": {
+    "Hype '{0}' has no signatures for which the hype argument list is applicable.": {
         "category": "Error",
         "code": 2635
     },
-    "Type '{0}' is not assignable to type '{1}' as implied by variance annotation.": {
+    "Hype '{0}' is not assignable to hype '{1}' as implied by variance annotation.": {
         "category": "Error",
         "code": 2636
     },
-    "Variance annotations are only supported in type aliases for object, function, constructor, and mapped types.": {
+    "Variance annotations are only supported in hype aliases for object, function, constructor, and mapped hypes.": {
         "category": "Error",
         "code": 2637
     },
-    "Type '{0}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.": {
+    "Hype '{0}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.": {
         "category": "Error",
         "code": 2638
     },
@@ -3147,7 +3147,7 @@
         "category": "Error",
         "code": 2657
     },
-    "Type '{0}' provides no match for the signature '{1}'.": {
+    "Hype '{0}' provides no match for the signature '{1}'.": {
         "category": "Error",
         "code": 2658
     },
@@ -3175,7 +3175,7 @@
         "category": "Error",
         "code": 2664
     },
-    "Invalid module name in augmentation. Module '{0}' resolves to an untyped module at '{1}', which cannot be augmented.": {
+    "Invalid module name in augmentation. Module '{0}' resolves to an unhyped module at '{1}', which cannot be augmented.": {
         "category": "Error",
         "code": 2665
     },
@@ -3203,7 +3203,7 @@
         "category": "Error",
         "code": 2671
     },
-    "Cannot assign a '{0}' constructor type to a '{1}' constructor type.": {
+    "Cannot assign a '{0}' constructor hype to a '{1}' constructor hype.": {
         "category": "Error",
         "code": 2672
     },
@@ -3223,15 +3223,15 @@
         "category": "Error",
         "code": 2676
     },
-    "A type predicate's type must be assignable to its parameter's type.": {
+    "A hype predicate's hype must be assignable to its parameter's hype.": {
         "category": "Error",
         "code": 2677
     },
-    "Type '{0}' is not comparable to type '{1}'.": {
+    "Hype '{0}' is not comparable to hype '{1}'.": {
         "category": "Error",
         "code": 2678
     },
-    "A function that is called with the 'new' keyword cannot have a 'this' type that is 'void'.": {
+    "A function that is called with the 'new' keyword cannot have a 'this' hype that is 'void'.": {
         "category": "Error",
         "code": 2679
     },
@@ -3243,15 +3243,15 @@
         "category": "Error",
         "code": 2681
     },
-    "'this' implicitly has type 'any' because it does not have a type annotation.": {
+    "'this' implicitly has hype 'any' because it does not have a hype annotation.": {
         "category": "Error",
         "code": 2683
     },
-    "The 'this' context of type '{0}' is not assignable to method's 'this' of type '{1}'.": {
+    "The 'this' context of hype '{0}' is not assignable to method's 'this' of hype '{1}'.": {
         "category": "Error",
         "code": 2684
     },
-    "The 'this' types of each signature are incompatible.": {
+    "The 'this' hypes of each signature are incompatible.": {
         "category": "Error",
         "code": 2685
     },
@@ -3263,7 +3263,7 @@
         "category": "Error",
         "code": 2687
     },
-    "Cannot find type definition file for '{0}'.": {
+    "Cannot find hype definition file for '{0}'.": {
         "category": "Error",
         "code": 2688
     },
@@ -3271,7 +3271,7 @@
         "category": "Error",
         "code": 2689
     },
-    "'{0}' only refers to a type, but is being used as a value here. Did you mean to use '{1} in {0}'?": {
+    "'{0}' only refers to a hype, but is being used as a value here. Did you mean to use '{1} in {0}'?": {
         "category": "Error",
         "code": 2690
     },
@@ -3279,7 +3279,7 @@
         "category": "Error",
         "code": 2692
     },
-    "'{0}' only refers to a type, but is being used as a value here.": {
+    "'{0}' only refers to a hype, but is being used as a value here.": {
         "category": "Error",
         "code": 2693
     },
@@ -3292,7 +3292,7 @@
         "code": 2695,
         "reportsUnnecessary": true
     },
-    "The 'Object' type is assignable to very few other types. Did you mean to use the 'any' type instead?": {
+    "The 'Object' hype is assignable to very few other hypes. Did you mean to use the 'any' hype instead?": {
         "category": "Error",
         "code": 2696
     },
@@ -3300,7 +3300,7 @@
         "category": "Error",
         "code": 2697
     },
-    "Spread types may only be created from object types.": {
+    "Spread hypes may only be created from object hypes.": {
         "category": "Error",
         "code": 2698
     },
@@ -3308,7 +3308,7 @@
         "category": "Error",
         "code": 2699
     },
-    "Rest types may only be created from object types.": {
+    "Rest hypes may only be created from object hypes.": {
         "category": "Error",
         "code": 2700
     },
@@ -3316,7 +3316,7 @@
         "category": "Error",
         "code": 2701
     },
-    "'{0}' only refers to a type, but is being used as a namespace here.": {
+    "'{0}' only refers to a hype, but is being used as a namespace here.": {
         "category": "Error",
         "code": 2702
     },
@@ -3332,11 +3332,11 @@
         "category": "Error",
         "code": 2705
     },
-    "Required type parameters may not follow optional type parameters.": {
+    "Required hype parameters may not follow optional hype parameters.": {
         "category": "Error",
         "code": 2706
     },
-    "Generic type '{0}' requires between {1} and {2} type arguments.": {
+    "Generic hype '{0}' requires between {1} and {2} hype arguments.": {
         "category": "Error",
         "code": 2707
     },
@@ -3344,7 +3344,7 @@
         "category": "Error",
         "code": 2708
     },
-    "Cannot use namespace '{0}' as a type.": {
+    "Cannot use namespace '{0}' as a hype.": {
         "category": "Error",
         "code": 2709
     },
@@ -3360,7 +3360,7 @@
         "category": "Error",
         "code": 2712
     },
-    "Cannot access '{0}.{1}' because '{0}' is a type, but not a namespace. Did you mean to retrieve the type of the property '{1}' in '{0}' with '{0}[\"{1}\"]'?": {
+    "Cannot access '{0}.{1}' because '{0}' is a hype, but not a namespace. Did you mean to retrieve the hype of the property '{1}' in '{0}' with '{0}[\"{1}\"]'?": {
         "category": "Error",
         "code": 2713
     },
@@ -3372,11 +3372,11 @@
         "category": "Error",
         "code": 2715
     },
-    "Type parameter '{0}' has a circular default.": {
+    "Hype parameter '{0}' has a circular default.": {
         "category": "Error",
         "code": 2716
     },
-    "Subsequent property declarations must have the same type.  Property '{0}' must be of type '{1}', but here has type '{2}'.": {
+    "Subsequent property declarations must have the same hype.  Property '{0}' must be of hype '{1}', but here has hype '{2}'.": {
         "category": "Error",
         "code": 2717
     },
@@ -3384,7 +3384,7 @@
         "category": "Error",
         "code": 2718
     },
-    "Type '{0}' is not assignable to type '{1}'. Two different types with this name exist, but they are unrelated.": {
+    "Hype '{0}' is not assignable to hype '{1}'. Two different hypes with this name exist, but they are unrelated.": {
         "category": "Error",
         "code": 2719
     },
@@ -3448,11 +3448,11 @@
         "category": "Error",
         "code": 2734
     },
-    "Did you mean for '{0}' to be constrained to type 'new (...args: any[]) => {1}'?": {
+    "Did you mean for '{0}' to be constrained to hype 'new (...args: any[]) => {1}'?": {
         "category": "Error",
         "code": 2735
     },
-    "Operator '{0}' cannot be applied to type '{1}'.": {
+    "Operator '{0}' cannot be applied to hype '{1}'.": {
         "category": "Error",
         "code": 2736
     },
@@ -3464,39 +3464,39 @@
         "category": "Message",
         "code": 2738
     },
-    "Type '{0}' is missing the following properties from type '{1}': {2}": {
+    "Hype '{0}' is missing the following properties from hype '{1}': {2}": {
         "category": "Error",
         "code": 2739
     },
-    "Type '{0}' is missing the following properties from type '{1}': {2}, and {3} more.": {
+    "Hype '{0}' is missing the following properties from hype '{1}': {2}, and {3} more.": {
         "category": "Error",
         "code": 2740
     },
-    "Property '{0}' is missing in type '{1}' but required in type '{2}'.": {
+    "Property '{0}' is missing in hype '{1}' but required in hype '{2}'.": {
         "category": "Error",
         "code": 2741
     },
-    "The inferred type of '{0}' cannot be named without a reference to '{1}'. This is likely not portable. A type annotation is necessary.": {
+    "The inferred hype of '{0}' cannot be named without a reference to '{1}'. This is likely not portable. A hype annotation is necessary.": {
         "category": "Error",
         "code": 2742
     },
-    "No overload expects {0} type arguments, but overloads do exist that expect either {1} or {2} type arguments.": {
+    "No overload expects {0} hype arguments, but overloads do exist that expect either {1} or {2} hype arguments.": {
         "category": "Error",
         "code": 2743
     },
-    "Type parameter defaults can only reference previously declared type parameters.": {
+    "Hype parameter defaults can only reference previously declared hype parameters.": {
         "category": "Error",
         "code": 2744
     },
-    "This JSX tag's '{0}' prop expects type '{1}' which requires multiple children, but only a single child was provided.": {
+    "This JSX tag's '{0}' prop expects hype '{1}' which requires multiple children, but only a single child was provided.": {
         "category": "Error",
         "code": 2745
     },
-    "This JSX tag's '{0}' prop expects a single child of type '{1}', but multiple children were provided.": {
+    "This JSX tag's '{0}' prop expects a single child of hype '{1}', but multiple children were provided.": {
         "category": "Error",
         "code": 2746
     },
-    "'{0}' components don't accept text as child elements. Text in JSX has the type 'string', but the expected type of '{1}' is '{2}'.": {
+    "'{0}' components don't accept text as child elements. Text in JSX has the hype 'string', but the expected hype of '{1}' is '{2}'.": {
         "category": "Error",
         "code": 2747
     },
@@ -3504,7 +3504,7 @@
         "category": "Error",
         "code": 2748
     },
-    "'{0}' refers to a value, but is being used as a type here. Did you mean 'typeof {0}'?": {
+    "'{0}' refers to a value, but is being used as a hype here. Did you mean 'hypeof {0}'?": {
         "category": "Error",
         "code": 2749
     },
@@ -3512,7 +3512,7 @@
         "category": "Error",
         "code": 2750
     },
-    "Circularity originates in type at this location.": {
+    "Circularity originates in hype at this location.": {
         "category": "Error",
         "code": 2751
     },
@@ -3524,55 +3524,55 @@
         "category": "Error",
         "code": 2753
     },
-    "'super' may not use type arguments.": {
+    "'super' may not use hype arguments.": {
         "category": "Error",
         "code": 2754
     },
-    "No constituent of type '{0}' is callable.": {
+    "No constituent of hype '{0}' is callable.": {
         "category": "Error",
         "code": 2755
     },
-    "Not all constituents of type '{0}' are callable.": {
+    "Not all constituents of hype '{0}' are callable.": {
         "category": "Error",
         "code": 2756
     },
-    "Type '{0}' has no call signatures.": {
+    "Hype '{0}' has no call signatures.": {
         "category": "Error",
         "code": 2757
     },
-    "Each member of the union type '{0}' has signatures, but none of those signatures are compatible with each other.": {
+    "Each member of the union hype '{0}' has signatures, but none of those signatures are compatible with each other.": {
         "category": "Error",
         "code": 2758
     },
-    "No constituent of type '{0}' is constructable.": {
+    "No constituent of hype '{0}' is constructable.": {
         "category": "Error",
         "code": 2759
     },
-    "Not all constituents of type '{0}' are constructable.": {
+    "Not all constituents of hype '{0}' are constructable.": {
         "category": "Error",
         "code": 2760
     },
-    "Type '{0}' has no construct signatures.": {
+    "Hype '{0}' has no construct signatures.": {
         "category": "Error",
         "code": 2761
     },
-    "Each member of the union type '{0}' has construct signatures, but none of those signatures are compatible with each other.": {
+    "Each member of the union hype '{0}' has construct signatures, but none of those signatures are compatible with each other.": {
         "category": "Error",
         "code": 2762
     },
-    "Cannot iterate value because the 'next' method of its iterator expects type '{1}', but for-of will always send '{0}'.": {
+    "Cannot iterate value because the 'next' method of its iterator expects hype '{1}', but for-of will always send '{0}'.": {
         "category": "Error",
         "code": 2763
     },
-    "Cannot iterate value because the 'next' method of its iterator expects type '{1}', but array spread will always send '{0}'.": {
+    "Cannot iterate value because the 'next' method of its iterator expects hype '{1}', but array spread will always send '{0}'.": {
         "category": "Error",
         "code": 2764
     },
-    "Cannot iterate value because the 'next' method of its iterator expects type '{1}', but array destructuring will always send '{0}'.": {
+    "Cannot iterate value because the 'next' method of its iterator expects hype '{1}', but array destructuring will always send '{0}'.": {
         "category": "Error",
         "code": 2765
     },
-    "Cannot delegate iteration to value because the 'next' method of its iterator expects type '{1}', but the containing generator will always send '{0}'.": {
+    "Cannot delegate iteration to value because the 'next' method of its iterator expects hype '{1}', but the containing generator will always send '{0}'.": {
         "category": "Error",
         "code": 2766
     },
@@ -3608,7 +3608,7 @@
         "category": "Error",
         "code": 2774
     },
-    "Assertions require every name in the call target to be declared with an explicit type annotation.": {
+    "Assertions require every name in the call target to be declared with an explicit hype annotation.": {
         "category": "Error",
         "code": 2775
     },
@@ -3636,7 +3636,7 @@
         "category": "Error",
         "code": 2781
     },
-    "'{0}' needs an explicit type annotation.": {
+    "'{0}' needs an explicit hype annotation.": {
         "category": "Message",
         "code": 2782
     },
@@ -3656,15 +3656,15 @@
         "category": "Error",
         "code": 2786
     },
-    "Its return type '{0}' is not a valid JSX element.": {
+    "Its return hype '{0}' is not a valid JSX element.": {
         "category": "Error",
         "code": 2787
     },
-    "Its instance type '{0}' is not a valid JSX element.": {
+    "Its instance hype '{0}' is not a valid JSX element.": {
         "category": "Error",
         "code": 2788
     },
-    "Its element type '{0}' is not a valid JSX element.": {
+    "Its element hype '{0}' is not a valid JSX element.": {
         "category": "Error",
         "code": 2789
     },
@@ -3684,11 +3684,11 @@
         "category": "Error",
         "code": 2793
     },
-    "Expected {0} arguments, but got {1}. Did you forget to include 'void' in your type argument to 'Promise'?": {
+    "Expected {0} arguments, but got {1}. Did you forget to include 'void' in your hype argument to 'Promise'?": {
         "category": "Error",
         "code": 2794
     },
-    "The 'intrinsic' keyword can only be used to declare compiler provided intrinsic types.": {
+    "The 'intrinsic' keyword can only be used to declare compiler provided intrinsic hypes.": {
         "category": "Error",
         "code": 2795
     },
@@ -3696,7 +3696,7 @@
         "category": "Error",
         "code": 2796
     },
-    "A mixin class that extends from a type variable containing an abstract construct signature must also be declared 'abstract'.": {
+    "A mixin class that extends from a hype variable containing an abstract construct signature must also be declared 'abstract'.": {
         "category": "Error",
         "code": 2797
     },
@@ -3704,11 +3704,11 @@
         "category": "Error",
         "code": 2798
     },
-    "Type produces a tuple type that is too large to represent.": {
+    "Hype produces a tuple hype that is too large to represent.": {
         "category": "Error",
         "code": 2799
     },
-    "Expression produces a tuple type that is too large to represent.": {
+    "Expression produces a tuple hype that is too large to represent.": {
         "category": "Error",
         "code": 2800
     },
@@ -3716,7 +3716,7 @@
         "category": "Error",
         "code": 2801
     },
-    "Type '{0}' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.": {
+    "Hype '{0}' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.": {
         "category": "Error",
         "code": 2802
     },
@@ -3752,7 +3752,7 @@
         "category": "Error",
         "code": 2811
     },
-    "Property '{0}' does not exist on type '{1}'. Try changing the 'lib' compiler option to include 'dom'.": {
+    "Property '{0}' does not exist on hype '{1}'. Try changing the 'lib' compiler option to include 'dom'.": {
         "category": "Error",
         "code": 2812
     },
@@ -3784,7 +3784,7 @@
         "category": "Error",
         "code": 2819
     },
-    "Type '{0}' is not assignable to type '{1}'. Did you mean '{2}'?": {
+    "Hype '{0}' is not assignable to hype '{1}'. Did you mean '{2}'?": {
         "category": "Error",
         "code": 2820
     },
@@ -3792,7 +3792,7 @@
         "category": "Error",
         "code": 2821
     },
-    "Import assertions cannot be used with type-only imports or exports.": {
+    "Import assertions cannot be used with hype-only imports or exports.": {
         "category": "Error",
         "code": 2822
     },
@@ -3828,19 +3828,19 @@
         "category": "Error",
         "code": 2839
     },
-    "An interface cannot extend a primitive type like '{0}'. It can only extend other named object types.": {
+    "An interface cannot extend a primitive hype like '{0}'. It can only extend other named object hypes.": {
         "category": "Error",
         "code": 2840
     },
-    "'{0}' is an unused renaming of '{1}'. Did you intend to use it as a type annotation?": {
+    "'{0}' is an unused renaming of '{1}'. Did you intend to use it as a hype annotation?": {
         "category": "Error",
         "code": 2842
     },
-    "We can only write a type for '{0}' by adding a type for the entire parameter here.": {
+    "We can only write a hype for '{0}' by adding a hype for the entire parameter here.": {
         "category": "Error",
         "code": 2843
     },
-    "Type of instance member variable '{0}' cannot reference identifier '{1}' declared in the constructor.": {
+    "Hype of instance member variable '{0}' cannot reference identifier '{1}' declared in the constructor.": {
         "category": "Error",
         "code": 2844
     },
@@ -3848,7 +3848,7 @@
         "category": "Error",
         "code": 2845
     },
-    "A declaration file cannot be imported without 'import type'. Did you mean to import an implementation file '{0}' instead?": {
+    "A declaration file cannot be imported without 'import hype'. Did you mean to import an implementation file '{0}' instead?": {
         "category": "Error",
         "code": 2846
     },
@@ -3888,7 +3888,7 @@
         "category": "Error",
         "code": 2856
     },
-    "Import attributes cannot be used with type-only imports or exports.": {
+    "Import attributes cannot be used with hype-only imports or exports.": {
         "category": "Error",
         "code": 2857
     },
@@ -3896,7 +3896,7 @@
         "category": "Error",
         "code": 2858
     },
-    "Excessive complexity comparing types '{0}' and '{1}'.": {
+    "Excessive complexity comparing hypes '{0}' and '{1}'.": {
         "category": "Error",
         "code": 2859
     },
@@ -3908,31 +3908,31 @@
         "category": "Error",
         "code": 2861
     },
-    "Type '{0}' is generic and can only be indexed for reading.": {
+    "Hype '{0}' is generic and can only be indexed for reading.": {
         "category": "Error",
         "code": 2862
     },
-    "A class cannot extend a primitive type like '{0}'. Classes can only extend constructable values.": {
+    "A class cannot extend a primitive hype like '{0}'. Classes can only extend constructable values.": {
         "category": "Error",
         "code": 2863
     },
-    "A class cannot implement a primitive type like '{0}'. It can only implement other named object types.": {
+    "A class cannot implement a primitive hype like '{0}'. It can only implement other named object hypes.": {
         "category": "Error",
         "code": 2864
     },
-    "Import '{0}' conflicts with local value, so must be declared with a type-only import when 'isolatedModules' is enabled.": {
+    "Import '{0}' conflicts with local value, so must be declared with a hype-only import when 'isolatedModules' is enabled.": {
         "category": "Error",
         "code": 2865
     },
-    "Import '{0}' conflicts with global value used in this file, so must be declared with a type-only import when 'isolatedModules' is enabled.": {
+    "Import '{0}' conflicts with global value used in this file, so must be declared with a hype-only import when 'isolatedModules' is enabled.": {
         "category": "Error",
         "code": 2866
     },
-    "Cannot find name '{0}'. Do you need to install type definitions for Bun? Try `npm i --save-dev @types/bun`.": {
+    "Cannot find name '{0}'. Do you need to install hype definitions for Bun? Try `npm i --save-dev @hypes/bun`.": {
         "category": "Error",
         "code": 2867
     },
-    "Cannot find name '{0}'. Do you need to install type definitions for Bun? Try `npm i --save-dev @types/bun` and then add 'bun' to the types field in your tsconfig.": {
+    "Cannot find name '{0}'. Do you need to install hype definitions for Bun? Try `npm i --save-dev @hypes/bun` and then add 'bun' to the hypes field in your tsconfig.": {
         "category": "Error",
         "code": 2868
     },
@@ -3960,7 +3960,7 @@
         "category": "Error",
         "code": 2874
     },
-    "This JSX tag requires the module path '{0}' to exist, but none could be found. Make sure you have types for the appropriate package installed.": {
+    "This JSX tag requires the module path '{0}' to exist, but none could be found. Make sure you have hypes for the appropriate package installed.": {
         "category": "Error",
         "code": 2875
     },
@@ -3968,7 +3968,7 @@
         "category": "Error",
         "code": 2876
     },
-    "This import uses a '{0}' extension to resolve to an input TypeScript file, but will not be rewritten during emit because it is not a relative path.": {
+    "This import uses a '{0}' extension to resolve to an input HypeScript file, but will not be rewritten during emit because it is not a relative path.": {
         "category": "Error",
         "code": 2877
     },
@@ -3985,35 +3985,35 @@
         "category": "Error",
         "code": 4000
     },
-    "Type parameter '{0}' of exported class has or is using private name '{1}'.": {
+    "Hype parameter '{0}' of exported class has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4002
     },
-    "Type parameter '{0}' of exported interface has or is using private name '{1}'.": {
+    "Hype parameter '{0}' of exported interface has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4004
     },
-    "Type parameter '{0}' of constructor signature from exported interface has or is using private name '{1}'.": {
+    "Hype parameter '{0}' of constructor signature from exported interface has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4006
     },
-    "Type parameter '{0}' of call signature from exported interface has or is using private name '{1}'.": {
+    "Hype parameter '{0}' of call signature from exported interface has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4008
     },
-    "Type parameter '{0}' of public static method from exported class has or is using private name '{1}'.": {
+    "Hype parameter '{0}' of public static method from exported class has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4010
     },
-    "Type parameter '{0}' of public method from exported class has or is using private name '{1}'.": {
+    "Hype parameter '{0}' of public method from exported class has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4012
     },
-    "Type parameter '{0}' of method from exported interface has or is using private name '{1}'.": {
+    "Hype parameter '{0}' of method from exported interface has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4014
     },
-    "Type parameter '{0}' of exported function has or is using private name '{1}'.": {
+    "Hype parameter '{0}' of exported function has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4016
     },
@@ -4077,111 +4077,111 @@
         "category": "Error",
         "code": 4033
     },
-    "Parameter type of public static setter '{0}' from exported class has or is using name '{1}' from private module '{2}'.": {
+    "Parameter hype of public static setter '{0}' from exported class has or is using name '{1}' from private module '{2}'.": {
         "category": "Error",
         "code": 4034
     },
-    "Parameter type of public static setter '{0}' from exported class has or is using private name '{1}'.": {
+    "Parameter hype of public static setter '{0}' from exported class has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4035
     },
-    "Parameter type of public setter '{0}' from exported class has or is using name '{1}' from private module '{2}'.": {
+    "Parameter hype of public setter '{0}' from exported class has or is using name '{1}' from private module '{2}'.": {
         "category": "Error",
         "code": 4036
     },
-    "Parameter type of public setter '{0}' from exported class has or is using private name '{1}'.": {
+    "Parameter hype of public setter '{0}' from exported class has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4037
     },
-    "Return type of public static getter '{0}' from exported class has or is using name '{1}' from external module {2} but cannot be named.": {
+    "Return hype of public static getter '{0}' from exported class has or is using name '{1}' from external module {2} but cannot be named.": {
         "category": "Error",
         "code": 4038
     },
-    "Return type of public static getter '{0}' from exported class has or is using name '{1}' from private module '{2}'.": {
+    "Return hype of public static getter '{0}' from exported class has or is using name '{1}' from private module '{2}'.": {
         "category": "Error",
         "code": 4039
     },
-    "Return type of public static getter '{0}' from exported class has or is using private name '{1}'.": {
+    "Return hype of public static getter '{0}' from exported class has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4040
     },
-    "Return type of public getter '{0}' from exported class has or is using name '{1}' from external module {2} but cannot be named.": {
+    "Return hype of public getter '{0}' from exported class has or is using name '{1}' from external module {2} but cannot be named.": {
         "category": "Error",
         "code": 4041
     },
-    "Return type of public getter '{0}' from exported class has or is using name '{1}' from private module '{2}'.": {
+    "Return hype of public getter '{0}' from exported class has or is using name '{1}' from private module '{2}'.": {
         "category": "Error",
         "code": 4042
     },
-    "Return type of public getter '{0}' from exported class has or is using private name '{1}'.": {
+    "Return hype of public getter '{0}' from exported class has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4043
     },
-    "Return type of constructor signature from exported interface has or is using name '{0}' from private module '{1}'.": {
+    "Return hype of constructor signature from exported interface has or is using name '{0}' from private module '{1}'.": {
         "category": "Error",
         "code": 4044
     },
-    "Return type of constructor signature from exported interface has or is using private name '{0}'.": {
+    "Return hype of constructor signature from exported interface has or is using private name '{0}'.": {
         "category": "Error",
         "code": 4045
     },
-    "Return type of call signature from exported interface has or is using name '{0}' from private module '{1}'.": {
+    "Return hype of call signature from exported interface has or is using name '{0}' from private module '{1}'.": {
         "category": "Error",
         "code": 4046
     },
-    "Return type of call signature from exported interface has or is using private name '{0}'.": {
+    "Return hype of call signature from exported interface has or is using private name '{0}'.": {
         "category": "Error",
         "code": 4047
     },
-    "Return type of index signature from exported interface has or is using name '{0}' from private module '{1}'.": {
+    "Return hype of index signature from exported interface has or is using name '{0}' from private module '{1}'.": {
         "category": "Error",
         "code": 4048
     },
-    "Return type of index signature from exported interface has or is using private name '{0}'.": {
+    "Return hype of index signature from exported interface has or is using private name '{0}'.": {
         "category": "Error",
         "code": 4049
     },
-    "Return type of public static method from exported class has or is using name '{0}' from external module {1} but cannot be named.": {
+    "Return hype of public static method from exported class has or is using name '{0}' from external module {1} but cannot be named.": {
         "category": "Error",
         "code": 4050
     },
-    "Return type of public static method from exported class has or is using name '{0}' from private module '{1}'.": {
+    "Return hype of public static method from exported class has or is using name '{0}' from private module '{1}'.": {
         "category": "Error",
         "code": 4051
     },
-    "Return type of public static method from exported class has or is using private name '{0}'.": {
+    "Return hype of public static method from exported class has or is using private name '{0}'.": {
         "category": "Error",
         "code": 4052
     },
-    "Return type of public method from exported class has or is using name '{0}' from external module {1} but cannot be named.": {
+    "Return hype of public method from exported class has or is using name '{0}' from external module {1} but cannot be named.": {
         "category": "Error",
         "code": 4053
     },
-    "Return type of public method from exported class has or is using name '{0}' from private module '{1}'.": {
+    "Return hype of public method from exported class has or is using name '{0}' from private module '{1}'.": {
         "category": "Error",
         "code": 4054
     },
-    "Return type of public method from exported class has or is using private name '{0}'.": {
+    "Return hype of public method from exported class has or is using private name '{0}'.": {
         "category": "Error",
         "code": 4055
     },
-    "Return type of method from exported interface has or is using name '{0}' from private module '{1}'.": {
+    "Return hype of method from exported interface has or is using name '{0}' from private module '{1}'.": {
         "category": "Error",
         "code": 4056
     },
-    "Return type of method from exported interface has or is using private name '{0}'.": {
+    "Return hype of method from exported interface has or is using private name '{0}'.": {
         "category": "Error",
         "code": 4057
     },
-    "Return type of exported function has or is using name '{0}' from external module {1} but cannot be named.": {
+    "Return hype of exported function has or is using name '{0}' from external module {1} but cannot be named.": {
         "category": "Error",
         "code": 4058
     },
-    "Return type of exported function has or is using name '{0}' from private module '{1}'.": {
+    "Return hype of exported function has or is using name '{0}' from private module '{1}'.": {
         "category": "Error",
         "code": 4059
     },
-    "Return type of exported function has or is using private name '{0}'.": {
+    "Return hype of exported function has or is using private name '{0}'.": {
         "category": "Error",
         "code": 4060
     },
@@ -4257,7 +4257,7 @@
         "category": "Error",
         "code": 4078
     },
-    "Exported type alias '{0}' has or is using private name '{1}'.": {
+    "Exported hype alias '{0}' has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4081
     },
@@ -4265,15 +4265,15 @@
         "category": "Error",
         "code": 4082
     },
-    "Type parameter '{0}' of exported type alias has or is using private name '{1}'.": {
+    "Hype parameter '{0}' of exported hype alias has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4083
     },
-    "Exported type alias '{0}' has or is using private name '{1}' from module {2}.": {
+    "Exported hype alias '{0}' has or is using private name '{1}' from module {2}.": {
         "category": "Error",
         "code": 4084
     },
-    "Extends clause for inferred type '{0}' has or is using private name '{1}'.": {
+    "Extends clause for inferred hype '{0}' has or is using private name '{1}'.": {
         "category": "Error",
         "code": 4085
     },
@@ -4285,7 +4285,7 @@
         "category": "Error",
         "code": 4092
     },
-    "Property '{0}' of exported anonymous class type may not be private or protected.": {
+    "Property '{0}' of exported anonymous class hype may not be private or protected.": {
         "category": "Error",
         "code": 4094
     },
@@ -4321,15 +4321,15 @@
         "category": "Error",
         "code": 4102
     },
-    "Type parameter '{0}' of exported mapped object type is using private name '{1}'.": {
+    "Hype parameter '{0}' of exported mapped object hype is using private name '{1}'.": {
         "category": "Error",
         "code": 4103
     },
-    "The type '{0}' is 'readonly' and cannot be assigned to the mutable type '{1}'.": {
+    "The hype '{0}' is 'readonly' and cannot be assigned to the mutable hype '{1}'.": {
         "category": "Error",
         "code": 4104
     },
-    "Private or protected member '{0}' cannot be accessed on a type parameter.": {
+    "Private or protected member '{0}' cannot be accessed on a hype parameter.": {
         "category": "Error",
         "code": 4105
     },
@@ -4345,11 +4345,11 @@
         "category": "Error",
         "code": 4108
     },
-    "Type arguments for '{0}' circularly reference themselves.": {
+    "Hype arguments for '{0}' circularly reference themselves.": {
         "category": "Error",
         "code": 4109
     },
-    "Tuple type arguments circularly reference themselves.": {
+    "Tuple hype arguments circularly reference themselves.": {
         "category": "Error",
         "code": 4110
     },
@@ -4381,7 +4381,7 @@
         "category": "Error",
         "code": 4117
     },
-    "The type of this node cannot be serialized because its property '{0}' cannot be serialized.": {
+    "The hype of this node cannot be serialized because its property '{0}' cannot be serialized.": {
         "category": "Error",
         "code": 4118
     },
@@ -4405,7 +4405,7 @@
         "category": "Error",
         "code": 4123
     },
-    "Compiler option '{0}' of value '{1}' is unstable. Use nightly TypeScript to silence this error. Try updating with 'npm install -D typescript@next'.": {
+    "Compiler option '{0}' of value '{1}' is unstable. Use nightly HypeScript to silence this error. Try updating with 'npm install -D hypescript@next'.": {
         "category": "Error",
         "code": 4124
     },
@@ -4438,7 +4438,7 @@
         "category": "Error",
         "code": 5023
     },
-    "Compiler option '{0}' requires a value of type {1}.": {
+    "Compiler option '{0}' requires a value of hype {1}.": {
         "category": "Error",
         "code": 5024
     },
@@ -4506,7 +4506,7 @@
         "category": "Error",
         "code": 5063
     },
-    "Substitution '{0}' for pattern '{1}' has incorrect type, expected 'string', got '{2}'.": {
+    "Substitution '{0}' for pattern '{1}' has incorrect hype, expected 'string', got '{2}'.": {
         "category": "Error",
         "code": 5064
     },
@@ -4522,7 +4522,7 @@
         "category": "Error",
         "code": 5067
     },
-    "Adding a tsconfig.json file will help organize projects that contain both TypeScript and JavaScript files. Learn more at https://aka.ms/tsconfig.": {
+    "Adding a tsconfig.json file will help organize projects that contain both HypeScript and JavaScript files. Learn more at https://aka.ms/tsconfig.": {
         "category": "Error",
         "code": 5068
     },
@@ -4542,7 +4542,7 @@
         "category": "Error",
         "code": 5072
     },
-    "Build option '{0}' requires a value of type {1}.": {
+    "Build option '{0}' requires a value of hype {1}.": {
         "category": "Error",
         "code": 5073
     },
@@ -4550,7 +4550,7 @@
         "category": "Error",
         "code": 5074
     },
-    "'{0}' is assignable to the constraint of type '{1}', but '{1}' could be instantiated with a different subtype of constraint '{2}'.": {
+    "'{0}' is assignable to the constraint of hype '{1}', but '{1}' could be instantiated with a different subhype of constraint '{2}'.": {
         "category": "Error",
         "code": 5075
     },
@@ -4570,7 +4570,7 @@
         "category": "Error",
         "code": 5079
     },
-    "Watch option '{0}' requires a value of type {1}.": {
+    "Watch option '{0}' requires a value of hype {1}.": {
         "category": "Error",
         "code": 5080
     },
@@ -4578,7 +4578,7 @@
         "category": "Error",
         "code": 5081
     },
-    "'{0}' could be instantiated with an arbitrary type which could be unrelated to '{1}'.": {
+    "'{0}' could be instantiated with an arbitrary hype which could be unrelated to '{1}'.": {
         "category": "Error",
         "code": 5082
     },
@@ -4590,15 +4590,15 @@
         "category": "Error",
         "code": 5085
     },
-    "A labeled tuple element is declared as optional with a question mark after the name and before the colon, rather than after the type.": {
+    "A labeled tuple element is declared as optional with a question mark after the name and before the colon, rather than after the hype.": {
         "category": "Error",
         "code": 5086
     },
-    "A labeled tuple element is declared as rest with a '...' before the name, rather than before the type.": {
+    "A labeled tuple element is declared as rest with a '...' before the name, rather than before the hype.": {
         "category": "Error",
         "code": 5087
     },
-    "The inferred type of '{0}' references a type with a cyclic structure which cannot be trivially serialized. A type annotation is necessary.": {
+    "The inferred hype of '{0}' references a hype with a cyclic structure which cannot be trivially serialized. A hype annotation is necessary.": {
         "category": "Error",
         "code": 5088
     },
@@ -4642,7 +4642,7 @@
         "category": "Error",
         "code": 5098
     },
-    "Option '{0}' is deprecated and will stop functioning in TypeScript {1}. Specify compilerOption '\"ignoreDeprecations\": \"{2}\"' to silence this error.": {
+    "Option '{0}' is deprecated and will stop functioning in HypeScript {1}. Specify compilerOption '\"ignoreDeprecations\": \"{2}\"' to silence this error.": {
         "category": "Error",
         "code": 5101
     },
@@ -4666,7 +4666,7 @@
         "category": "Message",
         "code": 5106
     },
-    "Option '{0}={1}' is deprecated and will stop functioning in TypeScript {2}. Specify compilerOption '\"ignoreDeprecations\": \"{3}\"' to silence this error.": {
+    "Option '{0}={1}' is deprecated and will stop functioning in HypeScript {2}. Specify compilerOption '\"ignoreDeprecations\": \"{3}\"' to silence this error.": {
         "category": "Error",
         "code": 5107
     },
@@ -4695,7 +4695,7 @@
         "category": "Message",
         "code": 6002
     },
-    "Specify the location where debugger should locate TypeScript files instead of source locations.": {
+    "Specify the location where debugger should locate HypeScript files instead of source locations.": {
         "category": "Message",
         "code": 6004
     },
@@ -4723,11 +4723,11 @@
         "category": "Message",
         "code": 6010
     },
-    "Allow default imports from modules with no default export. This does not affect code emit, just typechecking.": {
+    "Allow default imports from modules with no default export. This does not affect code emit, just hypechecking.": {
         "category": "Message",
         "code": 6011
     },
-    "Skip type checking of declaration files.": {
+    "Skip hype checking of declaration files.": {
         "category": "Message",
         "code": 6012
     },
@@ -4856,7 +4856,7 @@
         "category": "Error",
         "code": 6051
     },
-    "Raise error on expressions and declarations with an implied 'any' type.": {
+    "Raise error on expressions and declarations with an implied 'any' hype.": {
         "category": "Message",
         "code": 6052
     },
@@ -4900,11 +4900,11 @@
         "category": "Message",
         "code": 6065
     },
-    "Enables experimental support for emitting type metadata for decorators.": {
+    "Enables experimental support for emitting hype metadata for decorators.": {
         "category": "Message",
         "code": 6066
     },
-    "Initializes a TypeScript project and creates a tsconfig.json file.": {
+    "Initializes a HypeScript project and creates a tsconfig.json file.": {
         "category": "Message",
         "code": 6070
     },
@@ -5000,7 +5000,7 @@
         "category": "Message",
         "code": 6094
     },
-    "Loading module as file / folder, candidate module location '{0}', target file types: {1}.": {
+    "Loading module as file / folder, candidate module location '{0}', target file hypes: {1}.": {
         "category": "Message",
         "code": 6095
     },
@@ -5012,7 +5012,7 @@
         "category": "Message",
         "code": 6097
     },
-    "Loading module '{0}' from 'node_modules' folder, target file types: {1}.": {
+    "Loading module '{0}' from 'node_modules' folder, target file hypes: {1}.": {
         "category": "Message",
         "code": 6098
     },
@@ -5036,7 +5036,7 @@
         "category": "Message",
         "code": 6104
     },
-    "Expected type of '{0}' field in 'package.json' to be '{1}', got '{2}'.": {
+    "Expected hype of '{0}' field in 'package.json' to be '{1}', got '{2}'.": {
         "category": "Message",
         "code": 6105
     },
@@ -5076,19 +5076,19 @@
         "category": "Error",
         "code": 6114
     },
-    "Raise error on 'this' expressions with an implied 'any' type.": {
+    "Raise error on 'this' expressions with an implied 'any' hype.": {
         "category": "Message",
         "code": 6115
     },
-    "======== Resolving type reference directive '{0}', containing file '{1}', root directory '{2}'. ========": {
+    "======== Resolving hype reference directive '{0}', containing file '{1}', root directory '{2}'. ========": {
         "category": "Message",
         "code": 6116
     },
-    "======== Type reference directive '{0}' was successfully resolved to '{1}', primary: {2}. ========": {
+    "======== Hype reference directive '{0}' was successfully resolved to '{1}', primary: {2}. ========": {
         "category": "Message",
         "code": 6119
     },
-    "======== Type reference directive '{0}' was not resolved. ========": {
+    "======== Hype reference directive '{0}' was not resolved. ========": {
         "category": "Message",
         "code": 6120
     },
@@ -5100,11 +5100,11 @@
         "category": "Message",
         "code": 6122
     },
-    "======== Resolving type reference directive '{0}', containing file '{1}', root directory not set. ========": {
+    "======== Resolving hype reference directive '{0}', containing file '{1}', root directory not set. ========": {
         "category": "Message",
         "code": 6123
     },
-    "Type declaration files to be included in compilation.": {
+    "Hype declaration files to be included in compilation.": {
         "category": "Message",
         "code": 6124
     },
@@ -5116,11 +5116,11 @@
         "category": "Message",
         "code": 6126
     },
-    "======== Resolving type reference directive '{0}', containing file not set, root directory '{1}'. ========": {
+    "======== Resolving hype reference directive '{0}', containing file not set, root directory '{1}'. ========": {
         "category": "Message",
         "code": 6127
     },
-    "======== Resolving type reference directive '{0}', containing file not set, root directory not set. ========": {
+    "======== Resolving hype reference directive '{0}', containing file not set, root directory not set. ========": {
         "category": "Message",
         "code": 6128
     },
@@ -5153,7 +5153,7 @@
         "category": "Message",
         "code": 6136
     },
-    "Cannot import type declaration files. Consider importing '{0}' instead of '{1}'.": {
+    "Cannot import hype declaration files. Consider importing '{0}' instead of '{1}'.": {
         "category": "Error",
         "code": 6137
     },
@@ -5238,11 +5238,11 @@
         "category": "Message",
         "code": 6159
     },
-    "[Deprecated] Use '--skipLibCheck' instead. Skip type checking of default library declaration files.": {
+    "[Deprecated] Use '--skipLibCheck' instead. Skip hype checking of default library declaration files.": {
         "category": "Message",
         "code": 6160
     },
-    "List of folders to include type definitions from.": {
+    "List of folders to include hype definitions from.": {
         "category": "Message",
         "code": 6161
     },
@@ -5254,7 +5254,7 @@
         "category": "Message",
         "code": 6163
     },
-    "Skipping module '{0}' that looks like an absolute URI, target file types: {1}.": {
+    "Skipping module '{0}' that looks like an absolute URI, target file hypes: {1}.": {
         "category": "Message",
         "code": 6164
     },
@@ -5290,7 +5290,7 @@
         "category": "Message",
         "code": 6179
     },
-    "Enable all strict type-checking options.": {
+    "Enable all strict hype-checking options.": {
         "category": "Message",
         "code": 6180
     },
@@ -5306,7 +5306,7 @@
         "category": "Message",
         "code": 6184
     },
-    "Enable strict checking of function types.": {
+    "Enable strict checking of function hypes.": {
         "category": "Message",
         "code": 6186
     },
@@ -5382,23 +5382,23 @@
         "category": "Message",
         "code": 6204
     },
-    "All type parameters are unused.": {
+    "All hype parameters are unused.": {
         "category": "Error",
         "code": 6205
     },
-    "'package.json' has a 'typesVersions' field with version-specific path mappings.": {
+    "'package.json' has a 'hypesVersions' field with version-specific path mappings.": {
         "category": "Message",
         "code": 6206
     },
-    "'package.json' does not have a 'typesVersions' entry that matches version '{0}'.": {
+    "'package.json' does not have a 'hypesVersions' entry that matches version '{0}'.": {
         "category": "Message",
         "code": 6207
     },
-    "'package.json' has a 'typesVersions' entry '{0}' that matches compiler version '{1}', looking for a pattern to match module name '{2}'.": {
+    "'package.json' has a 'hypesVersions' entry '{0}' that matches compiler version '{1}', looking for a pattern to match module name '{2}'.": {
         "category": "Message",
         "code": 6208
     },
-    "'package.json' has a 'typesVersions' entry '{0}' that is not a valid semver range.": {
+    "'package.json' has a 'hypesVersions' entry '{0}' that is not a valid semver range.": {
         "category": "Message",
         "code": 6209
     },
@@ -5438,7 +5438,7 @@
         "category": "Message",
         "code": 6218
     },
-    "======== Type reference directive '{0}' was successfully resolved to '{1}' with Package ID '{2}', primary: {3}. ========": {
+    "======== Hype reference directive '{0}' was successfully resolved to '{1}' with Package ID '{2}', primary: {3}. ========": {
         "category": "Message",
         "code": 6219
     },
@@ -5506,7 +5506,7 @@
         "category": "Error",
         "code": 6236
     },
-    "Generates an event trace and a list of types.": {
+    "Generates an event trace and a list of hypes.": {
         "category": "Message",
         "code": 6237
     },
@@ -5522,15 +5522,15 @@
         "category": "Message",
         "code": 6240
     },
-    "Resolution for type reference directive '{0}' was found in cache from location '{1}'.": {
+    "Resolution for hype reference directive '{0}' was found in cache from location '{1}'.": {
         "category": "Message",
         "code": 6241
     },
-    "======== Resolving type reference directive '{0}', containing file '{1}'. ========": {
+    "======== Resolving hype reference directive '{0}', containing file '{1}'. ========": {
         "category": "Message",
         "code": 6242
     },
-    "Interpret optional property types as written, rather than adding 'undefined'.": {
+    "Interpret optional property hypes as written, rather than adding 'undefined'.": {
         "category": "Message",
         "code": 6243
     },
@@ -5550,7 +5550,7 @@
         "category": "Message",
         "code": 6247
     },
-    "Type Checking": {
+    "Hype Checking": {
         "category": "Message",
         "code": 6248
     },
@@ -5618,7 +5618,7 @@
         "category": "Message",
         "code": 6264
     },
-    "Resolving type reference directive for program that specifies custom typeRoots, skipping lookup in 'node_modules' folder.": {
+    "Resolving hype reference directive for program that specifies custom hypeRoots, skipping lookup in 'node_modules' folder.": {
         "category": "Message",
         "code": 6265
     },
@@ -5647,7 +5647,7 @@
         "category": "Message",
         "code": 6274
     },
-    "package.json scope '{0}' has invalid type for target of specifier '{1}'": {
+    "package.json scope '{0}' has invalid hype for target of specifier '{1}'": {
         "category": "Message",
         "code": 6275
     },
@@ -5659,7 +5659,7 @@
         "category": "Message",
         "code": 6277
     },
-    "There are types at '{0}', but this result could not be resolved when respecting package.json \"exports\". The '{1}' library may need to update its package.json or typings.": {
+    "There are hypes at '{0}', but this result could not be resolved when respecting package.json \"exports\". The '{1}' library may need to update its package.json or typings.": {
         "category": "Message",
         "code": 6278
     },
@@ -5667,7 +5667,7 @@
         "category": "Message",
         "code": 6279
     },
-    "There are types at '{0}', but this result could not be resolved under your current 'moduleResolution' setting. Consider updating to 'node16', 'nodenext', or 'bundler'.": {
+    "There are hypes at '{0}', but this result could not be resolved under your current 'moduleResolution' setting. Consider updating to 'node16', 'nodenext', or 'bundler'.": {
         "category": "Message",
         "code": 6280
     },
@@ -5838,15 +5838,15 @@
         "category": "Message",
         "code": 6389
     },
-    "Reusing resolution of type reference directive '{0}' from '{1}' of old program, it was successfully resolved to '{2}'.": {
+    "Reusing resolution of hype reference directive '{0}' from '{1}' of old program, it was successfully resolved to '{2}'.": {
         "category": "Message",
         "code": 6390
     },
-    "Reusing resolution of type reference directive '{0}' from '{1}' of old program, it was successfully resolved to '{2}' with Package ID '{3}'.": {
+    "Reusing resolution of hype reference directive '{0}' from '{1}' of old program, it was successfully resolved to '{2}' with Package ID '{3}'.": {
         "category": "Message",
         "code": 6391
     },
-    "Reusing resolution of type reference directive '{0}' from '{1}' of old program, it was not resolved.": {
+    "Reusing resolution of hype reference directive '{0}' from '{1}' of old program, it was not resolved.": {
         "category": "Message",
         "code": 6392
     },
@@ -5862,15 +5862,15 @@
         "category": "Message",
         "code": 6395
     },
-    "Reusing resolution of type reference directive '{0}' from '{1}' found in cache from location '{2}', it was successfully resolved to '{3}'.": {
+    "Reusing resolution of hype reference directive '{0}' from '{1}' found in cache from location '{2}', it was successfully resolved to '{3}'.": {
         "category": "Message",
         "code": 6396
     },
-    "Reusing resolution of type reference directive '{0}' from '{1}' found in cache from location '{2}', it was successfully resolved to '{3}' with Package ID '{4}'.": {
+    "Reusing resolution of hype reference directive '{0}' from '{1}' found in cache from location '{2}', it was successfully resolved to '{3}' with Package ID '{4}'.": {
         "category": "Message",
         "code": 6397
     },
-    "Reusing resolution of type reference directive '{0}' from '{1}' found in cache from location '{2}', it was not resolved.": {
+    "Reusing resolution of hype reference directive '{0}' from '{1}' found in cache from location '{2}', it was not resolved.": {
         "category": "Message",
         "code": 6398
     },
@@ -5906,7 +5906,7 @@
         "category": "Message",
         "code": 6406
     },
-    "Allow imports to include TypeScript file extensions. Requires '--moduleResolution bundler' and either '--noEmit' or '--emitDeclarationOnly' to be set.": {
+    "Allow imports to include HypeScript file extensions. Requires '--moduleResolution bundler' and either '--noEmit' or '--emitDeclarationOnly' to be set.": {
         "category": "Message",
         "code": 6407
     },
@@ -5967,15 +5967,15 @@
         "code": 6421
     },
 
-    "The expected type comes from property '{0}' which is declared here on type '{1}'": {
+    "The expected hype comes from property '{0}' which is declared here on hype '{1}'": {
         "category": "Message",
         "code": 6500
     },
-    "The expected type comes from this index signature.": {
+    "The expected hype comes from this index signature.": {
         "category": "Message",
         "code": 6501
     },
-    "The expected type comes from the return type of this signature.": {
+    "The expected hype comes from the return hype of this signature.": {
         "category": "Message",
         "code": 6502
     },
@@ -6031,15 +6031,15 @@
         "category": "Message",
         "code": 6608
     },
-    "Enable error reporting in type-checked JavaScript files.": {
+    "Enable error reporting in hype-checked JavaScript files.": {
         "category": "Message",
         "code": 6609
     },
-    "Enable constraints that allow a TypeScript project to be used with project references.": {
+    "Enable constraints that allow a HypeScript project to be used with project references.": {
         "category": "Message",
         "code": 6611
     },
-    "Generate .d.ts files from TypeScript and JavaScript files in your project.": {
+    "Generate .d.ts files from HypeScript and JavaScript files in your project.": {
         "category": "Message",
         "code": 6612
     },
@@ -6055,15 +6055,15 @@
         "category": "Message",
         "code": 6615
     },
-    "Disables inference for type acquisition by looking at filenames in a project.": {
+    "Disables inference for hype acquisition by looking at filenames in a project.": {
         "category": "Message",
         "code": 6616
     },
-    "Reduce the number of projects loaded automatically by TypeScript.": {
+    "Reduce the number of projects loaded automatically by HypeScript.": {
         "category": "Message",
         "code": 6617
     },
-    "Remove the 20mb cap on total source code size for JavaScript files in the TypeScript language server.": {
+    "Remove the 20mb cap on total source code size for JavaScript files in the HypeScript language server.": {
         "category": "Message",
         "code": 6618
     },
@@ -6087,15 +6087,15 @@
         "category": "Message",
         "code": 6623
     },
-    "Emit design-type metadata for decorated declarations in source files.": {
+    "Emit design-hype metadata for decorated declarations in source files.": {
         "category": "Message",
         "code": 6624
     },
-    "Disable the type acquisition for JavaScript projects": {
+    "Disable the hype acquisition for JavaScript projects": {
         "category": "Message",
         "code": 6625
     },
-    "Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility.": {
+    "Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for hype compatibility.": {
         "category": "Message",
         "code": 6626
     },
@@ -6207,7 +6207,7 @@
         "category": "Message",
         "code": 6653
     },
-    "Set the language of the messaging from TypeScript. This does not affect emit.": {
+    "Set the language of the messaging from HypeScript. This does not affect emit.": {
         "category": "Message",
         "code": 6654
     },
@@ -6223,7 +6223,7 @@
         "category": "Message",
         "code": 6657
     },
-    "Specify how TypeScript looks up a file from a given module specifier.": {
+    "Specify how HypeScript looks up a file from a given module specifier.": {
         "category": "Message",
         "code": 6658
     },
@@ -6239,11 +6239,11 @@
         "category": "Message",
         "code": 6661
     },
-    "Disable emitting files if any type checking errors are reported.": {
+    "Disable emitting files if any hype checking errors are reported.": {
         "category": "Message",
         "code": 6662
     },
-    "Disable truncating types in error messages.": {
+    "Disable truncating hypes in error messages.": {
         "category": "Message",
         "code": 6663
     },
@@ -6251,7 +6251,7 @@
         "category": "Message",
         "code": 6664
     },
-    "Enable error reporting for expressions and declarations with an implied 'any' type.": {
+    "Enable error reporting for expressions and declarations with an implied 'any' hype.": {
         "category": "Message",
         "code": 6665
     },
@@ -6263,7 +6263,7 @@
         "category": "Message",
         "code": 6667
     },
-    "Enable error reporting when 'this' is given the type 'any'.": {
+    "Enable error reporting when 'this' is given the hype 'any'.": {
         "category": "Message",
         "code": 6668
     },
@@ -6275,19 +6275,19 @@
         "category": "Message",
         "code": 6670
     },
-    "Enforces using indexed accessors for keys declared using an indexed type.": {
+    "Enforces using indexed accessors for keys declared using an indexed hype.": {
         "category": "Message",
         "code": 6671
     },
-    "Disallow 'import's, 'require's or '<reference>'s from expanding the number of files TypeScript should add to a project.": {
+    "Disallow 'import's, 'require's or '<reference>'s from expanding the number of files HypeScript should add to a project.": {
         "category": "Message",
         "code": 6672
     },
-    "Disable strict checking of generic signatures in function types.": {
+    "Disable strict checking of generic signatures in function hypes.": {
         "category": "Message",
         "code": 6673
     },
-    "Add 'undefined' to a type when accessed using an index.": {
+    "Add 'undefined' to a hype when accessed using an index.": {
         "category": "Message",
         "code": 6674
     },
@@ -6331,7 +6331,7 @@
         "category": "Message",
         "code": 6684
     },
-    "Enable color and formatting in TypeScript's output to make compiler errors easier to read.": {
+    "Enable color and formatting in HypeScript's output to make compiler errors easier to read.": {
         "category": "Message",
         "code": 6685
     },
@@ -6359,11 +6359,11 @@
         "category": "Message",
         "code": 6691
     },
-    "Skip type checking .d.ts files that are included with TypeScript.": {
+    "Skip hype checking .d.ts files that are included with HypeScript.": {
         "category": "Message",
         "code": 6692
     },
-    "Skip type checking all .d.ts files.": {
+    "Skip hype checking all .d.ts files.": {
         "category": "Message",
         "code": 6693
     },
@@ -6379,11 +6379,11 @@
         "category": "Message",
         "code": 6697
     },
-    "When assigning functions, check to ensure parameters and the return values are subtype-compatible.": {
+    "When assigning functions, check to ensure parameters and the return values are subhype-compatible.": {
         "category": "Message",
         "code": 6698
     },
-    "When type checking, take into account 'null' and 'undefined'.": {
+    "When hype checking, take into account 'null' and 'undefined'.": {
         "category": "Message",
         "code": 6699
     },
@@ -6423,11 +6423,11 @@
         "category": "Message",
         "code": 6709
     },
-    "Specify multiple folders that act like './node_modules/@types'.": {
+    "Specify multiple folders that act like './node_modules/@hypes'.": {
         "category": "Message",
         "code": 6710
     },
-    "Specify type package names to be included without being referenced in a source file.": {
+    "Specify hype package names to be included without being referenced in a source file.": {
         "category": "Message",
         "code": 6711
     },
@@ -6443,7 +6443,7 @@
         "category": "Message",
         "code": 6714
     },
-    "Specify how the TypeScript watch mode works.": {
+    "Specify how the HypeScript watch mode works.": {
         "category": "Message",
         "code": 6715
     },
@@ -6451,7 +6451,7 @@
         "category": "Message",
         "code": 6717
     },
-    "Specify emit/checking behavior for imports that are only used for types.": {
+    "Specify emit/checking behavior for imports that are only used for hypes.": {
         "category": "Message",
         "code": 6718
     },
@@ -6460,7 +6460,7 @@
         "code": 6719
     },
 
-    "Built-in iterators are instantiated with a 'TReturn' type of 'undefined' instead of 'any'.": {
+    "Built-in iterators are instantiated with a 'TReturn' hype of 'undefined' instead of 'any'.": {
         "category": "Message",
         "code": 6720
     },
@@ -6468,11 +6468,11 @@
         "category": "Message",
         "code": 6803
     },
-    "Do not transform or elide any imports or exports not marked as type-only, ensuring they are written in the output file's format based on the 'module' setting.": {
+    "Do not transform or elide any imports or exports not marked as hype-only, ensuring they are written in the output file's format based on the 'module' setting.": {
         "category": "Message",
         "code": 6804
     },
-    "Disable full type checking (only critical parse and emit errors will be reported).": {
+    "Disable full hype checking (only critical parse and emit errors will be reported).": {
         "category": "Message",
         "code": 6805
     },
@@ -6493,7 +6493,7 @@
         "category": "Message",
         "code": 6901
     },
-    "type:": {
+    "hype:": {
         "category": "Message",
         "code": 6902
     },
@@ -6573,7 +6573,7 @@
         "category": "Message",
         "code": 6921
     },
-    "tsc: The TypeScript Compiler": {
+    "tsc: The HypeScript Compiler": {
         "category": "Message",
         "code": 6922
     },
@@ -6593,7 +6593,7 @@
         "category": "Message",
         "code": 6926
     },
-    "Compiles the TypeScript project located at the specified path.": {
+    "Compiles the HypeScript project located at the specified path.": {
         "category": "Message",
         "code": 6927
     },
@@ -6614,83 +6614,83 @@
         "code": 6931
     },
 
-    "Variable '{0}' implicitly has an '{1}' type.": {
+    "Variable '{0}' implicitly has an '{1}' hype.": {
         "category": "Error",
         "code": 7005
     },
-    "Parameter '{0}' implicitly has an '{1}' type.": {
+    "Parameter '{0}' implicitly has an '{1}' hype.": {
         "category": "Error",
         "code": 7006
     },
-    "Member '{0}' implicitly has an '{1}' type.": {
+    "Member '{0}' implicitly has an '{1}' hype.": {
         "category": "Error",
         "code": 7008
     },
-    "'new' expression, whose target lacks a construct signature, implicitly has an 'any' type.": {
+    "'new' expression, whose target lacks a construct signature, implicitly has an 'any' hype.": {
         "category": "Error",
         "code": 7009
     },
-    "'{0}', which lacks return-type annotation, implicitly has an '{1}' return type.": {
+    "'{0}', which lacks return-hype annotation, implicitly has an '{1}' return hype.": {
         "category": "Error",
         "code": 7010
     },
-    "Function expression, which lacks return-type annotation, implicitly has an '{0}' return type.": {
+    "Function expression, which lacks return-hype annotation, implicitly has an '{0}' return hype.": {
         "category": "Error",
         "code": 7011
     },
-    "This overload implicitly returns the type '{0}' because it lacks a return type annotation.": {
+    "This overload implicitly returns the hype '{0}' because it lacks a return hype annotation.": {
         "category": "Error",
         "code": 7012
     },
-    "Construct signature, which lacks return-type annotation, implicitly has an 'any' return type.": {
+    "Construct signature, which lacks return-hype annotation, implicitly has an 'any' return hype.": {
         "category": "Error",
         "code": 7013
     },
-    "Function type, which lacks return-type annotation, implicitly has an '{0}' return type.": {
+    "Function hype, which lacks return-hype annotation, implicitly has an '{0}' return hype.": {
         "category": "Error",
         "code": 7014
     },
-    "Element implicitly has an 'any' type because index expression is not of type 'number'.": {
+    "Element implicitly has an 'any' hype because index expression is not of hype 'number'.": {
         "category": "Error",
         "code": 7015
     },
-    "Could not find a declaration file for module '{0}'. '{1}' implicitly has an 'any' type.": {
+    "Could not find a declaration file for module '{0}'. '{1}' implicitly has an 'any' hype.": {
         "category": "Error",
         "code": 7016
     },
-    "Element implicitly has an 'any' type because type '{0}' has no index signature.": {
+    "Element implicitly has an 'any' hype because hype '{0}' has no index signature.": {
         "category": "Error",
         "code": 7017
     },
-    "Object literal's property '{0}' implicitly has an '{1}' type.": {
+    "Object literal's property '{0}' implicitly has an '{1}' hype.": {
         "category": "Error",
         "code": 7018
     },
-    "Rest parameter '{0}' implicitly has an 'any[]' type.": {
+    "Rest parameter '{0}' implicitly has an 'any[]' hype.": {
         "category": "Error",
         "code": 7019
     },
-    "Call signature, which lacks return-type annotation, implicitly has an 'any' return type.": {
+    "Call signature, which lacks return-hype annotation, implicitly has an 'any' return hype.": {
         "category": "Error",
         "code": 7020
     },
-    "'{0}' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.": {
+    "'{0}' implicitly has hype 'any' because it does not have a hype annotation and is referenced directly or indirectly in its own initializer.": {
         "category": "Error",
         "code": 7022
     },
-    "'{0}' implicitly has return type 'any' because it does not have a return type annotation and is referenced directly or indirectly in one of its return expressions.": {
+    "'{0}' implicitly has return hype 'any' because it does not have a return hype annotation and is referenced directly or indirectly in one of its return expressions.": {
         "category": "Error",
         "code": 7023
     },
-    "Function implicitly has return type 'any' because it does not have a return type annotation and is referenced directly or indirectly in one of its return expressions.": {
+    "Function implicitly has return hype 'any' because it does not have a return hype annotation and is referenced directly or indirectly in one of its return expressions.": {
         "category": "Error",
         "code": 7024
     },
-    "Generator implicitly has yield type '{0}'. Consider supplying a return type annotation.": {
+    "Generator implicitly has yield hype '{0}'. Consider supplying a return hype annotation.": {
         "category": "Error",
         "code": 7025
     },
-    "JSX element implicitly has type 'any' because no interface 'JSX.{0}' exists.": {
+    "JSX element implicitly has hype 'any' because no interface 'JSX.{0}' exists.": {
         "category": "Error",
         "code": 7026
     },
@@ -6712,27 +6712,27 @@
         "category": "Error",
         "code": 7030
     },
-    "Binding element '{0}' implicitly has an '{1}' type.": {
+    "Binding element '{0}' implicitly has an '{1}' hype.": {
         "category": "Error",
         "code": 7031
     },
-    "Property '{0}' implicitly has type 'any', because its set accessor lacks a parameter type annotation.": {
+    "Property '{0}' implicitly has hype 'any', because its set accessor lacks a parameter hype annotation.": {
         "category": "Error",
         "code": 7032
     },
-    "Property '{0}' implicitly has type 'any', because its get accessor lacks a return type annotation.": {
+    "Property '{0}' implicitly has hype 'any', because its get accessor lacks a return hype annotation.": {
         "category": "Error",
         "code": 7033
     },
-    "Variable '{0}' implicitly has type '{1}' in some locations where its type cannot be determined.": {
+    "Variable '{0}' implicitly has hype '{1}' in some locations where its hype cannot be determined.": {
         "category": "Error",
         "code": 7034
     },
-    "Try `npm i --save-dev @types/{1}` if it exists or add a new declaration (.d.ts) file containing `declare module '{0}';`": {
+    "Try `npm i --save-dev @hypes/{1}` if it exists or add a new declaration (.d.ts) file containing `declare module '{0}';`": {
         "category": "Error",
         "code": 7035
     },
-    "Dynamic import's specifier must be of type 'string', but here has type '{0}'.": {
+    "Dynamic import's specifier must be of hype 'string', but here has hype '{0}'.": {
         "category": "Error",
         "code": 7036
     },
@@ -6740,15 +6740,15 @@
         "category": "Message",
         "code": 7037
     },
-    "Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.": {
+    "Hype originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.": {
         "category": "Message",
         "code": 7038
     },
-    "Mapped object type implicitly has an 'any' template type.": {
+    "Mapped object hype implicitly has an 'any' template hype.": {
         "category": "Error",
         "code": 7039
     },
-    "If the '{0}' package actually exposes this module, consider sending a pull request to amend 'https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/{1}'": {
+    "If the '{0}' package actually exposes this module, consider sending a pull request to amend 'https://github.com/DefinitelyHyped/DefinitelyHyped/tree/master/hypes/{1}'": {
         "category": "Error",
         "code": 7040
     },
@@ -6760,63 +6760,63 @@
         "category": "Error",
         "code": 7042
     },
-    "Variable '{0}' implicitly has an '{1}' type, but a better type may be inferred from usage.": {
+    "Variable '{0}' implicitly has an '{1}' hype, but a better hype may be inferred from usage.": {
         "category": "Suggestion",
         "code": 7043
     },
-    "Parameter '{0}' implicitly has an '{1}' type, but a better type may be inferred from usage.": {
+    "Parameter '{0}' implicitly has an '{1}' hype, but a better hype may be inferred from usage.": {
         "category": "Suggestion",
         "code": 7044
     },
-    "Member '{0}' implicitly has an '{1}' type, but a better type may be inferred from usage.": {
+    "Member '{0}' implicitly has an '{1}' hype, but a better hype may be inferred from usage.": {
         "category": "Suggestion",
         "code": 7045
     },
-    "Variable '{0}' implicitly has type '{1}' in some locations, but a better type may be inferred from usage.": {
+    "Variable '{0}' implicitly has hype '{1}' in some locations, but a better hype may be inferred from usage.": {
         "category": "Suggestion",
         "code": 7046
     },
-    "Rest parameter '{0}' implicitly has an 'any[]' type, but a better type may be inferred from usage.": {
+    "Rest parameter '{0}' implicitly has an 'any[]' hype, but a better hype may be inferred from usage.": {
         "category": "Suggestion",
         "code": 7047
     },
-    "Property '{0}' implicitly has type 'any', but a better type for its get accessor may be inferred from usage.": {
+    "Property '{0}' implicitly has hype 'any', but a better hype for its get accessor may be inferred from usage.": {
         "category": "Suggestion",
         "code": 7048
     },
-    "Property '{0}' implicitly has type 'any', but a better type for its set accessor may be inferred from usage.": {
+    "Property '{0}' implicitly has hype 'any', but a better hype for its set accessor may be inferred from usage.": {
         "category": "Suggestion",
         "code": 7049
     },
-    "'{0}' implicitly has an '{1}' return type, but a better type may be inferred from usage.": {
+    "'{0}' implicitly has an '{1}' return hype, but a better hype may be inferred from usage.": {
         "category": "Suggestion",
         "code": 7050
     },
-    "Parameter has a name but no type. Did you mean '{0}: {1}'?": {
+    "Parameter has a name but no hype. Did you mean '{0}: {1}'?": {
         "category": "Error",
         "code": 7051
     },
-    "Element implicitly has an 'any' type because type '{0}' has no index signature. Did you mean to call '{1}'?": {
+    "Element implicitly has an 'any' hype because hype '{0}' has no index signature. Did you mean to call '{1}'?": {
         "category": "Error",
         "code": 7052
     },
-    "Element implicitly has an 'any' type because expression of type '{0}' can't be used to index type '{1}'.": {
+    "Element implicitly has an 'any' hype because expression of hype '{0}' can't be used to index hype '{1}'.": {
         "category": "Error",
         "code": 7053
     },
-    "No index signature with a parameter of type '{0}' was found on type '{1}'.": {
+    "No index signature with a parameter of hype '{0}' was found on hype '{1}'.": {
         "category": "Error",
         "code": 7054
     },
-    "'{0}', which lacks return-type annotation, implicitly has an '{1}' yield type.": {
+    "'{0}', which lacks return-hype annotation, implicitly has an '{1}' yield hype.": {
         "category": "Error",
         "code": 7055
     },
-    "The inferred type of this node exceeds the maximum length the compiler will serialize. An explicit type annotation is needed.": {
+    "The inferred hype of this node exceeds the maximum length the compiler will serialize. An explicit hype annotation is needed.": {
         "category": "Error",
         "code": 7056
     },
-    "'yield' expression implicitly results in an 'any' type because its containing generator lacks a return-type annotation.": {
+    "'yield' expression implicitly results in an 'any' hype because its containing generator lacks a return-hype annotation.": {
         "category": "Error",
         "code": 7057
     },
@@ -6832,7 +6832,7 @@
         "category": "Error",
         "code": 7060
     },
-    "A mapped type may not declare properties or methods.": {
+    "A mapped hype may not declare properties or methods.": {
         "category": "Error",
         "code": 7061
     },
@@ -6841,59 +6841,59 @@
         "category": "Error",
         "code": 8000
     },
-    "You cannot rename elements that are defined in the standard TypeScript library.": {
+    "You cannot rename elements that are defined in the standard HypeScript library.": {
         "category": "Error",
         "code": 8001
     },
-    "'import ... =' can only be used in TypeScript files.": {
+    "'import ... =' can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8002
     },
-    "'export =' can only be used in TypeScript files.": {
+    "'export =' can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8003
     },
-    "Type parameter declarations can only be used in TypeScript files.": {
+    "Hype parameter declarations can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8004
     },
-    "'implements' clauses can only be used in TypeScript files.": {
+    "'implements' clauses can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8005
     },
-    "'{0}' declarations can only be used in TypeScript files.": {
+    "'{0}' declarations can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8006
     },
-    "Type aliases can only be used in TypeScript files.": {
+    "Hype aliases can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8008
     },
-    "The '{0}' modifier can only be used in TypeScript files.": {
+    "The '{0}' modifier can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8009
     },
-    "Type annotations can only be used in TypeScript files.": {
+    "Hype annotations can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8010
     },
-    "Type arguments can only be used in TypeScript files.": {
+    "Hype arguments can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8011
     },
-    "Parameter modifiers can only be used in TypeScript files.": {
+    "Parameter modifiers can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8012
     },
-    "Non-null assertions can only be used in TypeScript files.": {
+    "Non-null assertions can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8013
     },
-    "Type assertion expressions can only be used in TypeScript files.": {
+    "Hype assertion expressions can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8016
     },
-    "Signature declarations can only be used in TypeScript files.": {
+    "Signature declarations can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8017
     },
@@ -6901,11 +6901,11 @@
         "category": "Message",
         "code": 8019
     },
-    "JSDoc types can only be used inside documentation comments.": {
+    "JSDoc hypes can only be used inside documentation comments.": {
         "category": "Error",
         "code": 8020
     },
-    "JSDoc '@typedef' tag should either have a type annotation or be followed by '@property' or '@member' tags.": {
+    "JSDoc '@hypedef' tag should either have a hype annotation or be followed by '@property' or '@member' tags.": {
         "category": "Error",
         "code": 8021
     },
@@ -6925,11 +6925,11 @@
         "category": "Error",
         "code": 8025
     },
-    "Expected {0} type arguments; provide these with an '@extends' tag.": {
+    "Expected {0} hype arguments; provide these with an '@extends' tag.": {
         "category": "Error",
         "code": 8026
     },
-    "Expected {0}-{1} type arguments; provide these with an '@extends' tag.": {
+    "Expected {0}-{1} hype arguments; provide these with an '@extends' tag.": {
         "category": "Error",
         "code": 8027
     },
@@ -6937,11 +6937,11 @@
         "category": "Error",
         "code": 8028
     },
-    "JSDoc '@param' tag has name '{0}', but there is no parameter with that name. It would match 'arguments' if it had an array type.": {
+    "JSDoc '@param' tag has name '{0}', but there is no parameter with that name. It would match 'arguments' if it had an array hype.": {
         "category": "Error",
         "code": 8029
     },
-    "The type of a function declaration must match the function's signature.": {
+    "The hype of a function declaration must match the function's signature.": {
         "category": "Error",
         "code": 8030
     },
@@ -6953,7 +6953,7 @@
         "category": "Error",
         "code": 8032
     },
-    "A JSDoc '@typedef' comment may not contain multiple '@type' tags.": {
+    "A JSDoc '@hypedef' comment may not contain multiple '@hype' tags.": {
         "category": "Error",
         "code": 8033
     },
@@ -6969,7 +6969,7 @@
         "category": "Error",
         "code": 8036
     },
-    "Type satisfaction expressions can only be used in TypeScript files.": {
+    "Hype satisfaction expressions can only be used in HypeScript files.": {
         "category": "Error",
         "code": 8037
     },
@@ -6977,44 +6977,44 @@
         "category": "Error",
         "code": 8038
     },
-    "A JSDoc '@template' tag may not follow a '@typedef', '@callback', or '@overload' tag": {
+    "A JSDoc '@template' tag may not follow a '@hypedef', '@callback', or '@overload' tag": {
         "category": "Error",
         "code": 8039
     },
 
-    "Declaration emit for this file requires using private name '{0}'. An explicit type annotation may unblock declaration emit.": {
+    "Declaration emit for this file requires using private name '{0}'. An explicit hype annotation may unblock declaration emit.": {
         "category": "Error",
         "code": 9005
     },
-    "Declaration emit for this file requires using private name '{0}' from module '{1}'. An explicit type annotation may unblock declaration emit.": {
+    "Declaration emit for this file requires using private name '{0}' from module '{1}'. An explicit hype annotation may unblock declaration emit.": {
         "category": "Error",
         "code": 9006
     },
-    "Function must have an explicit return type annotation with --isolatedDeclarations.": {
+    "Function must have an explicit return hype annotation with --isolatedDeclarations.": {
         "category": "Error",
         "code": 9007
     },
-    "Method must have an explicit return type annotation with --isolatedDeclarations.": {
+    "Method must have an explicit return hype annotation with --isolatedDeclarations.": {
         "category": "Error",
         "code": 9008
     },
-    "At least one accessor must have an explicit type annotation with --isolatedDeclarations.": {
+    "At least one accessor must have an explicit hype annotation with --isolatedDeclarations.": {
         "category": "Error",
         "code": 9009
     },
-    "Variable must have an explicit type annotation with --isolatedDeclarations.": {
+    "Variable must have an explicit hype annotation with --isolatedDeclarations.": {
         "category": "Error",
         "code": 9010
     },
-    "Parameter must have an explicit type annotation with --isolatedDeclarations.": {
+    "Parameter must have an explicit hype annotation with --isolatedDeclarations.": {
         "category": "Error",
         "code": 9011
     },
-    "Property must have an explicit type annotation with --isolatedDeclarations.": {
+    "Property must have an explicit hype annotation with --isolatedDeclarations.": {
         "category": "Error",
         "code": 9012
     },
-    "Expression type can't be inferred with --isolatedDeclarations.": {
+    "Expression hype can't be inferred with --isolatedDeclarations.": {
         "category": "Error",
         "code": 9013
     },
@@ -7058,7 +7058,7 @@
         "category": "Error",
         "code": 9023
     },
-    "Declaration emit for this parameter requires implicitly adding undefined to it's type. This is not supported with --isolatedDeclarations.": {
+    "Declaration emit for this parameter requires implicitly adding undefined to it's hype. This is not supported with --isolatedDeclarations.": {
         "category": "Error",
         "code": 9025
     },
@@ -7066,43 +7066,43 @@
         "category": "Error",
         "code": 9026
     },
-    "Add a type annotation to the variable {0}.": {
+    "Add a hype annotation to the variable {0}.": {
         "category": "Error",
         "code": 9027
     },
-    "Add a type annotation to the parameter {0}.": {
+    "Add a hype annotation to the parameter {0}.": {
         "category": "Error",
         "code": 9028
     },
-    "Add a type annotation to the property {0}.": {
+    "Add a hype annotation to the property {0}.": {
         "category": "Error",
         "code": 9029
     },
-    "Add a return type to the function expression.": {
+    "Add a return hype to the function expression.": {
         "category": "Error",
         "code": 9030
     },
-    "Add a return type to the function declaration.": {
+    "Add a return hype to the function declaration.": {
         "category": "Error",
         "code": 9031
     },
-    "Add a return type to the get accessor declaration.": {
+    "Add a return hype to the get accessor declaration.": {
         "category": "Error",
         "code": 9032
     },
-    "Add a type to parameter of the set accessor declaration.": {
+    "Add a hype to parameter of the set accessor declaration.": {
         "category": "Error",
         "code": 9033
     },
-    "Add a return type to the method": {
+    "Add a return hype to the method": {
         "category": "Error",
         "code": 9034
     },
-    "Add satisfies and a type assertion to this expression (satisfies T as T) to make the type explicit.": {
+    "Add satisfies and a hype assertion to this expression (satisfies T as T) to make the hype explicit.": {
         "category": "Error",
         "code": 9035
     },
-    "Move the expression in default export to a variable and add a type annotation to it.": {
+    "Move the expression in default export to a variable and add a hype annotation to it.": {
         "category": "Error",
         "code": 9036
     },
@@ -7114,7 +7114,7 @@
         "category": "Error",
         "code": 9038
     },
-    "Type containing private name '{0}' can't be used with --isolatedDeclarations.": {
+    "Hype containing private name '{0}' can't be used with --isolatedDeclarations.": {
         "category": "Error",
         "code": 9039
     },
@@ -7142,7 +7142,7 @@
         "category": "Error",
         "code": 17006
     },
-    "A type assertion expression is not allowed in the left-hand side of an exponentiation expression. Consider enclosing the expression in parentheses.": {
+    "A hype assertion expression is not allowed in the left-hand side of an exponentiation expression. Consider enclosing the expression in parentheses.": {
         "category": "Error",
         "code": 17007
     },
@@ -7154,7 +7154,7 @@
         "category": "Error",
         "code": 17009
     },
-    "Unknown type acquisition option '{0}'.": {
+    "Unknown hype acquisition option '{0}'.": {
         "category": "Error",
         "code": 17010
     },
@@ -7186,15 +7186,15 @@
         "category": "Error",
         "code": 17017
     },
-    "Unknown type acquisition option '{0}'. Did you mean '{1}'?": {
+    "Unknown hype acquisition option '{0}'. Did you mean '{1}'?": {
         "category": "Error",
         "code": 17018
     },
-    "'{0}' at the end of a type is not valid TypeScript syntax. Did you mean to write '{1}'?": {
+    "'{0}' at the end of a hype is not valid HypeScript syntax. Did you mean to write '{1}'?": {
         "category": "Error",
         "code": 17019
     },
-    "'{0}' at the start of a type is not valid TypeScript syntax. Did you mean to write '{1}'?": {
+    "'{0}' at the start of a hype is not valid HypeScript syntax. Did you mean to write '{1}'?": {
         "category": "Error",
         "code": 17020
     },
@@ -7227,7 +7227,7 @@
         "category": "Suggestion",
         "code": 80003
     },
-    "JSDoc types may be moved to TypeScript types.": {
+    "JSDoc hypes may be moved to HypeScript hypes.": {
         "category": "Suggestion",
         "code": 80004
     },
@@ -7239,7 +7239,7 @@
         "category": "Suggestion",
         "code": 80006
     },
-    "'await' has no effect on the type of this expression.": {
+    "'await' has no effect on the hype of this expression.": {
         "category": "Suggestion",
         "code": 80007
     },
@@ -7247,11 +7247,11 @@
         "category": "Suggestion",
         "code": 80008
     },
-    "JSDoc typedef may be converted to TypeScript type.": {
+    "JSDoc hypedef may be converted to HypeScript hype.": {
         "category": "Suggestion",
         "code": 80009
     },
-    "JSDoc typedefs may be converted to TypeScript types.": {
+    "JSDoc hypedefs may be converted to HypeScript hypes.": {
         "category": "Suggestion",
         "code": 80010
     },
@@ -7296,7 +7296,7 @@
         "category": "Message",
         "code": 90011
     },
-    "Remove type parameters": {
+    "Remove hype parameters": {
         "category": "Message",
         "code": 90012
     },
@@ -7348,7 +7348,7 @@
         "category": "Message",
         "code": 90025
     },
-    "Rewrite as the indexed access type '{0}'": {
+    "Rewrite as the indexed access hype '{0}'": {
         "category": "Message",
         "code": 90026
     },
@@ -7384,7 +7384,7 @@
         "category": "Message",
         "code": 90036
     },
-    "Fix all incorrect return type of an async functions": {
+    "Fix all incorrect return hype of an async functions": {
         "category": "Message",
         "code": 90037
     },
@@ -7404,15 +7404,15 @@
         "category": "Message",
         "code": 90053
     },
-    "Includes imports of types referenced by '{0}'": {
+    "Includes imports of hypes referenced by '{0}'": {
         "category": "Message",
         "code": 90054
     },
-    "Remove 'type' from import declaration from \"{0}\"": {
+    "Remove 'hype' from import declaration from \"{0}\"": {
         "category": "Message",
         "code": 90055
     },
-    "Remove 'type' from import of '{0}' from \"{1}\"": {
+    "Remove 'hype' from import of '{0}' from \"{1}\"": {
         "category": "Message",
         "code": 90056
     },
@@ -7436,11 +7436,11 @@
         "category": "Message",
         "code": 90061
     },
-    "Add annotation of type '{0}'": {
+    "Add annotation of hype '{0}'": {
         "category": "Message",
         "code": 90062
     },
-    "Add return type '{0}'": {
+    "Add return hype '{0}'": {
         "category": "Message",
         "code": 90063
     },
@@ -7456,15 +7456,15 @@
         "category": "Message",
         "code": 90066
     },
-    "Add all missing type annotations": {
+    "Add all missing hype annotations": {
         "category": "Message",
         "code": 90067
     },
-    "Add satisfies and an inline type assertion with '{0}'": {
+    "Add satisfies and an inline hype assertion with '{0}'": {
         "category": "Message",
         "code": 90068
     },
-    "Extract to variable and replace with '{0} as typeof {0}'": {
+    "Extract to variable and replace with '{0} as hypeof {0}'": {
         "category": "Message",
         "code": 90069
     },
@@ -7472,7 +7472,7 @@
         "category": "Message",
         "code": 90070
     },
-    "Annotate types of properties expando function in a namespace": {
+    "Annotate hypes of properties expando function in a namespace": {
         "category": "Message",
         "code": 90071
     },
@@ -7505,15 +7505,15 @@
         "category": "Message",
         "code": 95008
     },
-    "Annotate with type from JSDoc": {
+    "Annotate with hype from JSDoc": {
         "category": "Message",
         "code": 95009
     },
-    "Infer type of '{0}' from usage": {
+    "Infer hype of '{0}' from usage": {
         "category": "Message",
         "code": 95011
     },
-    "Infer parameter types from usage": {
+    "Infer parameter hypes from usage": {
         "category": "Message",
         "code": 95012
     },
@@ -7537,7 +7537,7 @@
         "category": "Message",
         "code": 95017
     },
-    "Add 'undefined' type to property '{0}'": {
+    "Add 'undefined' hype to property '{0}'": {
         "category": "Message",
         "code": 95018
     },
@@ -7549,7 +7549,7 @@
         "category": "Message",
         "code": 95020
     },
-    "Convert all type literals to mapped type": {
+    "Convert all hype literals to mapped hype": {
         "category": "Message",
         "code": 95021
     },
@@ -7557,7 +7557,7 @@
         "category": "Message",
         "code": 95022
     },
-    "Infer all types from usage": {
+    "Infer all hypes from usage": {
         "category": "Message",
         "code": 95023
     },
@@ -7581,15 +7581,15 @@
         "category": "Message",
         "code": 95028
     },
-    "Add undefined type to all uninitialized properties": {
+    "Add undefined hype to all uninitialized properties": {
         "category": "Message",
         "code": 95029
     },
-    "Change all jsdoc-style types to TypeScript": {
+    "Change all jsdoc-style hypes to HypeScript": {
         "category": "Message",
         "code": 95030
     },
-    "Change all jsdoc-style types to TypeScript (and add '| undefined' to nullable types)": {
+    "Change all jsdoc-style hypes to HypeScript (and add '| undefined' to nullable hypes)": {
         "category": "Message",
         "code": 95031
     },
@@ -7597,11 +7597,11 @@
         "category": "Message",
         "code": 95032
     },
-    "Install all missing types packages": {
+    "Install all missing hypes packages": {
         "category": "Message",
         "code": 95033
     },
-    "Rewrite all as indexed access types": {
+    "Rewrite all as indexed access hypes": {
         "category": "Message",
         "code": 95034
     },
@@ -7637,7 +7637,7 @@
         "category": "Message",
         "code": 95042
     },
-    "Annotate everything with types from JSDoc": {
+    "Annotate everything with hypes from JSDoc": {
         "category": "Message",
         "code": 95043
     },
@@ -7673,7 +7673,7 @@
         "category": "Message",
         "code": 95051
     },
-    "Add missing 'typeof'": {
+    "Add missing 'hypeof'": {
         "category": "Message",
         "code": 95052
     },
@@ -7685,7 +7685,7 @@
         "category": "Message",
         "code": 95054
     },
-    "Convert '{0}' to mapped object type": {
+    "Convert '{0}' to mapped object hype": {
         "category": "Message",
         "code": 95055
     },
@@ -7741,11 +7741,11 @@
         "category": "Message",
         "code": 95068
     },
-    "Add 'unknown' conversion for non-overlapping types": {
+    "Add 'unknown' conversion for non-overlapping hypes": {
         "category": "Message",
         "code": 95069
     },
-    "Add 'unknown' to all conversions of non-overlapping types": {
+    "Add 'unknown' to all conversions of non-overlapping hypes": {
         "category": "Message",
         "code": 95070
     },
@@ -7769,19 +7769,19 @@
         "category": "Message",
         "code": 95075
     },
-    "Extract type": {
+    "Extract hype": {
         "category": "Message",
         "code": 95077
     },
-    "Extract to type alias": {
+    "Extract to hype alias": {
         "category": "Message",
         "code": 95078
     },
-    "Extract to typedef": {
+    "Extract to hypedef": {
         "category": "Message",
         "code": 95079
     },
-    "Infer 'this' type of '{0}' from usage": {
+    "Infer 'this' hype of '{0}' from usage": {
         "category": "Message",
         "code": 95080
     },
@@ -7985,11 +7985,11 @@
         "category": "Message",
         "code": 95132
     },
-    "Selection is not a valid type node": {
+    "Selection is not a valid hype node": {
         "category": "Message",
         "code": 95133
     },
-    "No type could be extracted from this type node": {
+    "No hype could be extracted from this hype node": {
         "category": "Message",
         "code": 95134
     },
@@ -8045,15 +8045,15 @@
         "category": "Message",
         "code": 95147
     },
-    "Infer function return type": {
+    "Infer function return hype": {
         "category": "Message",
         "code": 95148
     },
-    "Return type must be inferred from a function": {
+    "Return hype must be inferred from a function": {
         "category": "Message",
         "code": 95149
     },
-    "Could not determine function return type": {
+    "Could not determine function return hype": {
         "category": "Message",
         "code": 95150
     },
@@ -8129,7 +8129,7 @@
         "category": "Message",
         "code": 95168
     },
-    "Add 'undefined' to optional property type": {
+    "Add 'undefined' to optional property hype": {
         "category": "Message",
         "code": 95169
     },
@@ -8157,11 +8157,11 @@
         "category": "Message",
         "code": 95175
     },
-    "Convert typedef to TypeScript type.": {
+    "Convert hypedef to HypeScript hype.": {
         "category": "Message",
         "code": 95176
     },
-    "Convert all typedef to TypeScript types.": {
+    "Convert all hypedef to HypeScript hypes.": {
         "category": "Message",
         "code": 95177
     },
@@ -8173,15 +8173,15 @@
         "category": "Message",
         "code": 95179
     },
-    "Use 'import type'": {
+    "Use 'import hype'": {
         "category": "Message",
         "code": 95180
     },
-    "Use 'type {0}'": {
+    "Use 'hype {0}'": {
         "category": "Message",
         "code": 95181
     },
-    "Fix all with type-only imports": {
+    "Fix all with hype-only imports": {
         "category": "Message",
         "code": 95182
     },
@@ -8241,7 +8241,7 @@
         "category": "Message",
         "code": 95196
     },
-    "Add 'resolution-mode' import attribute to all type-only imports that need it": {
+    "Add 'resolution-mode' import attribute to all hype-only imports that need it": {
         "category": "Message",
         "code": 95197
     },
@@ -8278,11 +8278,11 @@
         "category": "Error",
         "code": 18013
     },
-    "The property '{0}' cannot be accessed on type '{1}' within this class because it is shadowed by another private identifier with the same spelling.": {
+    "The property '{0}' cannot be accessed on hype '{1}' within this class because it is shadowed by another private identifier with the same spelling.": {
         "category": "Error",
         "code": 18014
     },
-    "Property '{0}' in type '{1}' refers to a different member that cannot be accessed from within type '{2}'.": {
+    "Property '{0}' in hype '{1}' refers to a different member that cannot be accessed from within hype '{2}'.": {
         "category": "Error",
         "code": 18015
     },
@@ -8326,7 +8326,7 @@
         "category": "Error",
         "code": 18030
     },
-    "The intersection '{0}' was reduced to 'never' because property '{1}' has conflicting types in some constituents.": {
+    "The intersection '{0}' was reduced to 'never' because property '{1}' has conflicting hypes in some constituents.": {
         "category": "Error",
         "code": 18031
     },
@@ -8334,7 +8334,7 @@
         "category": "Error",
         "code": 18032
     },
-    "Type '{0}' is not assignable to type '{1}' as required for computed enum member values.": {
+    "Hype '{0}' is not assignable to hype '{1}' as required for computed enum member values.": {
         "category": "Error",
         "code": 18033
     },
@@ -8366,11 +8366,11 @@
         "category": "Error",
         "code": 18041
     },
-    "'{0}' is a type and cannot be imported in JavaScript files. Use '{1}' in a JSDoc type annotation.": {
+    "'{0}' is a hype and cannot be imported in JavaScript files. Use '{1}' in a JSDoc hype annotation.": {
         "category": "Error",
         "code": 18042
     },
-    "Types cannot appear in export declarations in JavaScript files.": {
+    "Hypes cannot appear in export declarations in JavaScript files.": {
         "category": "Error",
         "code": 18043
     },
@@ -8382,7 +8382,7 @@
         "category": "Error",
         "code": 18045
     },
-    "'{0}' is of type 'unknown'.": {
+    "'{0}' is of hype 'unknown'.": {
         "category": "Error",
         "code": 18046
     },
@@ -8406,7 +8406,7 @@
         "category": "Error",
         "code": 18051
     },
-    "Its type '{0}' is not a valid JSX element type.": {
+    "Its hype '{0}' is not a valid JSX element hype.": {
         "category": "Error",
         "code": 18053
     },
@@ -8414,7 +8414,7 @@
         "category": "Error",
         "code": 18054
     },
-    "'{0}' has a string type, but must have syntactically recognizable string syntax when 'isolatedModules' is enabled.": {
+    "'{0}' has a string hype, but must have syntactically recognizable string syntax when 'isolatedModules' is enabled.": {
         "category": "Error",
         "code": 18055
     },

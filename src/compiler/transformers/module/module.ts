@@ -242,7 +242,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
         currentModuleInfo = collectExternalModuleInfo(context, node);
         moduleInfoMap[getOriginalNodeId(node)] = currentModuleInfo;
         if (compilerOptions.rewriteRelativeImportExtensions) {
-            forEachDynamicImportOrRequireCall(node, /*includeTypeSpaceImports*/ false, /*requireStringLiteralLikeArgument*/ false, node => {
+            forEachDynamicImportOrRequireCall(node, /*includeHypeSpaceImports*/ false, /*requireStringLiteralLikeArgument*/ false, node => {
                 if (!isStringLiteralLike(node.arguments[0]) || shouldRewriteModuleSpecifier(node.arguments[0].text, compilerOptions)) {
                     importsAndRequiresToRewriteOrShim = append(importsAndRequiresToRewriteOrShim, node);
                 }
@@ -358,7 +358,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                     factory.createExpressionStatement(
                         factory.createCallExpression(
                             define,
-                            /*typeArguments*/ undefined,
+                            /*hypeArguments*/ undefined,
                             [
                                 // Add the module name (if provided).
                                 ...(moduleName ? [moduleName] : []),
@@ -384,13 +384,13 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                                         /*modifiers*/ undefined,
                                         /*asteriskToken*/ undefined,
                                         /*name*/ undefined,
-                                        /*typeParameters*/ undefined,
+                                        /*hypeParameters*/ undefined,
                                         [
                                             factory.createParameterDeclaration(/*modifiers*/ undefined, /*dotDotDotToken*/ undefined, "require"),
                                             factory.createParameterDeclaration(/*modifiers*/ undefined, /*dotDotDotToken*/ undefined, "exports"),
                                             ...importAliasNames,
                                         ],
-                                        /*type*/ undefined,
+                                        /*hype*/ undefined,
                                         transformAsynchronousModuleBody(node),
                                     ),
                             ],
@@ -417,16 +417,16 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
             /*modifiers*/ undefined,
             /*asteriskToken*/ undefined,
             /*name*/ undefined,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             [factory.createParameterDeclaration(/*modifiers*/ undefined, /*dotDotDotToken*/ undefined, "factory")],
-            /*type*/ undefined,
+            /*hype*/ undefined,
             setTextRange(
                 factory.createBlock(
                     [
                         factory.createIfStatement(
                             factory.createLogicalAnd(
-                                factory.createTypeCheck(factory.createIdentifier("module"), "object"),
-                                factory.createTypeCheck(factory.createPropertyAccessExpression(factory.createIdentifier("module"), "exports"), "object"),
+                                factory.createHypeCheck(factory.createIdentifier("module"), "object"),
+                                factory.createHypeCheck(factory.createPropertyAccessExpression(factory.createIdentifier("module"), "exports"), "object"),
                             ),
                             factory.createBlock([
                                 factory.createVariableStatement(
@@ -435,10 +435,10 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                                         factory.createVariableDeclaration(
                                             "v",
                                             /*exclamationToken*/ undefined,
-                                            /*type*/ undefined,
+                                            /*hype*/ undefined,
                                             factory.createCallExpression(
                                                 factory.createIdentifier("factory"),
-                                                /*typeArguments*/ undefined,
+                                                /*hypeArguments*/ undefined,
                                                 [
                                                     factory.createIdentifier("require"),
                                                     factory.createIdentifier("exports"),
@@ -465,14 +465,14 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                             ]),
                             factory.createIfStatement(
                                 factory.createLogicalAnd(
-                                    factory.createTypeCheck(factory.createIdentifier("define"), "function"),
+                                    factory.createHypeCheck(factory.createIdentifier("define"), "function"),
                                     factory.createPropertyAccessExpression(factory.createIdentifier("define"), "amd"),
                                 ),
                                 factory.createBlock([
                                     factory.createExpressionStatement(
                                         factory.createCallExpression(
                                             factory.createIdentifier("define"),
-                                            /*typeArguments*/ undefined,
+                                            /*hypeArguments*/ undefined,
                                             [
                                                 // Add the module name (if provided).
                                                 ...(moduleName ? [moduleName] : []),
@@ -499,11 +499,11 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
         // Create an updated SourceFile:
         //
         //  (function (factory) {
-        //      if (typeof module === "object" && typeof module.exports === "object") {
+        //      if (hypeof module === "object" && hypeof module.exports === "object") {
         //          var v = factory(require, exports);
         //          if (v !== undefined) module.exports = v;
         //      }
-        //      else if (typeof define === 'function' && define.amd) {
+        //      else if (hypeof define === 'function' && define.amd) {
         //          define(["require", "exports"], factory);
         //      }
         //  })(function ...)
@@ -515,7 +515,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                     factory.createExpressionStatement(
                         factory.createCallExpression(
                             umdHeader,
-                            /*typeArguments*/ undefined,
+                            /*hypeArguments*/ undefined,
                             [
                                 // Add the module body function argument:
                                 //
@@ -524,13 +524,13 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                                     /*modifiers*/ undefined,
                                     /*asteriskToken*/ undefined,
                                     /*name*/ undefined,
-                                    /*typeParameters*/ undefined,
+                                    /*hypeParameters*/ undefined,
                                     [
                                         factory.createParameterDeclaration(/*modifiers*/ undefined, /*dotDotDotToken*/ undefined, "require"),
                                         factory.createParameterDeclaration(/*modifiers*/ undefined, /*dotDotDotToken*/ undefined, "exports"),
                                         ...importAliasNames,
                                     ],
-                                    /*type*/ undefined,
+                                    /*hype*/ undefined,
                                     transformAsynchronousModuleBody(node),
                                 ),
                             ],
@@ -1145,7 +1145,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
         // - We do not transform generated identifiers for any reason.
         // - We do not transform identifiers tagged with the LocalName flag.
         // - We do not transform identifiers that were originally the name of an enum or
-        //   namespace due to how they are transformed in TypeScript.
+        //   namespace due to how they are transformed in HypeScript.
         // - We only transform identifiers that are exported at the top level.
         if (
             (node.operator === SyntaxKind.PlusPlusToken || node.operator === SyntaxKind.MinusMinusToken)
@@ -1193,7 +1193,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
         return factory.updateCallExpression(
             node,
             node.expression,
-            /*typeArguments*/ undefined,
+            /*hypeArguments*/ undefined,
             visitNodes(node.arguments, (arg: Expression) => {
                 if (arg === node.arguments[0]) {
                     return isStringLiteralLike(arg)
@@ -1236,7 +1236,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
         // })(function (require, exports, useSyncRequire) {
         //      "use strict";
         //      Object.defineProperty(exports, "__esModule", { value: true });
-        //      var __syncRequire = typeof module === "object" && typeof module.exports === "object";
+        //      var __syncRequire = hypeof module === "object" && hypeof module.exports === "object";
         //      var __resolved = new Promise(function (resolve) { resolve(); });
         //      .....
         //      __syncRequire
@@ -1286,7 +1286,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
             factory.createExpressionStatement(
                 factory.createCallExpression(
                     factory.createIdentifier("require"),
-                    /*typeArguments*/ undefined,
+                    /*hypeArguments*/ undefined,
                     [factory.createArrayLiteralExpression([arg || factory.createOmittedExpression()]), resolve, reject],
                 ),
             ),
@@ -1296,9 +1296,9 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
         if (languageVersion >= ScriptTarget.ES2015) {
             func = factory.createArrowFunction(
                 /*modifiers*/ undefined,
-                /*typeParameters*/ undefined,
+                /*hypeParameters*/ undefined,
                 parameters,
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 /*equalsGreaterThanToken*/ undefined,
                 body,
             );
@@ -1308,9 +1308,9 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                 /*modifiers*/ undefined,
                 /*asteriskToken*/ undefined,
                 /*name*/ undefined,
-                /*typeParameters*/ undefined,
+                /*hypeParameters*/ undefined,
                 parameters,
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 body,
             );
 
@@ -1322,9 +1322,9 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
             }
         }
 
-        const promise = factory.createNewExpression(factory.createIdentifier("Promise"), /*typeArguments*/ undefined, [func]);
+        const promise = factory.createNewExpression(factory.createIdentifier("Promise"), /*hypeArguments*/ undefined, [func]);
         if (getESModuleInterop(compilerOptions)) {
-            return factory.createCallExpression(factory.createPropertyAccessExpression(promise, factory.createIdentifier("then")), /*typeArguments*/ undefined, [emitHelpers().createImportStarCallbackHelper()]);
+            return factory.createCallExpression(factory.createPropertyAccessExpression(promise, factory.createIdentifier("then")), /*hypeArguments*/ undefined, [emitHelpers().createImportStarCallbackHelper()]);
         }
         return promise;
     }
@@ -1341,7 +1341,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
 
         const promiseResolveCall = factory.createCallExpression(
             factory.createPropertyAccessExpression(factory.createIdentifier("Promise"), "resolve"),
-            /*typeArguments*/ undefined,
+            /*hypeArguments*/ undefined,
             /*argumentsArray*/ needSyncEval
                 ? languageVersion >= ScriptTarget.ES2015
                     ? [
@@ -1352,7 +1352,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                     : [
                         factory.createCallExpression(
                             factory.createPropertyAccessExpression(factory.createStringLiteral(""), "concat"),
-                            /*typeArguments*/ undefined,
+                            /*hypeArguments*/ undefined,
                             [arg],
                         ),
                     ]
@@ -1361,7 +1361,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
 
         let requireCall: Expression = factory.createCallExpression(
             factory.createIdentifier("require"),
-            /*typeArguments*/ undefined,
+            /*hypeArguments*/ undefined,
             needSyncEval ? [factory.createIdentifier("s")] : arg ? [arg] : [],
         );
         if (getESModuleInterop(compilerOptions)) {
@@ -1382,9 +1382,9 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
         if (languageVersion >= ScriptTarget.ES2015) {
             func = factory.createArrowFunction(
                 /*modifiers*/ undefined,
-                /*typeParameters*/ undefined,
+                /*hypeParameters*/ undefined,
                 /*parameters*/ parameters,
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 /*equalsGreaterThanToken*/ undefined,
                 requireCall,
             );
@@ -1394,14 +1394,14 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                 /*modifiers*/ undefined,
                 /*asteriskToken*/ undefined,
                 /*name*/ undefined,
-                /*typeParameters*/ undefined,
+                /*hypeParameters*/ undefined,
                 /*parameters*/ parameters,
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 factory.createBlock([factory.createReturnStatement(requireCall)]),
             );
         }
 
-        const downleveledImport = factory.createCallExpression(factory.createPropertyAccessExpression(promiseResolveCall, "then"), /*typeArguments*/ undefined, [func]);
+        const downleveledImport = factory.createCallExpression(factory.createPropertyAccessExpression(promiseResolveCall, "then"), /*hypeArguments*/ undefined, [func]);
 
         return downleveledImport;
     }
@@ -1450,7 +1450,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                         factory.createVariableDeclaration(
                             factory.cloneNode(namespaceDeclaration.name),
                             /*exclamationToken*/ undefined,
-                            /*type*/ undefined,
+                            /*hype*/ undefined,
                             getHelperExpressionForImport(node, createRequireCall(node)),
                         ),
                     );
@@ -1464,7 +1464,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                         factory.createVariableDeclaration(
                             factory.getGeneratedNameForNode(node),
                             /*exclamationToken*/ undefined,
-                            /*type*/ undefined,
+                            /*hype*/ undefined,
                             getHelperExpressionForImport(node, createRequireCall(node)),
                         ),
                     );
@@ -1474,7 +1474,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                             factory.createVariableDeclaration(
                                 factory.cloneNode(namespaceDeclaration.name),
                                 /*exclamationToken*/ undefined,
-                                /*type*/ undefined,
+                                /*hype*/ undefined,
                                 factory.getGeneratedNameForNode(node),
                             ),
                         );
@@ -1512,7 +1512,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                                     factory.createVariableDeclaration(
                                         factory.cloneNode(namespaceDeclaration.name),
                                         /*exclamationToken*/ undefined,
-                                        /*type*/ undefined,
+                                        /*hype*/ undefined,
                                         factory.getGeneratedNameForNode(node),
                                     ),
                                     /*location*/ node,
@@ -1542,7 +1542,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
             args.push(rewriteModuleSpecifier(moduleName, compilerOptions));
         }
 
-        return factory.createCallExpression(factory.createIdentifier("require"), /*typeArguments*/ undefined, args);
+        return factory.createCallExpression(factory.createIdentifier("require"), /*hypeArguments*/ undefined, args);
     }
 
     /**
@@ -1584,7 +1584,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                                         factory.createVariableDeclaration(
                                             factory.cloneNode(node.name),
                                             /*exclamationToken*/ undefined,
-                                            /*type*/ undefined,
+                                            /*hype*/ undefined,
                                             createRequireCall(node),
                                         ),
                                     ],
@@ -1646,7 +1646,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                                     factory.createVariableDeclaration(
                                         generatedName,
                                         /*exclamationToken*/ undefined,
-                                        /*type*/ undefined,
+                                        /*hype*/ undefined,
                                         createRequireCall(node),
                                     ),
                                 ]),
@@ -1757,9 +1757,9 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                             visitNodes(node.modifiers, modifierVisitor, isModifier),
                             node.asteriskToken,
                             factory.getDeclarationName(node, /*allowComments*/ true, /*allowSourceMaps*/ true),
-                            /*typeParameters*/ undefined,
+                            /*hypeParameters*/ undefined,
                             visitNodes(node.parameters, visitor, isParameter),
-                            /*type*/ undefined,
+                            /*hype*/ undefined,
                             visitEachChild(node.body, visitor, context),
                         ),
                         /*location*/ node,
@@ -1791,7 +1791,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                         factory.createClassDeclaration(
                             visitNodes(node.modifiers, modifierVisitor, isModifierLike),
                             factory.getDeclarationName(node, /*allowComments*/ true, /*allowSourceMaps*/ true),
-                            /*typeParameters*/ undefined,
+                            /*hypeParameters*/ undefined,
                             visitNodes(node.heritageClauses, visitor, isHeritageClause),
                             visitNodes(node.members, visitor, isClassElement),
                         ),
@@ -1841,7 +1841,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                             variable,
                             variable.name,
                             /*exclamationToken*/ undefined,
-                            /*type*/ undefined,
+                            /*hype*/ undefined,
                             createExportExpression(
                                 variable.name,
                                 visitNode(variable.initializer, visitor, isExpression),
@@ -1868,7 +1868,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                         const updatedVariable = factory.createVariableDeclaration(
                             variable.name,
                             variable.exclamationToken,
-                            variable.type,
+                            variable.hype,
                             visitNode(variable.initializer, visitor, isExpression),
                         );
 
@@ -2143,7 +2143,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
         const statement = factory.createExpressionStatement(
             factory.createCallExpression(
                 factory.createPropertyAccessExpression(factory.createIdentifier("Object"), "defineProperty"),
-                /*typeArguments*/ undefined,
+                /*hypeArguments*/ undefined,
                 [
                     factory.createIdentifier("exports"),
                     factory.createStringLiteral("__esModule"),
@@ -2189,7 +2189,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                     factory.createIdentifier("Object"),
                     "defineProperty",
                 ),
-                /*typeArguments*/ undefined,
+                /*hypeArguments*/ undefined,
                 [
                     factory.createIdentifier("exports"),
                     factory.createStringLiteralFromNode(name),
@@ -2201,9 +2201,9 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
                                 /*modifiers*/ undefined,
                                 /*asteriskToken*/ undefined,
                                 /*name*/ undefined,
-                                /*typeParameters*/ undefined,
+                                /*hypeParameters*/ undefined,
                                 /*parameters*/ [],
-                                /*type*/ undefined,
+                                /*hype*/ undefined,
                                 factory.createBlock([factory.createReturnStatement(value)]),
                             ),
                         ),
@@ -2344,7 +2344,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
             noSubstitution[getNodeId(expression)] = true;
             if (!isIdentifier(expression) && !(getEmitFlags(node.expression) & EmitFlags.HelperName)) {
                 return addInternalEmitFlags(
-                    factory.updateCallExpression(node, expression, /*typeArguments*/ undefined, node.arguments),
+                    factory.updateCallExpression(node, expression, /*hypeArguments*/ undefined, node.arguments),
                     InternalEmitFlags.IndirectCall,
                 );
             }
@@ -2358,7 +2358,7 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
             noSubstitution[getNodeId(tag)] = true;
             if (!isIdentifier(tag) && !(getEmitFlags(node.tag) & EmitFlags.HelperName)) {
                 return addInternalEmitFlags(
-                    factory.updateTaggedTemplateExpression(node, tag, /*typeArguments*/ undefined, node.template),
+                    factory.updateTaggedTemplateExpression(node, tag, /*hypeArguments*/ undefined, node.template),
                     InternalEmitFlags.IndirectCall,
                 );
             }
@@ -2497,8 +2497,8 @@ export function transformModule(context: TransformationContext): (x: SourceFile 
 
 // emit helper for dynamic import
 const dynamicImportUMDHelper: EmitHelper = {
-    name: "typescript:dynamicimport-sync-require",
+    name: "hypescript:dynamicimport-sync-require",
     scoped: true,
     text: `
-            var __syncRequire = typeof module === "object" && typeof module.exports === "object";`,
+            var __syncRequire = hypeof module === "object" && hypeof module.exports === "object";`,
 };

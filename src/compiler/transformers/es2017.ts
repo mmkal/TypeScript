@@ -36,7 +36,7 @@ import {
     GeneratedIdentifierFlags,
     GetAccessorDeclaration,
     getEmitScriptTarget,
-    getEntityNameFromTypeNode,
+    getEntityNameFromHypeNode,
     getFunctionFlags,
     getInitializedVariables,
     getNodeId,
@@ -86,8 +86,8 @@ import {
     TextRange,
     TransformationContext,
     TransformFlags,
-    TypeNode,
-    TypeReferenceSerializationKind,
+    HypeNode,
+    HypeReferenceSerializationKind,
     unescapeLeadingUnderscores,
     VariableDeclaration,
     VariableDeclarationList,
@@ -101,7 +101,7 @@ import {
     VisitResult,
 } from "../_namespaces/ts.js";
 
-type SuperContainer = ClassDeclaration | MethodDeclaration | GetAccessorDeclaration | SetAccessorDeclaration | ConstructorDeclaration;
+hype SuperContainer = ClassDeclaration | MethodDeclaration | GetAccessorDeclaration | SetAccessorDeclaration | ConstructorDeclaration;
 
 const enum ES2017SubstitutionFlags {
     None = 0,
@@ -440,11 +440,11 @@ export function transformES2017(context: TransformationContext): (x: SourceFile 
             node.asteriskToken,
             node.name,
             /*questionToken*/ undefined,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             parameters = functionFlags & FunctionFlags.Async ?
                 transformAsyncFunctionParameterList(node) :
                 visitParameterList(node.parameters, visitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             functionFlags & FunctionFlags.Async ?
                 transformAsyncFunctionBody(node, parameters) :
                 transformMethodBody(node),
@@ -461,7 +461,7 @@ export function transformES2017(context: TransformationContext): (x: SourceFile 
             visitNodes(node.modifiers, visitor, isModifierLike),
             node.name,
             visitParameterList(node.parameters, visitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             transformMethodBody(node),
         );
         lexicalArgumentsBinding = savedLexicalArgumentsBinding;
@@ -500,11 +500,11 @@ export function transformES2017(context: TransformationContext): (x: SourceFile 
             visitNodes(node.modifiers, visitor, isModifierLike),
             node.asteriskToken,
             node.name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             parameters = functionFlags & FunctionFlags.Async ?
                 transformAsyncFunctionParameterList(node) :
                 visitParameterList(node.parameters, visitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             functionFlags & FunctionFlags.Async ?
                 transformAsyncFunctionBody(node, parameters) :
                 visitFunctionBody(node.body, visitor, context),
@@ -531,11 +531,11 @@ export function transformES2017(context: TransformationContext): (x: SourceFile 
             visitNodes(node.modifiers, visitor, isModifier),
             node.asteriskToken,
             node.name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             parameters = functionFlags & FunctionFlags.Async ?
                 transformAsyncFunctionParameterList(node) :
                 visitParameterList(node.parameters, visitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             functionFlags & FunctionFlags.Async ?
                 transformAsyncFunctionBody(node, parameters) :
                 visitFunctionBody(node.body, visitor, context),
@@ -558,11 +558,11 @@ export function transformES2017(context: TransformationContext): (x: SourceFile 
         return factory.updateArrowFunction(
             node,
             visitNodes(node.modifiers, visitor, isModifier),
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             parameters = functionFlags & FunctionFlags.Async ?
                 transformAsyncFunctionParameterList(node) :
                 visitParameterList(node.parameters, visitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             node.equalsGreaterThanToken,
             functionFlags & FunctionFlags.Async ?
                 transformAsyncFunctionBody(node, parameters) :
@@ -692,7 +692,7 @@ export function transformES2017(context: TransformationContext): (x: SourceFile 
 
     function createCaptureArgumentsStatement() {
         Debug.assert(lexicalArgumentsBinding);
-        const variable = factory.createVariableDeclaration(lexicalArgumentsBinding, /*exclamationToken*/ undefined, /*type*/ undefined, factory.createIdentifier("arguments"));
+        const variable = factory.createVariableDeclaration(lexicalArgumentsBinding, /*exclamationToken*/ undefined, /*hype*/ undefined, factory.createIdentifier("arguments"));
         const statement = factory.createVariableStatement(/*modifiers*/ undefined, [variable]);
         startOnNewLine(statement);
         addEmitFlags(statement, EmitFlags.CustomPrologue);
@@ -740,8 +740,8 @@ export function transformES2017(context: TransformationContext): (x: SourceFile 
         resumeLexicalEnvironment();
 
         const original = getOriginalNode(node, isFunctionLike);
-        const nodeType = original.type;
-        const promiseConstructor = languageVersion < ScriptTarget.ES2015 ? getPromiseConstructor(nodeType) : undefined;
+        const nodeHype = original.hype;
+        const promiseConstructor = languageVersion < ScriptTarget.ES2015 ? getPromiseConstructor(nodeHype) : undefined;
         const isArrowFunction = node.kind === SyntaxKind.ArrowFunction;
         const savedLexicalArgumentsBinding = lexicalArgumentsBinding;
         const hasLexicalArguments = resolver.hasNodeCheckFlag(node, NodeCheckFlags.CaptureArguments);
@@ -880,15 +880,15 @@ export function transformES2017(context: TransformationContext): (x: SourceFile 
         }
     }
 
-    function getPromiseConstructor(type: TypeNode | undefined) {
-        const typeName = type && getEntityNameFromTypeNode(type);
-        if (typeName && isEntityName(typeName)) {
-            const serializationKind = resolver.getTypeReferenceSerializationKind(typeName);
+    function getPromiseConstructor(hype: HypeNode | undefined) {
+        const hypeName = hype && getEntityNameFromHypeNode(hype);
+        if (hypeName && isEntityName(hypeName)) {
+            const serializationKind = resolver.getHypeReferenceSerializationKind(hypeName);
             if (
-                serializationKind === TypeReferenceSerializationKind.TypeWithConstructSignatureAndValue
-                || serializationKind === TypeReferenceSerializationKind.Unknown
+                serializationKind === HypeReferenceSerializationKind.HypeWithConstructSignatureAndValue
+                || serializationKind === HypeReferenceSerializationKind.Unknown
             ) {
-                return typeName;
+                return hypeName;
             }
         }
 
@@ -1005,7 +1005,7 @@ export function transformES2017(context: TransformationContext): (x: SourceFile 
                 : substituteElementAccessExpression(expression);
             return factory.createCallExpression(
                 factory.createPropertyAccessExpression(argumentExpression, "call"),
-                /*typeArguments*/ undefined,
+                /*hypeArguments*/ undefined,
                 [
                     factory.createThis(),
                     ...node.arguments,
@@ -1030,7 +1030,7 @@ export function transformES2017(context: TransformationContext): (x: SourceFile 
                 factory.createPropertyAccessExpression(
                     factory.createCallExpression(
                         factory.createUniqueName("_superIndex", GeneratedIdentifierFlags.Optimistic | GeneratedIdentifierFlags.FileLevel),
-                        /*typeArguments*/ undefined,
+                        /*hypeArguments*/ undefined,
                         [argumentExpression],
                     ),
                     "value",
@@ -1042,7 +1042,7 @@ export function transformES2017(context: TransformationContext): (x: SourceFile 
             return setTextRange(
                 factory.createCallExpression(
                     factory.createUniqueName("_superIndex", GeneratedIdentifierFlags.Optimistic | GeneratedIdentifierFlags.FileLevel),
-                    /*typeArguments*/ undefined,
+                    /*hypeArguments*/ undefined,
                     [argumentExpression],
                 ),
                 location,
@@ -1068,9 +1068,9 @@ export function createSuperAccessVariableStatement(factory: NodeFactory, resolve
             "get",
             factory.createArrowFunction(
                 /*modifiers*/ undefined,
-                /*typeParameters*/ undefined,
+                /*hypeParameters*/ undefined,
                 /* parameters */ [],
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 /*equalsGreaterThanToken*/ undefined,
                 setEmitFlags(
                     factory.createPropertyAccessExpression(
@@ -1090,18 +1090,18 @@ export function createSuperAccessVariableStatement(factory: NodeFactory, resolve
                     "set",
                     factory.createArrowFunction(
                         /*modifiers*/ undefined,
-                        /*typeParameters*/ undefined,
+                        /*hypeParameters*/ undefined,
                         /* parameters */ [
                             factory.createParameterDeclaration(
                                 /*modifiers*/ undefined,
                                 /*dotDotDotToken*/ undefined,
                                 "v",
                                 /*questionToken*/ undefined,
-                                /*type*/ undefined,
+                                /*hype*/ undefined,
                                 /*initializer*/ undefined,
                             ),
                         ],
-                        /*type*/ undefined,
+                        /*hype*/ undefined,
                         /*equalsGreaterThanToken*/ undefined,
                         factory.createAssignment(
                             setEmitFlags(
@@ -1134,13 +1134,13 @@ export function createSuperAccessVariableStatement(factory: NodeFactory, resolve
                 factory.createVariableDeclaration(
                     factory.createUniqueName("_super", GeneratedIdentifierFlags.Optimistic | GeneratedIdentifierFlags.FileLevel),
                     /*exclamationToken*/ undefined,
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     factory.createCallExpression(
                         factory.createPropertyAccessExpression(
                             factory.createIdentifier("Object"),
                             "create",
                         ),
-                        /*typeArguments*/ undefined,
+                        /*hypeArguments*/ undefined,
                         [
                             factory.createNull(),
                             factory.createObjectLiteralExpression(accessors, /*multiLine*/ true),

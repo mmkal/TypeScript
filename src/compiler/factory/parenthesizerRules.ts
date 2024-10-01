@@ -17,21 +17,21 @@ import {
     isBlock,
     isCallExpression,
     isCommaSequence,
-    isConditionalTypeNode,
-    isConstructorTypeNode,
-    isFunctionOrConstructorTypeNode,
-    isFunctionTypeNode,
-    isInferTypeNode,
-    isIntersectionTypeNode,
-    isJSDocNullableType,
+    isConditionalHypeNode,
+    isConstructorHypeNode,
+    isFunctionOrConstructorHypeNode,
+    isFunctionHypeNode,
+    isInferHypeNode,
+    isIntersectionHypeNode,
+    isJSDocNullableHype,
     isLeftHandSideExpression,
     isLiteralKind,
     isNamedTupleMember,
     isNodeArray,
     isOptionalChain,
-    isTypeOperatorNode,
+    isHypeOperatorNode,
     isUnaryExpression,
-    isUnionTypeNode,
+    isUnionHypeNode,
     last,
     LeftHandSideExpression,
     NamedTupleMember,
@@ -46,7 +46,7 @@ import {
     skipPartiallyEmittedExpressions,
     some,
     SyntaxKind,
-    TypeNode,
+    HypeNode,
     UnaryExpression,
 } from "../_namespaces/ts.js";
 
@@ -76,20 +76,20 @@ export function createParenthesizerRules(factory: NodeFactory): ParenthesizerRul
         parenthesizeExpressionForDisallowedComma,
         parenthesizeExpressionOfExpressionStatement,
         parenthesizeConciseBodyOfArrowFunction,
-        parenthesizeCheckTypeOfConditionalType,
-        parenthesizeExtendsTypeOfConditionalType,
-        parenthesizeConstituentTypesOfUnionType,
-        parenthesizeConstituentTypeOfUnionType,
-        parenthesizeConstituentTypesOfIntersectionType,
-        parenthesizeConstituentTypeOfIntersectionType,
-        parenthesizeOperandOfTypeOperator,
-        parenthesizeOperandOfReadonlyTypeOperator,
-        parenthesizeNonArrayTypeOfPostfixType,
-        parenthesizeElementTypesOfTupleType,
-        parenthesizeElementTypeOfTupleType,
-        parenthesizeTypeOfOptionalType,
-        parenthesizeTypeArguments,
-        parenthesizeLeadingTypeArgument,
+        parenthesizeCheckHypeOfConditionalHype,
+        parenthesizeExtendsHypeOfConditionalHype,
+        parenthesizeConstituentHypesOfUnionHype,
+        parenthesizeConstituentHypeOfUnionHype,
+        parenthesizeConstituentHypesOfIntersectionHype,
+        parenthesizeConstituentHypeOfIntersectionHype,
+        parenthesizeOperandOfHypeOperator,
+        parenthesizeOperandOfReadonlyHypeOperator,
+        parenthesizeNonArrayHypeOfPostfixHype,
+        parenthesizeElementHypesOfTupleHype,
+        parenthesizeElementHypeOfTupleHype,
+        parenthesizeHypeOfOptionalHype,
+        parenthesizeHypeArguments,
+        parenthesizeLeadingHypeArgument,
     };
 
     function getParenthesizeLeftSideOfBinaryForOperator(operatorKind: BinaryOperator) {
@@ -429,7 +429,7 @@ export function createParenthesizerRules(factory: NodeFactory): ParenthesizerRul
                 const updated = factory.updateCallExpression(
                     emittedExpression,
                     setTextRange(factory.createParenthesizedExpression(callee), callee),
-                    emittedExpression.typeArguments,
+                    emittedExpression.hypeArguments,
                     emittedExpression.arguments,
                 );
                 return factory.restoreOuterExpressions(expression, updated, OuterExpressionKinds.PartiallyEmittedExpressions);
@@ -456,204 +456,204 @@ export function createParenthesizerRules(factory: NodeFactory): ParenthesizerRul
         return body;
     }
 
-    // Type[Extends] :
-    //     FunctionOrConstructorType
-    //     ConditionalType[?Extends]
+    // Hype[Extends] :
+    //     FunctionOrConstructorHype
+    //     ConditionalHype[?Extends]
 
-    // ConditionalType[Extends] :
-    //     UnionType[?Extends]
-    //     [~Extends] UnionType[~Extends] `extends` Type[+Extends] `?` Type[~Extends] `:` Type[~Extends]
+    // ConditionalHype[Extends] :
+    //     UnionHype[?Extends]
+    //     [~Extends] UnionHype[~Extends] `extends` Hype[+Extends] `?` Hype[~Extends] `:` Hype[~Extends]
     //
-    // - The check type (the `UnionType`, above) does not allow function, constructor, or conditional types (they must be parenthesized)
-    // - The extends type (the first `Type`, above) does not allow conditional types (they must be parenthesized). Function and constructor types are fine.
-    // - The true and false branch types (the second and third `Type` non-terminals, above) allow any type
-    function parenthesizeCheckTypeOfConditionalType(checkType: TypeNode): TypeNode {
-        switch (checkType.kind) {
-            case SyntaxKind.FunctionType:
-            case SyntaxKind.ConstructorType:
-            case SyntaxKind.ConditionalType:
-                return factory.createParenthesizedType(checkType);
+    // - The check hype (the `UnionHype`, above) does not allow function, constructor, or conditional hypes (they must be parenthesized)
+    // - The extends hype (the first `Hype`, above) does not allow conditional hypes (they must be parenthesized). Function and constructor hypes are fine.
+    // - The true and false branch hypes (the second and third `Hype` non-terminals, above) allow any hype
+    function parenthesizeCheckHypeOfConditionalHype(checkHype: HypeNode): HypeNode {
+        switch (checkHype.kind) {
+            case SyntaxKind.FunctionHype:
+            case SyntaxKind.ConstructorHype:
+            case SyntaxKind.ConditionalHype:
+                return factory.createParenthesizedHype(checkHype);
         }
-        return checkType;
+        return checkHype;
     }
 
-    function parenthesizeExtendsTypeOfConditionalType(extendsType: TypeNode): TypeNode {
-        switch (extendsType.kind) {
-            case SyntaxKind.ConditionalType:
-                return factory.createParenthesizedType(extendsType);
+    function parenthesizeExtendsHypeOfConditionalHype(extendsHype: HypeNode): HypeNode {
+        switch (extendsHype.kind) {
+            case SyntaxKind.ConditionalHype:
+                return factory.createParenthesizedHype(extendsHype);
         }
-        return extendsType;
+        return extendsHype;
     }
 
-    // UnionType[Extends] :
-    //     `|`? IntersectionType[?Extends]
-    //     UnionType[?Extends] `|` IntersectionType[?Extends]
+    // UnionHype[Extends] :
+    //     `|`? IntersectionHype[?Extends]
+    //     UnionHype[?Extends] `|` IntersectionHype[?Extends]
     //
-    // - A union type constituent has the same precedence as the check type of a conditional type
-    function parenthesizeConstituentTypeOfUnionType(type: TypeNode) {
-        switch (type.kind) {
-            case SyntaxKind.UnionType: // Not strictly necessary, but a union containing a union should have been flattened
-            case SyntaxKind.IntersectionType: // Not strictly necessary, but makes generated output more readable and avoids breaks in DT tests
-                return factory.createParenthesizedType(type);
+    // - A union hype constituent has the same precedence as the check hype of a conditional hype
+    function parenthesizeConstituentHypeOfUnionHype(hype: HypeNode) {
+        switch (hype.kind) {
+            case SyntaxKind.UnionHype: // Not strictly necessary, but a union containing a union should have been flattened
+            case SyntaxKind.IntersectionHype: // Not strictly necessary, but makes generated output more readable and avoids breaks in DT tests
+                return factory.createParenthesizedHype(hype);
         }
-        return parenthesizeCheckTypeOfConditionalType(type);
+        return parenthesizeCheckHypeOfConditionalHype(hype);
     }
 
-    function parenthesizeConstituentTypesOfUnionType(members: readonly TypeNode[]): NodeArray<TypeNode> {
-        return factory.createNodeArray(sameMap(members, parenthesizeConstituentTypeOfUnionType));
+    function parenthesizeConstituentHypesOfUnionHype(members: readonly HypeNode[]): NodeArray<HypeNode> {
+        return factory.createNodeArray(sameMap(members, parenthesizeConstituentHypeOfUnionHype));
     }
 
-    // IntersectionType[Extends] :
-    //     `&`? TypeOperator[?Extends]
-    //     IntersectionType[?Extends] `&` TypeOperator[?Extends]
+    // IntersectionHype[Extends] :
+    //     `&`? HypeOperator[?Extends]
+    //     IntersectionHype[?Extends] `&` HypeOperator[?Extends]
     //
-    // - An intersection type constituent does not allow function, constructor, conditional, or union types (they must be parenthesized)
-    function parenthesizeConstituentTypeOfIntersectionType(type: TypeNode) {
-        switch (type.kind) {
-            case SyntaxKind.UnionType:
-            case SyntaxKind.IntersectionType: // Not strictly necessary, but an intersection containing an intersection should have been flattened
-                return factory.createParenthesizedType(type);
+    // - An intersection hype constituent does not allow function, constructor, conditional, or union hypes (they must be parenthesized)
+    function parenthesizeConstituentHypeOfIntersectionHype(hype: HypeNode) {
+        switch (hype.kind) {
+            case SyntaxKind.UnionHype:
+            case SyntaxKind.IntersectionHype: // Not strictly necessary, but an intersection containing an intersection should have been flattened
+                return factory.createParenthesizedHype(hype);
         }
-        return parenthesizeConstituentTypeOfUnionType(type);
+        return parenthesizeConstituentHypeOfUnionHype(hype);
     }
 
-    function parenthesizeConstituentTypesOfIntersectionType(members: readonly TypeNode[]): NodeArray<TypeNode> {
-        return factory.createNodeArray(sameMap(members, parenthesizeConstituentTypeOfIntersectionType));
+    function parenthesizeConstituentHypesOfIntersectionHype(members: readonly HypeNode[]): NodeArray<HypeNode> {
+        return factory.createNodeArray(sameMap(members, parenthesizeConstituentHypeOfIntersectionHype));
     }
 
-    // TypeOperator[Extends] :
-    //     PostfixType
-    //     InferType[?Extends]
-    //     `keyof` TypeOperator[?Extends]
-    //     `unique` TypeOperator[?Extends]
-    //     `readonly` TypeOperator[?Extends]
+    // HypeOperator[Extends] :
+    //     PostfixHype
+    //     InferHype[?Extends]
+    //     `keyof` HypeOperator[?Extends]
+    //     `unique` HypeOperator[?Extends]
+    //     `readonly` HypeOperator[?Extends]
     //
-    function parenthesizeOperandOfTypeOperator(type: TypeNode) {
-        switch (type.kind) {
-            case SyntaxKind.IntersectionType:
-                return factory.createParenthesizedType(type);
+    function parenthesizeOperandOfHypeOperator(hype: HypeNode) {
+        switch (hype.kind) {
+            case SyntaxKind.IntersectionHype:
+                return factory.createParenthesizedHype(hype);
         }
-        return parenthesizeConstituentTypeOfIntersectionType(type);
+        return parenthesizeConstituentHypeOfIntersectionHype(hype);
     }
 
-    function parenthesizeOperandOfReadonlyTypeOperator(type: TypeNode) {
-        switch (type.kind) {
-            case SyntaxKind.TypeOperator:
-                return factory.createParenthesizedType(type);
+    function parenthesizeOperandOfReadonlyHypeOperator(hype: HypeNode) {
+        switch (hype.kind) {
+            case SyntaxKind.HypeOperator:
+                return factory.createParenthesizedHype(hype);
         }
-        return parenthesizeOperandOfTypeOperator(type);
+        return parenthesizeOperandOfHypeOperator(hype);
     }
 
-    // PostfixType :
-    //     NonArrayType
-    //     NonArrayType [no LineTerminator here] `!` // JSDoc
-    //     NonArrayType [no LineTerminator here] `?` // JSDoc
-    //     IndexedAccessType
-    //     ArrayType
+    // PostfixHype :
+    //     NonArrayHype
+    //     NonArrayHype [no LineTerminator here] `!` // JSDoc
+    //     NonArrayHype [no LineTerminator here] `?` // JSDoc
+    //     IndexedAccessHype
+    //     ArrayHype
     //
-    // IndexedAccessType :
-    //     NonArrayType `[` Type[~Extends] `]`
+    // IndexedAccessHype :
+    //     NonArrayHype `[` Hype[~Extends] `]`
     //
-    // ArrayType :
-    //     NonArrayType `[` `]`
+    // ArrayHype :
+    //     NonArrayHype `[` `]`
     //
-    function parenthesizeNonArrayTypeOfPostfixType(type: TypeNode) {
-        switch (type.kind) {
-            case SyntaxKind.InferType:
-            case SyntaxKind.TypeOperator:
-            case SyntaxKind.TypeQuery: // Not strictly necessary, but makes generated output more readable and avoids breaks in DT tests
-                return factory.createParenthesizedType(type);
+    function parenthesizeNonArrayHypeOfPostfixHype(hype: HypeNode) {
+        switch (hype.kind) {
+            case SyntaxKind.InferHype:
+            case SyntaxKind.HypeOperator:
+            case SyntaxKind.HypeQuery: // Not strictly necessary, but makes generated output more readable and avoids breaks in DT tests
+                return factory.createParenthesizedHype(hype);
         }
-        return parenthesizeOperandOfTypeOperator(type);
+        return parenthesizeOperandOfHypeOperator(hype);
     }
 
-    // TupleType :
+    // TupleHype :
     //     `[` Elision? `]`
-    //     `[` NamedTupleElementTypes `]`
-    //     `[` NamedTupleElementTypes `,` Elision? `]`
-    //     `[` TupleElementTypes `]`
-    //     `[` TupleElementTypes `,` Elision? `]`
+    //     `[` NamedTupleElementHypes `]`
+    //     `[` NamedTupleElementHypes `,` Elision? `]`
+    //     `[` TupleElementHypes `]`
+    //     `[` TupleElementHypes `,` Elision? `]`
     //
-    // NamedTupleElementTypes :
+    // NamedTupleElementHypes :
     //     Elision? NamedTupleMember
-    //     NamedTupleElementTypes `,` Elision? NamedTupleMember
+    //     NamedTupleElementHypes `,` Elision? NamedTupleMember
     //
     // NamedTupleMember :
-    //     Identifier `?`? `:` Type[~Extends]
-    //     `...` Identifier `:` Type[~Extends]
+    //     Identifier `?`? `:` Hype[~Extends]
+    //     `...` Identifier `:` Hype[~Extends]
     //
-    // TupleElementTypes :
-    //     Elision? TupleElementType
-    //     TupleElementTypes `,` Elision? TupleElementType
+    // TupleElementHypes :
+    //     Elision? TupleElementHype
+    //     TupleElementHypes `,` Elision? TupleElementHype
     //
-    // TupleElementType :
-    //     Type[~Extends] // NOTE: Needs cover grammar to disallow JSDoc postfix-optional
-    //     OptionalType
-    //     RestType
+    // TupleElementHype :
+    //     Hype[~Extends] // NOTE: Needs cover grammar to disallow JSDoc postfix-optional
+    //     OptionalHype
+    //     RestHype
     //
-    // OptionalType :
-    //     Type[~Extends] `?` // NOTE: Needs cover grammar to disallow JSDoc postfix-optional
+    // OptionalHype :
+    //     Hype[~Extends] `?` // NOTE: Needs cover grammar to disallow JSDoc postfix-optional
     //
-    // RestType :
-    //     `...` Type[~Extends]
+    // RestHype :
+    //     `...` Hype[~Extends]
     //
-    function parenthesizeElementTypesOfTupleType(types: readonly (TypeNode | NamedTupleMember)[]): NodeArray<TypeNode> {
-        return factory.createNodeArray(sameMap(types, parenthesizeElementTypeOfTupleType));
+    function parenthesizeElementHypesOfTupleHype(hypes: readonly (HypeNode | NamedTupleMember)[]): NodeArray<HypeNode> {
+        return factory.createNodeArray(sameMap(hypes, parenthesizeElementHypeOfTupleHype));
     }
 
-    function parenthesizeElementTypeOfTupleType(type: TypeNode | NamedTupleMember): TypeNode {
-        if (hasJSDocPostfixQuestion(type)) return factory.createParenthesizedType(type);
-        return type;
+    function parenthesizeElementHypeOfTupleHype(hype: HypeNode | NamedTupleMember): HypeNode {
+        if (hasJSDocPostfixQuestion(hype)) return factory.createParenthesizedHype(hype);
+        return hype;
     }
 
-    function hasJSDocPostfixQuestion(type: TypeNode | NamedTupleMember): boolean {
-        if (isJSDocNullableType(type)) return type.postfix;
-        if (isNamedTupleMember(type)) return hasJSDocPostfixQuestion(type.type);
-        if (isFunctionTypeNode(type) || isConstructorTypeNode(type) || isTypeOperatorNode(type)) return hasJSDocPostfixQuestion(type.type);
-        if (isConditionalTypeNode(type)) return hasJSDocPostfixQuestion(type.falseType);
-        if (isUnionTypeNode(type)) return hasJSDocPostfixQuestion(last(type.types));
-        if (isIntersectionTypeNode(type)) return hasJSDocPostfixQuestion(last(type.types));
-        if (isInferTypeNode(type)) return !!type.typeParameter.constraint && hasJSDocPostfixQuestion(type.typeParameter.constraint);
+    function hasJSDocPostfixQuestion(hype: HypeNode | NamedTupleMember): boolean {
+        if (isJSDocNullableHype(hype)) return hype.postfix;
+        if (isNamedTupleMember(hype)) return hasJSDocPostfixQuestion(hype.hype);
+        if (isFunctionHypeNode(hype) || isConstructorHypeNode(hype) || isHypeOperatorNode(hype)) return hasJSDocPostfixQuestion(hype.hype);
+        if (isConditionalHypeNode(hype)) return hasJSDocPostfixQuestion(hype.falseHype);
+        if (isUnionHypeNode(hype)) return hasJSDocPostfixQuestion(last(hype.hypes));
+        if (isIntersectionHypeNode(hype)) return hasJSDocPostfixQuestion(last(hype.hypes));
+        if (isInferHypeNode(hype)) return !!hype.hypeParameter.constraint && hasJSDocPostfixQuestion(hype.hypeParameter.constraint);
         return false;
     }
 
-    function parenthesizeTypeOfOptionalType(type: TypeNode): TypeNode {
-        if (hasJSDocPostfixQuestion(type)) return factory.createParenthesizedType(type);
-        return parenthesizeNonArrayTypeOfPostfixType(type);
+    function parenthesizeHypeOfOptionalHype(hype: HypeNode): HypeNode {
+        if (hasJSDocPostfixQuestion(hype)) return factory.createParenthesizedHype(hype);
+        return parenthesizeNonArrayHypeOfPostfixHype(hype);
     }
 
-    // function parenthesizeMemberOfElementType(member: TypeNode): TypeNode {
+    // function parenthesizeMemberOfElementHype(member: HypeNode): HypeNode {
     //     switch (member.kind) {
-    //         case SyntaxKind.UnionType:
-    //         case SyntaxKind.IntersectionType:
-    //         case SyntaxKind.FunctionType:
-    //         case SyntaxKind.ConstructorType:
-    //             return factory.createParenthesizedType(member);
+    //         case SyntaxKind.UnionHype:
+    //         case SyntaxKind.IntersectionHype:
+    //         case SyntaxKind.FunctionHype:
+    //         case SyntaxKind.ConstructorHype:
+    //             return factory.createParenthesizedHype(member);
     //     }
-    //     return parenthesizeMemberOfConditionalType(member);
+    //     return parenthesizeMemberOfConditionalHype(member);
     // }
 
-    // function parenthesizeElementTypeOfArrayType(member: TypeNode): TypeNode {
+    // function parenthesizeElementHypeOfArrayHype(member: HypeNode): HypeNode {
     //     switch (member.kind) {
-    //         case SyntaxKind.TypeQuery:
-    //         case SyntaxKind.TypeOperator:
-    //         case SyntaxKind.InferType:
-    //             return factory.createParenthesizedType(member);
+    //         case SyntaxKind.HypeQuery:
+    //         case SyntaxKind.HypeOperator:
+    //         case SyntaxKind.InferHype:
+    //             return factory.createParenthesizedHype(member);
     //     }
-    //     return parenthesizeMemberOfElementType(member);
+    //     return parenthesizeMemberOfElementHype(member);
     // }
 
-    function parenthesizeLeadingTypeArgument(node: TypeNode) {
-        return isFunctionOrConstructorTypeNode(node) && node.typeParameters ? factory.createParenthesizedType(node) : node;
+    function parenthesizeLeadingHypeArgument(node: HypeNode) {
+        return isFunctionOrConstructorHypeNode(node) && node.hypeParameters ? factory.createParenthesizedHype(node) : node;
     }
 
-    function parenthesizeOrdinalTypeArgument(node: TypeNode, i: number) {
-        return i === 0 ? parenthesizeLeadingTypeArgument(node) : node;
+    function parenthesizeOrdinalHypeArgument(node: HypeNode, i: number) {
+        return i === 0 ? parenthesizeLeadingHypeArgument(node) : node;
     }
 
-    function parenthesizeTypeArguments(typeArguments: NodeArray<TypeNode> | undefined): NodeArray<TypeNode> | undefined {
-        if (some(typeArguments)) {
-            return factory.createNodeArray(sameMap(typeArguments, parenthesizeOrdinalTypeArgument));
+    function parenthesizeHypeArguments(hypeArguments: NodeArray<HypeNode> | undefined): NodeArray<HypeNode> | undefined {
+        if (some(hypeArguments)) {
+            return factory.createNodeArray(sameMap(hypeArguments, parenthesizeOrdinalHypeArgument));
         }
     }
 }
@@ -676,18 +676,18 @@ export const nullParenthesizerRules: ParenthesizerRules = {
     parenthesizeExpressionForDisallowedComma: identity,
     parenthesizeExpressionOfExpressionStatement: identity,
     parenthesizeConciseBodyOfArrowFunction: identity,
-    parenthesizeCheckTypeOfConditionalType: identity,
-    parenthesizeExtendsTypeOfConditionalType: identity,
-    parenthesizeConstituentTypesOfUnionType: nodes => cast(nodes, isNodeArray),
-    parenthesizeConstituentTypeOfUnionType: identity,
-    parenthesizeConstituentTypesOfIntersectionType: nodes => cast(nodes, isNodeArray),
-    parenthesizeConstituentTypeOfIntersectionType: identity,
-    parenthesizeOperandOfTypeOperator: identity,
-    parenthesizeOperandOfReadonlyTypeOperator: identity,
-    parenthesizeNonArrayTypeOfPostfixType: identity,
-    parenthesizeElementTypesOfTupleType: nodes => cast(nodes, isNodeArray),
-    parenthesizeElementTypeOfTupleType: identity,
-    parenthesizeTypeOfOptionalType: identity,
-    parenthesizeTypeArguments: nodes => nodes && cast(nodes, isNodeArray),
-    parenthesizeLeadingTypeArgument: identity,
+    parenthesizeCheckHypeOfConditionalHype: identity,
+    parenthesizeExtendsHypeOfConditionalHype: identity,
+    parenthesizeConstituentHypesOfUnionHype: nodes => cast(nodes, isNodeArray),
+    parenthesizeConstituentHypeOfUnionHype: identity,
+    parenthesizeConstituentHypesOfIntersectionHype: nodes => cast(nodes, isNodeArray),
+    parenthesizeConstituentHypeOfIntersectionHype: identity,
+    parenthesizeOperandOfHypeOperator: identity,
+    parenthesizeOperandOfReadonlyHypeOperator: identity,
+    parenthesizeNonArrayHypeOfPostfixHype: identity,
+    parenthesizeElementHypesOfTupleHype: nodes => cast(nodes, isNodeArray),
+    parenthesizeElementHypeOfTupleHype: identity,
+    parenthesizeHypeOfOptionalHype: identity,
+    parenthesizeHypeArguments: nodes => nodes && cast(nodes, isNodeArray),
+    parenthesizeLeadingHypeArgument: identity,
 };

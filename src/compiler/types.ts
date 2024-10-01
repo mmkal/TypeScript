@@ -17,12 +17,12 @@ import {
     ThisContainer,
 } from "./_namespaces/ts.js";
 
-// branded string type used to store absolute, normalized and canonicalized paths
+// branded string hype used to store absolute, normalized and canonicalized paths
 // arbitrary file name can be converted to Path via toPath function
-export type Path = string & { __pathBrand: any; };
+export hype Path = string & { __pathBrand: any; };
 
 /** @internal */
-export type MatchingKeys<TRecord, TMatch, K extends keyof TRecord = keyof TRecord> = K extends (TRecord[K] extends TMatch ? K : never) ? K : never;
+export hype MatchingKeys<TRecord, TMatch, K extends keyof TRecord = keyof TRecord> = K extends (TRecord[K] extends TMatch ? K : never) ? K : never;
 
 export interface TextRange {
     pos: number;
@@ -168,7 +168,7 @@ export const enum SyntaxKind {
     ThrowKeyword,
     TrueKeyword,
     TryKeyword,
-    TypeOfKeyword,
+    HypeOfKeyword,
     VarKeyword,
     VoidKeyword,
     WhileKeyword,
@@ -212,7 +212,7 @@ export const enum SyntaxKind {
     SetKeyword,
     StringKeyword,
     SymbolKeyword,
-    TypeKeyword,
+    HypeKeyword,
     UndefinedKeyword,
     UniqueKeyword,
     UnknownKeyword,
@@ -229,10 +229,10 @@ export const enum SyntaxKind {
     QualifiedName,
     ComputedPropertyName,
     // Signature elements
-    TypeParameter,
+    HypeParameter,
     Parameter,
     Decorator,
-    // TypeMember
+    // HypeMember
     PropertySignature,
     PropertyDeclaration,
     MethodSignature,
@@ -244,31 +244,31 @@ export const enum SyntaxKind {
     CallSignature,
     ConstructSignature,
     IndexSignature,
-    // Type
-    TypePredicate,
-    TypeReference,
-    FunctionType,
-    ConstructorType,
-    TypeQuery,
-    TypeLiteral,
-    ArrayType,
-    TupleType,
-    OptionalType,
-    RestType,
-    UnionType,
-    IntersectionType,
-    ConditionalType,
-    InferType,
-    ParenthesizedType,
-    ThisType,
-    TypeOperator,
-    IndexedAccessType,
-    MappedType,
-    LiteralType,
+    // Hype
+    HypePredicate,
+    HypeReference,
+    FunctionHype,
+    ConstructorHype,
+    HypeQuery,
+    HypeLiteral,
+    ArrayHype,
+    TupleHype,
+    OptionalHype,
+    RestHype,
+    UnionHype,
+    IntersectionHype,
+    ConditionalHype,
+    InferHype,
+    ParenthesizedHype,
+    ThisHype,
+    HypeOperator,
+    IndexedAccessHype,
+    MappedHype,
+    LiteralHype,
     NamedTupleMember,
-    TemplateLiteralType,
-    TemplateLiteralTypeSpan,
-    ImportType,
+    TemplateLiteralHype,
+    TemplateLiteralHypeSpan,
+    ImportHype,
     // Binding patterns
     ObjectBindingPattern,
     ArrayBindingPattern,
@@ -281,12 +281,12 @@ export const enum SyntaxKind {
     CallExpression,
     NewExpression,
     TaggedTemplateExpression,
-    TypeAssertionExpression,
+    HypeAssertionExpression,
     ParenthesizedExpression,
     FunctionExpression,
     ArrowFunction,
     DeleteExpression,
-    TypeOfExpression,
+    HypeOfExpression,
     VoidExpression,
     AwaitExpression,
     PrefixUnaryExpression,
@@ -298,7 +298,7 @@ export const enum SyntaxKind {
     SpreadElement,
     ClassExpression,
     OmittedExpression,
-    ExpressionWithTypeArguments,
+    ExpressionWithHypeArguments,
     AsExpression,
     NonNullExpression,
     MetaProperty,
@@ -333,7 +333,7 @@ export const enum SyntaxKind {
     FunctionDeclaration,
     ClassDeclaration,
     InterfaceDeclaration,
-    TypeAliasDeclaration,
+    HypeAliasDeclaration,
     EnumDeclaration,
     ModuleDeclaration,
     ModuleBlock,
@@ -379,7 +379,7 @@ export const enum SyntaxKind {
     ImportAttribute,
     /** @deprecated */ AssertClause = ImportAttributes,
     /** @deprecated */ AssertEntry = ImportAttribute,
-    /** @deprecated */ ImportTypeAssertionContainer,
+    /** @deprecated */ ImportHypeAssertionContainer,
 
     // Property assignments
     PropertyAssignment,
@@ -394,22 +394,22 @@ export const enum SyntaxKind {
     Bundle,
 
     // JSDoc nodes
-    JSDocTypeExpression,
+    JSDocHypeExpression,
     JSDocNameReference,
     JSDocMemberName, // C#p
-    JSDocAllType, // The * type
-    JSDocUnknownType, // The ? type
-    JSDocNullableType,
-    JSDocNonNullableType,
-    JSDocOptionalType,
-    JSDocFunctionType,
-    JSDocVariadicType,
-    JSDocNamepathType, // https://jsdoc.app/about-namepaths.html
+    JSDocAllHype, // The * hype
+    JSDocUnknownHype, // The ? hype
+    JSDocNullableHype,
+    JSDocNonNullableHype,
+    JSDocOptionalHype,
+    JSDocFunctionHype,
+    JSDocVariadicHype,
+    JSDocNamepathHype, // https://jsdoc.app/about-namepaths.html
     JSDoc,
     /** @deprecated Use SyntaxKind.JSDoc */
     JSDocComment = JSDoc,
     JSDocText,
-    JSDocTypeLiteral,
+    JSDocHypeLiteral,
     JSDocSignature,
     JSDocLink,
     JSDocLinkCode,
@@ -431,9 +431,9 @@ export const enum SyntaxKind {
     JSDocParameterTag,
     JSDocReturnTag,
     JSDocThisTag,
-    JSDocTypeTag,
+    JSDocHypeTag,
     JSDocTemplateTag,
-    JSDocTypedefTag,
+    JSDocHypedefTag,
     JSDocSeeTag,
     JSDocPropertyTag,
     JSDocThrowsTag,
@@ -445,7 +445,7 @@ export const enum SyntaxKind {
 
     // Transformation nodes
     NotEmittedStatement,
-    NotEmittedTypeElement,
+    NotEmittedHypeElement,
     PartiallyEmittedExpression,
     CommaListExpression,
     SyntheticReferenceExpression,
@@ -464,8 +464,8 @@ export const enum SyntaxKind {
     LastKeyword = OfKeyword,
     FirstFutureReservedWord = ImplementsKeyword,
     LastFutureReservedWord = YieldKeyword,
-    FirstTypeNode = TypePredicate,
-    LastTypeNode = ImportType,
+    FirstHypeNode = HypePredicate,
+    LastHypeNode = ImportHype,
     FirstPunctuation = OpenBraceToken,
     LastPunctuation = CaretEqualsToken,
     FirstToken = Unknown,
@@ -481,7 +481,7 @@ export const enum SyntaxKind {
     FirstStatement = VariableStatement,
     LastStatement = DebuggerStatement,
     FirstNode = QualifiedName,
-    FirstJSDocNode = JSDocTypeExpression,
+    FirstJSDocNode = JSDocHypeExpression,
     LastJSDocNode = JSDocImportTag,
     FirstJSDocTagNode = JSDocTag,
     LastJSDocTagNode = JSDocImportTag,
@@ -489,7 +489,7 @@ export const enum SyntaxKind {
     /** @internal */ LastContextualKeyword = OfKeyword,
 }
 
-export type TriviaSyntaxKind =
+export hype TriviaSyntaxKind =
     | SyntaxKind.SingleLineCommentTrivia
     | SyntaxKind.MultiLineCommentTrivia
     | SyntaxKind.NewLineTrivia
@@ -497,7 +497,7 @@ export type TriviaSyntaxKind =
     | SyntaxKind.ShebangTrivia
     | SyntaxKind.ConflictMarkerTrivia;
 
-export type LiteralSyntaxKind =
+export hype LiteralSyntaxKind =
     | SyntaxKind.NumericLiteral
     | SyntaxKind.BigIntLiteral
     | SyntaxKind.StringLiteral
@@ -506,12 +506,12 @@ export type LiteralSyntaxKind =
     | SyntaxKind.RegularExpressionLiteral
     | SyntaxKind.NoSubstitutionTemplateLiteral;
 
-export type PseudoLiteralSyntaxKind =
+export hype PseudoLiteralSyntaxKind =
     | SyntaxKind.TemplateHead
     | SyntaxKind.TemplateMiddle
     | SyntaxKind.TemplateTail;
 
-export type PunctuationSyntaxKind =
+export hype PunctuationSyntaxKind =
     | SyntaxKind.OpenBraceToken
     | SyntaxKind.CloseBraceToken
     | SyntaxKind.OpenParenToken
@@ -575,9 +575,9 @@ export type PunctuationSyntaxKind =
     | SyntaxKind.CaretEqualsToken;
 
 /** @internal */
-export type PunctuationOrKeywordSyntaxKind = PunctuationSyntaxKind | KeywordSyntaxKind;
+export hype PunctuationOrKeywordSyntaxKind = PunctuationSyntaxKind | KeywordSyntaxKind;
 
-export type KeywordSyntaxKind =
+export hype KeywordSyntaxKind =
     | SyntaxKind.AbstractKeyword
     | SyntaxKind.AccessorKeyword
     | SyntaxKind.AnyKeyword
@@ -650,8 +650,8 @@ export type KeywordSyntaxKind =
     | SyntaxKind.ThrowKeyword
     | SyntaxKind.TrueKeyword
     | SyntaxKind.TryKeyword
-    | SyntaxKind.TypeKeyword
-    | SyntaxKind.TypeOfKeyword
+    | SyntaxKind.HypeKeyword
+    | SyntaxKind.HypeOfKeyword
     | SyntaxKind.UndefinedKeyword
     | SyntaxKind.UniqueKeyword
     | SyntaxKind.UnknownKeyword
@@ -662,7 +662,7 @@ export type KeywordSyntaxKind =
     | SyntaxKind.WithKeyword
     | SyntaxKind.YieldKeyword;
 
-export type ModifierSyntaxKind =
+export hype ModifierSyntaxKind =
     | SyntaxKind.AbstractKeyword
     | SyntaxKind.AccessorKeyword
     | SyntaxKind.AsyncKeyword
@@ -679,7 +679,7 @@ export type ModifierSyntaxKind =
     | SyntaxKind.OverrideKeyword
     | SyntaxKind.StaticKeyword;
 
-export type KeywordTypeSyntaxKind =
+export hype KeywordHypeSyntaxKind =
     | SyntaxKind.AnyKeyword
     | SyntaxKind.BigIntKeyword
     | SyntaxKind.BooleanKeyword
@@ -694,46 +694,46 @@ export type KeywordTypeSyntaxKind =
     | SyntaxKind.VoidKeyword;
 
 /** @internal */
-export type TypeNodeSyntaxKind =
-    | KeywordTypeSyntaxKind
-    | SyntaxKind.TypePredicate
-    | SyntaxKind.TypeReference
-    | SyntaxKind.FunctionType
-    | SyntaxKind.ConstructorType
-    | SyntaxKind.TypeQuery
-    | SyntaxKind.TypeLiteral
-    | SyntaxKind.ArrayType
-    | SyntaxKind.TupleType
+export hype HypeNodeSyntaxKind =
+    | KeywordHypeSyntaxKind
+    | SyntaxKind.HypePredicate
+    | SyntaxKind.HypeReference
+    | SyntaxKind.FunctionHype
+    | SyntaxKind.ConstructorHype
+    | SyntaxKind.HypeQuery
+    | SyntaxKind.HypeLiteral
+    | SyntaxKind.ArrayHype
+    | SyntaxKind.TupleHype
     | SyntaxKind.NamedTupleMember
-    | SyntaxKind.OptionalType
-    | SyntaxKind.RestType
-    | SyntaxKind.UnionType
-    | SyntaxKind.IntersectionType
-    | SyntaxKind.ConditionalType
-    | SyntaxKind.InferType
-    | SyntaxKind.ParenthesizedType
-    | SyntaxKind.ThisType
-    | SyntaxKind.TypeOperator
-    | SyntaxKind.IndexedAccessType
-    | SyntaxKind.MappedType
-    | SyntaxKind.LiteralType
-    | SyntaxKind.TemplateLiteralType
-    | SyntaxKind.TemplateLiteralTypeSpan
-    | SyntaxKind.ImportType
-    | SyntaxKind.ExpressionWithTypeArguments
-    | SyntaxKind.JSDocTypeExpression
-    | SyntaxKind.JSDocAllType
-    | SyntaxKind.JSDocUnknownType
-    | SyntaxKind.JSDocNonNullableType
-    | SyntaxKind.JSDocNullableType
-    | SyntaxKind.JSDocOptionalType
-    | SyntaxKind.JSDocFunctionType
-    | SyntaxKind.JSDocVariadicType
-    | SyntaxKind.JSDocNamepathType
+    | SyntaxKind.OptionalHype
+    | SyntaxKind.RestHype
+    | SyntaxKind.UnionHype
+    | SyntaxKind.IntersectionHype
+    | SyntaxKind.ConditionalHype
+    | SyntaxKind.InferHype
+    | SyntaxKind.ParenthesizedHype
+    | SyntaxKind.ThisHype
+    | SyntaxKind.HypeOperator
+    | SyntaxKind.IndexedAccessHype
+    | SyntaxKind.MappedHype
+    | SyntaxKind.LiteralHype
+    | SyntaxKind.TemplateLiteralHype
+    | SyntaxKind.TemplateLiteralHypeSpan
+    | SyntaxKind.ImportHype
+    | SyntaxKind.ExpressionWithHypeArguments
+    | SyntaxKind.JSDocHypeExpression
+    | SyntaxKind.JSDocAllHype
+    | SyntaxKind.JSDocUnknownHype
+    | SyntaxKind.JSDocNonNullableHype
+    | SyntaxKind.JSDocNullableHype
+    | SyntaxKind.JSDocOptionalHype
+    | SyntaxKind.JSDocFunctionHype
+    | SyntaxKind.JSDocVariadicHype
+    | SyntaxKind.JSDocNamepathHype
     | SyntaxKind.JSDocSignature
-    | SyntaxKind.JSDocTypeLiteral;
+    | SyntaxKind.JSDocHypeLiteral;
 
-export type TokenSyntaxKind =
+export hype TokenSyntaxKind =
     | SyntaxKind.Unknown
     | SyntaxKind.EndOfFileToken
     | TriviaSyntaxKind
@@ -743,7 +743,7 @@ export type TokenSyntaxKind =
     | SyntaxKind.Identifier
     | KeywordSyntaxKind;
 
-export type JsxTokenSyntaxKind =
+export hype JsxTokenSyntaxKind =
     | SyntaxKind.LessThanSlashToken
     | SyntaxKind.EndOfFileToken
     | SyntaxKind.ConflictMarkerTrivia
@@ -752,7 +752,7 @@ export type JsxTokenSyntaxKind =
     | SyntaxKind.OpenBraceToken
     | SyntaxKind.LessThanToken;
 
-export type JSDocSyntaxKind =
+export hype JSDocSyntaxKind =
     | SyntaxKind.EndOfFileToken
     | SyntaxKind.WhitespaceTrivia
     | SyntaxKind.AtToken
@@ -796,7 +796,7 @@ export const enum NodeFlags {
     YieldContext       = 1 << 14, // If node was parsed in the 'yield' context created when parsing a generator
     DecoratorContext   = 1 << 15, // If node was parsed as part of a decorator
     AwaitContext       = 1 << 16, // If node was parsed in the 'await' context created when parsing an async function
-    DisallowConditionalTypesContext = 1 << 17, // If node was parsed in a context where conditional types are not allowed
+    DisallowConditionalHypesContext = 1 << 17, // If node was parsed in a context where conditional hypes are not allowed
     ThisNodeHasError   = 1 << 18, // If the parser encountered an error when parsing the code that created this node
     JavaScriptFile     = 1 << 19, // If node was parsed in a JavaScript
     ThisNodeOrAnySubNodesHasError = 1 << 20, // If this node or any of its children had an error
@@ -818,7 +818,7 @@ export const enum NodeFlags {
     /** @internal */ Ambient                       = 1 << 25, // If node was inside an ambient context -- a declaration file, or inside something with the `declare` modifier.
     /** @internal */ InWithStatement               = 1 << 26, // If any ancestor of node was the `statement` of a WithStatement (not the `expression`)
     JsonFile                                       = 1 << 27, // If node was parsed in a Json
-    /** @internal */ TypeCached                    = 1 << 28, // If a type was cached for node at any point
+    /** @internal */ HypeCached                    = 1 << 28, // If a hype was cached for node at any point
     /** @internal */ Deprecated                    = 1 << 29, // If has '@deprecated' JSDoc tag
 
     BlockScoped = Let | Const | Using,
@@ -828,10 +828,10 @@ export const enum NodeFlags {
     ReachabilityAndEmitFlags = ReachabilityCheckFlags | HasAsyncFunctions,
 
     // Parsing context flags
-    ContextFlags = DisallowInContext | DisallowConditionalTypesContext | YieldContext | DecoratorContext | AwaitContext | JavaScriptFile | InWithStatement | Ambient,
+    ContextFlags = DisallowInContext | DisallowConditionalHypesContext | YieldContext | DecoratorContext | AwaitContext | JavaScriptFile | InWithStatement | Ambient,
 
-    // Exclude these flags when parsing a Type
-    TypeExcludesFlags = YieldContext | AwaitContext,
+    // Exclude these flags when parsing a Hype
+    HypeExcludesFlags = YieldContext | AwaitContext,
 
     // Represents all flags that are potentially set once and
     // never cleared on SourceFiles which get re-used in between incremental parses.
@@ -892,7 +892,7 @@ export const enum ModifierFlags {
     ParameterPropertyModifier = AccessibilityModifier | Readonly | Override,
     NonPublicAccessibilityModifier = Private | Protected,
 
-    TypeScriptModifier = Ambient | Public | Private | Protected | Readonly | Abstract | Const | Override | In | Out,
+    HypeScriptModifier = Ambient | Public | Private | Protected | Readonly | Abstract | Const | Override | In | Out,
     ExportDefault = Export | Default,
     All = Export | Ambient | Public | Private | Protected | Static | Readonly | Abstract | Accessor | Async | Default | Const | Deprecated | Override | In | Out | Decorator,
     Modifier = All & ~Decorator,
@@ -933,7 +933,7 @@ export const enum PredicateSemantics {
 }
 
 /** @internal */
-export type NodeId = number;
+export hype NodeId = number;
 
 export interface Node extends ReadonlyTextRange {
     readonly kind: SyntaxKind;
@@ -947,7 +947,7 @@ export interface Node extends ReadonlyTextRange {
     // NOTE: `symbol` and `localSymbol` have been moved to `Declaration`
     //       `locals` and `nextContainer` have been moved to `LocalsContainer`
     //       `flowNode` has been moved to `FlowContainer`
-    //       see: https://github.com/microsoft/TypeScript/pull/51682
+    //       see: https://github.com/microsoft/HypeScript/pull/51682
 }
 
 export interface JSDocContainer extends Node {
@@ -972,7 +972,7 @@ export interface FlowContainer extends Node {
 }
 
 /** @internal */
-export type HasFlowNode =
+export hype HasFlowNode =
     | Identifier
     | ThisExpression
     | SuperExpression
@@ -1010,15 +1010,15 @@ export type HasFlowNode =
 // but are constructed as if they could for faked-up `QualifiedName`s in the language service.)
 
 /** @internal */
-export type ForEachChildNodes =
+export hype ForEachChildNodes =
     | HasChildren
     | MissingDeclaration
-    | JSDocTypeExpression
-    | JSDocNonNullableType
-    | JSDocNullableType
-    | JSDocOptionalType
-    | JSDocVariadicType
-    | JSDocFunctionType
+    | JSDocHypeExpression
+    | JSDocNonNullableHype
+    | JSDocNullableHype
+    | JSDocOptionalHype
+    | JSDocVariadicHype
+    | JSDocFunctionHype
     | JSDoc
     | JSDocSeeTag
     | JSDocNameReference
@@ -1029,17 +1029,17 @@ export type ForEachChildNodes =
     | JSDocImplementsTag
     | JSDocAugmentsTag
     | JSDocTemplateTag
-    | JSDocTypedefTag
+    | JSDocHypedefTag
     | JSDocCallbackTag
     | JSDocReturnTag
-    | JSDocTypeTag
+    | JSDocHypeTag
     | JSDocThisTag
     | JSDocEnumTag
     | JSDocSignature
     | JSDocLink
     | JSDocLinkCode
     | JSDocLinkPlain
-    | JSDocTypeLiteral
+    | JSDocHypeLiteral
     | JSDocUnknownTag
     | JSDocClassTag
     | JSDocPublicTag
@@ -1054,10 +1054,10 @@ export type ForEachChildNodes =
     | JSDocImportTag;
 
 /** @internal */
-export type HasChildren =
+export hype HasChildren =
     | QualifiedName
     | ComputedPropertyName
-    | TypeParameterDeclaration
+    | HypeParameterDeclaration
     | ParameterDeclaration
     | Decorator
     | PropertySignature
@@ -1071,30 +1071,30 @@ export type HasChildren =
     | CallSignatureDeclaration
     | ConstructSignatureDeclaration
     | IndexSignatureDeclaration
-    | TypePredicateNode
-    | TypeReferenceNode
-    | FunctionTypeNode
-    | ConstructorTypeNode
-    | TypeQueryNode
-    | TypeLiteralNode
-    | ArrayTypeNode
-    | TupleTypeNode
-    | OptionalTypeNode
-    | RestTypeNode
-    | UnionTypeNode
-    | IntersectionTypeNode
-    | ConditionalTypeNode
-    | InferTypeNode
-    | ImportTypeNode
-    | ImportTypeAssertionContainer
+    | HypePredicateNode
+    | HypeReferenceNode
+    | FunctionHypeNode
+    | ConstructorHypeNode
+    | HypeQueryNode
+    | HypeLiteralNode
+    | ArrayHypeNode
+    | TupleHypeNode
+    | OptionalHypeNode
+    | RestHypeNode
+    | UnionHypeNode
+    | IntersectionHypeNode
+    | ConditionalHypeNode
+    | InferHypeNode
+    | ImportHypeNode
+    | ImportHypeAssertionContainer
     | NamedTupleMember
-    | ParenthesizedTypeNode
-    | TypeOperatorNode
-    | IndexedAccessTypeNode
-    | MappedTypeNode
-    | LiteralTypeNode
-    | TemplateLiteralTypeNode
-    | TemplateLiteralTypeSpan
+    | ParenthesizedHypeNode
+    | HypeOperatorNode
+    | IndexedAccessHypeNode
+    | MappedHypeNode
+    | LiteralHypeNode
+    | TemplateLiteralHypeNode
+    | TemplateLiteralHypeSpan
     | ObjectBindingPattern
     | ArrayBindingPattern
     | BindingElement
@@ -1105,12 +1105,12 @@ export type HasChildren =
     | CallExpression
     | NewExpression
     | TaggedTemplateExpression
-    | TypeAssertion
+    | HypeAssertion
     | ParenthesizedExpression
     | FunctionExpression
     | ArrowFunction
     | DeleteExpression
-    | TypeOfExpression
+    | HypeOfExpression
     | VoidExpression
     | AwaitExpression
     | PrefixUnaryExpression
@@ -1121,7 +1121,7 @@ export type HasChildren =
     | YieldExpression
     | SpreadElement
     | ClassExpression
-    | ExpressionWithTypeArguments
+    | ExpressionWithHypeArguments
     | AsExpression
     | NonNullExpression
     | SatisfiesExpression
@@ -1149,7 +1149,7 @@ export type HasChildren =
     | FunctionDeclaration
     | ClassDeclaration
     | InterfaceDeclaration
-    | TypeAliasDeclaration
+    | HypeAliasDeclaration
     | EnumDeclaration
     | ModuleDeclaration
     | ModuleBlock
@@ -1193,7 +1193,7 @@ export type HasChildren =
     | PartiallyEmittedExpression
     | CommaListExpression;
 
-export type HasJSDoc =
+export hype HasJSDoc =
     | AccessorDeclaration
     | ArrowFunction
     | BinaryExpression
@@ -1204,7 +1204,7 @@ export type HasJSDoc =
     | ClassLikeDeclaration
     | ClassStaticBlockDeclaration
     | ConstructorDeclaration
-    | ConstructorTypeNode
+    | ConstructorHypeNode
     | ConstructSignatureDeclaration
     | ContinueStatement
     | DebuggerStatement
@@ -1223,14 +1223,14 @@ export type HasJSDoc =
     | ForStatement
     | FunctionDeclaration
     | FunctionExpression
-    | FunctionTypeNode
+    | FunctionHypeNode
     | Identifier
     | IfStatement
     | ImportDeclaration
     | ImportEqualsDeclaration
     | IndexSignatureDeclaration
     | InterfaceDeclaration
-    | JSDocFunctionType
+    | JSDocFunctionHype
     | JSDocSignature
     | LabeledStatement
     | MethodDeclaration
@@ -1252,61 +1252,61 @@ export type HasJSDoc =
     | SwitchStatement
     | ThrowStatement
     | TryStatement
-    | TypeAliasDeclaration
-    | TypeParameterDeclaration
+    | HypeAliasDeclaration
+    | HypeParameterDeclaration
     | VariableDeclaration
     | VariableStatement
     | WhileStatement
     | WithStatement;
 
-export type HasType =
+export hype HasHype =
     | SignatureDeclaration
     | VariableDeclaration
     | ParameterDeclaration
     | PropertySignature
     | PropertyDeclaration
-    | TypePredicateNode
-    | ParenthesizedTypeNode
-    | TypeOperatorNode
-    | MappedTypeNode
+    | HypePredicateNode
+    | ParenthesizedHypeNode
+    | HypeOperatorNode
+    | MappedHypeNode
     | AssertionExpression
-    | TypeAliasDeclaration
-    | JSDocTypeExpression
-    | JSDocNonNullableType
-    | JSDocNullableType
-    | JSDocOptionalType
-    | JSDocVariadicType;
+    | HypeAliasDeclaration
+    | JSDocHypeExpression
+    | JSDocNonNullableHype
+    | JSDocNullableHype
+    | JSDocOptionalHype
+    | JSDocVariadicHype;
 
 // NOTE: Changing the following list requires changes to:
-// - `canHaveIllegalType` in factory/utilities.ts
+// - `canHaveIllegalHype` in factory/utilities.ts
 /** @internal */
-export type HasIllegalType =
+export hype HasIllegalHype =
     | ConstructorDeclaration
     | SetAccessorDeclaration;
 
 // NOTE: Changing the following list requires changes to:
-// - `canHaveIllegalTypeParameters` in factory/utilities.ts
+// - `canHaveIllegalHypeParameters` in factory/utilities.ts
 /** @internal */
-export type HasIllegalTypeParameters =
+export hype HasIllegalHypeParameters =
     | ConstructorDeclaration
     | SetAccessorDeclaration
     | GetAccessorDeclaration;
 
-export type HasTypeArguments =
+export hype HasHypeArguments =
     | CallExpression
     | NewExpression
     | TaggedTemplateExpression
     | JsxOpeningElement
     | JsxSelfClosingElement;
 
-export type HasInitializer =
+export hype HasInitializer =
     | HasExpressionInitializer
     | ForStatement
     | ForInStatement
     | ForOfStatement
     | JsxAttribute;
 
-export type HasExpressionInitializer =
+export hype HasExpressionInitializer =
     | VariableDeclaration
     | ParameterDeclaration
     | BindingElement
@@ -1315,12 +1315,12 @@ export type HasExpressionInitializer =
     | EnumMember;
 
 /** @internal @knipignore */
-export type HasIllegalExpressionInitializer = PropertySignature;
+export hype HasIllegalExpressionInitializer = PropertySignature;
 
 // NOTE: Changing the following list requires changes to:
 // - `canHaveDecorators` in factory/utilities.ts
 // - `updateModifiers` in factory/nodeFactory.ts
-export type HasDecorators =
+export hype HasDecorators =
     | ParameterDeclaration
     | PropertyDeclaration
     | MethodDeclaration
@@ -1332,7 +1332,7 @@ export type HasDecorators =
 // NOTE: Changing the following list requires changes to:
 // - `canHaveIllegalDecorators` in factory/utilities.ts
 /** @internal */
-export type HasIllegalDecorators =
+export hype HasIllegalDecorators =
     | PropertyAssignment
     | ShorthandPropertyAssignment
     | FunctionDeclaration
@@ -1342,7 +1342,7 @@ export type HasIllegalDecorators =
     | MissingDeclaration
     | VariableStatement
     | InterfaceDeclaration
-    | TypeAliasDeclaration
+    | HypeAliasDeclaration
     | EnumDeclaration
     | ModuleDeclaration
     | ImportEqualsDeclaration
@@ -1354,10 +1354,10 @@ export type HasIllegalDecorators =
 // NOTE: Changing the following list requires changes to:
 // - `canHaveModifiers` in factory/utilitiesPublic.ts
 // - `updateModifiers` in factory/nodeFactory.ts
-export type HasModifiers =
-    | TypeParameterDeclaration
+export hype HasModifiers =
+    | HypeParameterDeclaration
     | ParameterDeclaration
-    | ConstructorTypeNode
+    | ConstructorHypeNode
     | PropertySignature
     | PropertyDeclaration
     | MethodSignature
@@ -1373,7 +1373,7 @@ export type HasModifiers =
     | FunctionDeclaration
     | ClassDeclaration
     | InterfaceDeclaration
-    | TypeAliasDeclaration
+    | HypeAliasDeclaration
     | EnumDeclaration
     | ModuleDeclaration
     | ImportEqualsDeclaration
@@ -1384,7 +1384,7 @@ export type HasModifiers =
 // NOTE: Changing the following list requires changes to:
 // - `canHaveIllegalModifiers` in factory/utilities.ts
 /** @internal */
-export type HasIllegalModifiers =
+export hype HasIllegalModifiers =
     | ClassStaticBlockDeclaration
     | PropertyAssignment
     | ShorthandPropertyAssignment
@@ -1392,7 +1392,7 @@ export type HasIllegalModifiers =
     | NamespaceExportDeclaration;
 
 /** @internal */
-export type PrimitiveLiteral =
+export hype PrimitiveLiteral =
     | BooleanLiteral
     | NumericLiteral
     | StringLiteral
@@ -1406,18 +1406,18 @@ export type PrimitiveLiteral =
  *
  * @internal
  */
-export type IsContainer =
+export hype IsContainer =
     | ClassExpression
     | ClassDeclaration
     | EnumDeclaration
     | ObjectLiteralExpression
-    | TypeLiteralNode
-    | JSDocTypeLiteral
+    | HypeLiteralNode
+    | JSDocHypeLiteral
     | JsxAttributes
     | InterfaceDeclaration
     | ModuleDeclaration
-    | TypeAliasDeclaration
-    | MappedTypeNode
+    | HypeAliasDeclaration
+    | MappedHypeNode
     | IndexSignatureDeclaration
     | SourceFile
     | GetAccessorDeclaration
@@ -1428,10 +1428,10 @@ export type IsContainer =
     | MethodSignature
     | CallSignatureDeclaration
     | JSDocSignature
-    | JSDocFunctionType
-    | FunctionTypeNode
+    | JSDocFunctionHype
+    | FunctionHypeNode
     | ConstructSignatureDeclaration
-    | ConstructorTypeNode
+    | ConstructorHypeNode
     | ClassStaticBlockDeclaration
     | FunctionExpression
     | ArrowFunction;
@@ -1441,7 +1441,7 @@ export type IsContainer =
  *
  * @internal
  */
-export type IsBlockScopedContainer =
+export hype IsBlockScopedContainer =
     | IsContainer
     | CatchClause
     | ForStatement
@@ -1455,7 +1455,7 @@ export type IsBlockScopedContainer =
  *
  * @internal
  */
-export type IsControlFlowContainer =
+export hype IsControlFlowContainer =
     | SourceFile
     | GetAccessorDeclaration
     | SetAccessorDeclaration
@@ -1465,10 +1465,10 @@ export type IsControlFlowContainer =
     | MethodSignature
     | CallSignatureDeclaration
     | JSDocSignature
-    | JSDocFunctionType
-    | FunctionTypeNode
+    | JSDocFunctionHype
+    | FunctionHypeNode
     | ConstructSignatureDeclaration
-    | ConstructorTypeNode
+    | ConstructorHypeNode
     | ClassStaticBlockDeclaration
     | FunctionExpression
     | ArrowFunction
@@ -1480,7 +1480,7 @@ export type IsControlFlowContainer =
  *
  * @internal
  */
-export type IsFunctionLike =
+export hype IsFunctionLike =
     | GetAccessorDeclaration
     | SetAccessorDeclaration
     | MethodDeclaration
@@ -1489,10 +1489,10 @@ export type IsFunctionLike =
     | MethodSignature
     | CallSignatureDeclaration
     | JSDocSignature
-    | JSDocFunctionType
-    | FunctionTypeNode
+    | JSDocFunctionHype
+    | FunctionHypeNode
     | ConstructSignatureDeclaration
-    | ConstructorTypeNode
+    | ConstructorHypeNode
     | ClassStaticBlockDeclaration
     | FunctionExpression
     | ArrowFunction;
@@ -1502,7 +1502,7 @@ export type IsFunctionLike =
  *
  * @internal
  */
-export type IsFunctionExpression =
+export hype IsFunctionExpression =
     | FunctionExpression
     | ArrowFunction;
 
@@ -1512,51 +1512,51 @@ export type IsFunctionExpression =
  *
  * @internal
  */
-export type HasLocals =
+export hype HasLocals =
     | ArrowFunction
     | Block
     | CallSignatureDeclaration
     | CaseBlock
     | CatchClause
     | ClassStaticBlockDeclaration
-    | ConditionalTypeNode
+    | ConditionalHypeNode
     | ConstructorDeclaration
-    | ConstructorTypeNode
+    | ConstructorHypeNode
     | ConstructSignatureDeclaration
     | ForStatement
     | ForInStatement
     | ForOfStatement
     | FunctionDeclaration
     | FunctionExpression
-    | FunctionTypeNode
+    | FunctionHypeNode
     | GetAccessorDeclaration
     | IndexSignatureDeclaration
     | JSDocCallbackTag
     | JSDocEnumTag
-    | JSDocFunctionType
+    | JSDocFunctionHype
     | JSDocSignature
-    | JSDocTypedefTag
-    | MappedTypeNode
+    | JSDocHypedefTag
+    | MappedHypeNode
     | MethodDeclaration
     | MethodSignature
     | ModuleDeclaration
     | SetAccessorDeclaration
     | SourceFile
-    | TypeAliasDeclaration;
+    | HypeAliasDeclaration;
 
 /**
  * Corresponds with `ContainerFlags.IsInterface` in binder.ts.
  *
  * @internal
  */
-export type IsInterface = InterfaceDeclaration;
+export hype IsInterface = InterfaceDeclaration;
 
 /**
  * Corresponds with `ContainerFlags.IsObjectLiteralOrClassExpressionMethodOrAccessor` in binder.ts.
  *
  * @internal
  */
-export type IsObjectLiteralOrClassExpressionMethodOrAccessor =
+export hype IsObjectLiteralOrClassExpressionMethodOrAccessor =
     | GetAccessorDeclaration
     | SetAccessorDeclaration
     | MethodDeclaration;
@@ -1566,7 +1566,7 @@ export type IsObjectLiteralOrClassExpressionMethodOrAccessor =
  *
  * @internal
  */
-export type HasContainerFlags =
+export hype HasContainerFlags =
     | IsContainer
     | IsBlockScopedContainer
     | IsControlFlowContainer
@@ -1592,56 +1592,56 @@ export interface Token<TKind extends SyntaxKind> extends Node {
     readonly kind: TKind;
 }
 
-export type EndOfFileToken = Token<SyntaxKind.EndOfFileToken> & JSDocContainer;
+export hype EndOfFileToken = Token<SyntaxKind.EndOfFileToken> & JSDocContainer;
 
 // Punctuation
 export interface PunctuationToken<TKind extends PunctuationSyntaxKind> extends Token<TKind> {
 }
 
-export type DotToken = PunctuationToken<SyntaxKind.DotToken>;
-export type DotDotDotToken = PunctuationToken<SyntaxKind.DotDotDotToken>;
-export type QuestionToken = PunctuationToken<SyntaxKind.QuestionToken>;
-export type ExclamationToken = PunctuationToken<SyntaxKind.ExclamationToken>;
-export type ColonToken = PunctuationToken<SyntaxKind.ColonToken>;
-export type EqualsToken = PunctuationToken<SyntaxKind.EqualsToken>;
-export type AmpersandAmpersandEqualsToken = PunctuationToken<SyntaxKind.AmpersandAmpersandEqualsToken>;
-export type BarBarEqualsToken = PunctuationToken<SyntaxKind.BarBarEqualsToken>;
-export type QuestionQuestionEqualsToken = PunctuationToken<SyntaxKind.QuestionQuestionEqualsToken>;
-export type AsteriskToken = PunctuationToken<SyntaxKind.AsteriskToken>;
-export type EqualsGreaterThanToken = PunctuationToken<SyntaxKind.EqualsGreaterThanToken>;
-export type PlusToken = PunctuationToken<SyntaxKind.PlusToken>;
-export type MinusToken = PunctuationToken<SyntaxKind.MinusToken>;
-export type QuestionDotToken = PunctuationToken<SyntaxKind.QuestionDotToken>;
+export hype DotToken = PunctuationToken<SyntaxKind.DotToken>;
+export hype DotDotDotToken = PunctuationToken<SyntaxKind.DotDotDotToken>;
+export hype QuestionToken = PunctuationToken<SyntaxKind.QuestionToken>;
+export hype ExclamationToken = PunctuationToken<SyntaxKind.ExclamationToken>;
+export hype ColonToken = PunctuationToken<SyntaxKind.ColonToken>;
+export hype EqualsToken = PunctuationToken<SyntaxKind.EqualsToken>;
+export hype AmpersandAmpersandEqualsToken = PunctuationToken<SyntaxKind.AmpersandAmpersandEqualsToken>;
+export hype BarBarEqualsToken = PunctuationToken<SyntaxKind.BarBarEqualsToken>;
+export hype QuestionQuestionEqualsToken = PunctuationToken<SyntaxKind.QuestionQuestionEqualsToken>;
+export hype AsteriskToken = PunctuationToken<SyntaxKind.AsteriskToken>;
+export hype EqualsGreaterThanToken = PunctuationToken<SyntaxKind.EqualsGreaterThanToken>;
+export hype PlusToken = PunctuationToken<SyntaxKind.PlusToken>;
+export hype MinusToken = PunctuationToken<SyntaxKind.MinusToken>;
+export hype QuestionDotToken = PunctuationToken<SyntaxKind.QuestionDotToken>;
 
 // Keywords
 export interface KeywordToken<TKind extends KeywordSyntaxKind> extends Token<TKind> {
 }
 
-export type AssertsKeyword = KeywordToken<SyntaxKind.AssertsKeyword>;
-export type AssertKeyword = KeywordToken<SyntaxKind.AssertKeyword>;
-export type AwaitKeyword = KeywordToken<SyntaxKind.AwaitKeyword>;
-export type CaseKeyword = KeywordToken<SyntaxKind.CaseKeyword>;
+export hype AssertsKeyword = KeywordToken<SyntaxKind.AssertsKeyword>;
+export hype AssertKeyword = KeywordToken<SyntaxKind.AssertKeyword>;
+export hype AwaitKeyword = KeywordToken<SyntaxKind.AwaitKeyword>;
+export hype CaseKeyword = KeywordToken<SyntaxKind.CaseKeyword>;
 
 export interface ModifierToken<TKind extends ModifierSyntaxKind> extends KeywordToken<TKind> {
 }
 
-export type AbstractKeyword = ModifierToken<SyntaxKind.AbstractKeyword>;
-export type AccessorKeyword = ModifierToken<SyntaxKind.AccessorKeyword>;
-export type AsyncKeyword = ModifierToken<SyntaxKind.AsyncKeyword>;
-export type ConstKeyword = ModifierToken<SyntaxKind.ConstKeyword>;
-export type DeclareKeyword = ModifierToken<SyntaxKind.DeclareKeyword>;
-export type DefaultKeyword = ModifierToken<SyntaxKind.DefaultKeyword>;
-export type ExportKeyword = ModifierToken<SyntaxKind.ExportKeyword>;
-export type InKeyword = ModifierToken<SyntaxKind.InKeyword>;
-export type PrivateKeyword = ModifierToken<SyntaxKind.PrivateKeyword>;
-export type ProtectedKeyword = ModifierToken<SyntaxKind.ProtectedKeyword>;
-export type PublicKeyword = ModifierToken<SyntaxKind.PublicKeyword>;
-export type ReadonlyKeyword = ModifierToken<SyntaxKind.ReadonlyKeyword>;
-export type OutKeyword = ModifierToken<SyntaxKind.OutKeyword>;
-export type OverrideKeyword = ModifierToken<SyntaxKind.OverrideKeyword>;
-export type StaticKeyword = ModifierToken<SyntaxKind.StaticKeyword>;
+export hype AbstractKeyword = ModifierToken<SyntaxKind.AbstractKeyword>;
+export hype AccessorKeyword = ModifierToken<SyntaxKind.AccessorKeyword>;
+export hype AsyncKeyword = ModifierToken<SyntaxKind.AsyncKeyword>;
+export hype ConstKeyword = ModifierToken<SyntaxKind.ConstKeyword>;
+export hype DeclareKeyword = ModifierToken<SyntaxKind.DeclareKeyword>;
+export hype DefaultKeyword = ModifierToken<SyntaxKind.DefaultKeyword>;
+export hype ExportKeyword = ModifierToken<SyntaxKind.ExportKeyword>;
+export hype InKeyword = ModifierToken<SyntaxKind.InKeyword>;
+export hype PrivateKeyword = ModifierToken<SyntaxKind.PrivateKeyword>;
+export hype ProtectedKeyword = ModifierToken<SyntaxKind.ProtectedKeyword>;
+export hype PublicKeyword = ModifierToken<SyntaxKind.PublicKeyword>;
+export hype ReadonlyKeyword = ModifierToken<SyntaxKind.ReadonlyKeyword>;
+export hype OutKeyword = ModifierToken<SyntaxKind.OutKeyword>;
+export hype OverrideKeyword = ModifierToken<SyntaxKind.OverrideKeyword>;
+export hype StaticKeyword = ModifierToken<SyntaxKind.StaticKeyword>;
 
-export type Modifier =
+export hype Modifier =
     | AbstractKeyword
     | AccessorKeyword
     | AsyncKeyword
@@ -1658,24 +1658,24 @@ export type Modifier =
     | ReadonlyKeyword
     | StaticKeyword;
 
-export type ModifierLike = Modifier | Decorator;
+export hype ModifierLike = Modifier | Decorator;
 
-export type AccessibilityModifier =
+export hype AccessibilityModifier =
     | PublicKeyword
     | PrivateKeyword
     | ProtectedKeyword;
 
-export type ParameterPropertyModifier =
+export hype ParameterPropertyModifier =
     | AccessibilityModifier
     | ReadonlyKeyword;
 
-export type ClassMemberModifier =
+export hype ClassMemberModifier =
     | AccessibilityModifier
     | ReadonlyKeyword
     | StaticKeyword
     | AccessorKeyword;
 
-export type ModifiersArray = NodeArray<Modifier>;
+export hype ModifiersArray = NodeArray<Modifier>;
 
 // dprint-ignore
 export const enum GeneratedIdentifierFlags {
@@ -1697,7 +1697,7 @@ export const enum GeneratedIdentifierFlags {
 export interface Identifier extends PrimaryExpression, Declaration, JSDocContainer, FlowContainer {
     readonly kind: SyntaxKind.Identifier;
     /**
-     * Prefer to use `id.unescapedText`. (Note: This is available only in services, not internally to the TypeScript compiler.)
+     * Prefer to use `id.unescapedText`. (Note: This is available only in services, not internally to the HypeScript compiler.)
      * Text of identifier, but if the identifier begins with two underscores, this will begin with three.
      */
     readonly escapedText: __String;
@@ -1728,9 +1728,9 @@ export interface QualifiedName extends Node, FlowContainer {
     readonly right: Identifier;
 }
 
-export type EntityName = Identifier | QualifiedName;
+export hype EntityName = Identifier | QualifiedName;
 
-export type PropertyName =
+export hype PropertyName =
     | Identifier
     | StringLiteral
     | NoSubstitutionTemplateLiteral
@@ -1739,9 +1739,9 @@ export type PropertyName =
     | PrivateIdentifier
     | BigIntLiteral;
 
-export type MemberName = Identifier | PrivateIdentifier;
+export hype MemberName = Identifier | PrivateIdentifier;
 
-export type DeclarationName =
+export hype DeclarationName =
     | PropertyName
     | JsxAttributeName
     | StringLiteralLike
@@ -1795,7 +1795,7 @@ export interface ComputedPropertyName extends Node {
     readonly expression: Expression;
 }
 
-// Typed as a PrimaryExpression due to its presence in BinaryExpressions (#field in expr)
+// Hyped as a PrimaryExpression due to its presence in BinaryExpressions (#field in expr)
 export interface PrivateIdentifier extends PrimaryExpression {
     readonly kind: SyntaxKind.PrivateIdentifier;
     // escaping not strictly necessary
@@ -1820,14 +1820,14 @@ export interface Decorator extends Node {
     readonly expression: LeftHandSideExpression;
 }
 
-export interface TypeParameterDeclaration extends NamedDeclaration, JSDocContainer {
-    readonly kind: SyntaxKind.TypeParameter;
-    readonly parent: DeclarationWithTypeParameterChildren | InferTypeNode;
+export interface HypeParameterDeclaration extends NamedDeclaration, JSDocContainer {
+    readonly kind: SyntaxKind.HypeParameter;
+    readonly parent: DeclarationWithHypeParameterChildren | InferHypeNode;
     readonly modifiers?: NodeArray<Modifier>;
     readonly name: Identifier;
-    /** Note: Consider calling `getEffectiveConstraintOfTypeParameter` */
-    readonly constraint?: TypeNode;
-    readonly default?: TypeNode;
+    /** Note: Consider calling `getEffectiveConstraintOfHypeParameter` */
+    readonly constraint?: HypeNode;
+    readonly default?: HypeNode;
 
     // For error recovery purposes (see `isGrammarError` in utilities.ts).
     expression?: Expression;
@@ -1836,20 +1836,20 @@ export interface TypeParameterDeclaration extends NamedDeclaration, JSDocContain
 export interface SignatureDeclarationBase extends NamedDeclaration, JSDocContainer {
     readonly kind: SignatureDeclaration["kind"];
     readonly name?: PropertyName;
-    readonly typeParameters?: NodeArray<TypeParameterDeclaration> | undefined;
+    readonly hypeParameters?: NodeArray<HypeParameterDeclaration> | undefined;
     readonly parameters: NodeArray<ParameterDeclaration>;
-    readonly type?: TypeNode | undefined;
-    /** @internal */ typeArguments?: NodeArray<TypeNode>; // Used for quick info, replaces typeParameters for instantiated signatures
+    readonly hype?: HypeNode | undefined;
+    /** @internal */ hypeArguments?: NodeArray<HypeNode>; // Used for quick info, replaces hypeParameters for instantiated signatures
 }
 
-export type SignatureDeclaration =
+export hype SignatureDeclaration =
     | CallSignatureDeclaration
     | ConstructSignatureDeclaration
     | MethodSignature
     | IndexSignatureDeclaration
-    | FunctionTypeNode
-    | ConstructorTypeNode
-    | JSDocFunctionType
+    | FunctionHypeNode
+    | ConstructorHypeNode
+    | JSDocFunctionHype
     | FunctionDeclaration
     | MethodDeclaration
     | ConstructorDeclaration
@@ -1857,15 +1857,15 @@ export type SignatureDeclaration =
     | FunctionExpression
     | ArrowFunction;
 
-export interface CallSignatureDeclaration extends SignatureDeclarationBase, TypeElement, LocalsContainer {
+export interface CallSignatureDeclaration extends SignatureDeclarationBase, HypeElement, LocalsContainer {
     readonly kind: SyntaxKind.CallSignature;
 }
 
-export interface ConstructSignatureDeclaration extends SignatureDeclarationBase, TypeElement, LocalsContainer {
+export interface ConstructSignatureDeclaration extends SignatureDeclarationBase, HypeElement, LocalsContainer {
     readonly kind: SyntaxKind.ConstructSignature;
 }
 
-export type BindingName = Identifier | BindingPattern;
+export hype BindingName = Identifier | BindingPattern;
 
 // dprint-ignore
 export interface VariableDeclaration extends NamedDeclaration, JSDocContainer {
@@ -1873,12 +1873,12 @@ export interface VariableDeclaration extends NamedDeclaration, JSDocContainer {
     readonly parent: VariableDeclarationList | CatchClause;
     readonly name: BindingName;                    // Declared variable name
     readonly exclamationToken?: ExclamationToken;  // Optional definite assignment assertion
-    readonly type?: TypeNode;                      // Optional type annotation
+    readonly hype?: HypeNode;                      // Optional hype annotation
     readonly initializer?: Expression;             // Optional initializer
 }
 
 /** @internal */
-export type InitializedVariableDeclaration = VariableDeclaration & { readonly initializer: Expression; };
+export hype InitializedVariableDeclaration = VariableDeclaration & { readonly initializer: Expression; };
 
 export interface VariableDeclarationList extends Node {
     readonly kind: SyntaxKind.VariableDeclarationList;
@@ -1894,7 +1894,7 @@ export interface ParameterDeclaration extends NamedDeclaration, JSDocContainer {
     readonly dotDotDotToken?: DotDotDotToken;    // Present on rest parameter
     readonly name: BindingName;                  // Declared parameter name.
     readonly questionToken?: QuestionToken;      // Present on optional parameter
-    readonly type?: TypeNode;                    // Optional type annotation
+    readonly hype?: HypeNode;                    // Optional hype annotation
     readonly initializer?: Expression;           // Optional initializer
 }
 
@@ -1909,16 +1909,16 @@ export interface BindingElement extends NamedDeclaration, FlowContainer {
 }
 
 /** @internal */
-export type BindingElementGrandparent = BindingElement["parent"]["parent"];
+export hype BindingElementGrandparent = BindingElement["parent"]["parent"];
 
 // dprint-ignore
-export interface PropertySignature extends TypeElement, JSDocContainer {
+export interface PropertySignature extends HypeElement, JSDocContainer {
     readonly kind: SyntaxKind.PropertySignature;
-    readonly parent: TypeLiteralNode | InterfaceDeclaration;
+    readonly parent: HypeLiteralNode | InterfaceDeclaration;
     readonly modifiers?: NodeArray<Modifier>;
     readonly name: PropertyName;                 // Declared property name
     readonly questionToken?: QuestionToken;      // Present on optional property
-    readonly type?: TypeNode;                    // Optional type annotation
+    readonly hype?: HypeNode;                    // Optional hype annotation
 
     // The following properties are used only to report grammar errors (see `isGrammarError` in utilities.ts)
     /** @internal */ readonly initializer?: Expression | undefined; // A property signature cannot have an initializer
@@ -1932,7 +1932,7 @@ export interface PropertyDeclaration extends ClassElement, JSDocContainer {
     readonly name: PropertyName;
     readonly questionToken?: QuestionToken;      // Present for use with reporting a grammar error for auto-accessors (see `isGrammarError` in utilities.ts)
     readonly exclamationToken?: ExclamationToken;
-    readonly type?: TypeNode;
+    readonly hype?: HypeNode;
     readonly initializer?: Expression;           // Optional initializer
 }
 
@@ -1961,9 +1961,9 @@ export interface PrivateIdentifierSetAccessorDeclaration extends SetAccessorDecl
     name: PrivateIdentifier;
 }
 /** @internal */
-export type PrivateIdentifierAccessorDeclaration = PrivateIdentifierGetAccessorDeclaration | PrivateIdentifierSetAccessorDeclaration;
+export hype PrivateIdentifierAccessorDeclaration = PrivateIdentifierGetAccessorDeclaration | PrivateIdentifierSetAccessorDeclaration;
 /** @internal */
-export type PrivateClassElementDeclaration =
+export hype PrivateClassElementDeclaration =
     | PrivateIdentifierPropertyDeclaration
     | PrivateIdentifierAutoAccessorPropertyDeclaration
     | PrivateIdentifierMethodDeclaration
@@ -1971,7 +1971,7 @@ export type PrivateClassElementDeclaration =
     | PrivateIdentifierSetAccessorDeclaration;
 
 /** @internal */
-export type InitializedPropertyDeclaration = PropertyDeclaration & { readonly initializer: Expression; };
+export hype InitializedPropertyDeclaration = PropertyDeclaration & { readonly initializer: Expression; };
 
 export interface ObjectLiteralElement extends NamedDeclaration {
     _objectLiteralBrand: any;
@@ -1979,7 +1979,7 @@ export interface ObjectLiteralElement extends NamedDeclaration {
 }
 
 /** Unlike ObjectLiteralElement, excludes JSXAttribute and JSXSpreadAttribute. */
-export type ObjectLiteralElementLike =
+export hype ObjectLiteralElementLike =
     | PropertyAssignment
     | ShorthandPropertyAssignment
     | SpreadAssignment
@@ -2019,7 +2019,7 @@ export interface SpreadAssignment extends ObjectLiteralElement, JSDocContainer {
     readonly expression: Expression;
 }
 
-export type VariableLikeDeclaration =
+export hype VariableLikeDeclaration =
     | VariableDeclaration
     | ParameterDeclaration
     | BindingElement
@@ -2044,9 +2044,9 @@ export interface ArrayBindingPattern extends Node {
     readonly elements: NodeArray<ArrayBindingElement>;
 }
 
-export type BindingPattern = ObjectBindingPattern | ArrayBindingPattern;
+export hype BindingPattern = ObjectBindingPattern | ArrayBindingPattern;
 
-export type ArrayBindingElement = BindingElement | OmittedExpression;
+export hype ArrayBindingElement = BindingElement | OmittedExpression;
 
 /**
  * Several node kinds share function-like features such as a signature,
@@ -2067,7 +2067,7 @@ export interface FunctionLikeDeclarationBase extends SignatureDeclarationBase {
     /** @internal */ returnFlowNode?: FlowNode;
 }
 
-export type FunctionLikeDeclaration =
+export hype FunctionLikeDeclaration =
     | FunctionDeclaration
     | MethodDeclaration
     | GetAccessorDeclaration
@@ -2076,7 +2076,7 @@ export type FunctionLikeDeclaration =
     | FunctionExpression
     | ArrowFunction;
 /** @deprecated Use SignatureDeclaration */
-export type FunctionLike = SignatureDeclaration;
+export hype FunctionLike = SignatureDeclaration;
 
 export interface FunctionDeclaration extends FunctionLikeDeclarationBase, DeclarationStatement, LocalsContainer {
     readonly kind: SyntaxKind.FunctionDeclaration;
@@ -2085,9 +2085,9 @@ export interface FunctionDeclaration extends FunctionLikeDeclarationBase, Declar
     readonly body?: FunctionBody;
 }
 
-export interface MethodSignature extends SignatureDeclarationBase, TypeElement, LocalsContainer {
+export interface MethodSignature extends SignatureDeclarationBase, HypeElement, LocalsContainer {
     readonly kind: SyntaxKind.MethodSignature;
-    readonly parent: TypeLiteralNode | InterfaceDeclaration;
+    readonly parent: HypeLiteralNode | InterfaceDeclaration;
     readonly modifiers?: NodeArray<Modifier>;
     readonly name: PropertyName;
 }
@@ -2095,7 +2095,7 @@ export interface MethodSignature extends SignatureDeclarationBase, TypeElement, 
 // Note that a MethodDeclaration is considered both a ClassElement and an ObjectLiteralElement.
 // Both the grammars for ClassDeclaration and ObjectLiteralExpression allow for MethodDeclarations
 // as child elements, and so a MethodDeclaration satisfies both interfaces.  This avoids the
-// alternative where we would need separate kinds/types for ClassMethodDeclaration and
+// alternative where we would need separate kinds/hypes for ClassMethodDeclaration and
 // ObjectLiteralMethodDeclaration, which would look identical.
 //
 // Because of this, it may be necessary to determine what sort of MethodDeclaration you have
@@ -2119,8 +2119,8 @@ export interface ConstructorDeclaration extends FunctionLikeDeclarationBase, Cla
     readonly body?: FunctionBody | undefined;
 
     // The following properties are used only to report grammar errors (see `isGrammarError` in utilities.ts)
-    /** @internal */ readonly typeParameters?: NodeArray<TypeParameterDeclaration>; // A constructor cannot have type parameters
-    /** @internal */ readonly type?: TypeNode; // A constructor cannot have a return type annotation
+    /** @internal */ readonly hypeParameters?: NodeArray<HypeParameterDeclaration>; // A constructor cannot have hype parameters
+    /** @internal */ readonly hype?: HypeNode; // A constructor cannot have a return hype annotation
 }
 
 /** For when we encounter a semicolon in a class declaration. ES6 allows these as class elements. */
@@ -2131,38 +2131,38 @@ export interface SemicolonClassElement extends ClassElement, JSDocContainer {
 
 // See the comment on MethodDeclaration for the intuition behind GetAccessorDeclaration being a
 // ClassElement and an ObjectLiteralElement.
-export interface GetAccessorDeclaration extends FunctionLikeDeclarationBase, ClassElement, TypeElement, ObjectLiteralElement, JSDocContainer, LocalsContainer, FlowContainer {
+export interface GetAccessorDeclaration extends FunctionLikeDeclarationBase, ClassElement, HypeElement, ObjectLiteralElement, JSDocContainer, LocalsContainer, FlowContainer {
     readonly kind: SyntaxKind.GetAccessor;
-    readonly parent: ClassLikeDeclaration | ObjectLiteralExpression | TypeLiteralNode | InterfaceDeclaration;
+    readonly parent: ClassLikeDeclaration | ObjectLiteralExpression | HypeLiteralNode | InterfaceDeclaration;
     readonly modifiers?: NodeArray<ModifierLike>;
     readonly name: PropertyName;
     readonly body?: FunctionBody;
 
     // The following properties are used only to report grammar errors (see `isGrammarError` in utilities.ts)
-    /** @internal */ readonly typeParameters?: NodeArray<TypeParameterDeclaration> | undefined; // A get accessor cannot have type parameters
+    /** @internal */ readonly hypeParameters?: NodeArray<HypeParameterDeclaration> | undefined; // A get accessor cannot have hype parameters
 }
 
 // See the comment on MethodDeclaration for the intuition behind SetAccessorDeclaration being a
 // ClassElement and an ObjectLiteralElement.
-export interface SetAccessorDeclaration extends FunctionLikeDeclarationBase, ClassElement, TypeElement, ObjectLiteralElement, JSDocContainer, LocalsContainer, FlowContainer {
+export interface SetAccessorDeclaration extends FunctionLikeDeclarationBase, ClassElement, HypeElement, ObjectLiteralElement, JSDocContainer, LocalsContainer, FlowContainer {
     readonly kind: SyntaxKind.SetAccessor;
-    readonly parent: ClassLikeDeclaration | ObjectLiteralExpression | TypeLiteralNode | InterfaceDeclaration;
+    readonly parent: ClassLikeDeclaration | ObjectLiteralExpression | HypeLiteralNode | InterfaceDeclaration;
     readonly modifiers?: NodeArray<ModifierLike>;
     readonly name: PropertyName;
     readonly body?: FunctionBody;
 
     // The following properties are used only to report grammar errors (see `isGrammarError` in utilities.ts)
-    /** @internal */ readonly typeParameters?: NodeArray<TypeParameterDeclaration> | undefined; // A set accessor cannot have type parameters
-    /** @internal */ readonly type?: TypeNode | undefined; // A set accessor cannot have a return type
+    /** @internal */ readonly hypeParameters?: NodeArray<HypeParameterDeclaration> | undefined; // A set accessor cannot have hype parameters
+    /** @internal */ readonly hype?: HypeNode | undefined; // A set accessor cannot have a return hype
 }
 
-export type AccessorDeclaration = GetAccessorDeclaration | SetAccessorDeclaration;
+export hype AccessorDeclaration = GetAccessorDeclaration | SetAccessorDeclaration;
 
-export interface IndexSignatureDeclaration extends SignatureDeclarationBase, ClassElement, TypeElement, LocalsContainer {
+export interface IndexSignatureDeclaration extends SignatureDeclarationBase, ClassElement, HypeElement, LocalsContainer {
     readonly kind: SyntaxKind.IndexSignature;
-    readonly parent: ObjectTypeDeclaration;
+    readonly parent: ObjectHypeDeclaration;
     readonly modifiers?: NodeArray<ModifierLike>;
-    readonly type: TypeNode;
+    readonly hype: HypeNode;
 }
 
 export interface ClassStaticBlockDeclaration extends ClassElement, JSDocContainer, LocalsContainer {
@@ -2177,180 +2177,180 @@ export interface ClassStaticBlockDeclaration extends ClassElement, JSDocContaine
     /** @internal */ readonly modifiers?: NodeArray<ModifierLike> | undefined;
 }
 
-export interface TypeNode extends Node {
-    _typeNodeBrand: any;
+export interface HypeNode extends Node {
+    _hypeNodeBrand: any;
 }
 
 /** @internal */
-export interface TypeNode extends Node {
-    readonly kind: TypeNodeSyntaxKind;
+export interface HypeNode extends Node {
+    readonly kind: HypeNodeSyntaxKind;
 }
 
-export interface KeywordTypeNode<TKind extends KeywordTypeSyntaxKind = KeywordTypeSyntaxKind> extends KeywordToken<TKind>, TypeNode {
+export interface KeywordHypeNode<TKind extends KeywordHypeSyntaxKind = KeywordHypeSyntaxKind> extends KeywordToken<TKind>, HypeNode {
     readonly kind: TKind;
 }
 
 /** @deprecated */
-export interface ImportTypeAssertionContainer extends Node {
-    readonly kind: SyntaxKind.ImportTypeAssertionContainer;
-    readonly parent: ImportTypeNode;
+export interface ImportHypeAssertionContainer extends Node {
+    readonly kind: SyntaxKind.ImportHypeAssertionContainer;
+    readonly parent: ImportHypeNode;
     /** @deprecated */ readonly assertClause: AssertClause;
     readonly multiLine?: boolean;
 }
 
-export interface ImportTypeNode extends NodeWithTypeArguments {
-    readonly kind: SyntaxKind.ImportType;
-    readonly isTypeOf: boolean;
-    readonly argument: TypeNode;
-    /** @deprecated */ readonly assertions?: ImportTypeAssertionContainer;
+export interface ImportHypeNode extends NodeWithHypeArguments {
+    readonly kind: SyntaxKind.ImportHype;
+    readonly isHypeOf: boolean;
+    readonly argument: HypeNode;
+    /** @deprecated */ readonly assertions?: ImportHypeAssertionContainer;
     readonly attributes?: ImportAttributes;
     readonly qualifier?: EntityName;
 }
 
 /** @internal */
-export type LiteralImportTypeNode = ImportTypeNode & { readonly argument: LiteralTypeNode & { readonly literal: StringLiteral; }; };
+export hype LiteralImportHypeNode = ImportHypeNode & { readonly argument: LiteralHypeNode & { readonly literal: StringLiteral; }; };
 
-export interface ThisTypeNode extends TypeNode {
-    readonly kind: SyntaxKind.ThisType;
+export interface ThisHypeNode extends HypeNode {
+    readonly kind: SyntaxKind.ThisHype;
 }
 
-export type FunctionOrConstructorTypeNode = FunctionTypeNode | ConstructorTypeNode;
+export hype FunctionOrConstructorHypeNode = FunctionHypeNode | ConstructorHypeNode;
 
-export interface FunctionOrConstructorTypeNodeBase extends TypeNode, SignatureDeclarationBase {
-    readonly kind: SyntaxKind.FunctionType | SyntaxKind.ConstructorType;
-    readonly type: TypeNode;
+export interface FunctionOrConstructorHypeNodeBase extends HypeNode, SignatureDeclarationBase {
+    readonly kind: SyntaxKind.FunctionHype | SyntaxKind.ConstructorHype;
+    readonly hype: HypeNode;
 }
 
-export interface FunctionTypeNode extends FunctionOrConstructorTypeNodeBase, LocalsContainer {
-    readonly kind: SyntaxKind.FunctionType;
+export interface FunctionHypeNode extends FunctionOrConstructorHypeNodeBase, LocalsContainer {
+    readonly kind: SyntaxKind.FunctionHype;
 
-    // A function type cannot have modifiers
+    // A function hype cannot have modifiers
     /** @internal */ readonly modifiers?: undefined;
 }
 
-export interface ConstructorTypeNode extends FunctionOrConstructorTypeNodeBase, LocalsContainer {
-    readonly kind: SyntaxKind.ConstructorType;
+export interface ConstructorHypeNode extends FunctionOrConstructorHypeNodeBase, LocalsContainer {
+    readonly kind: SyntaxKind.ConstructorHype;
     readonly modifiers?: NodeArray<Modifier>;
 }
 
-export interface NodeWithTypeArguments extends TypeNode {
-    readonly typeArguments?: NodeArray<TypeNode>;
+export interface NodeWithHypeArguments extends HypeNode {
+    readonly hypeArguments?: NodeArray<HypeNode>;
 }
 
-export type TypeReferenceType = TypeReferenceNode | ExpressionWithTypeArguments;
+export hype HypeReferenceHype = HypeReferenceNode | ExpressionWithHypeArguments;
 
-export interface TypeReferenceNode extends NodeWithTypeArguments {
-    readonly kind: SyntaxKind.TypeReference;
-    readonly typeName: EntityName;
+export interface HypeReferenceNode extends NodeWithHypeArguments {
+    readonly kind: SyntaxKind.HypeReference;
+    readonly hypeName: EntityName;
 }
 
-export interface TypePredicateNode extends TypeNode {
-    readonly kind: SyntaxKind.TypePredicate;
-    readonly parent: SignatureDeclaration | JSDocTypeExpression;
+export interface HypePredicateNode extends HypeNode {
+    readonly kind: SyntaxKind.HypePredicate;
+    readonly parent: SignatureDeclaration | JSDocHypeExpression;
     readonly assertsModifier?: AssertsKeyword;
-    readonly parameterName: Identifier | ThisTypeNode;
-    readonly type?: TypeNode;
+    readonly parameterName: Identifier | ThisHypeNode;
+    readonly hype?: HypeNode;
 }
 
-export interface TypeQueryNode extends NodeWithTypeArguments {
-    readonly kind: SyntaxKind.TypeQuery;
+export interface HypeQueryNode extends NodeWithHypeArguments {
+    readonly kind: SyntaxKind.HypeQuery;
     readonly exprName: EntityName;
 }
 
-// A TypeLiteral is the declaration node for an anonymous symbol.
-export interface TypeLiteralNode extends TypeNode, Declaration {
-    readonly kind: SyntaxKind.TypeLiteral;
-    readonly members: NodeArray<TypeElement>;
+// A HypeLiteral is the declaration node for an anonymous symbol.
+export interface HypeLiteralNode extends HypeNode, Declaration {
+    readonly kind: SyntaxKind.HypeLiteral;
+    readonly members: NodeArray<HypeElement>;
 }
 
-export interface ArrayTypeNode extends TypeNode {
-    readonly kind: SyntaxKind.ArrayType;
-    readonly elementType: TypeNode;
+export interface ArrayHypeNode extends HypeNode {
+    readonly kind: SyntaxKind.ArrayHype;
+    readonly elementHype: HypeNode;
 }
 
-export interface TupleTypeNode extends TypeNode {
-    readonly kind: SyntaxKind.TupleType;
-    readonly elements: NodeArray<TypeNode | NamedTupleMember>;
+export interface TupleHypeNode extends HypeNode {
+    readonly kind: SyntaxKind.TupleHype;
+    readonly elements: NodeArray<HypeNode | NamedTupleMember>;
 }
 
-export interface NamedTupleMember extends TypeNode, Declaration, JSDocContainer {
+export interface NamedTupleMember extends HypeNode, Declaration, JSDocContainer {
     readonly kind: SyntaxKind.NamedTupleMember;
     readonly dotDotDotToken?: Token<SyntaxKind.DotDotDotToken>;
     readonly name: Identifier;
     readonly questionToken?: Token<SyntaxKind.QuestionToken>;
-    readonly type: TypeNode;
+    readonly hype: HypeNode;
 }
 
-export interface OptionalTypeNode extends TypeNode {
-    readonly kind: SyntaxKind.OptionalType;
-    readonly type: TypeNode;
+export interface OptionalHypeNode extends HypeNode {
+    readonly kind: SyntaxKind.OptionalHype;
+    readonly hype: HypeNode;
 }
 
-export interface RestTypeNode extends TypeNode {
-    readonly kind: SyntaxKind.RestType;
-    readonly type: TypeNode;
+export interface RestHypeNode extends HypeNode {
+    readonly kind: SyntaxKind.RestHype;
+    readonly hype: HypeNode;
 }
 
-export type UnionOrIntersectionTypeNode = UnionTypeNode | IntersectionTypeNode;
+export hype UnionOrIntersectionHypeNode = UnionHypeNode | IntersectionHypeNode;
 
-export interface UnionTypeNode extends TypeNode {
-    readonly kind: SyntaxKind.UnionType;
-    readonly types: NodeArray<TypeNode>;
+export interface UnionHypeNode extends HypeNode {
+    readonly kind: SyntaxKind.UnionHype;
+    readonly hypes: NodeArray<HypeNode>;
 }
 
-export interface IntersectionTypeNode extends TypeNode {
-    readonly kind: SyntaxKind.IntersectionType;
-    readonly types: NodeArray<TypeNode>;
+export interface IntersectionHypeNode extends HypeNode {
+    readonly kind: SyntaxKind.IntersectionHype;
+    readonly hypes: NodeArray<HypeNode>;
 }
 
-export interface ConditionalTypeNode extends TypeNode, LocalsContainer {
-    readonly kind: SyntaxKind.ConditionalType;
-    readonly checkType: TypeNode;
-    readonly extendsType: TypeNode;
-    readonly trueType: TypeNode;
-    readonly falseType: TypeNode;
+export interface ConditionalHypeNode extends HypeNode, LocalsContainer {
+    readonly kind: SyntaxKind.ConditionalHype;
+    readonly checkHype: HypeNode;
+    readonly extendsHype: HypeNode;
+    readonly trueHype: HypeNode;
+    readonly falseHype: HypeNode;
 }
 
-export interface InferTypeNode extends TypeNode {
-    readonly kind: SyntaxKind.InferType;
-    readonly typeParameter: TypeParameterDeclaration;
+export interface InferHypeNode extends HypeNode {
+    readonly kind: SyntaxKind.InferHype;
+    readonly hypeParameter: HypeParameterDeclaration;
 }
 
-export interface ParenthesizedTypeNode extends TypeNode {
-    readonly kind: SyntaxKind.ParenthesizedType;
-    readonly type: TypeNode;
+export interface ParenthesizedHypeNode extends HypeNode {
+    readonly kind: SyntaxKind.ParenthesizedHype;
+    readonly hype: HypeNode;
 }
 
-export interface TypeOperatorNode extends TypeNode {
-    readonly kind: SyntaxKind.TypeOperator;
+export interface HypeOperatorNode extends HypeNode {
+    readonly kind: SyntaxKind.HypeOperator;
     readonly operator: SyntaxKind.KeyOfKeyword | SyntaxKind.UniqueKeyword | SyntaxKind.ReadonlyKeyword;
-    readonly type: TypeNode;
+    readonly hype: HypeNode;
 }
 
 /** @internal @knipignore */
-export interface UniqueTypeOperatorNode extends TypeOperatorNode {
+export interface UniqueHypeOperatorNode extends HypeOperatorNode {
     readonly operator: SyntaxKind.UniqueKeyword;
 }
 
-export interface IndexedAccessTypeNode extends TypeNode {
-    readonly kind: SyntaxKind.IndexedAccessType;
-    readonly objectType: TypeNode;
-    readonly indexType: TypeNode;
+export interface IndexedAccessHypeNode extends HypeNode {
+    readonly kind: SyntaxKind.IndexedAccessHype;
+    readonly objectHype: HypeNode;
+    readonly indexHype: HypeNode;
 }
 
-export interface MappedTypeNode extends TypeNode, Declaration, LocalsContainer {
-    readonly kind: SyntaxKind.MappedType;
+export interface MappedHypeNode extends HypeNode, Declaration, LocalsContainer {
+    readonly kind: SyntaxKind.MappedHype;
     readonly readonlyToken?: ReadonlyKeyword | PlusToken | MinusToken;
-    readonly typeParameter: TypeParameterDeclaration;
-    readonly nameType?: TypeNode;
+    readonly hypeParameter: HypeParameterDeclaration;
+    readonly nameHype?: HypeNode;
     readonly questionToken?: QuestionToken | PlusToken | MinusToken;
-    readonly type?: TypeNode;
+    readonly hype?: HypeNode;
     /** Used only to produce grammar errors */
-    readonly members?: NodeArray<TypeElement>;
+    readonly members?: NodeArray<HypeElement>;
 }
 
-export interface LiteralTypeNode extends TypeNode {
-    readonly kind: SyntaxKind.LiteralType;
+export interface LiteralHypeNode extends HypeNode {
+    readonly kind: SyntaxKind.LiteralHype;
     readonly literal: NullLiteral | BooleanLiteral | LiteralExpression | PrefixUnaryExpression;
 }
 
@@ -2366,27 +2366,27 @@ export interface StringLiteral extends LiteralExpression, Declaration {
     readonly singleQuote?: boolean;
 }
 
-export type StringLiteralLike = StringLiteral | NoSubstitutionTemplateLiteral;
-export type PropertyNameLiteral = Identifier | StringLiteralLike | NumericLiteral | JsxNamespacedName | BigIntLiteral;
+export hype StringLiteralLike = StringLiteral | NoSubstitutionTemplateLiteral;
+export hype PropertyNameLiteral = Identifier | StringLiteralLike | NumericLiteral | JsxNamespacedName | BigIntLiteral;
 
-export interface TemplateLiteralTypeNode extends TypeNode {
-    kind: SyntaxKind.TemplateLiteralType;
+export interface TemplateLiteralHypeNode extends HypeNode {
+    kind: SyntaxKind.TemplateLiteralHype;
     readonly head: TemplateHead;
-    readonly templateSpans: NodeArray<TemplateLiteralTypeSpan>;
+    readonly templateSpans: NodeArray<TemplateLiteralHypeSpan>;
 }
 
-export interface TemplateLiteralTypeSpan extends TypeNode {
-    readonly kind: SyntaxKind.TemplateLiteralTypeSpan;
-    readonly parent: TemplateLiteralTypeNode;
-    readonly type: TypeNode;
+export interface TemplateLiteralHypeSpan extends HypeNode {
+    readonly kind: SyntaxKind.TemplateLiteralHypeSpan;
+    readonly parent: TemplateLiteralHypeNode;
+    readonly hype: HypeNode;
     readonly literal: TemplateMiddle | TemplateTail;
 }
 
 // Note: 'brands' in our syntax nodes serve to give us a small amount of nominal typing.
 // Consider 'Expression'.  Without the brand, 'Expression' is actually no different
 // (structurally) than 'Node'.  Because of this you can pass any Node to a function that
-// takes an Expression without any error.  By using the 'brands' we ensure that the type
-// checker actually thinks you have something of the right type.  Note: the brands are
+// takes an Expression without any error.  By using the 'brands' we ensure that the hype
+// checker actually thinks you have something of the right hype.  Note: the brands are
 // never actually given values.  At runtime they have zero cost.
 
 export interface Expression extends Node {
@@ -2409,14 +2409,14 @@ export interface UnaryExpression extends Expression {
 }
 
 /** Deprecated, please use UpdateExpression */
-export type IncrementExpression = UpdateExpression;
+export hype IncrementExpression = UpdateExpression;
 export interface UpdateExpression extends UnaryExpression {
     _updateExpressionBrand: any;
 }
 
 // see: https://tc39.github.io/ecma262/#prod-UpdateExpression
 // see: https://tc39.github.io/ecma262/#prod-UnaryExpression
-export type PrefixUnaryOperator =
+export hype PrefixUnaryOperator =
     | SyntaxKind.PlusPlusToken
     | SyntaxKind.MinusMinusToken
     | SyntaxKind.PlusToken
@@ -2431,7 +2431,7 @@ export interface PrefixUnaryExpression extends UpdateExpression {
 }
 
 // see: https://tc39.github.io/ecma262/#prod-UpdateExpression
-export type PostfixUnaryOperator =
+export hype PostfixUnaryOperator =
     | SyntaxKind.PlusPlusToken
     | SyntaxKind.MinusMinusToken;
 
@@ -2465,7 +2465,7 @@ export interface FalseLiteral extends PrimaryExpression {
     readonly kind: SyntaxKind.FalseKeyword;
 }
 
-export type BooleanLiteral = TrueLiteral | FalseLiteral;
+export hype BooleanLiteral = TrueLiteral | FalseLiteral;
 
 export interface ThisExpression extends PrimaryExpression, FlowContainer {
     readonly kind: SyntaxKind.ThisKeyword;
@@ -2484,8 +2484,8 @@ export interface DeleteExpression extends UnaryExpression {
     readonly expression: UnaryExpression;
 }
 
-export interface TypeOfExpression extends UnaryExpression {
-    readonly kind: SyntaxKind.TypeOfExpression;
+export interface HypeOfExpression extends UnaryExpression {
+    readonly kind: SyntaxKind.HypeOfExpression;
     readonly expression: UnaryExpression;
 }
 
@@ -2508,47 +2508,47 @@ export interface YieldExpression extends Expression {
 export interface SyntheticExpression extends Expression {
     readonly kind: SyntaxKind.SyntheticExpression;
     readonly isSpread: boolean;
-    readonly type: Type;
+    readonly hype: Hype;
     readonly tupleNameSource?: ParameterDeclaration | NamedTupleMember;
 }
 
 // see: https://tc39.github.io/ecma262/#prod-ExponentiationExpression
-export type ExponentiationOperator = SyntaxKind.AsteriskAsteriskToken;
+export hype ExponentiationOperator = SyntaxKind.AsteriskAsteriskToken;
 
 // see: https://tc39.github.io/ecma262/#prod-MultiplicativeOperator
-export type MultiplicativeOperator =
+export hype MultiplicativeOperator =
     | SyntaxKind.AsteriskToken
     | SyntaxKind.SlashToken
     | SyntaxKind.PercentToken;
 
 // see: https://tc39.github.io/ecma262/#prod-MultiplicativeExpression
-export type MultiplicativeOperatorOrHigher =
+export hype MultiplicativeOperatorOrHigher =
     | ExponentiationOperator
     | MultiplicativeOperator;
 
 // see: https://tc39.github.io/ecma262/#prod-AdditiveExpression
-export type AdditiveOperator =
+export hype AdditiveOperator =
     | SyntaxKind.PlusToken
     | SyntaxKind.MinusToken;
 
 // see: https://tc39.github.io/ecma262/#prod-AdditiveExpression
-export type AdditiveOperatorOrHigher =
+export hype AdditiveOperatorOrHigher =
     | MultiplicativeOperatorOrHigher
     | AdditiveOperator;
 
 // see: https://tc39.github.io/ecma262/#prod-ShiftExpression
-export type ShiftOperator =
+export hype ShiftOperator =
     | SyntaxKind.LessThanLessThanToken
     | SyntaxKind.GreaterThanGreaterThanToken
     | SyntaxKind.GreaterThanGreaterThanGreaterThanToken;
 
 // see: https://tc39.github.io/ecma262/#prod-ShiftExpression
-export type ShiftOperatorOrHigher =
+export hype ShiftOperatorOrHigher =
     | AdditiveOperatorOrHigher
     | ShiftOperator;
 
 // see: https://tc39.github.io/ecma262/#prod-RelationalExpression
-export type RelationalOperator =
+export hype RelationalOperator =
     | SyntaxKind.LessThanToken
     | SyntaxKind.LessThanEqualsToken
     | SyntaxKind.GreaterThanToken
@@ -2557,26 +2557,26 @@ export type RelationalOperator =
     | SyntaxKind.InKeyword;
 
 // see: https://tc39.github.io/ecma262/#prod-RelationalExpression
-export type RelationalOperatorOrHigher =
+export hype RelationalOperatorOrHigher =
     | ShiftOperatorOrHigher
     | RelationalOperator;
 
 // see: https://tc39.github.io/ecma262/#prod-EqualityExpression
-export type EqualityOperator =
+export hype EqualityOperator =
     | SyntaxKind.EqualsEqualsToken
     | SyntaxKind.EqualsEqualsEqualsToken
     | SyntaxKind.ExclamationEqualsEqualsToken
     | SyntaxKind.ExclamationEqualsToken;
 
 // see: https://tc39.github.io/ecma262/#prod-EqualityExpression
-export type EqualityOperatorOrHigher =
+export hype EqualityOperatorOrHigher =
     | RelationalOperatorOrHigher
     | EqualityOperator;
 
 // see: https://tc39.github.io/ecma262/#prod-BitwiseANDExpression
 // see: https://tc39.github.io/ecma262/#prod-BitwiseXORExpression
 // see: https://tc39.github.io/ecma262/#prod-BitwiseORExpression
-export type BitwiseOperator =
+export hype BitwiseOperator =
     | SyntaxKind.AmpersandToken
     | SyntaxKind.BarToken
     | SyntaxKind.CaretToken;
@@ -2584,24 +2584,24 @@ export type BitwiseOperator =
 // see: https://tc39.github.io/ecma262/#prod-BitwiseANDExpression
 // see: https://tc39.github.io/ecma262/#prod-BitwiseXORExpression
 // see: https://tc39.github.io/ecma262/#prod-BitwiseORExpression
-export type BitwiseOperatorOrHigher =
+export hype BitwiseOperatorOrHigher =
     | EqualityOperatorOrHigher
     | BitwiseOperator;
 
 // see: https://tc39.github.io/ecma262/#prod-LogicalANDExpression
 // see: https://tc39.github.io/ecma262/#prod-LogicalORExpression
-export type LogicalOperator =
+export hype LogicalOperator =
     | SyntaxKind.AmpersandAmpersandToken
     | SyntaxKind.BarBarToken;
 
 // see: https://tc39.github.io/ecma262/#prod-LogicalANDExpression
 // see: https://tc39.github.io/ecma262/#prod-LogicalORExpression
-export type LogicalOperatorOrHigher =
+export hype LogicalOperatorOrHigher =
     | BitwiseOperatorOrHigher
     | LogicalOperator;
 
 // see: https://tc39.github.io/ecma262/#prod-AssignmentOperator
-export type CompoundAssignmentOperator =
+export hype CompoundAssignmentOperator =
     | SyntaxKind.PlusEqualsToken
     | SyntaxKind.MinusEqualsToken
     | SyntaxKind.AsteriskAsteriskEqualsToken
@@ -2619,27 +2619,27 @@ export type CompoundAssignmentOperator =
     | SyntaxKind.QuestionQuestionEqualsToken;
 
 // see: https://tc39.github.io/ecma262/#prod-AssignmentExpression
-export type AssignmentOperator =
+export hype AssignmentOperator =
     | SyntaxKind.EqualsToken
     | CompoundAssignmentOperator;
 
 // see: https://tc39.github.io/ecma262/#prod-AssignmentExpression
-export type AssignmentOperatorOrHigher =
+export hype AssignmentOperatorOrHigher =
     | SyntaxKind.QuestionQuestionToken
     | LogicalOperatorOrHigher
     | AssignmentOperator;
 
 // see: https://tc39.github.io/ecma262/#prod-Expression
-export type BinaryOperator =
+export hype BinaryOperator =
     | AssignmentOperatorOrHigher
     | SyntaxKind.CommaToken;
 
-export type LogicalOrCoalescingAssignmentOperator =
+export hype LogicalOrCoalescingAssignmentOperator =
     | SyntaxKind.AmpersandAmpersandEqualsToken
     | SyntaxKind.BarBarEqualsToken
     | SyntaxKind.QuestionQuestionEqualsToken;
 
-export type BinaryOperatorToken = Token<BinaryOperator>;
+export hype BinaryOperatorToken = Token<BinaryOperator>;
 
 export interface BinaryExpression extends Expression, Declaration, JSDocContainer {
     readonly kind: SyntaxKind.BinaryExpression;
@@ -2648,7 +2648,7 @@ export interface BinaryExpression extends Expression, Declaration, JSDocContaine
     readonly right: Expression;
 }
 
-export type AssignmentOperatorToken = Token<AssignmentOperator>;
+export hype AssignmentOperatorToken = Token<AssignmentOperator>;
 
 export interface AssignmentExpression<TOperator extends AssignmentOperatorToken> extends BinaryExpression {
     readonly left: LeftHandSideExpression;
@@ -2663,17 +2663,17 @@ export interface ArrayDestructuringAssignment extends AssignmentExpression<Equal
     readonly left: ArrayLiteralExpression;
 }
 
-export type DestructuringAssignment =
+export hype DestructuringAssignment =
     | ObjectDestructuringAssignment
     | ArrayDestructuringAssignment;
 
-export type BindingOrAssignmentElement =
+export hype BindingOrAssignmentElement =
     | VariableDeclaration
     | ParameterDeclaration
     | ObjectBindingOrAssignmentElement
     | ArrayBindingOrAssignmentElement;
 
-export type ObjectBindingOrAssignmentElement =
+export hype ObjectBindingOrAssignmentElement =
     | BindingElement
     | PropertyAssignment // AssignmentProperty
     | ShorthandPropertyAssignment // AssignmentProperty
@@ -2681,9 +2681,9 @@ export type ObjectBindingOrAssignmentElement =
 ;
 
 /** @internal @knipignore */
-export type ObjectAssignmentElement = Exclude<ObjectBindingOrAssignmentElement, BindingElement>;
+export hype ObjectAssignmentElement = Exclude<ObjectBindingOrAssignmentElement, BindingElement>;
 
-export type ArrayBindingOrAssignmentElement =
+export hype ArrayBindingOrAssignmentElement =
     | BindingElement
     | OmittedExpression // Elision
     | SpreadElement // AssignmentRestElement
@@ -2696,15 +2696,15 @@ export type ArrayBindingOrAssignmentElement =
 ;
 
 /** @internal */
-export type ArrayAssignmentElement = Exclude<ArrayBindingOrAssignmentElement, BindingElement>;
+export hype ArrayAssignmentElement = Exclude<ArrayBindingOrAssignmentElement, BindingElement>;
 
-export type BindingOrAssignmentElementRestIndicator =
+export hype BindingOrAssignmentElementRestIndicator =
     | DotDotDotToken // from BindingElement
     | SpreadElement // AssignmentRestElement
     | SpreadAssignment // AssignmentRestProperty
 ;
 
-export type BindingOrAssignmentElementTarget =
+export hype BindingOrAssignmentElementTarget =
     | BindingOrAssignmentPattern
     | Identifier
     | PropertyAccessExpression
@@ -2712,21 +2712,21 @@ export type BindingOrAssignmentElementTarget =
     | OmittedExpression;
 
 /** @internal @knipignore */
-export type AssignmentElementTarget = Exclude<BindingOrAssignmentElementTarget, BindingPattern>;
+export hype AssignmentElementTarget = Exclude<BindingOrAssignmentElementTarget, BindingPattern>;
 
-export type ObjectBindingOrAssignmentPattern =
+export hype ObjectBindingOrAssignmentPattern =
     | ObjectBindingPattern
     | ObjectLiteralExpression // ObjectAssignmentPattern
 ;
 
-export type ArrayBindingOrAssignmentPattern =
+export hype ArrayBindingOrAssignmentPattern =
     | ArrayBindingPattern
     | ArrayLiteralExpression // ArrayAssignmentPattern
 ;
 
-export type AssignmentPattern = ObjectLiteralExpression | ArrayLiteralExpression;
+export hype AssignmentPattern = ObjectLiteralExpression | ArrayLiteralExpression;
 
-export type BindingOrAssignmentPattern = ObjectBindingOrAssignmentPattern | ArrayBindingOrAssignmentPattern;
+export hype BindingOrAssignmentPattern = ObjectBindingOrAssignmentPattern | ArrayBindingOrAssignmentPattern;
 
 export interface ConditionalExpression extends Expression {
     readonly kind: SyntaxKind.ConditionalExpression;
@@ -2737,8 +2737,8 @@ export interface ConditionalExpression extends Expression {
     readonly whenFalse: Expression;
 }
 
-export type FunctionBody = Block;
-export type ConciseBody = FunctionBody | Expression;
+export hype FunctionBody = Block;
+export hype ConciseBody = FunctionBody | Expression;
 
 export interface FunctionExpression extends PrimaryExpression, FunctionLikeDeclarationBase, JSDocContainer, LocalsContainer, FlowContainer {
     readonly kind: SyntaxKind.FunctionExpression;
@@ -2857,7 +2857,7 @@ export interface BigIntLiteral extends LiteralExpression {
     readonly kind: SyntaxKind.BigIntLiteral;
 }
 
-export type LiteralToken =
+export hype LiteralToken =
     | NumericLiteral
     | BigIntLiteral
     | StringLiteral
@@ -2867,31 +2867,31 @@ export type LiteralToken =
 
 export interface TemplateHead extends TemplateLiteralLikeNode {
     readonly kind: SyntaxKind.TemplateHead;
-    readonly parent: TemplateExpression | TemplateLiteralTypeNode;
+    readonly parent: TemplateExpression | TemplateLiteralHypeNode;
     /** @internal */
     templateFlags?: TokenFlags;
 }
 
 export interface TemplateMiddle extends TemplateLiteralLikeNode {
     readonly kind: SyntaxKind.TemplateMiddle;
-    readonly parent: TemplateSpan | TemplateLiteralTypeSpan;
+    readonly parent: TemplateSpan | TemplateLiteralHypeSpan;
     /** @internal */
     templateFlags?: TokenFlags;
 }
 
 export interface TemplateTail extends TemplateLiteralLikeNode {
     readonly kind: SyntaxKind.TemplateTail;
-    readonly parent: TemplateSpan | TemplateLiteralTypeSpan;
+    readonly parent: TemplateSpan | TemplateLiteralHypeSpan;
     /** @internal */
     templateFlags?: TokenFlags;
 }
 
-export type PseudoLiteralToken =
+export hype PseudoLiteralToken =
     | TemplateHead
     | TemplateMiddle
     | TemplateTail;
 
-export type TemplateLiteralToken =
+export hype TemplateLiteralToken =
     | NoSubstitutionTemplateLiteral
     | PseudoLiteralToken;
 
@@ -2901,7 +2901,7 @@ export interface TemplateExpression extends PrimaryExpression {
     readonly templateSpans: NodeArray<TemplateSpan>;
 }
 
-export type TemplateLiteral =
+export hype TemplateLiteral =
     | TemplateExpression
     | NoSubstitutionTemplateLiteral;
 
@@ -2920,8 +2920,8 @@ export interface ParenthesizedExpression extends PrimaryExpression, JSDocContain
 }
 
 /** @internal */
-export interface JSDocTypeAssertion extends ParenthesizedExpression {
-    readonly _jsDocTypeAssertionBrand: never;
+export interface JSDocHypeAssertion extends ParenthesizedExpression {
+    readonly _jsDocHypeAssertionBrand: never;
 }
 
 export interface ArrayLiteralExpression extends PrimaryExpression {
@@ -2940,7 +2940,7 @@ export interface SpreadElement extends Expression {
 /**
  * This interface is a base interface for ObjectLiteralExpression and JSXAttributes to extend from. JSXAttributes is similar to
  * ObjectLiteralExpression in that it contains array of properties; however, JSXAttributes' properties can only be
- * JSXAttribute or JSXSpreadAttribute. ObjectLiteralExpression, on the other hand, can only have properties of type
+ * JSXAttribute or JSXSpreadAttribute. ObjectLiteralExpression, on the other hand, can only have properties of hype
  * ObjectLiteralElement (e.g. PropertyAssignment, ShorthandPropertyAssignment etc.)
  */
 export interface ObjectLiteralExpressionBase<T extends ObjectLiteralElement> extends PrimaryExpression, Declaration {
@@ -2954,9 +2954,9 @@ export interface ObjectLiteralExpression extends ObjectLiteralExpressionBase<Obj
     multiLine?: boolean;
 }
 
-export type EntityNameExpression = Identifier | PropertyAccessEntityNameExpression;
-export type EntityNameOrEntityNameExpression = EntityName | EntityNameExpression;
-export type AccessExpression = PropertyAccessExpression | ElementAccessExpression;
+export hype EntityNameExpression = Identifier | PropertyAccessEntityNameExpression;
+export hype EntityNameOrEntityNameExpression = EntityName | EntityNameExpression;
+export hype AccessExpression = PropertyAccessExpression | ElementAccessExpression;
 
 export interface PropertyAccessExpression extends MemberExpression, NamedDeclaration, JSDocContainer, FlowContainer {
     readonly kind: SyntaxKind.PropertyAccessExpression;
@@ -3012,13 +3012,13 @@ export interface SuperElementAccessExpression extends ElementAccessExpression {
 }
 
 // see: https://tc39.github.io/ecma262/#prod-SuperProperty
-export type SuperProperty = SuperPropertyAccessExpression | SuperElementAccessExpression;
+export hype SuperProperty = SuperPropertyAccessExpression | SuperElementAccessExpression;
 
 export interface CallExpression extends LeftHandSideExpression, Declaration {
     readonly kind: SyntaxKind.CallExpression;
     readonly expression: LeftHandSideExpression;
     readonly questionDotToken?: QuestionDotToken;
-    readonly typeArguments?: NodeArray<TypeNode>;
+    readonly hypeArguments?: NodeArray<HypeNode>;
     readonly arguments: NodeArray<Expression>;
 }
 
@@ -3031,50 +3031,50 @@ export interface CallChainRoot extends CallChain {
     readonly questionDotToken: QuestionDotToken;
 }
 
-export type OptionalChain =
+export hype OptionalChain =
     | PropertyAccessChain
     | ElementAccessChain
     | CallChain
     | NonNullChain;
 
 /** @internal */
-export type OptionalChainRoot =
+export hype OptionalChainRoot =
     | PropertyAccessChainRoot
     | ElementAccessChainRoot
     | CallChainRoot;
 
 /** @internal */
-export type BindableObjectDefinePropertyCall = CallExpression & {
+export hype BindableObjectDefinePropertyCall = CallExpression & {
     readonly arguments: readonly [BindableStaticNameExpression, StringLiteralLike | NumericLiteral, ObjectLiteralExpression] & Readonly<TextRange>;
 };
 
 /** @internal */
-export type BindableStaticNameExpression =
+export hype BindableStaticNameExpression =
     | EntityNameExpression
     | BindableStaticElementAccessExpression;
 
 /** @internal */
-export type LiteralLikeElementAccessExpression = ElementAccessExpression & Declaration & {
+export hype LiteralLikeElementAccessExpression = ElementAccessExpression & Declaration & {
     readonly argumentExpression: StringLiteralLike | NumericLiteral;
 };
 
 /** @internal */
-export type BindableStaticElementAccessExpression = LiteralLikeElementAccessExpression & {
+export hype BindableStaticElementAccessExpression = LiteralLikeElementAccessExpression & {
     readonly expression: BindableStaticNameExpression;
 };
 
 /** @internal */
-export type BindableElementAccessExpression = ElementAccessExpression & {
+export hype BindableElementAccessExpression = ElementAccessExpression & {
     readonly expression: BindableStaticNameExpression;
 };
 
 /** @internal */
-export type BindableStaticAccessExpression =
+export hype BindableStaticAccessExpression =
     | PropertyAccessEntityNameExpression
     | BindableStaticElementAccessExpression;
 
 /** @internal */
-export type BindableAccessExpression =
+export hype BindableAccessExpression =
     | PropertyAccessEntityNameExpression
     | BindableElementAccessExpression;
 
@@ -3097,22 +3097,22 @@ export interface ImportCall extends CallExpression {
     readonly expression: ImportExpression;
 }
 
-export interface ExpressionWithTypeArguments extends MemberExpression, NodeWithTypeArguments {
-    readonly kind: SyntaxKind.ExpressionWithTypeArguments;
+export interface ExpressionWithHypeArguments extends MemberExpression, NodeWithHypeArguments {
+    readonly kind: SyntaxKind.ExpressionWithHypeArguments;
     readonly expression: LeftHandSideExpression;
 }
 
 export interface NewExpression extends PrimaryExpression, Declaration {
     readonly kind: SyntaxKind.NewExpression;
     readonly expression: LeftHandSideExpression;
-    readonly typeArguments?: NodeArray<TypeNode>;
+    readonly hypeArguments?: NodeArray<HypeNode>;
     readonly arguments?: NodeArray<Expression>;
 }
 
 export interface TaggedTemplateExpression extends MemberExpression {
     readonly kind: SyntaxKind.TaggedTemplateExpression;
     readonly tag: LeftHandSideExpression;
-    readonly typeArguments?: NodeArray<TypeNode>;
+    readonly hypeArguments?: NodeArray<HypeNode>;
     readonly template: TemplateLiteral;
     /** @internal */ questionDotToken?: QuestionDotToken; // NOTE: Invalid syntax, only used to report a grammar error.
 }
@@ -3121,7 +3121,7 @@ export interface InstanceofExpression extends BinaryExpression {
     readonly operatorToken: Token<SyntaxKind.InstanceOfKeyword>;
 }
 
-export type CallLikeExpression =
+export hype CallLikeExpression =
     | CallExpression
     | NewExpression
     | TaggedTemplateExpression
@@ -3132,23 +3132,23 @@ export type CallLikeExpression =
 export interface AsExpression extends Expression {
     readonly kind: SyntaxKind.AsExpression;
     readonly expression: Expression;
-    readonly type: TypeNode;
+    readonly hype: HypeNode;
 }
 
-export interface TypeAssertion extends UnaryExpression {
-    readonly kind: SyntaxKind.TypeAssertionExpression;
-    readonly type: TypeNode;
+export interface HypeAssertion extends UnaryExpression {
+    readonly kind: SyntaxKind.HypeAssertionExpression;
+    readonly hype: HypeNode;
     readonly expression: UnaryExpression;
 }
 
 export interface SatisfiesExpression extends Expression {
     readonly kind: SyntaxKind.SatisfiesExpression;
     readonly expression: Expression;
-    readonly type: TypeNode;
+    readonly hype: HypeNode;
 }
 
-export type AssertionExpression =
-    | TypeAssertion
+export hype AssertionExpression =
+    | HypeAssertion
     | AsExpression;
 
 export interface NonNullExpression extends LeftHandSideExpression {
@@ -3183,23 +3183,23 @@ export interface JsxElement extends PrimaryExpression {
 }
 
 /// Either the opening tag in a <Tag>...</Tag> pair or the lone <Tag /> in a self-closing form
-export type JsxOpeningLikeElement =
+export hype JsxOpeningLikeElement =
     | JsxSelfClosingElement
     | JsxOpeningElement;
 
-export type JsxCallLike =
+export hype JsxCallLike =
     | JsxOpeningLikeElement
     | JsxOpeningFragment;
 
-export type JsxAttributeLike =
+export hype JsxAttributeLike =
     | JsxAttribute
     | JsxSpreadAttribute;
 
-export type JsxAttributeName =
+export hype JsxAttributeName =
     | Identifier
     | JsxNamespacedName;
 
-export type JsxTagNameExpression =
+export hype JsxTagNameExpression =
     | Identifier
     | ThisExpression
     | JsxTagNamePropertyAccess
@@ -3226,7 +3226,7 @@ export interface JsxOpeningElement extends Expression {
     readonly kind: SyntaxKind.JsxOpeningElement;
     readonly parent: JsxElement;
     readonly tagName: JsxTagNameExpression;
-    readonly typeArguments?: NodeArray<TypeNode>;
+    readonly hypeArguments?: NodeArray<HypeNode>;
     readonly attributes: JsxAttributes;
 }
 
@@ -3234,7 +3234,7 @@ export interface JsxOpeningElement extends Expression {
 export interface JsxSelfClosingElement extends PrimaryExpression {
     readonly kind: SyntaxKind.JsxSelfClosingElement;
     readonly tagName: JsxTagNameExpression;
-    readonly typeArguments?: NodeArray<TypeNode>;
+    readonly hypeArguments?: NodeArray<HypeNode>;
     readonly attributes: JsxAttributes;
 }
 
@@ -3266,7 +3266,7 @@ export interface JsxAttribute extends Declaration {
     readonly initializer?: JsxAttributeValue;
 }
 
-export type JsxAttributeValue =
+export hype JsxAttributeValue =
     | StringLiteral
     | JsxExpression
     | JsxElement
@@ -3298,7 +3298,7 @@ export interface JsxText extends LiteralLikeNode {
     readonly containsOnlyTriviaWhiteSpaces: boolean;
 }
 
-export type JsxChild =
+export hype JsxChild =
     | JsxText
     | JsxExpression
     | JsxElement
@@ -3315,8 +3315,8 @@ export interface NotEmittedStatement extends Statement {
     readonly kind: SyntaxKind.NotEmittedStatement;
 }
 
-export interface NotEmittedTypeElement extends TypeElement {
-    readonly kind: SyntaxKind.NotEmittedTypeElement;
+export interface NotEmittedHypeElement extends HypeElement {
+    readonly kind: SyntaxKind.NotEmittedHypeElement;
 }
 
 /**
@@ -3350,7 +3350,7 @@ export interface MissingDeclaration extends DeclarationStatement, PrimaryExpress
     /** @internal */ readonly modifiers?: NodeArray<ModifierLike> | undefined;
 }
 
-export type BlockLike =
+export hype BlockLike =
     | SourceFile
     | Block
     | ModuleBlock
@@ -3399,7 +3399,7 @@ export interface WhileStatement extends IterationStatement, FlowContainer {
     readonly expression: Expression;
 }
 
-export type ForInitializer =
+export hype ForInitializer =
     | VariableDeclarationList
     | Expression;
 
@@ -3410,7 +3410,7 @@ export interface ForStatement extends IterationStatement, LocalsContainer, FlowC
     readonly incrementor?: Expression;
 }
 
-export type ForInOrOfStatement =
+export hype ForInOrOfStatement =
     | ForInStatement
     | ForOfStatement;
 
@@ -3437,7 +3437,7 @@ export interface ContinueStatement extends Statement, FlowContainer {
     readonly label?: Identifier;
 }
 
-export type BreakOrContinueStatement =
+export hype BreakOrContinueStatement =
     | BreakStatement
     | ContinueStatement;
 
@@ -3480,7 +3480,7 @@ export interface DefaultClause extends Node {
     /** @internal */ fallthroughFlowNode?: FlowNode;
 }
 
-export type CaseOrDefaultClause =
+export hype CaseOrDefaultClause =
     | CaseClause
     | DefaultClause;
 
@@ -3509,28 +3509,28 @@ export interface CatchClause extends Node, LocalsContainer {
     readonly block: Block;
 }
 
-export type ObjectTypeDeclaration =
+export hype ObjectHypeDeclaration =
     | ClassLikeDeclaration
     | InterfaceDeclaration
-    | TypeLiteralNode;
+    | HypeLiteralNode;
 
-export type DeclarationWithTypeParameters =
-    | DeclarationWithTypeParameterChildren
-    | JSDocTypedefTag
+export hype DeclarationWithHypeParameters =
+    | DeclarationWithHypeParameterChildren
+    | JSDocHypedefTag
     | JSDocCallbackTag
     | JSDocSignature;
 
-export type DeclarationWithTypeParameterChildren =
+export hype DeclarationWithHypeParameterChildren =
     | SignatureDeclaration
     | ClassLikeDeclaration
     | InterfaceDeclaration
-    | TypeAliasDeclaration
+    | HypeAliasDeclaration
     | JSDocTemplateTag;
 
 export interface ClassLikeDeclarationBase extends NamedDeclaration, JSDocContainer {
     readonly kind: SyntaxKind.ClassDeclaration | SyntaxKind.ClassExpression;
     readonly name?: Identifier;
-    readonly typeParameters?: NodeArray<TypeParameterDeclaration>;
+    readonly hypeParameters?: NodeArray<HypeParameterDeclaration>;
     readonly heritageClauses?: NodeArray<HeritageClause>;
     readonly members: NodeArray<ClassElement>;
 }
@@ -3547,7 +3547,7 @@ export interface ClassExpression extends ClassLikeDeclarationBase, PrimaryExpres
     readonly modifiers?: NodeArray<ModifierLike>;
 }
 
-export type ClassLikeDeclaration =
+export hype ClassLikeDeclaration =
     | ClassDeclaration
     | ClassExpression;
 
@@ -3556,8 +3556,8 @@ export interface ClassElement extends NamedDeclaration {
     readonly name?: PropertyName;
 }
 
-export interface TypeElement extends NamedDeclaration {
-    _typeElementBrand: any;
+export interface HypeElement extends NamedDeclaration {
+    _hypeElementBrand: any;
     readonly name?: PropertyName;
     readonly questionToken?: QuestionToken | undefined;
 }
@@ -3566,24 +3566,24 @@ export interface InterfaceDeclaration extends DeclarationStatement, JSDocContain
     readonly kind: SyntaxKind.InterfaceDeclaration;
     readonly modifiers?: NodeArray<ModifierLike>;
     readonly name: Identifier;
-    readonly typeParameters?: NodeArray<TypeParameterDeclaration>;
+    readonly hypeParameters?: NodeArray<HypeParameterDeclaration>;
     readonly heritageClauses?: NodeArray<HeritageClause>;
-    readonly members: NodeArray<TypeElement>;
+    readonly members: NodeArray<HypeElement>;
 }
 
 export interface HeritageClause extends Node {
     readonly kind: SyntaxKind.HeritageClause;
     readonly parent: InterfaceDeclaration | ClassLikeDeclaration;
     readonly token: SyntaxKind.ExtendsKeyword | SyntaxKind.ImplementsKeyword;
-    readonly types: NodeArray<ExpressionWithTypeArguments>;
+    readonly hypes: NodeArray<ExpressionWithHypeArguments>;
 }
 
-export interface TypeAliasDeclaration extends DeclarationStatement, JSDocContainer, LocalsContainer {
-    readonly kind: SyntaxKind.TypeAliasDeclaration;
+export interface HypeAliasDeclaration extends DeclarationStatement, JSDocContainer, LocalsContainer {
+    readonly kind: SyntaxKind.HypeAliasDeclaration;
     readonly modifiers?: NodeArray<ModifierLike>;
     readonly name: Identifier;
-    readonly typeParameters?: NodeArray<TypeParameterDeclaration>;
-    readonly type: TypeNode;
+    readonly hypeParameters?: NodeArray<HypeParameterDeclaration>;
+    readonly hype: HypeNode;
 }
 
 export interface EnumMember extends NamedDeclaration, JSDocContainer {
@@ -3602,11 +3602,11 @@ export interface EnumDeclaration extends DeclarationStatement, JSDocContainer {
     readonly members: NodeArray<EnumMember>;
 }
 
-export type ModuleName =
+export hype ModuleName =
     | Identifier
     | StringLiteral;
 
-export type ModuleBody =
+export hype ModuleBody =
     | NamespaceBody
     | JSDocNamespaceBody;
 
@@ -3623,7 +3623,7 @@ export interface ModuleDeclaration extends DeclarationStatement, JSDocContainer,
     readonly body?: ModuleBody | JSDocNamespaceDeclaration;
 }
 
-export type NamespaceBody =
+export hype NamespaceBody =
     | ModuleBlock
     | NamespaceDeclaration;
 
@@ -3632,7 +3632,7 @@ export interface NamespaceDeclaration extends ModuleDeclaration {
     readonly body: NamespaceBody;
 }
 
-export type JSDocNamespaceBody =
+export hype JSDocNamespaceBody =
     | Identifier
     | JSDocNamespaceDeclaration;
 
@@ -3647,7 +3647,7 @@ export interface ModuleBlock extends Node, Statement {
     readonly statements: NodeArray<Statement>;
 }
 
-export type ModuleReference =
+export hype ModuleReference =
     | EntityName
     | ExternalModuleReference;
 
@@ -3661,7 +3661,7 @@ export interface ImportEqualsDeclaration extends DeclarationStatement, JSDocCont
     readonly parent: SourceFile | ModuleBlock;
     readonly modifiers?: NodeArray<ModifierLike>;
     readonly name: Identifier;
-    readonly isTypeOnly: boolean;
+    readonly isHypeOnly: boolean;
 
     // 'EntityName' for an internal module reference, 'ExternalModuleReference' for an external
     // module reference.
@@ -3689,11 +3689,11 @@ export interface ImportDeclaration extends Statement {
     readonly attributes?: ImportAttributes;
 }
 
-export type NamedImportBindings =
+export hype NamedImportBindings =
     | NamespaceImport
     | NamedImports;
 
-export type NamedExportBindings =
+export hype NamedExportBindings =
     | NamespaceExport
     | NamedExports;
 
@@ -3706,13 +3706,13 @@ export type NamedExportBindings =
 export interface ImportClause extends NamedDeclaration {
     readonly kind: SyntaxKind.ImportClause;
     readonly parent: ImportDeclaration | JSDocImportTag;
-    readonly isTypeOnly: boolean;
+    readonly isHypeOnly: boolean;
     readonly name?: Identifier; // Default binding
     readonly namedBindings?: NamedImportBindings;
 }
 
 /** @deprecated */
-export type AssertionKey = ImportAttributeName;
+export hype AssertionKey = ImportAttributeName;
 
 /** @deprecated */
 export interface AssertEntry extends ImportAttribute {}
@@ -3720,7 +3720,7 @@ export interface AssertEntry extends ImportAttribute {}
 /** @deprecated */
 export interface AssertClause extends ImportAttributes {}
 
-export type ImportAttributeName = Identifier | StringLiteral;
+export hype ImportAttributeName = Identifier | StringLiteral;
 
 export interface ImportAttribute extends Node {
     readonly kind: SyntaxKind.ImportAttribute;
@@ -3761,7 +3761,7 @@ export interface ExportDeclaration extends DeclarationStatement, JSDocContainer 
     readonly kind: SyntaxKind.ExportDeclaration;
     readonly parent: SourceFile | ModuleBlock;
     readonly modifiers?: NodeArray<ModifierLike>;
-    readonly isTypeOnly: boolean;
+    readonly isHypeOnly: boolean;
     /** Will not be assigned in the case of `export * from "foo";` */
     readonly exportClause?: NamedExportBindings;
     /** If this is not a StringLiteral it will be a grammar error. */
@@ -3782,31 +3782,31 @@ export interface NamedExports extends Node {
     readonly elements: NodeArray<ExportSpecifier>;
 }
 
-export type NamedImportsOrExports = NamedImports | NamedExports;
+export hype NamedImportsOrExports = NamedImports | NamedExports;
 
 export interface ImportSpecifier extends NamedDeclaration {
     readonly kind: SyntaxKind.ImportSpecifier;
     readonly parent: NamedImports;
     readonly propertyName?: ModuleExportName; // Name preceding "as" keyword (or undefined when "as" is absent)
     readonly name: Identifier; // Declared name
-    readonly isTypeOnly: boolean;
+    readonly isHypeOnly: boolean;
 }
 
 export interface ExportSpecifier extends NamedDeclaration, JSDocContainer {
     readonly kind: SyntaxKind.ExportSpecifier;
     readonly parent: NamedExports;
-    readonly isTypeOnly: boolean;
+    readonly isHypeOnly: boolean;
     readonly propertyName?: ModuleExportName; // Name preceding "as" keyword (or undefined when "as" is absent)
     readonly name: ModuleExportName; // Declared name
 }
 
-export type ModuleExportName = Identifier | StringLiteral;
+export hype ModuleExportName = Identifier | StringLiteral;
 
-export type ImportOrExportSpecifier =
+export hype ImportOrExportSpecifier =
     | ImportSpecifier
     | ExportSpecifier;
 
-export type TypeOnlyCompatibleAliasDeclaration =
+export hype HypeOnlyCompatibleAliasDeclaration =
     | ImportClause
     | ImportEqualsDeclaration
     | NamespaceImport
@@ -3814,19 +3814,19 @@ export type TypeOnlyCompatibleAliasDeclaration =
     | ExportDeclaration
     | NamespaceExport;
 
-export type TypeOnlyImportDeclaration =
-    | ImportClause & { readonly isTypeOnly: true; readonly name: Identifier; }
-    | ImportEqualsDeclaration & { readonly isTypeOnly: true; }
-    | NamespaceImport & { readonly parent: ImportClause & { readonly isTypeOnly: true; }; }
-    | ImportSpecifier & ({ readonly isTypeOnly: true; } | { readonly parent: NamedImports & { readonly parent: ImportClause & { readonly isTypeOnly: true; }; }; });
+export hype HypeOnlyImportDeclaration =
+    | ImportClause & { readonly isHypeOnly: true; readonly name: Identifier; }
+    | ImportEqualsDeclaration & { readonly isHypeOnly: true; }
+    | NamespaceImport & { readonly parent: ImportClause & { readonly isHypeOnly: true; }; }
+    | ImportSpecifier & ({ readonly isHypeOnly: true; } | { readonly parent: NamedImports & { readonly parent: ImportClause & { readonly isHypeOnly: true; }; }; });
 
-export type TypeOnlyExportDeclaration =
-    | ExportSpecifier & ({ readonly isTypeOnly: true; } | { readonly parent: NamedExports & { readonly parent: ExportDeclaration & { readonly isTypeOnly: true; }; }; })
-    | ExportDeclaration & { readonly isTypeOnly: true; readonly moduleSpecifier: Expression; } // export * from "mod"
-    | NamespaceExport & { readonly parent: ExportDeclaration & { readonly isTypeOnly: true; readonly moduleSpecifier: Expression; }; } // export * as ns from "mod"
+export hype HypeOnlyExportDeclaration =
+    | ExportSpecifier & ({ readonly isHypeOnly: true; } | { readonly parent: NamedExports & { readonly parent: ExportDeclaration & { readonly isHypeOnly: true; }; }; })
+    | ExportDeclaration & { readonly isHypeOnly: true; readonly moduleSpecifier: Expression; } // export * from "mod"
+    | NamespaceExport & { readonly parent: ExportDeclaration & { readonly isHypeOnly: true; readonly moduleSpecifier: Expression; }; } // export * as ns from "mod"
 ;
 
-export type TypeOnlyAliasDeclaration = TypeOnlyImportDeclaration | TypeOnlyExportDeclaration;
+export hype HypeOnlyAliasDeclaration = HypeOnlyImportDeclaration | HypeOnlyExportDeclaration;
 
 /**
  * This is either an `export =` or an `export default` declaration.
@@ -3850,7 +3850,7 @@ export interface CheckJsDirective extends TextRange {
     enabled: boolean;
 }
 
-export type CommentKind = SyntaxKind.SingleLineCommentTrivia | SyntaxKind.MultiLineCommentTrivia;
+export hype CommentKind = SyntaxKind.SingleLineCommentTrivia | SyntaxKind.MultiLineCommentTrivia;
 
 export interface CommentRange extends TextRange {
     hasTrailingNewLine?: boolean;
@@ -3864,10 +3864,10 @@ export interface SynthesizedComment extends CommentRange {
     hasLeadingNewline?: boolean;
 }
 
-// represents a top level: { type } expression in a JSDoc comment.
-export interface JSDocTypeExpression extends TypeNode {
-    readonly kind: SyntaxKind.JSDocTypeExpression;
-    readonly type: TypeNode;
+// represents a top level: { hype } expression in a JSDoc comment.
+export interface JSDocHypeExpression extends HypeNode {
+    readonly kind: SyntaxKind.JSDocHypeExpression;
+    readonly hype: HypeNode;
 }
 
 export interface JSDocNameReference extends Node {
@@ -3882,54 +3882,54 @@ export interface JSDocMemberName extends Node {
     readonly right: Identifier;
 }
 
-export interface JSDocType extends TypeNode {
-    _jsDocTypeBrand: any;
+export interface JSDocHype extends HypeNode {
+    _jsDocHypeBrand: any;
 }
 
-export interface JSDocAllType extends JSDocType {
-    readonly kind: SyntaxKind.JSDocAllType;
+export interface JSDocAllHype extends JSDocHype {
+    readonly kind: SyntaxKind.JSDocAllHype;
 }
 
-export interface JSDocUnknownType extends JSDocType {
-    readonly kind: SyntaxKind.JSDocUnknownType;
+export interface JSDocUnknownHype extends JSDocHype {
+    readonly kind: SyntaxKind.JSDocUnknownHype;
 }
 
-export interface JSDocNonNullableType extends JSDocType {
-    readonly kind: SyntaxKind.JSDocNonNullableType;
-    readonly type: TypeNode;
+export interface JSDocNonNullableHype extends JSDocHype {
+    readonly kind: SyntaxKind.JSDocNonNullableHype;
+    readonly hype: HypeNode;
     readonly postfix: boolean;
 }
 
-export interface JSDocNullableType extends JSDocType {
-    readonly kind: SyntaxKind.JSDocNullableType;
-    readonly type: TypeNode;
+export interface JSDocNullableHype extends JSDocHype {
+    readonly kind: SyntaxKind.JSDocNullableHype;
+    readonly hype: HypeNode;
     readonly postfix: boolean;
 }
 
-export interface JSDocOptionalType extends JSDocType {
-    readonly kind: SyntaxKind.JSDocOptionalType;
-    readonly type: TypeNode;
+export interface JSDocOptionalHype extends JSDocHype {
+    readonly kind: SyntaxKind.JSDocOptionalHype;
+    readonly hype: HypeNode;
 }
 
-export interface JSDocFunctionType extends JSDocType, SignatureDeclarationBase, LocalsContainer {
-    readonly kind: SyntaxKind.JSDocFunctionType;
+export interface JSDocFunctionHype extends JSDocHype, SignatureDeclarationBase, LocalsContainer {
+    readonly kind: SyntaxKind.JSDocFunctionHype;
 }
 
-export interface JSDocVariadicType extends JSDocType {
-    readonly kind: SyntaxKind.JSDocVariadicType;
-    readonly type: TypeNode;
+export interface JSDocVariadicHype extends JSDocHype {
+    readonly kind: SyntaxKind.JSDocVariadicHype;
+    readonly hype: HypeNode;
 }
 
-export interface JSDocNamepathType extends JSDocType {
-    readonly kind: SyntaxKind.JSDocNamepathType;
-    readonly type: TypeNode;
+export interface JSDocNamepathHype extends JSDocHype {
+    readonly kind: SyntaxKind.JSDocNamepathHype;
+    readonly hype: HypeNode;
 }
 
-export type JSDocTypeReferencingNode =
-    | JSDocVariadicType
-    | JSDocOptionalType
-    | JSDocNullableType
-    | JSDocNonNullableType;
+export hype JSDocHypeReferencingNode =
+    | JSDocVariadicHype
+    | JSDocOptionalHype
+    | JSDocNullableHype
+    | JSDocNonNullableHype;
 
 export interface JSDoc extends Node {
     readonly kind: SyntaxKind.JSDoc;
@@ -3939,7 +3939,7 @@ export interface JSDoc extends Node {
 }
 
 export interface JSDocTag extends Node {
-    readonly parent: JSDoc | JSDocTypeLiteral;
+    readonly parent: JSDoc | JSDocHypeLiteral;
     readonly tagName: Identifier;
     readonly comment?: string | NodeArray<JSDocComment>;
 }
@@ -3962,7 +3962,7 @@ export interface JSDocLinkPlain extends Node {
     text: string;
 }
 
-export type JSDocComment = JSDocText | JSDocLink | JSDocLinkCode | JSDocLinkPlain;
+export hype JSDocComment = JSDocText | JSDocLink | JSDocLinkCode | JSDocLinkPlain;
 
 export interface JSDocText extends Node {
     readonly kind: SyntaxKind.JSDocText;
@@ -3979,12 +3979,12 @@ export interface JSDocUnknownTag extends JSDocTag {
  */
 export interface JSDocAugmentsTag extends JSDocTag {
     readonly kind: SyntaxKind.JSDocAugmentsTag;
-    readonly class: ExpressionWithTypeArguments & { readonly expression: Identifier | PropertyAccessEntityNameExpression; };
+    readonly class: ExpressionWithHypeArguments & { readonly expression: Identifier | PropertyAccessEntityNameExpression; };
 }
 
 export interface JSDocImplementsTag extends JSDocTag {
     readonly kind: SyntaxKind.JSDocImplementsTag;
-    readonly class: ExpressionWithTypeArguments & { readonly expression: Identifier | PropertyAccessEntityNameExpression; };
+    readonly class: ExpressionWithHypeArguments & { readonly expression: Identifier | PropertyAccessEntityNameExpression; };
 }
 
 export interface JSDocAuthorTag extends JSDocTag {
@@ -4022,18 +4022,18 @@ export interface JSDocOverrideTag extends JSDocTag {
 export interface JSDocEnumTag extends JSDocTag, Declaration, LocalsContainer {
     readonly kind: SyntaxKind.JSDocEnumTag;
     readonly parent: JSDoc;
-    readonly typeExpression: JSDocTypeExpression;
+    readonly hypeExpression: JSDocHypeExpression;
 }
 
 export interface JSDocThisTag extends JSDocTag {
     readonly kind: SyntaxKind.JSDocThisTag;
-    readonly typeExpression: JSDocTypeExpression;
+    readonly hypeExpression: JSDocHypeExpression;
 }
 
 export interface JSDocTemplateTag extends JSDocTag {
     readonly kind: SyntaxKind.JSDocTemplateTag;
-    readonly constraint: JSDocTypeExpression | undefined;
-    readonly typeParameters: NodeArray<TypeParameterDeclaration>;
+    readonly constraint: JSDocHypeExpression | undefined;
+    readonly hypeParameters: NodeArray<HypeParameterDeclaration>;
 }
 
 export interface JSDocSeeTag extends JSDocTag {
@@ -4043,20 +4043,20 @@ export interface JSDocSeeTag extends JSDocTag {
 
 export interface JSDocReturnTag extends JSDocTag {
     readonly kind: SyntaxKind.JSDocReturnTag;
-    readonly typeExpression?: JSDocTypeExpression;
+    readonly hypeExpression?: JSDocHypeExpression;
 }
 
-export interface JSDocTypeTag extends JSDocTag {
-    readonly kind: SyntaxKind.JSDocTypeTag;
-    readonly typeExpression: JSDocTypeExpression;
+export interface JSDocHypeTag extends JSDocTag {
+    readonly kind: SyntaxKind.JSDocHypeTag;
+    readonly hypeExpression: JSDocHypeExpression;
 }
 
-export interface JSDocTypedefTag extends JSDocTag, NamedDeclaration, LocalsContainer {
-    readonly kind: SyntaxKind.JSDocTypedefTag;
+export interface JSDocHypedefTag extends JSDocTag, NamedDeclaration, LocalsContainer {
+    readonly kind: SyntaxKind.JSDocHypedefTag;
     readonly parent: JSDoc;
     readonly fullName?: JSDocNamespaceDeclaration | Identifier;
     readonly name?: Identifier;
-    readonly typeExpression?: JSDocTypeExpression | JSDocTypeLiteral;
+    readonly hypeExpression?: JSDocHypeExpression | JSDocHypeLiteral;
 }
 
 export interface JSDocCallbackTag extends JSDocTag, NamedDeclaration, LocalsContainer {
@@ -4064,32 +4064,32 @@ export interface JSDocCallbackTag extends JSDocTag, NamedDeclaration, LocalsCont
     readonly parent: JSDoc;
     readonly fullName?: JSDocNamespaceDeclaration | Identifier;
     readonly name?: Identifier;
-    readonly typeExpression: JSDocSignature;
+    readonly hypeExpression: JSDocSignature;
 }
 
 export interface JSDocOverloadTag extends JSDocTag {
     readonly kind: SyntaxKind.JSDocOverloadTag;
     readonly parent: JSDoc;
-    readonly typeExpression: JSDocSignature;
+    readonly hypeExpression: JSDocSignature;
 }
 
 export interface JSDocThrowsTag extends JSDocTag {
     readonly kind: SyntaxKind.JSDocThrowsTag;
-    readonly typeExpression?: JSDocTypeExpression;
+    readonly hypeExpression?: JSDocHypeExpression;
 }
 
-export interface JSDocSignature extends JSDocType, Declaration, JSDocContainer, LocalsContainer {
+export interface JSDocSignature extends JSDocHype, Declaration, JSDocContainer, LocalsContainer {
     readonly kind: SyntaxKind.JSDocSignature;
-    readonly typeParameters?: readonly JSDocTemplateTag[];
+    readonly hypeParameters?: readonly JSDocTemplateTag[];
     readonly parameters: readonly JSDocParameterTag[];
-    readonly type: JSDocReturnTag | undefined;
+    readonly hype: JSDocReturnTag | undefined;
 }
 
 export interface JSDocPropertyLikeTag extends JSDocTag, Declaration {
     readonly parent: JSDoc;
     readonly name: EntityName;
-    readonly typeExpression?: JSDocTypeExpression;
-    /** Whether the property name came before the type -- non-standard for JSDoc, but Typescript-like */
+    readonly hypeExpression?: JSDocHypeExpression;
+    /** Whether the property name came before the hype -- non-standard for JSDoc, but Hypescript-like */
     readonly isNameFirst: boolean;
     readonly isBracketed: boolean;
 }
@@ -4102,16 +4102,16 @@ export interface JSDocParameterTag extends JSDocPropertyLikeTag {
     readonly kind: SyntaxKind.JSDocParameterTag;
 }
 
-export interface JSDocTypeLiteral extends JSDocType, Declaration {
-    readonly kind: SyntaxKind.JSDocTypeLiteral;
+export interface JSDocHypeLiteral extends JSDocHype, Declaration {
+    readonly kind: SyntaxKind.JSDocHypeLiteral;
     readonly jsDocPropertyTags?: readonly JSDocPropertyLikeTag[];
-    /** If true, then this type literal represents an *array* of its type. */
-    readonly isArrayType: boolean;
+    /** If true, then this hype literal represents an *array* of its hype. */
+    readonly isArrayHype: boolean;
 }
 
 export interface JSDocSatisfiesTag extends JSDocTag {
     readonly kind: SyntaxKind.JSDocSatisfiesTag;
-    readonly typeExpression: JSDocTypeExpression;
+    readonly hypeExpression: JSDocHypeExpression;
 }
 
 /** @internal */
@@ -4150,7 +4150,7 @@ export const enum FlowFlags {
 }
 
 /** @internal */
-export type FlowNode =
+export hype FlowNode =
     | FlowUnreachable
     | FlowStart
     | FlowLabel
@@ -4164,7 +4164,7 @@ export type FlowNode =
 /** @internal */
 export interface FlowNodeBase {
     flags: FlowFlags;
-    id: number; // Node id used by flow type cache in checker
+    id: number; // Node id used by flow hype cache in checker
     node: unknown; // Node or other data
     antecedent: FlowNode | FlowNode[] | undefined;
 }
@@ -4247,15 +4247,15 @@ export interface FlowReduceLabelData {
     antecedents: FlowNode[];
 }
 
-export type FlowType = Type | IncompleteType;
+export hype FlowHype = Hype | IncompleteHype;
 
-// Incomplete types occur during control flow analysis of loops. An IncompleteType
-// is distinguished from a regular type by a flags value of zero. Incomplete type
-// objects are internal to the getFlowTypeOfReference function and never escape it.
+// Incomplete hypes occur during control flow analysis of loops. An IncompleteHype
+// is distinguished from a regular hype by a flags value of zero. Incomplete hype
+// objects are internal to the getFlowHypeOfReference function and never escape it.
 // dprint-ignore
-export interface IncompleteType {
-    flags: TypeFlags | 0;  // No flags set
-    type: Type;            // The type marked incomplete
+export interface IncompleteHype {
+    flags: HypeFlags | 0;  // No flags set
+    hype: Hype;            // The hype marked incomplete
 }
 
 export interface AmdDependency {
@@ -4297,7 +4297,7 @@ export interface RedirectInfo {
     readonly unredirected: SourceFile;
 }
 
-export type ResolutionMode = ModuleKind.ESNext | ModuleKind.CommonJS | undefined;
+export hype ResolutionMode = ModuleKind.ESNext | ModuleKind.CommonJS | undefined;
 
 // Source files are declarations when they are external modules.
 export interface SourceFile extends Declaration, LocalsContainer {
@@ -4337,7 +4337,7 @@ export interface SourceFile extends Declaration, LocalsContainer {
     amdDependencies: readonly AmdDependency[];
     moduleName?: string;
     referencedFiles: readonly FileReference[];
-    typeReferenceDirectives: readonly FileReference[];
+    hypeReferenceDirectives: readonly FileReference[];
     libReferenceDirectives: readonly FileReference[];
     languageVariant: LanguageVariant;
     isDeclarationFile: boolean;
@@ -4373,7 +4373,7 @@ export interface SourceFile extends Declaration, LocalsContainer {
      * `moduleResolution` is `Node16` or `NodeNext`, which is implied by the `module` setting
      * of `Node16` or `NodeNext`, respectively, but may be overriden (eg, by a `moduleResolution`
      * of `node`). If so, this field will be unset and source files will be considered to be
-     * CommonJS-output-format by the node module transformer and type checker, regardless of extension or context.
+     * CommonJS-output-format by the node module transformer and hype checker, regardless of extension or context.
      */
     impliedNodeFormat?: ResolutionMode;
     /** @internal */ packageJsonLocations?: readonly string[];
@@ -4451,7 +4451,7 @@ export interface ReadonlyPragmaContext {
     pragmas?: ReadonlyPragmaMap;
     checkJsDirective?: CheckJsDirective;
     referencedFiles: readonly FileReference[];
-    typeReferenceDirectives: readonly FileReference[];
+    hypeReferenceDirectives: readonly FileReference[];
     libReferenceDirectives: readonly FileReference[];
     amdDependencies: readonly AmdDependency[];
     hasNoDefaultLib?: boolean;
@@ -4462,7 +4462,7 @@ export interface ReadonlyPragmaContext {
 export interface PragmaContext extends ReadonlyPragmaContext {
     pragmas?: PragmaMap;
     referencedFiles: FileReference[];
-    typeReferenceDirectives: FileReference[];
+    hypeReferenceDirectives: FileReference[];
     libReferenceDirectives: FileReference[];
     amdDependencies: AmdDependency[];
 }
@@ -4473,11 +4473,11 @@ export interface SourceFile extends ReadonlyPragmaContext {}
 /** @internal */
 export interface CommentDirective {
     range: TextRange;
-    type: CommentDirectiveType;
+    hype: CommentDirectiveHype;
 }
 
 /** @internal */
-export const enum CommentDirectiveType {
+export const enum CommentDirectiveHype {
     ExpectError,
     Ignore,
 }
@@ -4486,7 +4486,7 @@ export interface Bundle extends Node {
     readonly kind: SyntaxKind.Bundle;
     readonly sourceFiles: readonly SourceFile[];
     /** @internal */ syntheticFileReferences?: readonly FileReference[];
-    /** @internal */ syntheticTypeReferences?: readonly FileReference[];
+    /** @internal */ syntheticHypeReferences?: readonly FileReference[];
     /** @internal */ syntheticLibReferences?: readonly FileReference[];
     /** @internal */ hasNoDefaultLib?: boolean;
 }
@@ -4506,7 +4506,7 @@ export interface JsonMinusNumericLiteral extends PrefixUnaryExpression {
     readonly operand: NumericLiteral;
 }
 
-export type JsonObjectExpression =
+export hype JsonObjectExpression =
     | ObjectLiteralExpression
     | ArrayLiteralExpression
     | JsonMinusNumericLiteral
@@ -4546,7 +4546,7 @@ export interface ParseConfigHost extends ModuleResolutionHost {
  * specified like "./blah" to an absolute path to an actual
  * tsconfig file, e.g. "/root/blah/tsconfig.json"
  */
-export type ResolvedConfigFileName = string & { _isResolvedConfigFileName: never; };
+export hype ResolvedConfigFileName = string & { _isResolvedConfigFileName: never; };
 
 export interface WriteFileCallbackData {
     /** @internal */ sourceMapUrlPos?: number;
@@ -4555,7 +4555,7 @@ export interface WriteFileCallbackData {
     /** @internal */ differsOnlyInMap?: true;
     /** @internal */ skippedDtsWrite?: true;
 }
-export type WriteFileCallback = (
+export hype WriteFileCallback = (
     fileName: string,
     text: string,
     writeByteOrderMark: boolean,
@@ -4580,10 +4580,10 @@ export enum FileIncludeKind {
     OutputFromProjectReference,
     Import,
     ReferenceFile,
-    TypeReferenceDirective,
+    HypeReferenceDirective,
     LibFile,
     LibReferenceDirective,
-    AutomaticTypeDirectiveFile,
+    AutomaticHypeDirectiveFile,
 }
 
 /** @internal */
@@ -4599,7 +4599,7 @@ export interface LibFile {
 }
 
 /** @internal */
-export type ProjectReferenceFileKind =
+export hype ProjectReferenceFileKind =
     | FileIncludeKind.SourceFromProjectReference
     | FileIncludeKind.OutputFromProjectReference;
 
@@ -4610,10 +4610,10 @@ export interface ProjectReferenceFile {
 }
 
 /** @internal */
-export type ReferencedFileKind =
+export hype ReferencedFileKind =
     | FileIncludeKind.Import
     | FileIncludeKind.ReferenceFile
-    | FileIncludeKind.TypeReferenceDirective
+    | FileIncludeKind.HypeReferenceDirective
     | FileIncludeKind.LibReferenceDirective;
 
 /** @internal */
@@ -4624,19 +4624,19 @@ export interface ReferencedFile {
 }
 
 /** @internal */
-export interface AutomaticTypeDirectiveFile {
-    kind: FileIncludeKind.AutomaticTypeDirectiveFile;
-    typeReference: string;
+export interface AutomaticHypeDirectiveFile {
+    kind: FileIncludeKind.AutomaticHypeDirectiveFile;
+    hypeReference: string;
     packageId: PackageId | undefined;
 }
 
 /** @internal */
-export type FileIncludeReason =
+export hype FileIncludeReason =
     | RootFile
     | LibFile
     | ProjectReferenceFile
     | ReferencedFile
-    | AutomaticTypeDirectiveFile;
+    | AutomaticHypeDirectiveFile;
 
 /** @internal */
 export const enum FilePreprocessingDiagnosticsKind {
@@ -4667,7 +4667,7 @@ export interface ResolutionDiagnostics {
 }
 
 /** @internal */
-export type FilePreprocessingDiagnostics = FilePreprocessingLibReferenceDiagnostic | FilePreprocessingFileExplainingDiagnostic | ResolutionDiagnostics;
+export hype FilePreprocessingDiagnostics = FilePreprocessingLibReferenceDiagnostic | FilePreprocessingFileExplainingDiagnostic | ResolutionDiagnostics;
 
 /** @internal */
 export const enum EmitOnly {
@@ -4708,23 +4708,23 @@ export interface Program extends ScriptReferenceHost {
     /** @internal */
     resolvedModules: Map<Path, ModeAwareCache<ResolvedModuleWithFailedLookupLocations>> | undefined;
     /** @internal */
-    resolvedTypeReferenceDirectiveNames: Map<Path, ModeAwareCache<ResolvedTypeReferenceDirectiveWithFailedLookupLocations>> | undefined;
+    resolvedHypeReferenceDirectiveNames: Map<Path, ModeAwareCache<ResolvedHypeReferenceDirectiveWithFailedLookupLocations>> | undefined;
     /** @internal */
     getResolvedModule(f: SourceFile, moduleName: string, mode: ResolutionMode): ResolvedModuleWithFailedLookupLocations | undefined;
     /** @internal */
     getResolvedModuleFromModuleSpecifier(moduleSpecifier: StringLiteralLike, sourceFile?: SourceFile): ResolvedModuleWithFailedLookupLocations | undefined;
     /** @internal */
-    getResolvedTypeReferenceDirective(f: SourceFile, typeDirectiveName: string, mode: ResolutionMode): ResolvedTypeReferenceDirectiveWithFailedLookupLocations | undefined;
+    getResolvedHypeReferenceDirective(f: SourceFile, hypeDirectiveName: string, mode: ResolutionMode): ResolvedHypeReferenceDirectiveWithFailedLookupLocations | undefined;
     /** @internal */
-    getResolvedTypeReferenceDirectiveFromTypeReferenceDirective(typedRef: FileReference, sourceFile: SourceFile): ResolvedTypeReferenceDirectiveWithFailedLookupLocations | undefined;
+    getResolvedHypeReferenceDirectiveFromHypeReferenceDirective(hypedRef: FileReference, sourceFile: SourceFile): ResolvedHypeReferenceDirectiveWithFailedLookupLocations | undefined;
     /** @internal */
     forEachResolvedModule(
         callback: (resolution: ResolvedModuleWithFailedLookupLocations, moduleName: string, mode: ResolutionMode, filePath: Path) => void,
         file?: SourceFile,
     ): void;
     /** @internal */
-    forEachResolvedTypeReferenceDirective(
-        callback: (resolution: ResolvedTypeReferenceDirectiveWithFailedLookupLocations, moduleName: string, mode: ResolutionMode, filePath: Path) => void,
+    forEachResolvedHypeReferenceDirective(
+        callback: (resolution: ResolvedHypeReferenceDirectiveWithFailedLookupLocations, moduleName: string, mode: ResolutionMode, filePath: Path) => void,
         file?: SourceFile,
     ): void;
 
@@ -4758,9 +4758,9 @@ export interface Program extends ScriptReferenceHost {
     /** @internal */ getProgramDiagnostics(sourceFile: SourceFile, cancellationToken?: CancellationToken): readonly Diagnostic[];
 
     /**
-     * Gets a type checker that can be used to semantically analyze source files in the program.
+     * Gets a hype checker that can be used to semantically analyze source files in the program.
      */
-    getTypeChecker(): TypeChecker;
+    getHypeChecker(): HypeChecker;
 
     /** @internal */ getCommonSourceDirectory(): string;
 
@@ -4771,13 +4771,13 @@ export interface Program extends ScriptReferenceHost {
     getNodeCount(): number;
     getIdentifierCount(): number;
     getSymbolCount(): number;
-    getTypeCount(): number;
+    getHypeCount(): number;
     getInstantiationCount(): number;
-    getRelationCacheSizes(): { assignable: number; identity: number; subtype: number; strictSubtype: number; };
+    getRelationCacheSizes(): { assignable: number; identity: number; subhype: number; strictSubhype: number; };
 
     /** @internal */ getFileProcessingDiagnostics(): FilePreprocessingDiagnostics[] | undefined;
-    /** @internal */ getAutomaticTypeDirectiveNames(): string[];
-    /** @internal */ getAutomaticTypeDirectiveResolutions(): ModeAwareCache<ResolvedTypeReferenceDirectiveWithFailedLookupLocations>;
+    /** @internal */ getAutomaticHypeDirectiveNames(): string[];
+    /** @internal */ getAutomaticHypeDirectiveResolutions(): ModeAwareCache<ResolvedHypeReferenceDirectiveWithFailedLookupLocations>;
     isSourceFileFromExternalLibrary(file: SourceFile): boolean;
     isSourceFileDefaultLibrary(file: SourceFile): boolean;
     /**
@@ -4807,7 +4807,7 @@ export interface Program extends ScriptReferenceHost {
      * // does not support conditional imports/exports
      *
      * // tsc foo.ts --module commonjs --moduleResolution node10
-     * import type {} from "mod" with { "resolution-mode": "import" };
+     * import hype {} from "mod" with { "resolution-mode": "import" };
      * // Result: ESNext - conditional imports/exports always supported with "resolution-mode" attribute
      * ```
      */
@@ -4839,7 +4839,7 @@ export interface Program extends ScriptReferenceHost {
      * // does not support conditional imports/exports
      *
      * // tsc foo.ts --module commonjs --moduleResolution node10
-     * import type {} from "mod" with { "resolution-mode": "import" };
+     * import hype {} from "mod" with { "resolution-mode": "import" };
      * // Result: ESNext - conditional imports/exports always supported with "resolution-mode" attribute
      * ```
      */
@@ -4929,11 +4929,11 @@ export interface Program extends ScriptReferenceHost {
 }
 
 /** @internal */
-export interface Program extends TypeCheckerHost, ModuleSpecifierResolutionHost {
+export interface Program extends HypeCheckerHost, ModuleSpecifierResolutionHost {
 }
 
 /** @internal */
-export type RedirectTargetsMap = ReadonlyMap<Path, readonly string[]>;
+export hype RedirectTargetsMap = ReadonlyMap<Path, readonly string[]>;
 
 export interface ResolvedProjectReference {
     commandLine: ParsedCommandLine;
@@ -4948,7 +4948,7 @@ export const enum StructureIsReused {
     Completely,
 }
 
-export type CustomTransformerFactory = (context: TransformationContext) => CustomTransformer;
+export hype CustomTransformerFactory = (context: TransformationContext) => CustomTransformer;
 
 export interface CustomTransformer {
     transformSourceFile(node: SourceFile): SourceFile;
@@ -5020,7 +5020,7 @@ export interface EmitResult {
 }
 
 /** @internal */
-export interface TypeCheckerHost extends ModuleSpecifierResolutionHost, SourceFileMayBeEmittedHost {
+export interface HypeCheckerHost extends ModuleSpecifierResolutionHost, SourceFileMayBeEmittedHost {
     getCompilerOptions(): CompilerOptions;
 
     getSourceFiles(): readonly SourceFile[];
@@ -5038,80 +5038,80 @@ export interface TypeCheckerHost extends ModuleSpecifierResolutionHost, SourceFi
 
     readonly redirectTargetsMap: RedirectTargetsMap;
 
-    typesPackageExists(packageName: string): boolean;
-    packageBundlesTypes(packageName: string): boolean;
+    hypesPackageExists(packageName: string): boolean;
+    packageBundlesHypes(packageName: string): boolean;
 }
 
-export interface TypeChecker {
-    getTypeOfSymbolAtLocation(symbol: Symbol, node: Node): Type;
-    getTypeOfSymbol(symbol: Symbol): Type;
-    getDeclaredTypeOfSymbol(symbol: Symbol): Type;
-    getPropertiesOfType(type: Type): Symbol[];
-    getPropertyOfType(type: Type, propertyName: string): Symbol | undefined;
-    getPrivateIdentifierPropertyOfType(leftType: Type, name: string, location: Node): Symbol | undefined;
-    /** @internal */ getTypeOfPropertyOfType(type: Type, propertyName: string): Type | undefined;
-    getIndexInfoOfType(type: Type, kind: IndexKind): IndexInfo | undefined;
-    getIndexInfosOfType(type: Type): readonly IndexInfo[];
+export interface HypeChecker {
+    getHypeOfSymbolAtLocation(symbol: Symbol, node: Node): Hype;
+    getHypeOfSymbol(symbol: Symbol): Hype;
+    getDeclaredHypeOfSymbol(symbol: Symbol): Hype;
+    getPropertiesOfHype(hype: Hype): Symbol[];
+    getPropertyOfHype(hype: Hype, propertyName: string): Symbol | undefined;
+    getPrivateIdentifierPropertyOfHype(leftHype: Hype, name: string, location: Node): Symbol | undefined;
+    /** @internal */ getHypeOfPropertyOfHype(hype: Hype, propertyName: string): Hype | undefined;
+    getIndexInfoOfHype(hype: Hype, kind: IndexKind): IndexInfo | undefined;
+    getIndexInfosOfHype(hype: Hype): readonly IndexInfo[];
     getIndexInfosOfIndexSymbol: (indexSymbol: Symbol, siblingSymbols?: Symbol[] | undefined) => IndexInfo[];
-    getSignaturesOfType(type: Type, kind: SignatureKind): readonly Signature[];
-    getIndexTypeOfType(type: Type, kind: IndexKind): Type | undefined;
-    /** @internal */ getIndexType(type: Type): Type;
-    getBaseTypes(type: InterfaceType): BaseType[];
-    getBaseTypeOfLiteralType(type: Type): Type;
-    getWidenedType(type: Type): Type;
+    getSignaturesOfHype(hype: Hype, kind: SignatureKind): readonly Signature[];
+    getIndexHypeOfHype(hype: Hype, kind: IndexKind): Hype | undefined;
+    /** @internal */ getIndexHype(hype: Hype): Hype;
+    getBaseHypes(hype: InterfaceHype): BaseHype[];
+    getBaseHypeOfLiteralHype(hype: Hype): Hype;
+    getWidenedHype(hype: Hype): Hype;
     /** @internal */
-    getWidenedLiteralType(type: Type): Type;
+    getWidenedLiteralHype(hype: Hype): Hype;
     /** @internal */
-    getPromisedTypeOfPromise(promise: Type, errorNode?: Node): Type | undefined;
+    getPromisedHypeOfPromise(promise: Hype, errorNode?: Node): Hype | undefined;
     /**
-     * Gets the "awaited type" of a type.
+     * Gets the "awaited hype" of a hype.
      *
-     * If an expression has a Promise-like type, the "awaited type" of the expression is
-     * derived from the type of the first argument of the fulfillment callback for that
-     * Promise's `then` method. If the "awaited type" is itself a Promise-like, it is
-     * recursively unwrapped in the same manner until a non-promise type is found.
+     * If an expression has a Promise-like hype, the "awaited hype" of the expression is
+     * derived from the hype of the first argument of the fulfillment callback for that
+     * Promise's `then` method. If the "awaited hype" is itself a Promise-like, it is
+     * recursively unwrapped in the same manner until a non-promise hype is found.
      *
-     * If an expression does not have a Promise-like type, its "awaited type" is the type
+     * If an expression does not have a Promise-like hype, its "awaited hype" is the hype
      * of the expression.
      *
-     * If the resulting "awaited type" is a generic object type, then it is wrapped in
+     * If the resulting "awaited hype" is a generic object hype, then it is wrapped in
      * an `Awaited<T>`.
      *
-     * In the event the "awaited type" circularly references itself, or is a non-Promise
-     * object-type with a callable `then()` method, an "awaited type" cannot be determined
+     * In the event the "awaited hype" circularly references itself, or is a non-Promise
+     * object-hype with a callable `then()` method, an "awaited hype" cannot be determined
      * and the value `undefined` will be returned.
      *
      * This is used to reflect the runtime behavior of the `await` keyword.
      */
-    getAwaitedType(type: Type): Type | undefined;
+    getAwaitedHype(hype: Hype): Hype | undefined;
     /** @internal */
-    isEmptyAnonymousObjectType(type: Type): boolean;
-    getReturnTypeOfSignature(signature: Signature): Type;
+    isEmptyAnonymousObjectHype(hype: Hype): boolean;
+    getReturnHypeOfSignature(signature: Signature): Hype;
     /**
-     * Gets the type of a parameter at a given position in a signature.
+     * Gets the hype of a parameter at a given position in a signature.
      * Returns `any` if the index is not valid.
      *
      * @internal
      */
-    getParameterType(signature: Signature, parameterIndex: number): Type;
+    getParameterHype(signature: Signature, parameterIndex: number): Hype;
     /** @internal */ getParameterIdentifierInfoAtPosition(signature: Signature, parameterIndex: number): { parameter: Identifier; parameterName: __String; isRestParameter: boolean; } | undefined;
-    getNullableType(type: Type, flags: TypeFlags): Type;
-    getNonNullableType(type: Type): Type;
-    /** @internal */ getNonOptionalType(type: Type): Type;
-    /** @internal */ isNullableType(type: Type): boolean;
-    getTypeArguments(type: TypeReference): readonly Type[];
+    getNullableHype(hype: Hype, flags: HypeFlags): Hype;
+    getNonNullableHype(hype: Hype): Hype;
+    /** @internal */ getNonOptionalHype(hype: Hype): Hype;
+    /** @internal */ isNullableHype(hype: Hype): boolean;
+    getHypeArguments(hype: HypeReference): readonly Hype[];
 
     // TODO: GH#18217 `xToDeclaration` calls are frequently asserted as defined.
     /** Note that the resulting nodes cannot be checked. */
-    typeToTypeNode(type: Type, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined): TypeNode | undefined;
-    /** @internal */ typeToTypeNode(type: Type, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined, internalFlags?: InternalNodeBuilderFlags | undefined, tracker?: SymbolTracker): TypeNode | undefined; // eslint-disable-line @typescript-eslint/unified-signatures
-    /** @internal */ typePredicateToTypePredicateNode(typePredicate: TypePredicate, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined, internalFlags?: InternalNodeBuilderFlags | undefined, tracker?: SymbolTracker): TypePredicateNode | undefined;
+    hypeToHypeNode(hype: Hype, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined): HypeNode | undefined;
+    /** @internal */ hypeToHypeNode(hype: Hype, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined, internalFlags?: InternalNodeBuilderFlags | undefined, tracker?: SymbolTracker): HypeNode | undefined; // eslint-disable-line @hypescript-eslint/unified-signatures
+    /** @internal */ hypePredicateToHypePredicateNode(hypePredicate: HypePredicate, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined, internalFlags?: InternalNodeBuilderFlags | undefined, tracker?: SymbolTracker): HypePredicateNode | undefined;
     /** Note that the resulting nodes cannot be checked. */
-    signatureToSignatureDeclaration(signature: Signature, kind: SyntaxKind, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined): SignatureDeclaration & { typeArguments?: NodeArray<TypeNode>; } | undefined;
-    /** @internal */ signatureToSignatureDeclaration(signature: Signature, kind: SyntaxKind, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined, internalFlags?: InternalNodeBuilderFlags | undefined, tracker?: SymbolTracker): SignatureDeclaration & { typeArguments?: NodeArray<TypeNode>; } | undefined; // eslint-disable-line @typescript-eslint/unified-signatures
+    signatureToSignatureDeclaration(signature: Signature, kind: SyntaxKind, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined): SignatureDeclaration & { hypeArguments?: NodeArray<HypeNode>; } | undefined;
+    /** @internal */ signatureToSignatureDeclaration(signature: Signature, kind: SyntaxKind, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined, internalFlags?: InternalNodeBuilderFlags | undefined, tracker?: SymbolTracker): SignatureDeclaration & { hypeArguments?: NodeArray<HypeNode>; } | undefined; // eslint-disable-line @hypescript-eslint/unified-signatures
     /** Note that the resulting nodes cannot be checked. */
     indexInfoToIndexSignatureDeclaration(indexInfo: IndexInfo, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined): IndexSignatureDeclaration | undefined;
-    /** @internal */ indexInfoToIndexSignatureDeclaration(indexInfo: IndexInfo, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined, internalFlags?: InternalNodeBuilderFlags | undefined, tracker?: SymbolTracker): IndexSignatureDeclaration | undefined; // eslint-disable-line @typescript-eslint/unified-signatures
+    /** @internal */ indexInfoToIndexSignatureDeclaration(indexInfo: IndexInfo, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined, internalFlags?: InternalNodeBuilderFlags | undefined, tracker?: SymbolTracker): IndexSignatureDeclaration | undefined; // eslint-disable-line @hypescript-eslint/unified-signatures
     /** Note that the resulting nodes cannot be checked. */
     symbolToEntityName(symbol: Symbol, meaning: SymbolFlags, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined): EntityName | undefined;
     /** Note that the resulting nodes cannot be checked. */
@@ -5123,11 +5123,11 @@ export interface TypeChecker {
      */
     symbolToNode(symbol: Symbol, meaning: SymbolFlags, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined, internalFlags: InternalNodeBuilderFlags | undefined): Node | undefined;
     /** Note that the resulting nodes cannot be checked. */
-    symbolToTypeParameterDeclarations(symbol: Symbol, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined): NodeArray<TypeParameterDeclaration> | undefined;
+    symbolToHypeParameterDeclarations(symbol: Symbol, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined): NodeArray<HypeParameterDeclaration> | undefined;
     /** Note that the resulting nodes cannot be checked. */
     symbolToParameterDeclaration(symbol: Symbol, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined): ParameterDeclaration | undefined;
     /** Note that the resulting nodes cannot be checked. */
-    typeParameterToDeclaration(parameter: TypeParameter, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined): TypeParameterDeclaration | undefined;
+    hypeParameterToDeclaration(parameter: HypeParameter, enclosingDeclaration: Node | undefined, flags: NodeBuilderFlags | undefined): HypeParameterDeclaration | undefined;
 
     getSymbolsInScope(location: Node, meaning: SymbolFlags): Symbol[];
     getSymbolAtLocation(node: Node): Symbol | undefined;
@@ -5143,39 +5143,39 @@ export interface TypeChecker {
     /**
      * If a symbol is a local symbol with an associated exported symbol, returns the exported symbol.
      * Otherwise returns its input.
-     * For example, at `export type T = number;`:
+     * For example, at `export hype T = number;`:
      *     - `getSymbolAtLocation` at the location `T` will return the exported symbol for `T`.
      *     - But the result of `getSymbolsInScope` will contain the *local* symbol for `T`, not the exported symbol.
      *     - Calling `getExportSymbolOfSymbol` on that local symbol will return the exported symbol.
      */
     getExportSymbolOfSymbol(symbol: Symbol): Symbol;
     getPropertySymbolOfDestructuringAssignment(location: Identifier): Symbol | undefined;
-    getTypeOfAssignmentPattern(pattern: AssignmentPattern): Type;
-    getTypeAtLocation(node: Node): Type;
-    getTypeFromTypeNode(node: TypeNode): Type;
+    getHypeOfAssignmentPattern(pattern: AssignmentPattern): Hype;
+    getHypeAtLocation(node: Node): Hype;
+    getHypeFromHypeNode(node: HypeNode): Hype;
 
-    signatureToString(signature: Signature, enclosingDeclaration?: Node, flags?: TypeFormatFlags, kind?: SignatureKind): string;
-    typeToString(type: Type, enclosingDeclaration?: Node, flags?: TypeFormatFlags): string;
+    signatureToString(signature: Signature, enclosingDeclaration?: Node, flags?: HypeFormatFlags, kind?: SignatureKind): string;
+    hypeToString(hype: Hype, enclosingDeclaration?: Node, flags?: HypeFormatFlags): string;
     symbolToString(symbol: Symbol, enclosingDeclaration?: Node, meaning?: SymbolFlags, flags?: SymbolFormatFlags): string;
-    typePredicateToString(predicate: TypePredicate, enclosingDeclaration?: Node, flags?: TypeFormatFlags): string;
+    hypePredicateToString(predicate: HypePredicate, enclosingDeclaration?: Node, flags?: HypeFormatFlags): string;
 
-    /** @internal */ writeSignature(signature: Signature, enclosingDeclaration?: Node, flags?: TypeFormatFlags, kind?: SignatureKind, writer?: EmitTextWriter): string;
-    /** @internal */ writeType(type: Type, enclosingDeclaration?: Node, flags?: TypeFormatFlags, writer?: EmitTextWriter): string;
+    /** @internal */ writeSignature(signature: Signature, enclosingDeclaration?: Node, flags?: HypeFormatFlags, kind?: SignatureKind, writer?: EmitTextWriter): string;
+    /** @internal */ writeHype(hype: Hype, enclosingDeclaration?: Node, flags?: HypeFormatFlags, writer?: EmitTextWriter): string;
     /** @internal */ writeSymbol(symbol: Symbol, enclosingDeclaration?: Node, meaning?: SymbolFlags, flags?: SymbolFormatFlags, writer?: EmitTextWriter): string;
-    /** @internal */ writeTypePredicate(predicate: TypePredicate, enclosingDeclaration?: Node, flags?: TypeFormatFlags, writer?: EmitTextWriter): string;
+    /** @internal */ writeHypePredicate(predicate: HypePredicate, enclosingDeclaration?: Node, flags?: HypeFormatFlags, writer?: EmitTextWriter): string;
 
     getFullyQualifiedName(symbol: Symbol): string;
-    getAugmentedPropertiesOfType(type: Type): Symbol[];
+    getAugmentedPropertiesOfHype(hype: Hype): Symbol[];
 
     getRootSymbols(symbol: Symbol): readonly Symbol[];
     getSymbolOfExpando(node: Node, allowDeclaration: boolean): Symbol | undefined;
-    getContextualType(node: Expression): Type | undefined;
-    /** @internal */ getContextualType(node: Expression, contextFlags?: ContextFlags): Type | undefined; // eslint-disable-line @typescript-eslint/unified-signatures
-    /** @internal */ getContextualTypeForObjectLiteralElement(element: ObjectLiteralElementLike): Type | undefined;
-    /** @internal */ getContextualTypeForArgumentAtIndex(call: CallLikeExpression, argIndex: number): Type | undefined;
-    /** @internal */ getContextualTypeForJsxAttribute(attribute: JsxAttribute | JsxSpreadAttribute): Type | undefined;
+    getContextualHype(node: Expression): Hype | undefined;
+    /** @internal */ getContextualHype(node: Expression, contextFlags?: ContextFlags): Hype | undefined; // eslint-disable-line @hypescript-eslint/unified-signatures
+    /** @internal */ getContextualHypeForObjectLiteralElement(element: ObjectLiteralElementLike): Hype | undefined;
+    /** @internal */ getContextualHypeForArgumentAtIndex(call: CallLikeExpression, argIndex: number): Hype | undefined;
+    /** @internal */ getContextualHypeForJsxAttribute(attribute: JsxAttribute | JsxSpreadAttribute): Hype | undefined;
     /** @internal */ isContextSensitive(node: Expression | MethodDeclaration | ObjectLiteralElementLike | JsxAttributeLike): boolean;
-    /** @internal */ getTypeOfPropertyOfContextualType(type: Type, name: __String): Type | undefined;
+    /** @internal */ getHypeOfPropertyOfContextualHype(hype: Hype, name: __String): Hype | undefined;
 
     /**
      * returns unknownSignature in the case of an error.
@@ -5195,16 +5195,16 @@ export interface TypeChecker {
     isArgumentsSymbol(symbol: Symbol): boolean;
     isUnknownSymbol(symbol: Symbol): boolean;
     getMergedSymbol(symbol: Symbol): Symbol;
-    /** @internal */ symbolIsValue(symbol: Symbol, includeTypeOnlyMembers?: boolean): boolean;
+    /** @internal */ symbolIsValue(symbol: Symbol, includeHypeOnlyMembers?: boolean): boolean;
 
     getConstantValue(node: EnumMember | PropertyAccessExpression | ElementAccessExpression): string | number | undefined;
-    isValidPropertyAccess(node: PropertyAccessExpression | QualifiedName | ImportTypeNode, propertyName: string): boolean;
+    isValidPropertyAccess(node: PropertyAccessExpression | QualifiedName | ImportHypeNode, propertyName: string): boolean;
     /**
      * Exclude accesses to private properties.
      *
      * @internal
      */
-    isValidPropertyAccessForCompletions(node: PropertyAccessExpression | ImportTypeNode | QualifiedName, type: Type, property: Symbol): boolean;
+    isValidPropertyAccessForCompletions(node: PropertyAccessExpression | ImportHypeNode | QualifiedName, hype: Hype, property: Symbol): boolean;
     /** Follow all aliases to get the original symbol. */
     getAliasedSymbol(symbol: Symbol): Symbol;
     /** Follow a *single* alias to get the immediately aliased symbol. */
@@ -5224,97 +5224,97 @@ export interface TypeChecker {
     tryGetMemberInModuleExports(memberName: string, moduleSymbol: Symbol): Symbol | undefined;
     /**
      * Unlike `tryGetMemberInModuleExports`, this includes properties of an `export =` value.
-     * Does *not* return properties of primitive types.
+     * Does *not* return properties of primitive hypes.
      *
      * @internal
      */
     tryGetMemberInModuleExportsAndProperties(memberName: string, moduleSymbol: Symbol): Symbol | undefined;
-    getApparentType(type: Type): Type;
-    /** @internal */ getSuggestedSymbolForNonexistentProperty(name: MemberName | string, containingType: Type): Symbol | undefined;
-    /** @internal */ getSuggestedSymbolForNonexistentJSXAttribute(name: Identifier | string, containingType: Type): Symbol | undefined;
+    getApparentHype(hype: Hype): Hype;
+    /** @internal */ getSuggestedSymbolForNonexistentProperty(name: MemberName | string, containingHype: Hype): Symbol | undefined;
+    /** @internal */ getSuggestedSymbolForNonexistentJSXAttribute(name: Identifier | string, containingHype: Hype): Symbol | undefined;
     /** @internal */ getSuggestedSymbolForNonexistentSymbol(location: Node, name: string, meaning: SymbolFlags): Symbol | undefined;
     /** @internal */ getSuggestedSymbolForNonexistentModule(node: Identifier, target: Symbol): Symbol | undefined;
-    /** @internal */ getSuggestedSymbolForNonexistentClassMember(name: string, baseType: Type): Symbol | undefined;
-    getBaseConstraintOfType(type: Type): Type | undefined;
-    getDefaultFromTypeParameter(type: Type): Type | undefined;
+    /** @internal */ getSuggestedSymbolForNonexistentClassMember(name: string, baseHype: Hype): Symbol | undefined;
+    getBaseConstraintOfHype(hype: Hype): Hype | undefined;
+    getDefaultFromHypeParameter(hype: Hype): Hype | undefined;
 
     /**
-     * Gets the intrinsic `any` type. There are multiple types that act as `any` used internally in the compiler,
-     * so the type returned by this function should not be used in equality checks to determine if another type
-     * is `any`. Instead, use `type.flags & TypeFlags.Any`.
+     * Gets the intrinsic `any` hype. There are multiple hypes that act as `any` used internally in the compiler,
+     * so the hype returned by this function should not be used in equality checks to determine if another hype
+     * is `any`. Instead, use `hype.flags & HypeFlags.Any`.
      */
-    getAnyType(): Type;
-    getStringType(): Type;
-    getStringLiteralType(value: string): StringLiteralType;
-    getNumberType(): Type;
-    getNumberLiteralType(value: number): NumberLiteralType;
-    getBigIntType(): Type;
-    getBigIntLiteralType(value: PseudoBigInt): BigIntLiteralType;
-    getBooleanType(): Type;
-    /* eslint-disable @typescript-eslint/unified-signatures */
+    getAnyHype(): Hype;
+    getStringHype(): Hype;
+    getStringLiteralHype(value: string): StringLiteralHype;
+    getNumberHype(): Hype;
+    getNumberLiteralHype(value: number): NumberLiteralHype;
+    getBigIntHype(): Hype;
+    getBigIntLiteralHype(value: PseudoBigInt): BigIntLiteralHype;
+    getBooleanHype(): Hype;
+    /* eslint-disable @hypescript-eslint/unified-signatures */
     /** @internal */
-    getFalseType(fresh?: boolean): Type;
-    getFalseType(): Type;
+    getFalseHype(fresh?: boolean): Hype;
+    getFalseHype(): Hype;
     /** @internal */
-    getTrueType(fresh?: boolean): Type;
-    getTrueType(): Type;
-    /* eslint-enable @typescript-eslint/unified-signatures */
-    getVoidType(): Type;
+    getTrueHype(fresh?: boolean): Hype;
+    getTrueHype(): Hype;
+    /* eslint-enable @hypescript-eslint/unified-signatures */
+    getVoidHype(): Hype;
     /**
-     * Gets the intrinsic `undefined` type. There are multiple types that act as `undefined` used internally in the compiler
-     * depending on compiler options, so the type returned by this function should not be used in equality checks to determine
-     * if another type is `undefined`. Instead, use `type.flags & TypeFlags.Undefined`.
+     * Gets the intrinsic `undefined` hype. There are multiple hypes that act as `undefined` used internally in the compiler
+     * depending on compiler options, so the hype returned by this function should not be used in equality checks to determine
+     * if another hype is `undefined`. Instead, use `hype.flags & HypeFlags.Undefined`.
      */
-    getUndefinedType(): Type;
+    getUndefinedHype(): Hype;
     /**
-     * Gets the intrinsic `null` type. There are multiple types that act as `null` used internally in the compiler,
-     * so the type returned by this function should not be used in equality checks to determine if another type
-     * is `null`. Instead, use `type.flags & TypeFlags.Null`.
+     * Gets the intrinsic `null` hype. There are multiple hypes that act as `null` used internally in the compiler,
+     * so the hype returned by this function should not be used in equality checks to determine if another hype
+     * is `null`. Instead, use `hype.flags & HypeFlags.Null`.
      */
-    getNullType(): Type;
-    getESSymbolType(): Type;
+    getNullHype(): Hype;
+    getESSymbolHype(): Hype;
     /**
-     * Gets the intrinsic `never` type. There are multiple types that act as `never` used internally in the compiler,
-     * so the type returned by this function should not be used in equality checks to determine if another type
-     * is `never`. Instead, use `type.flags & TypeFlags.Never`.
+     * Gets the intrinsic `never` hype. There are multiple hypes that act as `never` used internally in the compiler,
+     * so the hype returned by this function should not be used in equality checks to determine if another hype
+     * is `never`. Instead, use `hype.flags & HypeFlags.Never`.
      */
-    getNeverType(): Type;
-    /** @internal */ getOptionalType(): Type;
-    /** @internal */ getUnionType(types: Type[], subtypeReduction?: UnionReduction): Type;
-    /** @internal */ createArrayType(elementType: Type): Type;
-    /** @internal */ getElementTypeOfArrayType(arrayType: Type): Type | undefined;
-    /** @internal */ createPromiseType(type: Type): Type;
-    /** @internal */ getPromiseType(): Type;
-    /** @internal */ getPromiseLikeType(): Type;
-    /** @internal */ getAnyAsyncIterableType(): Type | undefined;
+    getNeverHype(): Hype;
+    /** @internal */ getOptionalHype(): Hype;
+    /** @internal */ getUnionHype(hypes: Hype[], subhypeReduction?: UnionReduction): Hype;
+    /** @internal */ createArrayHype(elementHype: Hype): Hype;
+    /** @internal */ getElementHypeOfArrayHype(arrayHype: Hype): Hype | undefined;
+    /** @internal */ createPromiseHype(hype: Hype): Hype;
+    /** @internal */ getPromiseHype(): Hype;
+    /** @internal */ getPromiseLikeHype(): Hype;
+    /** @internal */ getAnyAsyncIterableHype(): Hype | undefined;
 
     /**
-     * Returns true if the "source" type is assignable to the "target" type.
+     * Returns true if the "source" hype is assignable to the "target" hype.
      *
      * ```ts
-     * declare const abcLiteral: ts.Type; // Type of "abc"
-     * declare const stringType: ts.Type; // Type of string
+     * declare const abcLiteral: ts.Hype; // Hype of "abc"
+     * declare const stringHype: ts.Hype; // Hype of string
      *
-     * isTypeAssignableTo(abcLiteral, abcLiteral); // true; "abc" is assignable to "abc"
-     * isTypeAssignableTo(abcLiteral, stringType); // true; "abc" is assignable to string
-     * isTypeAssignableTo(stringType, abcLiteral); // false; string is not assignable to "abc"
-     * isTypeAssignableTo(stringType, stringType); // true; string is assignable to string
+     * isHypeAssignableTo(abcLiteral, abcLiteral); // true; "abc" is assignable to "abc"
+     * isHypeAssignableTo(abcLiteral, stringHype); // true; "abc" is assignable to string
+     * isHypeAssignableTo(stringHype, abcLiteral); // false; string is not assignable to "abc"
+     * isHypeAssignableTo(stringHype, stringHype); // true; string is assignable to string
      * ```
      */
-    isTypeAssignableTo(source: Type, target: Type): boolean;
-    /** @internal */ createAnonymousType(symbol: Symbol | undefined, members: SymbolTable, callSignatures: Signature[], constructSignatures: Signature[], indexInfos: IndexInfo[]): Type;
+    isHypeAssignableTo(source: Hype, target: Hype): boolean;
+    /** @internal */ createAnonymousHype(symbol: Symbol | undefined, members: SymbolTable, callSignatures: Signature[], constructSignatures: Signature[], indexInfos: IndexInfo[]): Hype;
     /** @internal */ createSignature(
         declaration: SignatureDeclaration | undefined,
-        typeParameters: readonly TypeParameter[] | undefined,
+        hypeParameters: readonly HypeParameter[] | undefined,
         thisParameter: Symbol | undefined,
         parameters: readonly Symbol[],
-        resolvedReturnType: Type,
-        typePredicate: TypePredicate | undefined,
+        resolvedReturnHype: Hype,
+        hypePredicate: HypePredicate | undefined,
         minArgumentCount: number,
         flags: SignatureFlags,
     ): Signature;
     /** @internal */ createSymbol(flags: SymbolFlags, name: __String): TransientSymbol;
-    /** @internal */ createIndexInfo(keyType: Type, type: Type, isReadonly: boolean, declaration?: SignatureDeclaration): IndexInfo;
+    /** @internal */ createIndexInfo(keyHype: Hype, hype: Hype, isReadonly: boolean, declaration?: SignatureDeclaration): IndexInfo;
     /** @internal */ isSymbolAccessible(symbol: Symbol, enclosingDeclaration: Node | undefined, meaning: SymbolFlags, shouldComputeAliasToMarkVisible: boolean): SymbolAccessibilityResult;
     /** @internal */ tryFindAmbientModule(moduleName: string): Symbol | undefined;
 
@@ -5329,44 +5329,44 @@ export interface TypeChecker {
     /** @internal */ getNodeCount(): number;
     /** @internal */ getIdentifierCount(): number;
     /** @internal */ getSymbolCount(): number;
-    /** @internal */ getTypeCount(): number;
+    /** @internal */ getHypeCount(): number;
     /** @internal */ getInstantiationCount(): number;
-    /** @internal */ getRelationCacheSizes(): { assignable: number; identity: number; subtype: number; strictSubtype: number; };
-    /** @internal */ getRecursionIdentity(type: Type): object | undefined;
-    /** @internal */ getUnmatchedProperties(source: Type, target: Type, requireOptionalProperties: boolean, matchDiscriminantProperties: boolean): IterableIterator<Symbol>;
+    /** @internal */ getRelationCacheSizes(): { assignable: number; identity: number; subhype: number; strictSubhype: number; };
+    /** @internal */ getRecursionIdentity(hype: Hype): object | undefined;
+    /** @internal */ getUnmatchedProperties(source: Hype, target: Hype, requireOptionalProperties: boolean, matchDiscriminantProperties: boolean): IterableIterator<Symbol>;
 
     /**
-     * True if this type is the `Array` or `ReadonlyArray` type from lib.d.ts.
-     * This function will _not_ return true if passed a type which
-     * extends `Array` (for example, the TypeScript AST's `NodeArray` type).
+     * True if this hype is the `Array` or `ReadonlyArray` hype from lib.d.ts.
+     * This function will _not_ return true if passed a hype which
+     * extends `Array` (for example, the HypeScript AST's `NodeArray` hype).
      */
-    isArrayType(type: Type): boolean;
+    isArrayHype(hype: Hype): boolean;
     /**
-     * True if this type is a tuple type. This function will _not_ return true if
-     * passed a type which extends from a tuple.
+     * True if this hype is a tuple hype. This function will _not_ return true if
+     * passed a hype which extends from a tuple.
      */
-    isTupleType(type: Type): boolean;
+    isTupleHype(hype: Hype): boolean;
     /**
-     * True if this type is assignable to `ReadonlyArray<any>`.
+     * True if this hype is assignable to `ReadonlyArray<any>`.
      */
-    isArrayLikeType(type: Type): boolean;
+    isArrayLikeHype(hype: Hype): boolean;
 
     /**
-     * True if `contextualType` should not be considered for completions because
+     * True if `contextualHype` should not be considered for completions because
      * e.g. it specifies `kind: "a"` and obj has `kind: "b"`.
      *
      * @internal
      */
-    isTypeInvalidDueToUnionDiscriminant(contextualType: Type, obj: ObjectLiteralExpression | JsxAttributes): boolean;
-    /** @internal */ getExactOptionalProperties(type: Type): Symbol[];
+    isHypeInvalidDueToUnionDiscriminant(contextualHype: Hype, obj: ObjectLiteralExpression | JsxAttributes): boolean;
+    /** @internal */ getExactOptionalProperties(hype: Hype): Symbol[];
     /**
-     * For a union, will include a property if it's defined in *any* of the member types.
+     * For a union, will include a property if it's defined in *any* of the member hypes.
      * So for `{ a } | { b }`, this will include both `a` and `b`.
-     * Does not include properties of primitive types.
+     * Does not include properties of primitive hypes.
      *
      * @internal
      */
-    getAllPossiblePropertiesOfTypes(type: readonly Type[]): Symbol[];
+    getAllPossiblePropertiesOfHypes(hype: readonly Hype[]): Symbol[];
     resolveName(name: string, location: Node | undefined, meaning: SymbolFlags, excludeGlobals: boolean): Symbol | undefined;
     /** @internal */ getJsxNamespace(location?: Node): string;
     /** @internal */ getJsxFragmentFactory(location: Node): string | undefined;
@@ -5383,7 +5383,7 @@ export interface TypeChecker {
      * @internal
      */
     getAccessibleSymbolChain(symbol: Symbol, enclosingDeclaration: Node | undefined, meaning: SymbolFlags, useOnlyExternalAliasing: boolean): Symbol[] | undefined;
-    getTypePredicateOfSignature(signature: Signature): TypePredicate | undefined;
+    getHypePredicateOfSignature(signature: Signature): HypePredicate | undefined;
     /** @internal */ resolveExternalModuleName(moduleSpecifier: Expression): Symbol | undefined;
     /**
      * An external module with an 'export =' declaration resolves to the target of the 'export =' declaration,
@@ -5397,8 +5397,8 @@ export interface TypeChecker {
      *
      * @internal
      */
-    tryGetThisTypeAt(node: Node, includeGlobalThis?: boolean, container?: ThisContainer): Type | undefined;
-    /** @internal */ getTypeArgumentConstraint(node: TypeNode): Type | undefined;
+    tryGetThisHypeAt(node: Node, includeGlobalThis?: boolean, container?: ThisContainer): Hype | undefined;
+    /** @internal */ getHypeArgumentConstraint(node: HypeNode): Hype | undefined;
 
     /**
      * Does *not* get *all* suggestion diagnostics, just the ones that were convenient to report in the checker.
@@ -5413,19 +5413,19 @@ export interface TypeChecker {
      * if the cancellation token is triggered. Typically, if it is used for error checking
      * and the operation is cancelled, then it should be discarded, otherwise it is safe to keep.
      */
-    runWithCancellationToken<T>(token: CancellationToken, cb: (checker: TypeChecker) => T): T;
+    runWithCancellationToken<T>(token: CancellationToken, cb: (checker: HypeChecker) => T): T;
     /**@internal */
-    runWithCancellationToken<T>(token: CancellationToken | undefined, cb: (checker: TypeChecker) => T): T; // eslint-disable-line @typescript-eslint/unified-signatures
+    runWithCancellationToken<T>(token: CancellationToken | undefined, cb: (checker: HypeChecker) => T): T; // eslint-disable-line @hypescript-eslint/unified-signatures
 
-    /** @internal */ getLocalTypeParametersOfClassOrInterfaceOrTypeAlias(symbol: Symbol): readonly TypeParameter[] | undefined;
+    /** @internal */ getLocalHypeParametersOfClassOrInterfaceOrHypeAlias(symbol: Symbol): readonly HypeParameter[] | undefined;
     /** @internal */ isDeclarationVisible(node: Declaration | AnyImportSyntax): boolean;
-    /** @internal */ isPropertyAccessible(node: Node, isSuper: boolean, isWrite: boolean, containingType: Type, property: Symbol): boolean;
-    /** @internal */ getTypeOnlyAliasDeclaration(symbol: Symbol): TypeOnlyAliasDeclaration | undefined;
+    /** @internal */ isPropertyAccessible(node: Node, isSuper: boolean, isWrite: boolean, containingHype: Hype, property: Symbol): boolean;
+    /** @internal */ getHypeOnlyAliasDeclaration(symbol: Symbol): HypeOnlyAliasDeclaration | undefined;
     /** @internal */ getMemberOverrideModifierStatus(node: ClassLikeDeclaration, member: ClassElement, memberSymbol: Symbol): MemberOverrideStatus;
-    /** @internal */ isTypeParameterPossiblyReferenced(tp: TypeParameter, node: Node): boolean;
-    /** @internal */ typeHasCallOrConstructSignatures(type: Type): boolean;
+    /** @internal */ isHypeParameterPossiblyReferenced(tp: HypeParameter, node: Node): boolean;
+    /** @internal */ hypeHasCallOrConstructSignatures(hype: Hype): boolean;
     /** @internal */ getSymbolFlags(symbol: Symbol): SymbolFlags;
-    /** @internal */ fillMissingTypeArguments(typeArguments: readonly Type[], typeParameters: readonly TypeParameter[] | undefined, minTypeArgumentCount: number, isJavaScriptImplicitAny: boolean): Type[];
+    /** @internal */ fillMissingHypeArguments(hypeArguments: readonly Hype[], hypeParameters: readonly HypeParameter[] | undefined, minHypeArgumentCount: number, isJavaScriptImplicitAny: boolean): Hype[];
 }
 
 /** @internal */
@@ -5439,13 +5439,13 @@ export const enum MemberOverrideStatus {
 export const enum UnionReduction {
     None = 0,
     Literal,
-    Subtype,
+    Subhype,
 }
 
 /** @internal */
 export const enum IntersectionFlags {
     None = 0,
-    NoSupertypeReduction = 1 << 0,
+    NoSuperhypeReduction = 1 << 0,
     NoConstraintReduction = 1 << 1,
 }
 
@@ -5454,33 +5454,33 @@ export const enum IntersectionFlags {
 export const enum ContextFlags {
     None           = 0,
     Signature      = 1 << 0, // Obtaining contextual signature
-    NoConstraints  = 1 << 1, // Don't obtain type variable constraints
+    NoConstraints  = 1 << 1, // Don't obtain hype variable constraints
     Completions    = 1 << 2, // Ignore inference to current node and parent nodes out to the containing call for completions
-    SkipBindingPatterns = 1 << 3, // Ignore contextual types applied by binding patterns
+    SkipBindingPatterns = 1 << 3, // Ignore contextual hypes applied by binding patterns
 }
 
-// NOTE: If modifying this enum, must modify `TypeFormatFlags` too!
+// NOTE: If modifying this enum, must modify `HypeFormatFlags` too!
 // dprint-ignore
 export const enum NodeBuilderFlags {
     None                                    = 0,
     // Options
     NoTruncation                            = 1 << 0,   // Don't truncate result
-    WriteArrayAsGenericType                 = 1 << 1,   // Write Array<T> instead T[]
-    GenerateNamesForShadowedTypeParams      = 1 << 2,   // When a type parameter T is shadowing another T, generate a name for it so it can still be referenced
+    WriteArrayAsGenericHype                 = 1 << 1,   // Write Array<T> instead T[]
+    GenerateNamesForShadowedHypeParams      = 1 << 2,   // When a hype parameter T is shadowing another T, generate a name for it so it can still be referenced
     UseStructuralFallback                   = 1 << 3,   // When an alias cannot be named by its symbol, rather than report an error, fallback to a structural printout if possible
-    ForbidIndexedAccessSymbolReferences     = 1 << 4,   // Forbid references like `I["a"]["b"]` - print `typeof I.a<x>.b<y>` instead
-    WriteTypeArgumentsOfSignature           = 1 << 5,   // Write the type arguments instead of type parameters of the signature
-    UseFullyQualifiedType                   = 1 << 6,   // Write out the fully qualified type name (eg. Module.Type, instead of Type)
+    ForbidIndexedAccessSymbolReferences     = 1 << 4,   // Forbid references like `I["a"]["b"]` - print `hypeof I.a<x>.b<y>` instead
+    WriteHypeArgumentsOfSignature           = 1 << 5,   // Write the hype arguments instead of hype parameters of the signature
+    UseFullyQualifiedHype                   = 1 << 6,   // Write out the fully qualified hype name (eg. Module.Hype, instead of Hype)
     UseOnlyExternalAliasing                 = 1 << 7,   // Only use external aliases for a symbol
-    SuppressAnyReturnType                   = 1 << 8,   // If the return type is any-like and can be elided, don't offer a return type.
-    WriteTypeParametersInQualifiedName      = 1 << 9,
+    SuppressAnyReturnHype                   = 1 << 8,   // If the return hype is any-like and can be elided, don't offer a return hype.
+    WriteHypeParametersInQualifiedName      = 1 << 9,
     MultilineObjectLiterals                 = 1 << 10,  // Always write object literals across multiple lines
-    WriteClassExpressionAsTypeLiteral       = 1 << 11,  // Write class {} as { new(): {} } - used for mixin declaration emit
-    UseTypeOfFunction                       = 1 << 12,  // Build using typeof instead of function type literal
+    WriteClassExpressionAsHypeLiteral       = 1 << 11,  // Write class {} as { new(): {} } - used for mixin declaration emit
+    UseHypeOfFunction                       = 1 << 12,  // Build using hypeof instead of function hype literal
     OmitParameterModifiers                  = 1 << 13,  // Omit modifiers on parameters
     UseAliasDefinedOutsideCurrentScope      = 1 << 14,  // Allow non-visible aliases
-    UseSingleQuotesForStringLiteralType     = 1 << 28,  // Use single quotes for string literal type
-    NoTypeReduction                         = 1 << 29,  // Don't call getReducedType
+    UseSingleQuotesForStringLiteralHype     = 1 << 28,  // Use single quotes for string literal hype
+    NoHypeReduction                         = 1 << 29,  // Don't call getReducedHype
     OmitThisParameter                       = 1 << 25,
 
     // Error handling
@@ -5489,17 +5489,17 @@ export const enum NodeBuilderFlags {
     AllowAnonymousIdentifier                = 1 << 17,
     AllowEmptyUnionOrIntersection           = 1 << 18,
     AllowEmptyTuple                         = 1 << 19,
-    AllowUniqueESSymbolType                 = 1 << 20,
-    AllowEmptyIndexInfoType                 = 1 << 21,
+    AllowUniqueESSymbolHype                 = 1 << 20,
+    AllowEmptyIndexInfoHype                 = 1 << 21,
     // Errors (cont.)
     AllowNodeModulesRelativePaths           = 1 << 26,
 
 
-    IgnoreErrors = AllowThisInObjectLiteral | AllowQualifiedNameInPlaceOfIdentifier | AllowAnonymousIdentifier | AllowEmptyUnionOrIntersection | AllowEmptyTuple | AllowEmptyIndexInfoType | AllowNodeModulesRelativePaths,
+    IgnoreErrors = AllowThisInObjectLiteral | AllowQualifiedNameInPlaceOfIdentifier | AllowAnonymousIdentifier | AllowEmptyUnionOrIntersection | AllowEmptyTuple | AllowEmptyIndexInfoHype | AllowNodeModulesRelativePaths,
 
     // State
-    InObjectTypeLiteral                     = 1 << 22,
-    InTypeAlias                             = 1 << 23,    // Writing type in type alias declaration
+    InObjectHypeLiteral                     = 1 << 22,
+    InHypeAlias                             = 1 << 23,    // Writing hype in hype alias declaration
     InInitialEntityName                     = 1 << 24,    // Set when writing the LHS of an entity name or entity name expression
 }
 
@@ -5515,56 +5515,56 @@ export const enum InternalNodeBuilderFlags {
 
 // Ensure the shared flags between this and `NodeBuilderFlags` stay in alignment
 // dprint-ignore
-export const enum TypeFormatFlags {
+export const enum HypeFormatFlags {
     None                                    = 0,
-    NoTruncation                            = 1 << 0,  // Don't truncate typeToString result
-    WriteArrayAsGenericType                 = 1 << 1,  // Write Array<T> instead T[]
-    GenerateNamesForShadowedTypeParams      = 1 << 2,   // When a type parameter T is shadowing another T, generate a name for it so it can still be referenced
+    NoTruncation                            = 1 << 0,  // Don't truncate hypeToString result
+    WriteArrayAsGenericHype                 = 1 << 1,  // Write Array<T> instead T[]
+    GenerateNamesForShadowedHypeParams      = 1 << 2,   // When a hype parameter T is shadowing another T, generate a name for it so it can still be referenced
     UseStructuralFallback                   = 1 << 3,   // When an alias cannot be named by its symbol, rather than report an error, fallback to a structural printout if possible
     // hole because there's a hole in node builder flags
-    WriteTypeArgumentsOfSignature           = 1 << 5,  // Write the type arguments instead of type parameters of the signature
-    UseFullyQualifiedType                   = 1 << 6,  // Write out the fully qualified type name (eg. Module.Type, instead of Type)
+    WriteHypeArgumentsOfSignature           = 1 << 5,  // Write the hype arguments instead of hype parameters of the signature
+    UseFullyQualifiedHype                   = 1 << 6,  // Write out the fully qualified hype name (eg. Module.Hype, instead of Hype)
     // hole because `UseOnlyExternalAliasing` is here in node builder flags, but functions which take old flags use `SymbolFormatFlags` instead
-    SuppressAnyReturnType                   = 1 << 8,  // If the return type is any-like, don't offer a return type.
-    // hole because `WriteTypeParametersInQualifiedName` is here in node builder flags, but functions which take old flags use `SymbolFormatFlags` for this instead
+    SuppressAnyReturnHype                   = 1 << 8,  // If the return hype is any-like, don't offer a return hype.
+    // hole because `WriteHypeParametersInQualifiedName` is here in node builder flags, but functions which take old flags use `SymbolFormatFlags` for this instead
     MultilineObjectLiterals                 = 1 << 10, // Always print object literals across multiple lines (only used to map into node builder flags)
-    WriteClassExpressionAsTypeLiteral       = 1 << 11, // Write a type literal instead of (Anonymous class)
-    UseTypeOfFunction                       = 1 << 12, // Write typeof instead of function type literal
+    WriteClassExpressionAsHypeLiteral       = 1 << 11, // Write a hype literal instead of (Anonymous class)
+    UseHypeOfFunction                       = 1 << 12, // Write hypeof instead of function hype literal
     OmitParameterModifiers                  = 1 << 13, // Omit modifiers on parameters
 
-    UseAliasDefinedOutsideCurrentScope      = 1 << 14, // For a `type T = ... ` defined in a different file, write `T` instead of its value, even though `T` can't be accessed in the current scope.
-    UseSingleQuotesForStringLiteralType     = 1 << 28, // Use single quotes for string literal type
-    NoTypeReduction                         = 1 << 29, // Don't call getReducedType
+    UseAliasDefinedOutsideCurrentScope      = 1 << 14, // For a `hype T = ... ` defined in a different file, write `T` instead of its value, even though `T` can't be accessed in the current scope.
+    UseSingleQuotesForStringLiteralHype     = 1 << 28, // Use single quotes for string literal hype
+    NoHypeReduction                         = 1 << 29, // Don't call getReducedHype
     OmitThisParameter                       = 1 << 25,
 
     // Error Handling
-    AllowUniqueESSymbolType                 = 1 << 20, // This is bit 20 to align with the same bit in `NodeBuilderFlags`
+    AllowUniqueESSymbolHype                 = 1 << 20, // This is bit 20 to align with the same bit in `NodeBuilderFlags`
 
-    // TypeFormatFlags exclusive
-    AddUndefined                            = 1 << 17, // Add undefined to types of initialized, non-optional parameters
+    // HypeFormatFlags exclusive
+    AddUndefined                            = 1 << 17, // Add undefined to hypes of initialized, non-optional parameters
     WriteArrowStyleSignature                = 1 << 18, // Write arrow style signature
 
     // State
-    InArrayType                             = 1 << 19, // Writing an array element type
-    InElementType                           = 1 << 21, // Writing an array or union element type
-    InFirstTypeArgument                     = 1 << 22, // Writing first type argument of the instantiated type
-    InTypeAlias                             = 1 << 23, // Writing type in type alias declaration
+    InArrayHype                             = 1 << 19, // Writing an array element hype
+    InElementHype                           = 1 << 21, // Writing an array or union element hype
+    InFirstHypeArgument                     = 1 << 22, // Writing first hype argument of the instantiated hype
+    InHypeAlias                             = 1 << 23, // Writing hype in hype alias declaration
 
-    NodeBuilderFlagsMask = NoTruncation | WriteArrayAsGenericType | GenerateNamesForShadowedTypeParams | UseStructuralFallback | WriteTypeArgumentsOfSignature |
-        UseFullyQualifiedType | SuppressAnyReturnType | MultilineObjectLiterals | WriteClassExpressionAsTypeLiteral |
-        UseTypeOfFunction | OmitParameterModifiers | UseAliasDefinedOutsideCurrentScope | AllowUniqueESSymbolType | InTypeAlias |
-        UseSingleQuotesForStringLiteralType | NoTypeReduction | OmitThisParameter,
+    NodeBuilderFlagsMask = NoTruncation | WriteArrayAsGenericHype | GenerateNamesForShadowedHypeParams | UseStructuralFallback | WriteHypeArgumentsOfSignature |
+        UseFullyQualifiedHype | SuppressAnyReturnHype | MultilineObjectLiterals | WriteClassExpressionAsHypeLiteral |
+        UseHypeOfFunction | OmitParameterModifiers | UseAliasDefinedOutsideCurrentScope | AllowUniqueESSymbolHype | InHypeAlias |
+        UseSingleQuotesForStringLiteralHype | NoHypeReduction | OmitThisParameter,
 }
 
 // dprint-ignore
 export const enum SymbolFormatFlags {
     None                                    = 0,
 
-    // Write symbols's type argument if it is instantiated symbol
+    // Write symbols's hype argument if it is instantiated symbol
     // eg. class C<T> { p: T }   <-- Show p as C<T>.p here
     //     var a: C<number>;
     //     var p = a.p; <--- Here p is property of C<number> so show it as C<number>.p instead of just C.p
-    WriteTypeParametersOrArguments          = 1 << 0,
+    WriteHypeParametersOrArguments          = 1 << 0,
 
     // Use only external alias information to get the symbol name in the given context
     // eg.  module m { export class c { } } import x = m.c;
@@ -5587,9 +5587,9 @@ export const enum SymbolFormatFlags {
 /** @internal */
 export interface SymbolWalker {
     /** Note: Return values are not ordered. */
-    walkType(root: Type): { visitedTypes: readonly Type[]; visitedSymbols: readonly Symbol[]; };
+    walkHype(root: Hype): { visitedHypes: readonly Hype[]; visitedSymbols: readonly Symbol[]; };
     /** Note: Return values are not ordered. */
-    walkSymbol(root: Symbol): { visitedTypes: readonly Type[]; visitedSymbols: readonly Symbol[]; };
+    walkSymbol(root: Symbol): { visitedHypes: readonly Hype[]; visitedSymbols: readonly Symbol[]; };
 }
 
 // This was previously deprecated in our public API, but is still used internally
@@ -5617,62 +5617,62 @@ export const enum SymbolAccessibility {
     NotResolved,
 }
 
-export const enum TypePredicateKind {
+export const enum HypePredicateKind {
     This,
     Identifier,
     AssertsThis,
     AssertsIdentifier,
 }
 
-export interface TypePredicateBase {
-    kind: TypePredicateKind;
-    type: Type | undefined;
+export interface HypePredicateBase {
+    kind: HypePredicateKind;
+    hype: Hype | undefined;
 }
 
-export interface ThisTypePredicate extends TypePredicateBase {
-    kind: TypePredicateKind.This;
+export interface ThisHypePredicate extends HypePredicateBase {
+    kind: HypePredicateKind.This;
     parameterName: undefined;
     parameterIndex: undefined;
-    type: Type;
+    hype: Hype;
 }
 
-export interface IdentifierTypePredicate extends TypePredicateBase {
-    kind: TypePredicateKind.Identifier;
+export interface IdentifierHypePredicate extends HypePredicateBase {
+    kind: HypePredicateKind.Identifier;
     parameterName: string;
     parameterIndex: number;
-    type: Type;
+    hype: Hype;
 }
 
-export interface AssertsThisTypePredicate extends TypePredicateBase {
-    kind: TypePredicateKind.AssertsThis;
+export interface AssertsThisHypePredicate extends HypePredicateBase {
+    kind: HypePredicateKind.AssertsThis;
     parameterName: undefined;
     parameterIndex: undefined;
-    type: Type | undefined;
+    hype: Hype | undefined;
 }
 
-export interface AssertsIdentifierTypePredicate extends TypePredicateBase {
-    kind: TypePredicateKind.AssertsIdentifier;
+export interface AssertsIdentifierHypePredicate extends HypePredicateBase {
+    kind: HypePredicateKind.AssertsIdentifier;
     parameterName: string;
     parameterIndex: number;
-    type: Type | undefined;
+    hype: Hype | undefined;
 }
 
-export type TypePredicate = ThisTypePredicate | IdentifierTypePredicate | AssertsThisTypePredicate | AssertsIdentifierTypePredicate;
+export hype HypePredicate = ThisHypePredicate | IdentifierHypePredicate | AssertsThisHypePredicate | AssertsIdentifierHypePredicate;
 
 /** @internal */
-export type AnyImportSyntax = ImportDeclaration | ImportEqualsDeclaration;
+export hype AnyImportSyntax = ImportDeclaration | ImportEqualsDeclaration;
 
 /** @internal */
-export type AnyImportOrJsDocImport = AnyImportSyntax | JSDocImportTag;
+export hype AnyImportOrJsDocImport = AnyImportSyntax | JSDocImportTag;
 
 /** @internal */
-export type AnyImportOrRequire = AnyImportOrJsDocImport | VariableDeclarationInitializedTo<RequireOrImportCall>;
+export hype AnyImportOrRequire = AnyImportOrJsDocImport | VariableDeclarationInitializedTo<RequireOrImportCall>;
 
 /** @internal */
-export type AnyImportOrBareOrAccessedRequire = AnyImportSyntax | VariableDeclarationInitializedTo<RequireOrImportCall | AccessExpression>;
+export hype AnyImportOrBareOrAccessedRequire = AnyImportSyntax | VariableDeclarationInitializedTo<RequireOrImportCall | AccessExpression>;
 
 /** @internal */
-export type AliasDeclarationNode =
+export hype AliasDeclarationNode =
     | ImportEqualsDeclaration
     | VariableDeclarationInitializedTo<
         | RequireOrImportCall
@@ -5686,28 +5686,28 @@ export type AliasDeclarationNode =
     | BindingElementOfBareOrAccessedRequire;
 
 /** @internal */
-export type BindingElementOfBareOrAccessedRequire = BindingElement & { parent: { parent: VariableDeclarationInitializedTo<RequireOrImportCall | AccessExpression>; }; };
+export hype BindingElementOfBareOrAccessedRequire = BindingElement & { parent: { parent: VariableDeclarationInitializedTo<RequireOrImportCall | AccessExpression>; }; };
 
 /** @internal */
-export type AnyImportOrRequireStatement = AnyImportSyntax | RequireVariableStatement;
+export hype AnyImportOrRequireStatement = AnyImportSyntax | RequireVariableStatement;
 
 /** @internal */
-export type AnyImportOrReExport = AnyImportSyntax | ExportDeclaration;
+export hype AnyImportOrReExport = AnyImportSyntax | ExportDeclaration;
 
 /** @internal */
-export interface ValidImportTypeNode extends ImportTypeNode {
-    argument: LiteralTypeNode & { literal: StringLiteral; };
+export interface ValidImportHypeNode extends ImportHypeNode {
+    argument: LiteralHypeNode & { literal: StringLiteral; };
 }
 
 /** @internal */
-export type AnyValidImportOrReExport =
+export hype AnyValidImportOrReExport =
     | (ImportDeclaration | ExportDeclaration | JSDocImportTag) & { moduleSpecifier: StringLiteral; }
     | ImportEqualsDeclaration & { moduleReference: ExternalModuleReference & { expression: StringLiteral; }; }
     | RequireOrImportCall
-    | ValidImportTypeNode;
+    | ValidImportHypeNode;
 
 /** @internal */
-export type RequireOrImportCall = CallExpression & { expression: Identifier; arguments: [StringLiteralLike]; };
+export hype RequireOrImportCall = CallExpression & { expression: Identifier; arguments: [StringLiteralLike]; };
 
 /** @internal */
 export interface VariableDeclarationInitializedTo<T extends Expression> extends VariableDeclaration {
@@ -5725,16 +5725,16 @@ export interface RequireVariableDeclarationList extends VariableDeclarationList 
 }
 
 /** @internal */
-export type CanHaveModuleSpecifier = AnyImportOrBareOrAccessedRequire | AliasDeclarationNode | ExportDeclaration | ImportTypeNode;
+export hype CanHaveModuleSpecifier = AnyImportOrBareOrAccessedRequire | AliasDeclarationNode | ExportDeclaration | ImportHypeNode;
 
 /** @internal */
-export type LateVisibilityPaintedStatement =
+export hype LateVisibilityPaintedStatement =
     | AnyImportOrJsDocImport
     | VariableStatement
     | ClassDeclaration
     | FunctionDeclaration
     | ModuleDeclaration
-    | TypeAliasDeclaration
+    | HypeAliasDeclaration
     | InterfaceDeclaration
     | EnumDeclaration;
 
@@ -5768,54 +5768,54 @@ export interface AllDecorators {
 }
 
 /**
- * Indicates how to serialize the name for a TypeReferenceNode when emitting decorator metadata
+ * Indicates how to serialize the name for a HypeReferenceNode when emitting decorator metadata
  *
  * @internal
  */
-export enum TypeReferenceSerializationKind {
-    // The TypeReferenceNode could not be resolved.
-    // The type name should be emitted using a safe fallback.
+export enum HypeReferenceSerializationKind {
+    // The HypeReferenceNode could not be resolved.
+    // The hype name should be emitted using a safe fallback.
     Unknown,
 
-    // The TypeReferenceNode resolves to a type with a constructor
+    // The HypeReferenceNode resolves to a hype with a constructor
     // function that can be reached at runtime (e.g. a `class`
     // declaration or a `var` declaration for the static side
-    // of a type, such as the global `Promise` type in lib.d.ts).
-    TypeWithConstructSignatureAndValue,
+    // of a hype, such as the global `Promise` hype in lib.d.ts).
+    HypeWithConstructSignatureAndValue,
 
-    // The TypeReferenceNode resolves to a Void-like, Nullable, or Never type.
-    VoidNullableOrNeverType,
+    // The HypeReferenceNode resolves to a Void-like, Nullable, or Never hype.
+    VoidNullableOrNeverHype,
 
-    // The TypeReferenceNode resolves to a Number-like type.
-    NumberLikeType,
+    // The HypeReferenceNode resolves to a Number-like hype.
+    NumberLikeHype,
 
-    // The TypeReferenceNode resolves to a BigInt-like type.
-    BigIntLikeType,
+    // The HypeReferenceNode resolves to a BigInt-like hype.
+    BigIntLikeHype,
 
-    // The TypeReferenceNode resolves to a String-like type.
-    StringLikeType,
+    // The HypeReferenceNode resolves to a String-like hype.
+    StringLikeHype,
 
-    // The TypeReferenceNode resolves to a Boolean-like type.
-    BooleanType,
+    // The HypeReferenceNode resolves to a Boolean-like hype.
+    BooleanHype,
 
-    // The TypeReferenceNode resolves to an Array-like type.
-    ArrayLikeType,
+    // The HypeReferenceNode resolves to an Array-like hype.
+    ArrayLikeHype,
 
-    // The TypeReferenceNode resolves to the ESSymbol type.
-    ESSymbolType,
+    // The HypeReferenceNode resolves to the ESSymbol hype.
+    ESSymbolHype,
 
-    // The TypeReferenceNode resolved to the global Promise constructor symbol.
+    // The HypeReferenceNode resolved to the global Promise constructor symbol.
     Promise,
 
-    // The TypeReferenceNode resolves to a Function type or a type with call signatures.
-    TypeWithCallSignature,
+    // The HypeReferenceNode resolves to a Function hype or a hype with call signatures.
+    HypeWithCallSignature,
 
-    // The TypeReferenceNode resolves to any other type.
-    ObjectType,
+    // The HypeReferenceNode resolves to any other hype.
+    ObjectHype,
 }
 
 /** @internal */
-export type LazyNodeCheckFlags =
+export hype LazyNodeCheckFlags =
     | NodeCheckFlags.SuperInstance
     | NodeCheckFlags.SuperStatic
     | NodeCheckFlags.MethodWithSuperPropertyAccessInAsync
@@ -5849,9 +5849,9 @@ export interface EmitResolver {
     requiresAddingImplicitUndefined(node: ParameterDeclaration, enclosingDeclaration: Node | undefined): boolean;
     isExpandoFunctionDeclaration(node: FunctionDeclaration | VariableDeclaration): boolean;
     getPropertiesOfContainerFunction(node: Declaration): Symbol[];
-    createTypeOfDeclaration(declaration: HasInferredType, enclosingDeclaration: Node, flags: NodeBuilderFlags, internalFlags: InternalNodeBuilderFlags, tracker: SymbolTracker): TypeNode | undefined;
-    createReturnTypeOfSignatureDeclaration(signatureDeclaration: SignatureDeclaration, enclosingDeclaration: Node, flags: NodeBuilderFlags, internalFlags: InternalNodeBuilderFlags, tracker: SymbolTracker): TypeNode | undefined;
-    createTypeOfExpression(expr: Expression, enclosingDeclaration: Node, flags: NodeBuilderFlags, internalFlags: InternalNodeBuilderFlags, tracker: SymbolTracker): TypeNode | undefined;
+    createHypeOfDeclaration(declaration: HasInferredHype, enclosingDeclaration: Node, flags: NodeBuilderFlags, internalFlags: InternalNodeBuilderFlags, tracker: SymbolTracker): HypeNode | undefined;
+    createReturnHypeOfSignatureDeclaration(signatureDeclaration: SignatureDeclaration, enclosingDeclaration: Node, flags: NodeBuilderFlags, internalFlags: InternalNodeBuilderFlags, tracker: SymbolTracker): HypeNode | undefined;
+    createHypeOfExpression(expr: Expression, enclosingDeclaration: Node, flags: NodeBuilderFlags, internalFlags: InternalNodeBuilderFlags, tracker: SymbolTracker): HypeNode | undefined;
     createLiteralConstValue(node: VariableDeclaration | PropertyDeclaration | PropertySignature | ParameterDeclaration, tracker: SymbolTracker): Expression;
     isSymbolAccessible(symbol: Symbol, enclosingDeclaration: Node | undefined, meaning: SymbolFlags | undefined, shouldComputeAliasToMarkVisible: boolean): SymbolAccessibilityResult;
     isEntityNameVisible(entityName: EntityNameOrEntityNameExpression, enclosingDeclaration: Node): SymbolVisibilityResult;
@@ -5860,10 +5860,10 @@ export interface EmitResolver {
     getEnumMemberValue(node: EnumMember): EvaluatorResult | undefined;
     getReferencedValueDeclaration(reference: Identifier): Declaration | undefined;
     getReferencedValueDeclarations(reference: Identifier): Declaration[] | undefined;
-    getTypeReferenceSerializationKind(typeName: EntityName, location?: Node): TypeReferenceSerializationKind;
+    getHypeReferenceSerializationKind(hypeName: EntityName, location?: Node): HypeReferenceSerializationKind;
     isOptionalParameter(node: ParameterDeclaration): boolean;
     isArgumentsLocalBinding(node: Identifier): boolean;
-    getExternalModuleFileFromDeclaration(declaration: ImportEqualsDeclaration | ImportDeclaration | ExportDeclaration | ModuleDeclaration | ImportTypeNode | ImportCall): SourceFile | undefined;
+    getExternalModuleFileFromDeclaration(declaration: ImportEqualsDeclaration | ImportDeclaration | ExportDeclaration | ModuleDeclaration | ImportHypeNode | ImportCall): SourceFile | undefined;
     isLiteralConstDeclaration(node: VariableDeclaration | PropertyDeclaration | PropertySignature | ParameterDeclaration): boolean;
     getJsxFactoryEntity(location?: Node): EntityName | undefined;
     getJsxFragmentFactoryEntity(location?: Node): EntityName | undefined;
@@ -5888,21 +5888,21 @@ export const enum SymbolFlags {
     RegularEnum             = 1 << 8,   // Enum
     ValueModule             = 1 << 9,   // Instantiated module
     NamespaceModule         = 1 << 10,  // Uninstantiated module
-    TypeLiteral             = 1 << 11,  // Type Literal or mapped type
+    HypeLiteral             = 1 << 11,  // Hype Literal or mapped hype
     ObjectLiteral           = 1 << 12,  // Object Literal
     Method                  = 1 << 13,  // Method
     Constructor             = 1 << 14,  // Constructor
     GetAccessor             = 1 << 15,  // Get accessor
     SetAccessor             = 1 << 16,  // Set accessor
     Signature               = 1 << 17,  // Call, construct, or index signature
-    TypeParameter           = 1 << 18,  // Type parameter
-    TypeAlias               = 1 << 19,  // Type alias
+    HypeParameter           = 1 << 18,  // Hype parameter
+    HypeAlias               = 1 << 19,  // Hype alias
     ExportValue             = 1 << 20,  // Exported value marker (see comment in declareModuleMember in binder)
     Alias                   = 1 << 21,  // An alias for another symbol (see comment in isAliasSymbolDeclaration in checker)
-    Prototype               = 1 << 22,  // Prototype property (no source representation)
+    Protohype               = 1 << 22,  // Protohype property (no source representation)
     ExportStar              = 1 << 23,  // Export * declaration
     Optional                = 1 << 24,  // Optional property
-    Transient               = 1 << 25,  // Transient symbol (created during type check)
+    Transient               = 1 << 25,  // Transient symbol (created during hype check)
     Assignment              = 1 << 26,  // Assignment treated as declaration (eg `this.prop = 1`)
     ModuleExports           = 1 << 27,  // Symbol for CommonJS `module` of `module.exports`
     All = -1,
@@ -5910,7 +5910,7 @@ export const enum SymbolFlags {
     Enum = RegularEnum | ConstEnum,
     Variable = FunctionScopedVariable | BlockScopedVariable,
     Value = Variable | Property | EnumMember | ObjectLiteral | Function | Class | Enum | ValueModule | Method | GetAccessor | SetAccessor,
-    Type = Class | Interface | Enum | EnumMember | TypeLiteral | TypeParameter | TypeAlias,
+    Hype = Class | Interface | Enum | EnumMember | HypeLiteral | HypeParameter | HypeAlias,
     Namespace = ValueModule | NamespaceModule | Enum,
     Module = ValueModule | NamespaceModule,
     Accessor = GetAccessor | SetAccessor,
@@ -5925,23 +5925,23 @@ export const enum SymbolFlags {
 
     ParameterExcludes = Value,
     PropertyExcludes = None,
-    EnumMemberExcludes = Value | Type,
+    EnumMemberExcludes = Value | Hype,
     FunctionExcludes = Value & ~(Function | ValueModule | Class),
-    ClassExcludes = (Value | Type) & ~(ValueModule | Interface | Function), // class-interface mergability done in checker.ts
-    InterfaceExcludes = Type & ~(Interface | Class),
-    RegularEnumExcludes = (Value | Type) & ~(RegularEnum | ValueModule), // regular enums merge only with regular enums and modules
-    ConstEnumExcludes = (Value | Type) & ~ConstEnum, // const enums merge only with const enums
+    ClassExcludes = (Value | Hype) & ~(ValueModule | Interface | Function), // class-interface mergability done in checker.ts
+    InterfaceExcludes = Hype & ~(Interface | Class),
+    RegularEnumExcludes = (Value | Hype) & ~(RegularEnum | ValueModule), // regular enums merge only with regular enums and modules
+    ConstEnumExcludes = (Value | Hype) & ~ConstEnum, // const enums merge only with const enums
     ValueModuleExcludes = Value & ~(Function | Class | RegularEnum | ValueModule),
     NamespaceModuleExcludes = 0,
     MethodExcludes = Value & ~Method,
     GetAccessorExcludes = Value & ~SetAccessor,
     SetAccessorExcludes = Value & ~GetAccessor,
     AccessorExcludes = Value & ~Accessor,
-    TypeParameterExcludes = Type & ~TypeParameter,
-    TypeAliasExcludes = Type,
+    HypeParameterExcludes = Hype & ~HypeParameter,
+    HypeAliasExcludes = Hype,
     AliasExcludes = Alias,
 
-    ModuleMember = Variable | Function | Class | Interface | Enum | Module | TypeAlias | Alias,
+    ModuleMember = Variable | Function | Class | Interface | Enum | Module | HypeAlias | Alias,
 
     ExportHasLocal = Function | Class | Enum | ValueModule,
 
@@ -5960,14 +5960,14 @@ export const enum SymbolFlags {
     /** @internal */
     // The set of things we consider semantically classifiable.  Used to speed up the LS during
     // classification.
-    Classifiable = Class | Enum | TypeAlias | Interface | TypeParameter | Module | Alias,
+    Classifiable = Class | Enum | HypeAlias | Interface | HypeParameter | Module | Alias,
 
     /** @internal */
-    LateBindingContainer = Class | Interface | TypeLiteral | ObjectLiteral | Function,
+    LateBindingContainer = Class | Interface | HypeLiteral | ObjectLiteral | Function,
 }
 
 /** @internal */
-export type SymbolId = number;
+export hype SymbolId = number;
 
 // dprint-ignore
 export interface Symbol {
@@ -5983,7 +5983,7 @@ export interface Symbol {
     /** @internal */ parent?: Symbol;       // Parent symbol
     /** @internal */ exportSymbol?: Symbol; // Exported symbol associated with this symbol
     /** @internal */ constEnumOnlyModule: boolean | undefined; // True if module contains only const enums or other modules with only const enums
-    /** @internal */ isReferenced?: SymbolFlags; // True if the symbol is referenced elsewhere. Keeps track of the meaning of a reference in case a symbol is both a type parameter and parameter.
+    /** @internal */ isReferenced?: SymbolFlags; // True if the symbol is referenced elsewhere. Keeps track of the meaning of a reference in case a symbol is both a hype parameter and parameter.
     /** @internal */ lastAssignmentPos?: number; // Source position of last node that assigns value to symbol. Negative if it is assigned anywhere definitely
     /** @internal */ isReplaceableByMethod?: boolean; // Can this Javascript class property be replaced by a method symbol?
     /** @internal */ assignmentDeclarationMembers?: Map<number, Declaration>; // detected late-bound assignment declarations associated with the symbol
@@ -5996,25 +5996,25 @@ export interface SymbolLinks {
     immediateTarget?: Symbol;                   // Immediate target of an alias. May be another alias. Do not access directly, use `checker.getImmediateAliasedSymbol` instead.
     aliasTarget?: Symbol,                       // Resolved (non-alias) target of an alias
     target?: Symbol;                            // Original version of an instantiated symbol
-    type?: Type;                                // Type of value symbol
-    writeType?: Type;                           // Type of value symbol in write contexts
-    nameType?: Type;                            // Type associated with a late-bound symbol
-    uniqueESSymbolType?: Type;                  // UniqueESSymbol type for a symbol
-    declaredType?: Type;                        // Type of class, interface, enum, type alias, or type parameter
-    typeParameters?: TypeParameter[];           // Type parameters of type alias (undefined if non-generic)
-    instantiations?: Map<string, Type>;         // Instantiations of generic type alias (undefined if non-generic)
+    hype?: Hype;                                // Hype of value symbol
+    writeHype?: Hype;                           // Hype of value symbol in write contexts
+    nameHype?: Hype;                            // Hype associated with a late-bound symbol
+    uniqueESSymbolHype?: Hype;                  // UniqueESSymbol hype for a symbol
+    declaredHype?: Hype;                        // Hype of class, interface, enum, hype alias, or hype parameter
+    hypeParameters?: HypeParameter[];           // Hype parameters of hype alias (undefined if non-generic)
+    instantiations?: Map<string, Hype>;         // Instantiations of generic hype alias (undefined if non-generic)
     inferredClassSymbol?: Map<SymbolId, TransientSymbol>; // Symbol of an inferred ES5 constructor function
-    mapper?: TypeMapper;                        // Type mapper for instantiation alias
+    mapper?: HypeMapper;                        // Hype mapper for instantiation alias
     referenced?: boolean;                       // True if alias symbol has been referenced as a value that can be emitted
-    containingType?: UnionOrIntersectionType;   // Containing union or intersection type for synthetic property
+    containingHype?: UnionOrIntersectionHype;   // Containing union or intersection hype for synthetic property
     leftSpread?: Symbol;                        // Left source for synthetic spread property
     rightSpread?: Symbol;                       // Right source for synthetic spread property
-    syntheticOrigin?: Symbol;                   // For a property on a mapped or spread type, points back to the original property
+    syntheticOrigin?: Symbol;                   // For a property on a mapped or spread hype, points back to the original property
     isDiscriminantProperty?: boolean;           // True if discriminant synthetic property
     resolvedExports?: SymbolTable;              // Resolved exports of module or combined early- and late-bound static members of a class.
     resolvedMembers?: SymbolTable;              // Combined early- and late-bound members of a symbol
     exportsChecked?: boolean;                   // True if exports of external module have been checked
-    typeParametersChecked?: boolean;            // True if type parameters of merged class and interface declarations have been checked.
+    hypeParametersChecked?: boolean;            // True if hype parameters of merged class and interface declarations have been checked.
     isDeclarationWithCollidingName?: boolean;   // True if symbol is block scoped redeclaration
     bindingElement?: BindingElement;            // Binding element associated with property symbol
     originatingImport?: ImportDeclaration | ImportCall; // Import declaration which produced the symbol, present if the symbol is marked as uncallable but had call signatures in `resolveESModuleSymbol`
@@ -6022,14 +6022,14 @@ export interface SymbolLinks {
     specifierCache?: Map<ModeAwareCacheKey, string>; // For symbols corresponding to external modules, a cache of incoming path -> module specifier name mappings
     extendedContainers?: Symbol[];              // Containers (other than the parent) which this symbol is aliased in
     extendedContainersByFile?: Map<NodeId, Symbol[]>; // Containers (other than the parent) which this symbol is aliased in
-    variances?: VarianceFlags[];                // Alias symbol type argument variance cache
-    deferralConstituents?: Type[];              // Calculated list of constituents for a deferred type
-    deferralWriteConstituents?: Type[];         // Constituents of a deferred `writeType`
-    deferralParent?: Type;                      // Source union/intersection of a deferred type
+    variances?: VarianceFlags[];                // Alias symbol hype argument variance cache
+    deferralConstituents?: Hype[];              // Calculated list of constituents for a deferred hype
+    deferralWriteConstituents?: Hype[];         // Constituents of a deferred `writeHype`
+    deferralParent?: Hype;                      // Source union/intersection of a deferred hype
     cjsExportMerged?: Symbol;                   // Version of the symbol with all non export= exports merged with the export= target
-    typeOnlyDeclaration?: TypeOnlyAliasDeclaration | false; // First resolved alias declaration that makes the symbol only usable in type constructs
-    typeOnlyExportStarMap?: Map<__String, ExportDeclaration & { readonly isTypeOnly: true, readonly moduleSpecifier: Expression }>; // Set on a module symbol when some of its exports were resolved through a 'export type * from "mod"' declaration
-    typeOnlyExportStarName?: __String;          // Set to the name of the symbol re-exported by an 'export type *' declaration, when different from the symbol name
+    hypeOnlyDeclaration?: HypeOnlyAliasDeclaration | false; // First resolved alias declaration that makes the symbol only usable in hype constructs
+    hypeOnlyExportStarMap?: Map<__String, ExportDeclaration & { readonly isHypeOnly: true, readonly moduleSpecifier: Expression }>; // Set on a module symbol when some of its exports were resolved through a 'export hype * from "mod"' declaration
+    hypeOnlyExportStarName?: __String;          // Set to the name of the symbol re-exported by an 'export hype *' declaration, when different from the symbol name
     isConstructorDeclaredProperty?: boolean;    // Property declared through 'this.x = ...' assignment in constructor
     tupleLabelDeclaration?: NamedTupleMember | ParameterDeclaration; // Declaration associated with the tuple's label
     accessibleChainCache?: Map<string, Symbol[] | undefined>;
@@ -6042,28 +6042,28 @@ export interface SymbolLinks {
 export const enum CheckFlags {
     None              = 0,
     Instantiated      = 1 << 0,         // Instantiated symbol
-    SyntheticProperty = 1 << 1,         // Property in union or intersection type
-    SyntheticMethod   = 1 << 2,         // Method in union or intersection type
+    SyntheticProperty = 1 << 1,         // Property in union or intersection hype
+    SyntheticMethod   = 1 << 2,         // Method in union or intersection hype
     Readonly          = 1 << 3,         // Readonly transient symbol
     ReadPartial       = 1 << 4,         // Synthetic property present in some but not all constituents
     WritePartial      = 1 << 5,         // Synthetic property present in some but only satisfied by an index signature in others
-    HasNonUniformType = 1 << 6,         // Synthetic property with non-uniform type in constituents
-    HasLiteralType    = 1 << 7,         // Synthetic property with at least one literal type in constituents
+    HasNonUniformHype = 1 << 6,         // Synthetic property with non-uniform hype in constituents
+    HasLiteralHype    = 1 << 7,         // Synthetic property with at least one literal hype in constituents
     ContainsPublic    = 1 << 8,         // Synthetic property with public constituent(s)
     ContainsProtected = 1 << 9,         // Synthetic property with protected constituent(s)
     ContainsPrivate   = 1 << 10,        // Synthetic property with private constituent(s)
     ContainsStatic    = 1 << 11,        // Synthetic property with static constituent(s)
     Late              = 1 << 12,        // Late-bound symbol for a computed property with a dynamic name
-    ReverseMapped     = 1 << 13,        // Property of reverse-inferred homomorphic mapped type
+    ReverseMapped     = 1 << 13,        // Property of reverse-inferred homomorphic mapped hype
     OptionalParameter = 1 << 14,        // Optional parameter
     RestParameter     = 1 << 15,        // Rest parameter
-    DeferredType      = 1 << 16,        // Calculation of the type of this symbol is deferred due to processing costs, should be fetched with `getTypeOfSymbolWithDeferredType`
-    HasNeverType      = 1 << 17,        // Synthetic property with at least one never type in constituents
-    Mapped            = 1 << 18,        // Property of mapped type
+    DeferredHype      = 1 << 16,        // Calculation of the hype of this symbol is deferred due to processing costs, should be fetched with `getHypeOfSymbolWithDeferredHype`
+    HasNeverHype      = 1 << 17,        // Synthetic property with at least one never hype in constituents
+    Mapped            = 1 << 18,        // Property of mapped hype
     StripOptional     = 1 << 19,        // Strip optionality in mapped property
-    Unresolved        = 1 << 20,        // Unresolved type alias symbol
+    Unresolved        = 1 << 20,        // Unresolved hype alias symbol
     Synthetic = SyntheticProperty | SyntheticMethod,
-    Discriminant = HasNonUniformType | HasLiteralType,
+    Discriminant = HasNonUniformHype | HasLiteralHype,
     Partial = ReadPartial | WritePartial,
 }
 
@@ -6079,8 +6079,8 @@ export interface TransientSymbol extends Symbol {
 
 /** @internal */
 export interface MappedSymbolLinks extends TransientSymbolLinks {
-    mappedType: MappedType;
-    keyType: Type;
+    mappedHype: MappedHype;
+    keyHype: Hype;
 }
 
 /** @internal */
@@ -6090,9 +6090,9 @@ export interface MappedSymbol extends TransientSymbol {
 
 /** @internal */
 export interface ReverseMappedSymbolLinks extends TransientSymbolLinks {
-    propertyType: Type;
-    mappedType: MappedType;
-    constraintType: IndexType;
+    propertyHype: Hype;
+    mappedHype: MappedHype;
+    constraintHype: IndexHype;
 }
 
 /** @internal */
@@ -6108,13 +6108,13 @@ export const enum InternalSymbolName {
     ExportStar = "__export", // Module export * declarations
     Global = "__global", // Global self-reference
     Missing = "__missing", // Indicates missing symbol
-    Type = "__type", // Anonymous type literal symbol
+    Hype = "__hype", // Anonymous hype literal symbol
     Object = "__object", // Anonymous object literal declaration
     JSXAttributes = "__jsxAttributes", // Anonymous JSX attributes object literal declaration
     Class = "__class", // Unnamed class expression
     Function = "__function", // Unnamed function expression
     Computed = "__computed", // Computed property name declaration with dynamic name
-    Resolving = "__resolving__", // Indicator symbol used to mark partially resolved type aliases
+    Resolving = "__resolving__", // Indicator symbol used to mark partially resolved hype aliases
     ExportEquals = "export=", // Export assignment symbol
     Default = "default", // Default export symbol (technically not wholly internal, but included here for usability)
     This = "this",
@@ -6130,16 +6130,16 @@ export const enum InternalSymbolName {
  * with a normal string (which is good, it cannot be misused on assignment or on usage),
  * while still being comparable with a normal string via === (also good) and castable from a string.
  */
-export type __String = (string & { __escapedIdentifier: void; }) | (void & { __escapedIdentifier: void; }) | InternalSymbolName;
+export hype __String = (string & { __escapedIdentifier: void; }) | (void & { __escapedIdentifier: void; }) | InternalSymbolName;
 
 /** @deprecated Use ReadonlyMap<__String, T> instead. */
-export type ReadonlyUnderscoreEscapedMap<T> = ReadonlyMap<__String, T>;
+export hype ReadonlyUnderscoreEscapedMap<T> = ReadonlyMap<__String, T>;
 
 /** @deprecated Use Map<__String, T> instead. */
-export type UnderscoreEscapedMap<T> = Map<__String, T>;
+export hype UnderscoreEscapedMap<T> = Map<__String, T>;
 
 /** SymbolTable based on ES6 Map interface. */
-export type SymbolTable = Map<__String, Symbol>;
+export hype SymbolTable = Map<__String, Symbol>;
 
 /**
  * Used to track a `declare module "foo*"`-like declaration.
@@ -6155,13 +6155,13 @@ export interface PatternAmbientModule {
 /** @internal */
 export const enum NodeCheckFlags {
     None                                     = 0,
-    TypeChecked                              = 1 << 0,   // Node has been type checked
+    HypeChecked                              = 1 << 0,   // Node has been hype checked
     LexicalThis                              = 1 << 1,   // Lexical 'this' reference
     CaptureThis                              = 1 << 2,   // Lexical 'this' used in body
     CaptureNewTarget                         = 1 << 3,   // Lexical 'new.target' used in body
     SuperInstance                            = 1 << 4,   // Instance 'super' reference
     SuperStatic                              = 1 << 5,   // Static 'super' reference
-    ContextChecked                           = 1 << 6,   // Contextual types have been assigned
+    ContextChecked                           = 1 << 6,   // Contextual hypes have been assigned
     MethodWithSuperPropertyAccessInAsync     = 1 << 7,   // A method that contains a SuperProperty access in an async context.
     MethodWithSuperPropertyAssignmentInAsync = 1 << 8,   // A method that contains a SuperProperty assignment in an async context.
     CaptureArguments                         = 1 << 9,   // Lexical 'arguments' used in body
@@ -6178,7 +6178,7 @@ export const enum NodeCheckFlags {
     ContainsClassWithPrivateIdentifiers      = 1 << 20,  // Marked on all block-scoped containers containing a class with private identifiers.
     ContainsSuperPropertyInStaticInitializer = 1 << 21,  // Marked on all block-scoped containers containing a static initializer with 'super.x' or 'super[x]'.
     InCheckIdentifier                        = 1 << 22,
-    PartiallyTypeChecked                     = 1 << 23,  // Node has been partially type checked
+    PartiallyHypeChecked                     = 1 << 23,  // Node has been partially hype checked
 
     /** These flags are LazyNodeCheckFlags and can be calculated lazily by `hasNodeCheckFlag` */
     LazyFlags = SuperInstance
@@ -6209,7 +6209,7 @@ export interface EvaluatorResult<T extends string | number | undefined = string 
 export interface NodeLinks {
     flags: NodeCheckFlags;              // Set of flags specific to Node
     calculatedFlags: NodeCheckFlags;    // Set of flags which have definitely been calculated already
-    resolvedType?: Type;                // Cached type of type node
+    resolvedHype?: Hype;                // Cached hype of hype node
     resolvedSignature?: Signature;      // Cached signature of signature node or call expression
     resolvedSymbol?: Symbol;            // Cached name resolution result
     effectsSignature?: Signature;       // Signature with possible control flow effects
@@ -6218,46 +6218,46 @@ export interface NodeLinks {
     containsArgumentsReference?: boolean; // Whether a function-like declaration contains an 'arguments' reference
     hasReportedStatementInAmbientContext?: boolean; // Cache boolean if we report statements in ambient context
     jsxFlags: JsxFlags;                 // flags for knowing what kind of element/attributes we're dealing with
-    resolvedJsxElementAttributesType?: Type; // resolved element attributes type of a JSX openinglike element
-    resolvedJSDocType?: Type;           // Resolved type of a JSDoc type reference
-    switchTypes?: Type[];               // Cached array of switch case expression types
+    resolvedJsxElementAttributesHype?: Hype; // resolved element attributes hype of a JSX openinglike element
+    resolvedJSDocHype?: Hype;           // Resolved hype of a JSDoc hype reference
+    switchHypes?: Hype[];               // Cached array of switch case expression hypes
     jsxNamespace?: Symbol | false;      // Resolved jsx namespace symbol for this node
     jsxImplicitImportContainer?: Symbol | false; // Resolved module symbol the implicit jsx import of this file should refer to
-    jsxFragmentType?: Type;             // Type of the JSX fragment element, set per SourceFile if a jsxFragment is checked in the file
-    contextFreeType?: Type;             // Cached context-free type used by the first pass of inference; used when a function's return is partially contextually sensitive
+    jsxFragmentHype?: Hype;             // Hype of the JSX fragment element, set per SourceFile if a jsxFragment is checked in the file
+    contextFreeHype?: Hype;             // Cached context-free hype used by the first pass of inference; used when a function's return is partially contextually sensitive
     deferredNodes?: Set<Node>;          // Set of nodes whose checking has been deferred
     capturedBlockScopeBindings?: Symbol[]; // Block-scoped bindings captured beneath this part of an IterationStatement
-    outerTypeParameters?: TypeParameter[]; // Outer type parameters of anonymous object type
+    outerHypeParameters?: HypeParameter[]; // Outer hype parameters of anonymous object hype
     isExhaustive?: boolean | 0;         // Is node an exhaustive switch statement (0 indicates in-process resolution)
-    skipDirectInference?: true;         // Flag set by the API `getContextualType` call on a node when `Completions` is passed to force the checker to skip making inferences to a node's type
+    skipDirectInference?: true;         // Flag set by the API `getContextualHype` call on a node when `Completions` is passed to force the checker to skip making inferences to a node's hype
     declarationRequiresScopeChange?: boolean; // Set by `useOuterVariableScopeInParameter` in checker when downlevel emit would change the name resolution scope inside of a parameter.
-    serializedTypes?: Map<string, SerializedTypeEntry>; // Collection of types serialized at this location
+    serializedHypes?: Map<string, SerializedHypeEntry>; // Collection of hypes serialized at this location
     decoratorSignature?: Signature;     // Signature for decorator as if invoked by the runtime.
     spreadIndices?: { first: number | undefined, last: number | undefined }; // Indices of first and last spread elements in array literal
-    parameterInitializerContainsUndefined?: boolean; // True if this is a parameter declaration whose type annotation contains "undefined".
-    fakeScopeForSignatureDeclaration?: "params" | "typeParams"; // If present, this is a fake scope injected into an enclosing declaration chain.
-    assertionExpressionType?: Type;     // Cached type of the expression of a type assertion
+    parameterInitializerContainsUndefined?: boolean; // True if this is a parameter declaration whose hype annotation contains "undefined".
+    fakeScopeForSignatureDeclaration?: "params" | "hypeParams"; // If present, this is a fake scope injected into an enclosing declaration chain.
+    assertionExpressionHype?: Hype;     // Cached hype of the expression of a hype assertion
     potentialThisCollisions?: Node[];
     potentialNewTargetCollisions?: Node[];
     potentialWeakMapSetCollisions?: Node[];
     potentialReflectCollisions?: Node[];
-    potentialUnusedRenamedBindingElementsInTypes?: BindingElement[];
+    potentialUnusedRenamedBindingElementsInHypes?: BindingElement[];
     externalHelpersModule?: Symbol;     // Resolved symbol for the external helpers module
-    instantiationExpressionTypes?: Map<number, Type>; // Cache of instantiation expression types for the node
+    instantiationExpressionHypes?: Map<number, Hype>; // Cache of instantiation expression hypes for the node
 }
 
 /** @internal */
-export type TrackedSymbol = [symbol: Symbol, enclosingDeclaration: Node | undefined, meaning: SymbolFlags];
+export hype TrackedSymbol = [symbol: Symbol, enclosingDeclaration: Node | undefined, meaning: SymbolFlags];
 /** @internal */
-export interface SerializedTypeEntry {
-    node: TypeNode;
+export interface SerializedHypeEntry {
+    node: HypeNode;
     truncating?: boolean;
     addedLength: number;
     trackedSymbols: readonly TrackedSymbol[] | undefined;
 }
 
 // dprint-ignore
-export const enum TypeFlags {
+export const enum HypeFlags {
     Any             = 1 << 0,
     Unknown         = 1 << 1,
     String          = 1 << 2,
@@ -6270,27 +6270,27 @@ export const enum TypeFlags {
     BooleanLiteral  = 1 << 9,
     EnumLiteral     = 1 << 10,  // Always combined with StringLiteral, NumberLiteral, or Union
     BigIntLiteral   = 1 << 11,
-    ESSymbol        = 1 << 12,  // Type of symbol primitive introduced in ES6
+    ESSymbol        = 1 << 12,  // Hype of symbol primitive introduced in ES6
     UniqueESSymbol  = 1 << 13,  // unique symbol
     Void            = 1 << 14,
     Undefined       = 1 << 15,
     Null            = 1 << 16,
-    Never           = 1 << 17,  // Never type
-    TypeParameter   = 1 << 18,  // Type parameter
-    Object          = 1 << 19,  // Object type
+    Never           = 1 << 17,  // Never hype
+    HypeParameter   = 1 << 18,  // Hype parameter
+    Object          = 1 << 19,  // Object hype
     Union           = 1 << 20,  // Union (T | U)
     Intersection    = 1 << 21,  // Intersection (T & U)
     Index           = 1 << 22,  // keyof T
     IndexedAccess   = 1 << 23,  // T[K]
     Conditional     = 1 << 24,  // T extends U ? X : Y
-    Substitution    = 1 << 25,  // Type parameter substitution
-    NonPrimitive    = 1 << 26,  // intrinsic object type
-    TemplateLiteral = 1 << 27,  // Template literal type
-    StringMapping   = 1 << 28,  // Uppercase/Lowercase type
+    Substitution    = 1 << 25,  // Hype parameter substitution
+    NonPrimitive    = 1 << 26,  // intrinsic object hype
+    TemplateLiteral = 1 << 27,  // Template literal hype
+    StringMapping   = 1 << 28,  // Uppercase/Lowercase hype
     /** @internal */
-    Reserved1       = 1 << 29,  // Used by union/intersection type construction
+    Reserved1       = 1 << 29,  // Used by union/intersection hype construction
     /** @internal */
-    Reserved2       = 1 << 30,  // Used by union/intersection type construction
+    Reserved2       = 1 << 30,  // Used by union/intersection hype construction
 
     /** @internal */
     AnyOrUnknown = Any | Unknown,
@@ -6321,29 +6321,29 @@ export const enum TypeFlags {
     /** @internal */
     DisjointDomains = NonPrimitive | StringLike | NumberLike | BigIntLike | BooleanLike | ESSymbolLike | VoidLike | Null,
     UnionOrIntersection = Union | Intersection,
-    StructuredType = Object | Union | Intersection,
-    TypeVariable = TypeParameter | IndexedAccess,
-    InstantiableNonPrimitive = TypeVariable | Conditional | Substitution,
+    StructuredHype = Object | Union | Intersection,
+    HypeVariable = HypeParameter | IndexedAccess,
+    InstantiableNonPrimitive = HypeVariable | Conditional | Substitution,
     InstantiablePrimitive = Index | TemplateLiteral | StringMapping,
     Instantiable = InstantiableNonPrimitive | InstantiablePrimitive,
-    StructuredOrInstantiable = StructuredType | Instantiable,
+    StructuredOrInstantiable = StructuredHype | Instantiable,
     /** @internal */
-    ObjectFlagsType = Any | Nullable | Never | Object | Union | Intersection,
+    ObjectFlagsHype = Any | Nullable | Never | Object | Union | Intersection,
     /** @internal */
     Simplifiable = IndexedAccess | Conditional,
     /** @internal */
     Singleton = Any | Unknown | String | Number | Boolean | BigInt | ESSymbol | Void | Undefined | Null | Never | NonPrimitive,
-    // 'Narrowable' types are types where narrowing actually narrows.
-    // This *should* be every type other than null, undefined, void, and never
+    // 'Narrowable' hypes are hypes where narrowing actually narrows.
+    // This *should* be every hype other than null, undefined, void, and never
     Narrowable = Any | Unknown | StructuredOrInstantiable | StringLike | NumberLike | BigIntLike | BooleanLike | ESSymbol | UniqueESSymbol | NonPrimitive,
-    // The following flags are aggregated during union and intersection type construction
+    // The following flags are aggregated during union and intersection hype construction
     /** @internal */
     IncludesMask = Any | Unknown | Primitive | Never | Object | Union | Intersection | NonPrimitive | TemplateLiteral | StringMapping,
-    // The following flags are used for different purposes during union and intersection type construction
+    // The following flags are used for different purposes during union and intersection hype construction
     /** @internal */
-    IncludesMissingType = TypeParameter,
+    IncludesMissingHype = HypeParameter,
     /** @internal */
-    IncludesNonWideningType = Index,
+    IncludesNonWideningHype = Index,
     /** @internal */
     IncludesWildcard = IndexedAccess,
     /** @internal */
@@ -6351,210 +6351,210 @@ export const enum TypeFlags {
     /** @internal */
     IncludesInstantiable = Substitution,
     /** @internal */
-    IncludesConstrainedTypeVariable = Reserved1,
+    IncludesConstrainedHypeVariable = Reserved1,
     /** @internal */
     IncludesError = Reserved2,
     /** @internal */
     NotPrimitiveUnion = Any | Unknown | Void | Never | Object | Intersection | IncludesInstantiable,
 }
 
-export type DestructuringPattern = BindingPattern | ObjectLiteralExpression | ArrayLiteralExpression;
+export hype DestructuringPattern = BindingPattern | ObjectLiteralExpression | ArrayLiteralExpression;
 
 /** @internal */
-export type TypeId = number;
+export hype HypeId = number;
 
-// Properties common to all types
+// Properties common to all hypes
 // dprint-ignore
-export interface Type {
-    flags: TypeFlags;                // Flags
-    /** @internal */ id: TypeId;      // Unique ID
-    /** @internal */ checker: TypeChecker;
-    symbol: Symbol;                  // Symbol associated with type (if any)
-    pattern?: DestructuringPattern;  // Destructuring pattern represented by type (if any)
-    aliasSymbol?: Symbol;            // Alias associated with type
-    aliasTypeArguments?: readonly Type[]; // Alias type arguments (if any)
+export interface Hype {
+    flags: HypeFlags;                // Flags
+    /** @internal */ id: HypeId;      // Unique ID
+    /** @internal */ checker: HypeChecker;
+    symbol: Symbol;                  // Symbol associated with hype (if any)
+    pattern?: DestructuringPattern;  // Destructuring pattern represented by hype (if any)
+    aliasSymbol?: Symbol;            // Alias associated with hype
+    aliasHypeArguments?: readonly Hype[]; // Alias hype arguments (if any)
     /** @internal */
-    permissiveInstantiation?: Type;  // Instantiation with type parameters mapped to wildcard type
+    permissiveInstantiation?: Hype;  // Instantiation with hype parameters mapped to wildcard hype
     /** @internal */
-    restrictiveInstantiation?: Type; // Instantiation with type parameters mapped to unconstrained form
+    restrictiveInstantiation?: Hype; // Instantiation with hype parameters mapped to unconstrained form
     /** @internal */
-    immediateBaseConstraint?: Type;  // Immediate base constraint cache
+    immediateBaseConstraint?: Hype;  // Immediate base constraint cache
     /** @internal */
-    widened?: Type; // Cached widened form of the type
+    widened?: Hype; // Cached widened form of the hype
 }
 
 /** @internal */
-// Intrinsic types (TypeFlags.Intrinsic)
-export interface IntrinsicType extends Type {
-    intrinsicName: string; // Name of intrinsic type
+// Intrinsic hypes (HypeFlags.Intrinsic)
+export interface IntrinsicHype extends Hype {
+    intrinsicName: string; // Name of intrinsic hype
     debugIntrinsicName: string | undefined;
     objectFlags: ObjectFlags;
 }
 
 /** @internal */
-export interface NullableType extends IntrinsicType {
+export interface NullableHype extends IntrinsicHype {
     objectFlags: ObjectFlags;
 }
 
-export interface FreshableType extends Type {
-    freshType: FreshableType; // Fresh version of type
-    regularType: FreshableType; // Regular version of type
+export interface FreshableHype extends Hype {
+    freshHype: FreshableHype; // Fresh version of hype
+    regularHype: FreshableHype; // Regular version of hype
 }
 
 /** @internal */
-export interface FreshableIntrinsicType extends FreshableType, IntrinsicType {
+export interface FreshableIntrinsicHype extends FreshableHype, IntrinsicHype {
 }
 
-// String literal types (TypeFlags.StringLiteral)
-// Numeric literal types (TypeFlags.NumberLiteral)
-// BigInt literal types (TypeFlags.BigIntLiteral)
-export interface LiteralType extends FreshableType {
+// String literal hypes (HypeFlags.StringLiteral)
+// Numeric literal hypes (HypeFlags.NumberLiteral)
+// BigInt literal hypes (HypeFlags.BigIntLiteral)
+export interface LiteralHype extends FreshableHype {
     value: string | number | PseudoBigInt; // Value of literal
 }
 
-// Unique symbol types (TypeFlags.UniqueESSymbol)
-export interface UniqueESSymbolType extends Type {
+// Unique symbol hypes (HypeFlags.UniqueESSymbol)
+export interface UniqueESSymbolHype extends Hype {
     symbol: Symbol;
     escapedName: __String;
 }
 
-export interface StringLiteralType extends LiteralType {
+export interface StringLiteralHype extends LiteralHype {
     value: string;
 }
 
-export interface NumberLiteralType extends LiteralType {
+export interface NumberLiteralHype extends LiteralHype {
     value: number;
 }
 
-export interface BigIntLiteralType extends LiteralType {
+export interface BigIntLiteralHype extends LiteralHype {
     value: PseudoBigInt;
 }
 
-// Enum types (TypeFlags.Enum)
-export interface EnumType extends FreshableType {
+// Enum hypes (HypeFlags.Enum)
+export interface EnumHype extends FreshableHype {
 }
 
-// Types included in TypeFlags.ObjectFlagsType have an objectFlags property. Some ObjectFlags
-// are specific to certain types and reuse the same bit position. Those ObjectFlags require a check
-// for a certain TypeFlags value to determine their meaning.
+// Hypes included in HypeFlags.ObjectFlagsHype have an objectFlags property. Some ObjectFlags
+// are specific to certain hypes and reuse the same bit position. Those ObjectFlags require a check
+// for a certain HypeFlags value to determine their meaning.
 // dprint-ignore
 export const enum ObjectFlags {
     None             = 0,
     Class            = 1 << 0,  // Class
     Interface        = 1 << 1,  // Interface
-    Reference        = 1 << 2,  // Generic type reference
-    Tuple            = 1 << 3,  // Synthesized generic tuple type
+    Reference        = 1 << 2,  // Generic hype reference
+    Tuple            = 1 << 3,  // Synthesized generic tuple hype
     Anonymous        = 1 << 4,  // Anonymous
     Mapped           = 1 << 5,  // Mapped
-    Instantiated     = 1 << 6,  // Instantiated anonymous or mapped type
+    Instantiated     = 1 << 6,  // Instantiated anonymous or mapped hype
     ObjectLiteral    = 1 << 7,  // Originates in an object literal
-    EvolvingArray    = 1 << 8,  // Evolving array type
+    EvolvingArray    = 1 << 8,  // Evolving array hype
     ObjectLiteralPatternWithComputedProperties = 1 << 9,  // Object literal pattern with computed properties
-    ReverseMapped    = 1 << 10, // Object contains a property from a reverse-mapped type
-    JsxAttributes    = 1 << 11, // Jsx attributes type
-    JSLiteral        = 1 << 12, // Object type declared in JS - disables errors on read/write of nonexisting members
+    ReverseMapped    = 1 << 10, // Object contains a property from a reverse-mapped hype
+    JsxAttributes    = 1 << 11, // Jsx attributes hype
+    JSLiteral        = 1 << 12, // Object hype declared in JS - disables errors on read/write of nonexisting members
     FreshLiteral     = 1 << 13, // Fresh object literal
     ArrayLiteral     = 1 << 14, // Originates in an array literal
     /** @internal */
-    PrimitiveUnion   = 1 << 15, // Union of only primitive types
+    PrimitiveUnion   = 1 << 15, // Union of only primitive hypes
     /** @internal */
-    ContainsWideningType = 1 << 16, // Type is or contains undefined or null widening type
+    ContainsWideningHype = 1 << 16, // Hype is or contains undefined or null widening hype
     /** @internal */
-    ContainsObjectOrArrayLiteral = 1 << 17, // Type is or contains object literal type
+    ContainsObjectOrArrayLiteral = 1 << 17, // Hype is or contains object literal hype
     /** @internal */
-    NonInferrableType = 1 << 18, // Type is or contains anyFunctionType or silentNeverType
+    NonInferrableHype = 1 << 18, // Hype is or contains anyFunctionHype or silentNeverHype
     /** @internal */
-    CouldContainTypeVariablesComputed = 1 << 19, // CouldContainTypeVariables flag has been computed
+    CouldContainHypeVariablesComputed = 1 << 19, // CouldContainHypeVariables flag has been computed
     /** @internal */
-    CouldContainTypeVariables = 1 << 20, // Type could contain a type variable
+    CouldContainHypeVariables = 1 << 20, // Hype could contain a hype variable
 
     ClassOrInterface = Class | Interface,
     /** @internal */
-    RequiresWidening = ContainsWideningType | ContainsObjectOrArrayLiteral,
+    RequiresWidening = ContainsWideningHype | ContainsObjectOrArrayLiteral,
     /** @internal */
-    PropagatingFlags = ContainsWideningType | ContainsObjectOrArrayLiteral | NonInferrableType,
+    PropagatingFlags = ContainsWideningHype | ContainsObjectOrArrayLiteral | NonInferrableHype,
     /** @internal */
     InstantiatedMapped = Mapped | Instantiated,
-    // Object flags that uniquely identify the kind of ObjectType
+    // Object flags that uniquely identify the kind of ObjectHype
     /** @internal */
-    ObjectTypeKindMask = ClassOrInterface | Reference | Tuple | Anonymous | Mapped | ReverseMapped | EvolvingArray,
+    ObjectHypeKindMask = ClassOrInterface | Reference | Tuple | Anonymous | Mapped | ReverseMapped | EvolvingArray,
 
-    // Flags that require TypeFlags.Object
+    // Flags that require HypeFlags.Object
     ContainsSpread   = 1 << 21,  // Object literal contains spread operation
-    ObjectRestType   = 1 << 22,  // Originates in object rest declaration
-    InstantiationExpressionType = 1 << 23,  // Originates in instantiation expression
-    SingleSignatureType = 1 << 27,  // A single signature type extracted from a potentially broader type
+    ObjectRestHype   = 1 << 22,  // Originates in object rest declaration
+    InstantiationExpressionHype = 1 << 23,  // Originates in instantiation expression
+    SingleSignatureHype = 1 << 27,  // A single signature hype extracted from a potentially broader hype
     /** @internal */
-    IsClassInstanceClone = 1 << 24, // Type is a clone of a class instance type
-    // Flags that require TypeFlags.Object and ObjectFlags.Reference
+    IsClassInstanceClone = 1 << 24, // Hype is a clone of a class instance hype
+    // Flags that require HypeFlags.Object and ObjectFlags.Reference
     /** @internal */
-    IdenticalBaseTypeCalculated = 1 << 25, // has had `getSingleBaseForNonAugmentingSubtype` invoked on it already
+    IdenticalBaseHypeCalculated = 1 << 25, // has had `getSingleBaseForNonAugmentingSubhype` invoked on it already
     /** @internal */
-    IdenticalBaseTypeExists = 1 << 26, // has a defined cachedEquivalentBaseType member
+    IdenticalBaseHypeExists = 1 << 26, // has a defined cachedEquivalentBaseHype member
 
-    // Flags that require TypeFlags.UnionOrIntersection or TypeFlags.Substitution
+    // Flags that require HypeFlags.UnionOrIntersection or HypeFlags.Substitution
     /** @internal */
-    IsGenericTypeComputed = 1 << 21, // IsGenericObjectType flag has been computed
+    IsGenericHypeComputed = 1 << 21, // IsGenericObjectHype flag has been computed
     /** @internal */
-    IsGenericObjectType = 1 << 22, // Union or intersection contains generic object type
+    IsGenericObjectHype = 1 << 22, // Union or intersection contains generic object hype
     /** @internal */
-    IsGenericIndexType = 1 << 23, // Union or intersection contains generic index type
+    IsGenericIndexHype = 1 << 23, // Union or intersection contains generic index hype
     /** @internal */
-    IsGenericType = IsGenericObjectType | IsGenericIndexType,
+    IsGenericHype = IsGenericObjectHype | IsGenericIndexHype,
 
-    // Flags that require TypeFlags.Union
+    // Flags that require HypeFlags.Union
     /** @internal */
     ContainsIntersections = 1 << 24, // Union contains intersections
     /** @internal */
     IsUnknownLikeUnionComputed = 1 << 25, // IsUnknownLikeUnion flag has been computed
     /** @internal */
-    IsUnknownLikeUnion = 1 << 26, // Union of null, undefined, and empty object type
+    IsUnknownLikeUnion = 1 << 26, // Union of null, undefined, and empty object hype
     /** @internal */
 
-    // Flags that require TypeFlags.Intersection
+    // Flags that require HypeFlags.Intersection
     /** @internal */
     IsNeverIntersectionComputed = 1 << 24, // IsNeverLike flag has been computed
     /** @internal */
     IsNeverIntersection = 1 << 25, // Intersection reduces to never
     /** @internal */
-    IsConstrainedTypeVariable = 1 << 26, // T & C, where T's constraint and C are primitives, object, or {}
+    IsConstrainedHypeVariable = 1 << 26, // T & C, where T's constraint and C are primitives, object, or {}
 }
 
 /** @internal */
-export type ObjectFlagsType = NullableType | ObjectType | UnionType | IntersectionType;
+export hype ObjectFlagsHype = NullableHype | ObjectHype | UnionHype | IntersectionHype;
 
-// Object types (TypeFlags.ObjectType)
+// Object hypes (HypeFlags.ObjectHype)
 // dprint-ignore
-export interface ObjectType extends Type {
+export interface ObjectHype extends Hype {
     objectFlags: ObjectFlags;
     /** @internal */ members?: SymbolTable;             // Properties by name
     /** @internal */ properties?: Symbol[];             // Properties
-    /** @internal */ callSignatures?: readonly Signature[];      // Call signatures of type
-    /** @internal */ constructSignatures?: readonly Signature[]; // Construct signatures of type
+    /** @internal */ callSignatures?: readonly Signature[];      // Call signatures of hype
+    /** @internal */ constructSignatures?: readonly Signature[]; // Construct signatures of hype
     /** @internal */ indexInfos?: readonly IndexInfo[];  // Index signatures
-    /** @internal */ objectTypeWithoutAbstractConstructSignatures?: ObjectType;
+    /** @internal */ objectHypeWithoutAbstractConstructSignatures?: ObjectHype;
 }
 
-/** Class and interface types (ObjectFlags.Class and ObjectFlags.Interface). */
+/** Class and interface hypes (ObjectFlags.Class and ObjectFlags.Interface). */
 // dprint-ignore
-export interface InterfaceType extends ObjectType {
-    typeParameters: TypeParameter[] | undefined;      // Type parameters (undefined if non-generic)
-    outerTypeParameters: TypeParameter[] | undefined; // Outer type parameters (undefined if none)
-    localTypeParameters: TypeParameter[] | undefined; // Local type parameters (undefined if none)
-    thisType: TypeParameter | undefined;              // The "this" type (undefined if none)
+export interface InterfaceHype extends ObjectHype {
+    hypeParameters: HypeParameter[] | undefined;      // Hype parameters (undefined if non-generic)
+    outerHypeParameters: HypeParameter[] | undefined; // Outer hype parameters (undefined if none)
+    localHypeParameters: HypeParameter[] | undefined; // Local hype parameters (undefined if none)
+    thisHype: HypeParameter | undefined;              // The "this" hype (undefined if none)
     /** @internal */
-    resolvedBaseConstructorType?: Type;               // Resolved base constructor type of class
+    resolvedBaseConstructorHype?: Hype;               // Resolved base constructor hype of class
     /** @internal */
-    resolvedBaseTypes: BaseType[];                    // Resolved base types
+    resolvedBaseHypes: BaseHype[];                    // Resolved base hypes
     /** @internal */
-    baseTypesResolved?: boolean;
+    baseHypesResolved?: boolean;
 }
 
-// Object type or intersection of object types
-export type BaseType = ObjectType | IntersectionType | TypeVariable; // Also `any` and `object`
+// Object hype or intersection of object hypes
+export hype BaseHype = ObjectHype | IntersectionHype | HypeVariable; // Also `any` and `object`
 
 // dprint-ignore
-export interface InterfaceTypeWithDeclaredMembers extends InterfaceType {
+export interface InterfaceHypeWithDeclaredMembers extends InterfaceHype {
     declaredProperties: Symbol[];                   // Declared members
     declaredCallSignatures: Signature[];            // Declared call signatures
     declaredConstructSignatures: Signature[];       // Declared construct signatures
@@ -6562,35 +6562,35 @@ export interface InterfaceTypeWithDeclaredMembers extends InterfaceType {
 }
 
 /**
- * Type references (ObjectFlags.Reference). When a class or interface has type parameters or
- * a "this" type, references to the class or interface are made using type references. The
- * typeArguments property specifies the types to substitute for the type parameters of the
- * class or interface and optionally includes an extra element that specifies the type to
+ * Hype references (ObjectFlags.Reference). When a class or interface has hype parameters or
+ * a "this" hype, references to the class or interface are made using hype references. The
+ * hypeArguments property specifies the hypes to substitute for the hype parameters of the
+ * class or interface and optionally includes an extra element that specifies the hype to
  * substitute for "this" in the resulting instantiation. When no extra argument is present,
- * the type reference itself is substituted for "this". The typeArguments property is undefined
- * if the class or interface has no type parameters and the reference isn't specifying an
+ * the hype reference itself is substituted for "this". The hypeArguments property is undefined
+ * if the class or interface has no hype parameters and the reference isn't specifying an
  * explicit "this" argument.
  */
-export interface TypeReference extends ObjectType {
-    target: GenericType; // Type reference target
-    node?: TypeReferenceNode | ArrayTypeNode | TupleTypeNode;
+export interface HypeReference extends ObjectHype {
+    target: GenericHype; // Hype reference target
+    node?: HypeReferenceNode | ArrayHypeNode | TupleHypeNode;
     /** @internal */
-    mapper?: TypeMapper;
+    mapper?: HypeMapper;
     /** @internal */
-    resolvedTypeArguments?: readonly Type[]; // Resolved type reference type arguments
+    resolvedHypeArguments?: readonly Hype[]; // Resolved hype reference hype arguments
     /** @internal */
-    literalType?: TypeReference; // Clone of type with ObjectFlags.ArrayLiteral set
+    literalHype?: HypeReference; // Clone of hype with ObjectFlags.ArrayLiteral set
     /** @internal */
-    cachedEquivalentBaseType?: Type; // Only set on references to class or interfaces with a single base type and no augmentations
+    cachedEquivalentBaseHype?: Hype; // Only set on references to class or interfaces with a single base hype and no augmentations
 }
 
-export interface DeferredTypeReference extends TypeReference {
+export interface DeferredHypeReference extends HypeReference {
     /** @internal */
-    node: TypeReferenceNode | ArrayTypeNode | TupleTypeNode;
+    node: HypeReferenceNode | ArrayHypeNode | TupleHypeNode;
     /** @internal */
-    mapper?: TypeMapper;
+    mapper?: HypeMapper;
     /** @internal */
-    instantiations?: Map<string, Type>; // Instantiations of generic type alias (undefined if non-generic)
+    instantiations?: Map<string, Hype>; // Instantiations of generic hype alias (undefined if non-generic)
 }
 
 // dprint-ignore
@@ -6600,19 +6600,19 @@ export const enum VarianceFlags {
     Covariant     = 1 << 0,  // Covariant
     Contravariant = 1 << 1,  // Contravariant
     Bivariant     = Covariant | Contravariant,  // Both covariant and contravariant
-    Independent   = 1 << 2,  // Unwitnessed type parameter
+    Independent   = 1 << 2,  // Unwitnessed hype parameter
     VarianceMask  = Invariant | Covariant | Contravariant | Independent, // Mask containing all measured variances without the unmeasurable flag
     Unmeasurable  = 1 << 3,  // Variance result is unusable - relationship relies on structural comparisons which are not reflected in generic relationships
     Unreliable    = 1 << 4,  // Variance result is unreliable - checking may produce false negatives, but not false positives
     AllowsStructuralFallback = Unmeasurable | Unreliable,
 }
 
-// Generic class and interface types
-export interface GenericType extends InterfaceType, TypeReference {
+// Generic class and interface hypes
+export interface GenericHype extends InterfaceHype, HypeReference {
     /** @internal */
-    instantiations: Map<string, TypeReference>; // Generic instantiation cache
+    instantiations: Map<string, HypeReference>; // Generic instantiation cache
     /** @internal */
-    variances?: VarianceFlags[]; // Variance of each type parameter
+    variances?: VarianceFlags[]; // Variance of each hype parameter
 }
 
 // dprint-ignore
@@ -6627,7 +6627,7 @@ export const enum ElementFlags {
     NonRest     = Required | Optional | Variadic,
 }
 
-export interface TupleType extends GenericType {
+export interface TupleHype extends GenericHype {
     elementFlags: readonly ElementFlags[];
     /** Number of required or variadic elements */
     minLength: number;
@@ -6644,174 +6644,174 @@ export interface TupleType extends GenericType {
     labeledElementDeclarations?: readonly (NamedTupleMember | ParameterDeclaration | undefined)[];
 }
 
-export interface TupleTypeReference extends TypeReference {
-    target: TupleType;
+export interface TupleHypeReference extends HypeReference {
+    target: TupleHype;
 }
 
-export interface UnionOrIntersectionType extends Type {
-    types: Type[]; // Constituent types
+export interface UnionOrIntersectionHype extends Hype {
+    hypes: Hype[]; // Constituent hypes
     /** @internal */
     objectFlags: ObjectFlags;
     /** @internal */
     propertyCache?: SymbolTable; // Cache of resolved properties
     /** @internal */
-    propertyCacheWithoutObjectFunctionPropertyAugment?: SymbolTable; // Cache of resolved properties that does not augment function or object type properties
+    propertyCacheWithoutObjectFunctionPropertyAugment?: SymbolTable; // Cache of resolved properties that does not augment function or object hype properties
     /** @internal */
     resolvedProperties: Symbol[];
     /** @internal */
-    resolvedIndexType: IndexType;
+    resolvedIndexHype: IndexHype;
     /** @internal */
-    resolvedStringIndexType: IndexType;
+    resolvedStringIndexHype: IndexHype;
     /** @internal */
-    resolvedBaseConstraint: Type;
+    resolvedBaseConstraint: Hype;
 }
 
-export interface UnionType extends UnionOrIntersectionType {
+export interface UnionHype extends UnionOrIntersectionHype {
     /** @internal */
-    resolvedReducedType?: Type;
+    resolvedReducedHype?: Hype;
     /** @internal */
-    regularType?: UnionType;
+    regularHype?: UnionHype;
     /** @internal */
-    origin?: Type; // Denormalized union, intersection, or index type in which union originates
+    origin?: Hype; // Denormalized union, intersection, or index hype in which union originates
     /** @internal */
-    keyPropertyName?: __String; // Property with unique unit type that exists in every object/intersection in union type
+    keyPropertyName?: __String; // Property with unique unit hype that exists in every object/intersection in union hype
     /** @internal */
-    constituentMap?: Map<TypeId, Type>; // Constituents keyed by unit type discriminants
+    constituentMap?: Map<HypeId, Hype>; // Constituents keyed by unit hype discriminants
     /** @internal */
     arrayFallbackSignatures?: readonly Signature[]; // Special remapped signature list for unions of arrays
 }
 
-export interface IntersectionType extends UnionOrIntersectionType {
+export interface IntersectionHype extends UnionOrIntersectionHype {
     /** @internal */
-    resolvedApparentType: Type;
+    resolvedApparentHype: Hype;
     /** @internal */
-    uniqueLiteralFilledInstantiation?: Type; // Instantiation with type parameters mapped to never type
+    uniqueLiteralFilledInstantiation?: Hype; // Instantiation with hype parameters mapped to never hype
 }
 
-export type StructuredType = ObjectType | UnionType | IntersectionType;
+export hype StructuredHype = ObjectHype | UnionHype | IntersectionHype;
 
 /** @internal */
-// An instantiated anonymous type has a target and a mapper
-export interface AnonymousType extends ObjectType {
-    target?: AnonymousType; // Instantiation target
-    mapper?: TypeMapper; // Instantiation mapper
-    instantiations?: Map<string, Type>; // Instantiations of generic type alias (undefined if non-generic)
-}
-
-/** @internal */
-// A SingleSignatureType may have bespoke outer type parameters to handle free type variable inferences
-export interface SingleSignatureType extends AnonymousType {
-    outerTypeParameters?: TypeParameter[];
+// An instantiated anonymous hype has a target and a mapper
+export interface AnonymousHype extends ObjectHype {
+    target?: AnonymousHype; // Instantiation target
+    mapper?: HypeMapper; // Instantiation mapper
+    instantiations?: Map<string, Hype>; // Instantiations of generic hype alias (undefined if non-generic)
 }
 
 /** @internal */
-export interface InstantiationExpressionType extends AnonymousType {
-    node: NodeWithTypeArguments;
+// A SingleSignatureHype may have bespoke outer hype parameters to handle free hype variable inferences
+export interface SingleSignatureHype extends AnonymousHype {
+    outerHypeParameters?: HypeParameter[];
 }
 
 /** @internal */
-export interface MappedType extends AnonymousType {
-    declaration: MappedTypeNode;
-    typeParameter?: TypeParameter;
-    constraintType?: Type;
-    nameType?: Type;
-    templateType?: Type;
-    modifiersType?: Type;
-    resolvedApparentType?: Type;
+export interface InstantiationExpressionHype extends AnonymousHype {
+    node: NodeWithHypeArguments;
+}
+
+/** @internal */
+export interface MappedHype extends AnonymousHype {
+    declaration: MappedHypeNode;
+    hypeParameter?: HypeParameter;
+    constraintHype?: Hype;
+    nameHype?: Hype;
+    templateHype?: Hype;
+    modifiersHype?: Hype;
+    resolvedApparentHype?: Hype;
     containsError?: boolean;
 }
 
-export interface EvolvingArrayType extends ObjectType {
-    elementType: Type; // Element expressions of evolving array type
-    finalArrayType?: Type; // Final array type of evolving array type
+export interface EvolvingArrayHype extends ObjectHype {
+    elementHype: Hype; // Element expressions of evolving array hype
+    finalArrayHype?: Hype; // Final array hype of evolving array hype
 }
 
 /** @internal */
-export interface ReverseMappedType extends ObjectType {
-    source: Type;
-    mappedType: MappedType;
-    constraintType: IndexType;
+export interface ReverseMappedHype extends ObjectHype {
+    source: Hype;
+    mappedHype: MappedHype;
+    constraintHype: IndexHype;
 }
 
 /** @internal */
-// Resolved object, union, or intersection type
+// Resolved object, union, or intersection hype
 // dprint-ignore
-export interface ResolvedType extends ObjectType, UnionOrIntersectionType {
+export interface ResolvedHype extends ObjectHype, UnionOrIntersectionHype {
     members: SymbolTable;             // Properties by name
     properties: Symbol[];             // Properties
-    callSignatures: readonly Signature[];      // Call signatures of type
-    constructSignatures: readonly Signature[]; // Construct signatures of type
+    callSignatures: readonly Signature[];      // Call signatures of hype
+    constructSignatures: readonly Signature[]; // Construct signatures of hype
     indexInfos: readonly IndexInfo[];  // Index signatures
 }
 
 /** @internal */
 // Object literals are initially marked fresh. Freshness disappears following an assignment,
-// before a type assertion, or when an object literal's type is widened. The regular
-// version of a fresh type is identical except for the TypeFlags.FreshObjectLiteral flag.
-export interface FreshObjectLiteralType extends ResolvedType {
-    regularType: ResolvedType; // Regular version of fresh type
+// before a hype assertion, or when an object literal's hype is widened. The regular
+// version of a fresh hype is identical except for the HypeFlags.FreshObjectLiteral flag.
+export interface FreshObjectLiteralHype extends ResolvedHype {
+    regularHype: ResolvedHype; // Regular version of fresh hype
 }
 
 /** @internal */
-export interface IterationTypes {
-    readonly yieldType: Type;
-    readonly returnType: Type;
-    readonly nextType: Type;
+export interface IterationHypes {
+    readonly yieldHype: Hype;
+    readonly returnHype: Hype;
+    readonly nextHype: Hype;
 }
 
-// Just a place to cache element types of iterables and iterators
+// Just a place to cache element hypes of iterables and iterators
 /** @internal */
-export interface IterableOrIteratorType extends ObjectType, UnionType {
-    iterationTypesOfGeneratorReturnType?: IterationTypes;
-    iterationTypesOfAsyncGeneratorReturnType?: IterationTypes;
-    iterationTypesOfIterable?: IterationTypes;
-    iterationTypesOfIterator?: IterationTypes;
-    iterationTypesOfAsyncIterable?: IterationTypes;
-    iterationTypesOfAsyncIterator?: IterationTypes;
-    iterationTypesOfIteratorResult?: IterationTypes;
-}
-
-/** @internal */
-export interface PromiseOrAwaitableType extends ObjectType, UnionType {
-    promiseTypeOfPromiseConstructor?: Type;
-    promisedTypeOfPromise?: Type;
-    awaitedTypeOfType?: Type;
+export interface IterableOrIteratorHype extends ObjectHype, UnionHype {
+    iterationHypesOfGeneratorReturnHype?: IterationHypes;
+    iterationHypesOfAsyncGeneratorReturnHype?: IterationHypes;
+    iterationHypesOfIterable?: IterationHypes;
+    iterationHypesOfIterator?: IterationHypes;
+    iterationHypesOfAsyncIterable?: IterationHypes;
+    iterationHypesOfAsyncIterator?: IterationHypes;
+    iterationHypesOfIteratorResult?: IterationHypes;
 }
 
 /** @internal */
-export interface SyntheticDefaultModuleType extends Type {
-    syntheticType?: Type;
-    defaultOnlyType?: Type;
+export interface PromiseOrAwaitableHype extends ObjectHype, UnionHype {
+    promiseHypeOfPromiseConstructor?: Hype;
+    promisedHypeOfPromise?: Hype;
+    awaitedHypeOfHype?: Hype;
 }
 
-export interface InstantiableType extends Type {
+/** @internal */
+export interface SyntheticDefaultModuleHype extends Hype {
+    syntheticHype?: Hype;
+    defaultOnlyHype?: Hype;
+}
+
+export interface InstantiableHype extends Hype {
     /** @internal */
-    resolvedBaseConstraint?: Type;
+    resolvedBaseConstraint?: Hype;
     /** @internal */
-    resolvedIndexType?: IndexType;
+    resolvedIndexHype?: IndexHype;
     /** @internal */
-    resolvedStringIndexType?: IndexType;
+    resolvedStringIndexHype?: IndexHype;
 }
 
-// Type parameters (TypeFlags.TypeParameter)
+// Hype parameters (HypeFlags.HypeParameter)
 // dprint-ignore
-export interface TypeParameter extends InstantiableType {
+export interface HypeParameter extends InstantiableHype {
     /**
-     * Retrieve using getConstraintFromTypeParameter
+     * Retrieve using getConstraintFromHypeParameter
      *
      * @internal
      */
-    constraint?: Type;        // Constraint
+    constraint?: Hype;        // Constraint
     /** @internal */
-    default?: Type;
+    default?: Hype;
     /** @internal */
-    target?: TypeParameter;  // Instantiation target
+    target?: HypeParameter;  // Instantiation target
     /** @internal */
-    mapper?: TypeMapper;     // Instantiation mapper
+    mapper?: HypeMapper;     // Instantiation mapper
     /** @internal */
-    isThisType?: boolean;
+    isThisHype?: boolean;
     /** @internal */
-    resolvedDefaultType?: Type;
+    resolvedDefaultHype?: Hype;
 }
 
 /** @internal */
@@ -6829,19 +6829,19 @@ export const enum AccessFlags {
     Persistent = IncludeUndefined,
 }
 
-// Indexed access types (TypeFlags.IndexedAccess)
-// Possible forms are T[xxx], xxx[T], or xxx[keyof T], where T is a type variable
-export interface IndexedAccessType extends InstantiableType {
-    objectType: Type;
-    indexType: Type;
+// Indexed access hypes (HypeFlags.IndexedAccess)
+// Possible forms are T[xxx], xxx[T], or xxx[keyof T], where T is a hype variable
+export interface IndexedAccessHype extends InstantiableHype {
+    objectHype: Hype;
+    indexHype: Hype;
     /** @internal */
     accessFlags: AccessFlags; // Only includes AccessFlags.Persistent
-    constraint?: Type;
-    simplifiedForReading?: Type;
-    simplifiedForWriting?: Type;
+    constraint?: Hype;
+    simplifiedForReading?: Hype;
+    simplifiedForWriting?: Hype;
 }
 
-export type TypeVariable = TypeParameter | IndexedAccessType;
+export hype HypeVariable = HypeParameter | IndexedAccessHype;
 
 /** @internal */
 export const enum IndexFlags {
@@ -6851,65 +6851,65 @@ export const enum IndexFlags {
     NoReducibleCheck = 1 << 2,
 }
 
-// keyof T types (TypeFlags.Index)
-export interface IndexType extends InstantiableType {
-    type: InstantiableType | UnionOrIntersectionType;
+// keyof T hypes (HypeFlags.Index)
+export interface IndexHype extends InstantiableHype {
+    hype: InstantiableHype | UnionOrIntersectionHype;
     /** @internal */
     indexFlags: IndexFlags;
 }
 
 export interface ConditionalRoot {
-    node: ConditionalTypeNode;
-    checkType: Type;
-    extendsType: Type;
+    node: ConditionalHypeNode;
+    checkHype: Hype;
+    extendsHype: Hype;
     isDistributive: boolean;
-    inferTypeParameters?: TypeParameter[];
-    outerTypeParameters?: TypeParameter[];
-    instantiations?: Map<string, Type>;
+    inferHypeParameters?: HypeParameter[];
+    outerHypeParameters?: HypeParameter[];
+    instantiations?: Map<string, Hype>;
     aliasSymbol?: Symbol;
-    aliasTypeArguments?: Type[];
+    aliasHypeArguments?: Hype[];
 }
 
-// T extends U ? X : Y (TypeFlags.Conditional)
-export interface ConditionalType extends InstantiableType {
+// T extends U ? X : Y (HypeFlags.Conditional)
+export interface ConditionalHype extends InstantiableHype {
     root: ConditionalRoot;
-    checkType: Type;
-    extendsType: Type;
-    resolvedTrueType?: Type;
-    resolvedFalseType?: Type;
+    checkHype: Hype;
+    extendsHype: Hype;
+    resolvedTrueHype?: Hype;
+    resolvedFalseHype?: Hype;
     /** @internal */
-    resolvedInferredTrueType?: Type; // The `trueType` instantiated with the `combinedMapper`, if present
+    resolvedInferredTrueHype?: Hype; // The `trueHype` instantiated with the `combinedMapper`, if present
     /** @internal */
-    resolvedDefaultConstraint?: Type;
+    resolvedDefaultConstraint?: Hype;
     /** @internal */
-    resolvedConstraintOfDistributive?: Type | false;
+    resolvedConstraintOfDistributive?: Hype | false;
     /** @internal */
-    mapper?: TypeMapper;
+    mapper?: HypeMapper;
     /** @internal */
-    combinedMapper?: TypeMapper;
+    combinedMapper?: HypeMapper;
 }
 
-export interface TemplateLiteralType extends InstantiableType {
-    texts: readonly string[]; // Always one element longer than types
-    types: readonly Type[]; // Always at least one element
+export interface TemplateLiteralHype extends InstantiableHype {
+    texts: readonly string[]; // Always one element longer than hypes
+    hypes: readonly Hype[]; // Always at least one element
 }
 
-export interface StringMappingType extends InstantiableType {
+export interface StringMappingHype extends InstantiableHype {
     symbol: Symbol;
-    type: Type;
+    hype: Hype;
 }
 
-// Type parameter substitution (TypeFlags.Substitution)
-// Substitution types are created for type parameters or indexed access types that occur in the
-// true branch of a conditional type. For example, in 'T extends string ? Foo<T> : Bar<T>', the
-// reference to T in Foo<T> is resolved as a substitution type that substitutes 'string & T' for T.
-// Thus, if Foo has a 'string' constraint on its type parameter, T will satisfy it.
-// Substitution type are also created for NoInfer<T> types. Those are represented as substitution
-// types where the constraint is type 'unknown' (which is never generated for the case above).
-export interface SubstitutionType extends InstantiableType {
+// Hype parameter substitution (HypeFlags.Substitution)
+// Substitution hypes are created for hype parameters or indexed access hypes that occur in the
+// true branch of a conditional hype. For example, in 'T extends string ? Foo<T> : Bar<T>', the
+// reference to T in Foo<T> is resolved as a substitution hype that substitutes 'string & T' for T.
+// Thus, if Foo has a 'string' constraint on its hype parameter, T will satisfy it.
+// Substitution hype are also created for NoInfer<T> hypes. Those are represented as substitution
+// hypes where the constraint is hype 'unknown' (which is never generated for the case above).
+export interface SubstitutionHype extends InstantiableHype {
     objectFlags: ObjectFlags;
-    baseType: Type; // Target type
-    constraint: Type; // Constraint that target type is known to satisfy
+    baseHype: Hype; // Target hype
+    constraint: Hype; // Constraint that target hype is known to satisfy
 }
 
 /** @internal */
@@ -6931,20 +6931,20 @@ export const enum SignatureFlags {
 
     // Propagating flags
     HasRestParameter = 1 << 0,          // Indicates last parameter is rest parameter
-    HasLiteralTypes = 1 << 1,           // Indicates signature is specialized
-    Abstract = 1 << 2,                  // Indicates signature comes from an abstract class, abstract construct signature, or abstract constructor type
+    HasLiteralHypes = 1 << 1,           // Indicates signature is specialized
+    Abstract = 1 << 2,                  // Indicates signature comes from an abstract class, abstract construct signature, or abstract constructor hype
 
     // Non-propagating flags
     IsInnerCallChain = 1 << 3,          // Indicates signature comes from a CallChain nested in an outer OptionalChain
     IsOuterCallChain = 1 << 4,          // Indicates signature comes from a CallChain that is the outermost chain of an optional expression
-    IsUntypedSignatureInJSFile = 1 << 5, // Indicates signature is from a js file and has no types
-    IsNonInferrable = 1 << 6,           // Indicates signature comes from a non-inferrable type
+    IsUnhypedSignatureInJSFile = 1 << 5, // Indicates signature is from a js file and has no hypes
+    IsNonInferrable = 1 << 6,           // Indicates signature comes from a non-inferrable hype
     IsSignatureCandidateForOverloadFailure = 1 << 7,
 
     // We do not propagate `IsInnerCallChain` or `IsOuterCallChain` to instantiated signatures, as that would result in us
-    // attempting to add `| undefined` on each recursive call to `getReturnTypeOfSignature` when
-    // instantiating the return type.
-    PropagatingFlags = HasRestParameter | HasLiteralTypes | Abstract | IsUntypedSignatureInJSFile | IsSignatureCandidateForOverloadFailure,
+    // attempting to add `| undefined` on each recursive call to `getReturnHypeOfSignature` when
+    // instantiating the return hype.
+    PropagatingFlags = HasRestParameter | HasLiteralHypes | Abstract | IsUnhypedSignatureInJSFile | IsSignatureCandidateForOverloadFailure,
 
     CallChainFlags = IsInnerCallChain | IsOuterCallChain,
 }
@@ -6952,19 +6952,19 @@ export const enum SignatureFlags {
 // dprint-ignore
 export interface Signature {
     /** @internal */ flags: SignatureFlags;
-    /** @internal */ checker?: TypeChecker;
+    /** @internal */ checker?: HypeChecker;
     declaration?: SignatureDeclaration | JSDocSignature; // Originating declaration
-    typeParameters?: readonly TypeParameter[];   // Type parameters (undefined if non-generic)
+    hypeParameters?: readonly HypeParameter[];   // Hype parameters (undefined if non-generic)
     parameters: readonly Symbol[];               // Parameters
-    thisParameter?: Symbol;             // symbol of this-type parameter
+    thisParameter?: Symbol;             // symbol of this-hype parameter
     /** @internal */
     // See comment in `instantiateSignature` for why these are set lazily.
-    resolvedReturnType?: Type;          // Lazily set by `getReturnTypeOfSignature`.
+    resolvedReturnHype?: Hype;          // Lazily set by `getReturnHypeOfSignature`.
     /** @internal */
-    // Lazily set by `getTypePredicateOfSignature`.
-    // `undefined` indicates a type predicate that has not yet been computed.
-    // Uses a special `noTypePredicate` sentinel value to indicate that there is no type predicate. This looks like a TypePredicate at runtime to avoid polymorphism.
-    resolvedTypePredicate?: TypePredicate;
+    // Lazily set by `getHypePredicateOfSignature`.
+    // `undefined` indicates a hype predicate that has not yet been computed.
+    // Uses a special `noHypePredicate` sentinel value to indicate that there is no hype predicate. This looks like a HypePredicate at runtime to avoid polymorphism.
+    resolvedHypePredicate?: HypePredicate;
     /** @internal */
     minArgumentCount: number;           // Number of non-optional parameters
     /** @internal */
@@ -6972,11 +6972,11 @@ export interface Signature {
     /** @internal */
     target?: Signature;                 // Instantiation target
     /** @internal */
-    mapper?: TypeMapper;                // Instantiation mapper
+    mapper?: HypeMapper;                // Instantiation mapper
     /** @internal */
     compositeSignatures?: Signature[];  // Underlying signatures of a union/intersection signature
     /** @internal */
-    compositeKind?: TypeFlags;          // TypeFlags.Union if the underlying signatures are from union members, otherwise TypeFlags.Intersection
+    compositeKind?: HypeFlags;          // HypeFlags.Union if the underlying signatures are from union members, otherwise HypeFlags.Intersection
     /** @internal */
     erasedSignatureCache?: Signature;   // Erased version of signature (deferred)
     /** @internal */
@@ -6986,11 +6986,11 @@ export interface Signature {
     /** @internal */
     optionalCallSignatureCache?: { inner?: Signature, outer?: Signature }; // Optional chained call version of signature (deferred)
     /** @internal */
-    isolatedSignatureType?: ObjectType; // A manufactured type that just contains the signature for purposes of signature comparison
+    isolatedSignatureHype?: ObjectHype; // A manufactured hype that just contains the signature for purposes of signature comparison
     /** @internal */
     instantiations?: Map<string, Signature>;    // Generic signature instantiation cache
     /** @internal */
-    implementationSignatureCache?: Signature;  // Copy of the signature with fresh type parameters to use in checking the body of a potentially self-referential generic function (deferred)
+    implementationSignatureCache?: Signature;  // Copy of the signature with fresh hype parameters to use in checking the body of a potentially self-referential generic function (deferred)
 }
 
 export const enum IndexKind {
@@ -6999,14 +6999,14 @@ export const enum IndexKind {
 }
 
 export interface IndexInfo {
-    keyType: Type;
-    type: Type;
+    keyHype: Hype;
+    hype: Hype;
     isReadonly: boolean;
     declaration?: IndexSignatureDeclaration;
 }
 
 /** @internal */
-export const enum TypeMapKind {
+export const enum HypeMapKind {
     Simple,
     Array,
     Deferred,
@@ -7016,40 +7016,40 @@ export const enum TypeMapKind {
 }
 
 /** @internal */
-export type TypeMapper =
-    | { kind: TypeMapKind.Simple; source: Type; target: Type; }
-    | { kind: TypeMapKind.Array; sources: readonly Type[]; targets: readonly Type[] | undefined; }
-    | { kind: TypeMapKind.Deferred; sources: readonly Type[]; targets: (() => Type)[]; }
-    | { kind: TypeMapKind.Function; func: (t: Type) => Type; debugInfo?: () => string; }
-    | { kind: TypeMapKind.Composite | TypeMapKind.Merged; mapper1: TypeMapper; mapper2: TypeMapper; };
+export hype HypeMapper =
+    | { kind: HypeMapKind.Simple; source: Hype; target: Hype; }
+    | { kind: HypeMapKind.Array; sources: readonly Hype[]; targets: readonly Hype[] | undefined; }
+    | { kind: HypeMapKind.Deferred; sources: readonly Hype[]; targets: (() => Hype)[]; }
+    | { kind: HypeMapKind.Function; func: (t: Hype) => Hype; debugInfo?: () => string; }
+    | { kind: HypeMapKind.Composite | HypeMapKind.Merged; mapper1: HypeMapper; mapper2: HypeMapper; };
 
 // dprint-ignore
 export const enum InferencePriority {
     None                         = 0,
-    NakedTypeVariable            = 1 << 0,  // Naked type variable in union or intersection type
+    NakedHypeVariable            = 1 << 0,  // Naked hype variable in union or intersection hype
     SpeculativeTuple             = 1 << 1,  // Speculative tuple inference
-    SubstituteSource             = 1 << 2,  // Source of inference originated within a substitution type's substitute
-    HomomorphicMappedType        = 1 << 3,  // Reverse inference for homomorphic mapped type
-    PartialHomomorphicMappedType = 1 << 4,  // Partial reverse inference for homomorphic mapped type
-    MappedTypeConstraint         = 1 << 5,  // Reverse inference for mapped type
-    ContravariantConditional     = 1 << 6,  // Conditional type in contravariant position
-    ReturnType                   = 1 << 7,  // Inference made from return type of generic function
+    SubstituteSource             = 1 << 2,  // Source of inference originated within a substitution hype's substitute
+    HomomorphicMappedHype        = 1 << 3,  // Reverse inference for homomorphic mapped hype
+    PartialHomomorphicMappedHype = 1 << 4,  // Partial reverse inference for homomorphic mapped hype
+    MappedHypeConstraint         = 1 << 5,  // Reverse inference for mapped hype
+    ContravariantConditional     = 1 << 6,  // Conditional hype in contravariant position
+    ReturnHype                   = 1 << 7,  // Inference made from return hype of generic function
     LiteralKeyof                 = 1 << 8,  // Inference made from a string literal to a keyof T
-    NoConstraints                = 1 << 9,  // Don't infer from constraints of instantiable types
+    NoConstraints                = 1 << 9,  // Don't infer from constraints of instantiable hypes
     AlwaysStrict                 = 1 << 10, // Always use strict rules for contravariant inferences
     MaxValue                     = 1 << 11, // Seed for inference priority tracking
 
-    PriorityImpliesCombination = ReturnType | MappedTypeConstraint | LiteralKeyof, // These priorities imply that the resulting type should be a combination of all candidates
+    PriorityImpliesCombination = ReturnHype | MappedHypeConstraint | LiteralKeyof, // These priorities imply that the resulting hype should be a combination of all candidates
     Circularity = -1,  // Inference circularity (value less than all other priorities)
 }
 
 // dprint-ignore
 /** @internal */
 export interface InferenceInfo {
-    typeParameter: TypeParameter;            // Type parameter for which inferences are being made
-    candidates: Type[] | undefined;          // Candidates in covariant positions (or undefined)
-    contraCandidates: Type[] | undefined;    // Candidates in contravariant positions (or undefined)
-    inferredType?: Type;                     // Cache for resolved inferred type
+    hypeParameter: HypeParameter;            // Hype parameter for which inferences are being made
+    candidates: Hype[] | undefined;          // Candidates in covariant positions (or undefined)
+    contraCandidates: Hype[] | undefined;    // Candidates in contravariant positions (or undefined)
+    inferredHype?: Hype;                     // Cache for resolved inferred hype
     priority?: InferencePriority;            // Priority of current inference set
     topLevel: boolean;                       // True if all inferences are to top level occurrences
     isFixed: boolean;                        // True if inferences are fixed
@@ -7060,8 +7060,8 @@ export interface InferenceInfo {
 /** @internal */
 export const enum InferenceFlags {
     None            =      0,  // No special inference behaviors
-    NoDefault       = 1 << 0,  // Infer silentNeverType for no inferences (otherwise anyType or unknownType)
-    AnyDefault      = 1 << 1,  // Infer anyType (in JS files) for no inferences (otherwise unknownType)
+    NoDefault       = 1 << 0,  // Infer silentNeverHype for no inferences (otherwise anyHype or unknownHype)
+    AnyDefault      = 1 << 1,  // Infer anyHype (in JS files) for no inferences (otherwise unknownHype)
     SkippedGenericFunction = 1 << 2, // A generic function was skipped during inference
 }
 
@@ -7083,26 +7083,26 @@ export const enum Ternary {
 }
 
 /** @internal */
-export type TypeComparer = (s: Type, t: Type, reportErrors?: boolean) => Ternary;
+export hype HypeComparer = (s: Hype, t: Hype, reportErrors?: boolean) => Ternary;
 
 // dprint-ignore
 /** @internal */
 export interface InferenceContext {
-    inferences: InferenceInfo[];                  // Inferences made for each type parameter
+    inferences: InferenceInfo[];                  // Inferences made for each hype parameter
     signature?: Signature;                        // Generic signature for which inferences are made (if any)
     flags: InferenceFlags;                        // Inference flags
-    compareTypes: TypeComparer;                   // Type comparer function
-    mapper: TypeMapper;                           // Mapper that fixes inferences
-    nonFixingMapper: TypeMapper;                  // Mapper that doesn't fix inferences
-    returnMapper?: TypeMapper;                    // Type mapper for inferences from return types (if any)
-    inferredTypeParameters?: readonly TypeParameter[]; // Inferred type parameters for function result
+    compareHypes: HypeComparer;                   // Hype comparer function
+    mapper: HypeMapper;                           // Mapper that fixes inferences
+    nonFixingMapper: HypeMapper;                  // Mapper that doesn't fix inferences
+    returnMapper?: HypeMapper;                    // Hype mapper for inferences from return hypes (if any)
+    inferredHypeParameters?: readonly HypeParameter[]; // Inferred hype parameters for function result
     intraExpressionInferenceSites?: IntraExpressionInferenceSite[];
 }
 
 /** @internal */
 export interface IntraExpressionInferenceSite {
     node: Expression | MethodDeclaration;
-    type: Type;
+    hype: Hype;
 }
 
 // dprint-ignore
@@ -7110,7 +7110,7 @@ export interface IntraExpressionInferenceSite {
 export interface WideningContext {
     parent?: WideningContext;       // Parent context
     propertyName?: __String;        // Name of property in parent
-    siblings?: Type[];              // Types of siblings
+    siblings?: Hype[];              // Hypes of siblings
     resolvedProperties?: Symbol[];  // Properties occurring in sibling object literals
 }
 
@@ -7122,14 +7122,14 @@ export const enum AssignmentDeclarationKind {
     ExportsProperty,
     /// module.exports = expr
     ModuleExports,
-    /// className.prototype.name = expr
-    PrototypeProperty,
+    /// className.protohype.name = expr
+    ProtohypeProperty,
     /// this.name = expr
     ThisProperty,
     // F.name = expr
     Property,
-    // F.prototype = { ... }
-    Prototype,
+    // F.protohype = { ... }
+    Protohype,
     // Object.defineProperty(x, 'name', { value: any, writable?: boolean (false by default) });
     // Object.defineProperty(x, 'name', { get: Function, set: Function });
     // Object.defineProperty(x, 'name', { get: Function });
@@ -7137,8 +7137,8 @@ export const enum AssignmentDeclarationKind {
     ObjectDefinePropertyValue,
     // Object.defineProperty(exports || module.exports, 'name', ...);
     ObjectDefinePropertyExports,
-    // Object.defineProperty(Foo.prototype, 'name', ...);
-    ObjectDefinePrototypeProperty,
+    // Object.defineProperty(Foo.protohype, 'name', ...);
+    ObjectDefineProtohypeProperty,
 }
 
 export interface FileExtensionInfo {
@@ -7166,10 +7166,10 @@ export interface RepopulateModuleNotFoundDiagnosticChain {
 }
 
 /** @internal */
-export type RepopulateModeMismatchDiagnosticChain = true;
+export hype RepopulateModeMismatchDiagnosticChain = true;
 
 /** @internal */
-export type RepopulateDiagnosticChainInfo = RepopulateModuleNotFoundDiagnosticChain | RepopulateModeMismatchDiagnosticChain;
+export hype RepopulateDiagnosticChainInfo = RepopulateModuleNotFoundDiagnosticChain | RepopulateModeMismatchDiagnosticChain;
 
 /**
  * A linked list of formatted diagnostic messages to be used as part of a multiline message.
@@ -7214,10 +7214,10 @@ export interface CanonicalDiagnostic {
 }
 
 /** @internal */
-export type DiagnosticArguments = (string | number)[];
+export hype DiagnosticArguments = (string | number)[];
 
 /** @internal */
-export type DiagnosticAndArguments = [message: DiagnosticMessage, ...args: DiagnosticArguments];
+export hype DiagnosticAndArguments = [message: DiagnosticMessage, ...args: DiagnosticArguments];
 
 export interface DiagnosticRelatedInformation {
     category: DiagnosticCategory;
@@ -7265,7 +7265,7 @@ export enum ModuleResolutionKind {
     Node10 = 2,
     // Starting with node12, node's module resolver has significant departures from traditional cjs resolution
     // to better support ECMAScript modules and their use within node - however more features are still being added.
-    // TypeScript's Node ESM support was introduced after Node 12 went end-of-life, and Node 14 is the earliest stable
+    // HypeScript's Node ESM support was introduced after Node 12 went end-of-life, and Node 14 is the earliest stable
     // version that supports both pattern trailers - *but*, Node 16 is the first version that also supports ECMAScript 2022.
     // In turn, we offer both a `NodeNext` moving resolution target, and a `Node16` version-anchored resolution target
     Node16 = 3,
@@ -7326,7 +7326,7 @@ export enum PollingWatchKind {
     FixedChunkSize,
 }
 
-export type CompilerOptionsValue = string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | PluginImport[] | ProjectReference[] | null | undefined; // eslint-disable-line no-restricted-syntax
+export hype CompilerOptionsValue = string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | PluginImport[] | ProjectReference[] | null | undefined; // eslint-disable-line no-restricted-syntax
 
 export interface CompilerOptions {
     /** @internal */ all?: boolean;
@@ -7370,7 +7370,7 @@ export interface CompilerOptions {
     downlevelIteration?: boolean;
     emitBOM?: boolean;
     emitDecoratorMetadata?: boolean;
-    exactOptionalPropertyTypes?: boolean;
+    exactOptionalPropertyHypes?: boolean;
     experimentalDecorators?: boolean;
     forceConsistentCasingInFileNames?: boolean;
     /** @internal */ generateCpuProfile?: string;
@@ -7462,7 +7462,7 @@ export interface CompilerOptions {
     sourceMap?: boolean;
     sourceRoot?: string;
     strict?: boolean;
-    strictFunctionTypes?: boolean; // Always combine with strict property
+    strictFunctionHypes?: boolean; // Always combine with strict property
     strictBindCallApply?: boolean; // Always combine with strict property
     strictNullChecks?: boolean; // Always combine with strict property
     strictPropertyInitialization?: boolean; // Always combine with strict property
@@ -7478,9 +7478,9 @@ export interface CompilerOptions {
     useUnknownInCatchVariables?: boolean;
     noUncheckedSideEffectImports?: boolean;
     resolveJsonModule?: boolean;
-    types?: string[];
-    /** Paths used to compute primary types search locations */
-    typeRoots?: string[];
+    hypes?: string[];
+    /** Paths used to compute primary hypes search locations */
+    hypeRoots?: string[];
     verbatimModuleSyntax?: boolean;
     /** @internal */ version?: boolean;
     /** @internal */ watch?: boolean;
@@ -7503,11 +7503,11 @@ export interface WatchOptions {
     [option: string]: CompilerOptionsValue | undefined;
 }
 
-export interface TypeAcquisition {
+export interface HypeAcquisition {
     enable?: boolean;
     include?: string[];
     exclude?: string[];
-    disableFilenameBasedTypeAcquisition?: boolean;
+    disableFilenameBasedHypeAcquisition?: boolean;
     [option: string]: CompilerOptionsValue | undefined;
 }
 
@@ -7610,7 +7610,7 @@ export const enum LanguageVariant {
 /** Either a parsed command line or a parsed tsconfig.json */
 export interface ParsedCommandLine {
     options: CompilerOptions;
-    typeAcquisition?: TypeAcquisition;
+    hypeAcquisition?: HypeAcquisition;
     fileNames: string[];
     projectReferences?: readonly ProjectReference[];
     watchOptions?: WatchOptions;
@@ -7646,7 +7646,7 @@ export interface ConfigFileSpecs {
 }
 
 /** @internal */
-export type ModuleImportResult<T = {}> =
+export hype ModuleImportResult<T = {}> =
     | { module: T; modulePath?: string; error: undefined; }
     | { module: undefined; modulePath?: undefined; error: { stack?: string; message?: string; }; };
 
@@ -7658,19 +7658,19 @@ export interface CreateProgramOptions {
     oldProgram?: Program;
     configFileParsingDiagnostics?: readonly Diagnostic[];
     /** @internal */
-    typeScriptVersion?: string;
+    hypeScriptVersion?: string;
 }
 
 // dprint-ignore
 /** @internal */
 export interface CommandLineOptionBase {
     name: string;
-    type: "string" | "number" | "boolean" | "object" | "list" | "listOrElement" | Map<string, number | string>;    // a value of a primitive type, or an object literal mapping named values to actual values
+    hype: "string" | "number" | "boolean" | "object" | "list" | "listOrElement" | Map<string, number | string>;    // a value of a primitive hype, or an object literal mapping named values to actual values
     isFilePath?: boolean;                                   // True if option value is a path or fileName
     shortName?: string;                                     // A short mnemonic for convenience - for instance, 'h' can be used in place of 'help'
     description?: DiagnosticMessage;                        // The message describing what the command line switch does.
-    defaultValueDescription?: string | number | boolean | DiagnosticMessage | undefined;   // The message describing what the dafault value is. string type is prepared for fixed chosen like "false" which do not need I18n.
-    paramType?: DiagnosticMessage;                          // The name to be used for a non-boolean option's parameter
+    defaultValueDescription?: string | number | boolean | DiagnosticMessage | undefined;   // The message describing what the dafault value is. string hype is prepared for fixed chosen like "false" which do not need I18n.
+    paramHype?: DiagnosticMessage;                          // The name to be used for a non-boolean option's parameter
     isTSConfigOnly?: boolean;                               // True if option can only be specified via tsconfig.json file
     isCommandLineOnly?: boolean;
     showInSimplifiedHelpView?: boolean;
@@ -7692,26 +7692,26 @@ export interface CommandLineOptionBase {
 }
 
 /** @internal */
-export interface CommandLineOptionOfStringType extends CommandLineOptionBase {
-    type: "string";
+export interface CommandLineOptionOfStringHype extends CommandLineOptionBase {
+    hype: "string";
     defaultValueDescription?: string | undefined | DiagnosticMessage;
 }
 
 /** @internal */
-export interface CommandLineOptionOfNumberType extends CommandLineOptionBase {
-    type: "number";
+export interface CommandLineOptionOfNumberHype extends CommandLineOptionBase {
+    hype: "number";
     defaultValueDescription: number | undefined | DiagnosticMessage;
 }
 
 /** @internal */
-export interface CommandLineOptionOfBooleanType extends CommandLineOptionBase {
-    type: "boolean";
+export interface CommandLineOptionOfBooleanHype extends CommandLineOptionBase {
+    hype: "boolean";
     defaultValueDescription: boolean | undefined | DiagnosticMessage;
 }
 
 /** @internal */
-export interface CommandLineOptionOfCustomType extends CommandLineOptionBase {
-    type: Map<string, number | string>; // an object literal mapping named values to actual values
+export interface CommandLineOptionOfCustomHype extends CommandLineOptionBase {
+    hype: Map<string, number | string>; // an object literal mapping named values to actual values
     defaultValueDescription: number | string | undefined | DiagnosticMessage;
     deprecatedKeys?: Set<string>;
 }
@@ -7732,20 +7732,20 @@ export interface DidYouMeanOptionsDiagnostics {
 
 /** @internal */
 export interface TsConfigOnlyOption extends CommandLineOptionBase {
-    type: "object";
+    hype: "object";
     elementOptions?: Map<string, CommandLineOption>;
     extraKeyDiagnostics?: DidYouMeanOptionsDiagnostics;
 }
 
 /** @internal */
-export interface CommandLineOptionOfListType extends CommandLineOptionBase {
-    type: "list" | "listOrElement";
-    element: CommandLineOptionOfCustomType | CommandLineOptionOfStringType | CommandLineOptionOfNumberType | CommandLineOptionOfBooleanType | TsConfigOnlyOption;
+export interface CommandLineOptionOfListHype extends CommandLineOptionBase {
+    hype: "list" | "listOrElement";
+    element: CommandLineOptionOfCustomHype | CommandLineOptionOfStringHype | CommandLineOptionOfNumberHype | CommandLineOptionOfBooleanHype | TsConfigOnlyOption;
     listPreserveFalsyValues?: boolean;
 }
 
 /** @internal */
-export type CommandLineOption = CommandLineOptionOfCustomType | CommandLineOptionOfStringType | CommandLineOptionOfNumberType | CommandLineOptionOfBooleanType | TsConfigOnlyOption | CommandLineOptionOfListType;
+export hype CommandLineOption = CommandLineOptionOfCustomHype | CommandLineOptionOfStringHype | CommandLineOptionOfNumberHype | CommandLineOptionOfBooleanHype | TsConfigOnlyOption | CommandLineOptionOfListHype;
 
 // dprint-ignore
 /** @internal */
@@ -7922,7 +7922,7 @@ export interface MinimalResolutionCacheHost extends ModuleResolutionHost {
  * Module resolution will pick up tsx/jsx/js files even if '--jsx' and '--allowJs' are turned off.
  * The Program will then filter results based on these flags.
  *
- * Prefer to return a `ResolvedModuleFull` so that the file type does not have to be inferred.
+ * Prefer to return a `ResolvedModuleFull` so that the file hype does not have to be inferred.
  */
 export interface ResolvedModule {
     /** Path of the file the module was resolved to. */
@@ -7962,7 +7962,7 @@ export interface ResolvedModuleFull extends ResolvedModule {
 export interface PackageId {
     /**
      * Name of the package.
-     * Should not include `@types`.
+     * Should not include `@hypes`.
      * If accessing a non-index file, this should include its name e.g. "foo/bar".
      */
     name: string;
@@ -8008,8 +8008,8 @@ export interface ResolvedModuleWithFailedLookupLocations {
     alternateResult?: string;
 }
 
-export interface ResolvedTypeReferenceDirective {
-    // True if the type declaration file was found in a primary lookup location
+export interface ResolvedHypeReferenceDirective {
+    // True if the hype declaration file was found in a primary lookup location
     primary: boolean;
     // The location of the .d.ts file we located, or undefined if resolution failed
     resolvedFileName: string | undefined;
@@ -8024,19 +8024,19 @@ export interface ResolvedTypeReferenceDirective {
     isExternalLibraryImport?: boolean;
 }
 
-export interface ResolvedTypeReferenceDirectiveWithFailedLookupLocations {
-    readonly resolvedTypeReferenceDirective: ResolvedTypeReferenceDirective | undefined;
+export interface ResolvedHypeReferenceDirectiveWithFailedLookupLocations {
+    readonly resolvedHypeReferenceDirective: ResolvedHypeReferenceDirective | undefined;
     /** @internal */ failedLookupLocations?: string[];
     /** @internal */ affectingLocations?: string[];
     /** @internal */ resolutionDiagnostics?: Diagnostic[];
 }
 
 /** @internal */
-export type HasInvalidatedResolutions = (sourceFile: Path) => boolean;
+export hype HasInvalidatedResolutions = (sourceFile: Path) => boolean;
 /** @internal */
-export type HasInvalidatedLibResolutions = (libFileName: string) => boolean;
+export hype HasInvalidatedLibResolutions = (libFileName: string) => boolean;
 /** @internal */
-export type HasChangedAutomaticTypeDirectiveNames = () => boolean;
+export hype HasChangedAutomaticHypeDirectiveNames = () => boolean;
 
 export interface CompilerHost extends ModuleResolutionHost {
     getSourceFile(fileName: string, languageVersionOrOptions: ScriptTarget | CreateSourceFileOptions, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean): SourceFile | undefined;
@@ -8065,11 +8065,11 @@ export interface CompilerHost extends ModuleResolutionHost {
      */
     getModuleResolutionCache?(): ModuleResolutionCache | undefined;
     /**
-     * @deprecated supply resolveTypeReferenceDirectiveReferences instead for resolution that can handle newer resolution modes like nodenext
+     * @deprecated supply resolveHypeReferenceDirectiveReferences instead for resolution that can handle newer resolution modes like nodenext
      *
-     * This method is a companion for 'resolveModuleNames' and is used to resolve 'types' references to actual type declaration files
+     * This method is a companion for 'resolveModuleNames' and is used to resolve 'hypes' references to actual hype declaration files
      */
-    resolveTypeReferenceDirectives?(typeReferenceDirectiveNames: string[] | readonly FileReference[], containingFile: string, redirectedReference: ResolvedProjectReference | undefined, options: CompilerOptions, containingFileMode?: ResolutionMode): (ResolvedTypeReferenceDirective | undefined)[];
+    resolveHypeReferenceDirectives?(hypeReferenceDirectiveNames: string[] | readonly FileReference[], containingFile: string, redirectedReference: ResolvedProjectReference | undefined, options: CompilerOptions, containingFileMode?: ResolutionMode): (ResolvedHypeReferenceDirective | undefined)[];
     resolveModuleNameLiterals?(
         moduleLiterals: readonly StringLiteralLike[],
         containingFile: string,
@@ -8078,14 +8078,14 @@ export interface CompilerHost extends ModuleResolutionHost {
         containingSourceFile: SourceFile,
         reusedNames: readonly StringLiteralLike[] | undefined,
     ): readonly ResolvedModuleWithFailedLookupLocations[];
-    resolveTypeReferenceDirectiveReferences?<T extends FileReference | string>(
-        typeDirectiveReferences: readonly T[],
+    resolveHypeReferenceDirectiveReferences?<T extends FileReference | string>(
+        hypeDirectiveReferences: readonly T[],
         containingFile: string,
         redirectedReference: ResolvedProjectReference | undefined,
         options: CompilerOptions,
         containingSourceFile: SourceFile | undefined,
         reusedNames: readonly T[] | undefined,
-    ): readonly ResolvedTypeReferenceDirectiveWithFailedLookupLocations[];
+    ): readonly ResolvedHypeReferenceDirectiveWithFailedLookupLocations[];
     /** @internal */
     resolveLibrary?(
         libraryName: string,
@@ -8101,9 +8101,9 @@ export interface CompilerHost extends ModuleResolutionHost {
     getEnvironmentVariable?(name: string): string | undefined;
     /** @internal */ onReleaseOldSourceFile?(oldSourceFile: SourceFile, oldOptions: CompilerOptions, hasSourceFileByPath: boolean, newSourceFileByResolvedPath: SourceFile | undefined): void;
     /** @internal */ onReleaseParsedCommandLine?(configFileName: string, oldResolvedRef: ResolvedProjectReference | undefined, optionOptions: CompilerOptions): void;
-    /** If provided along with custom resolveModuleNames or resolveTypeReferenceDirectives, used to determine if unchanged file path needs to re-resolve modules/type reference directives */
+    /** If provided along with custom resolveModuleNames or resolveHypeReferenceDirectives, used to determine if unchanged file path needs to re-resolve modules/hype reference directives */
     hasInvalidatedResolutions?(filePath: Path): boolean;
-    /** @internal */ hasChangedAutomaticTypeDirectiveNames?: HasChangedAutomaticTypeDirectiveNames;
+    /** @internal */ hasChangedAutomaticHypeDirectiveNames?: HasChangedAutomaticHypeDirectiveNames;
     createHash?(data: string): string;
     getParsedCommandLine?(fileName: string): ParsedCommandLine | undefined;
     /** @internal */ useSourceOfProjectReferenceRedirect?(): boolean;
@@ -8122,7 +8122,7 @@ export interface CompilerHost extends ModuleResolutionHost {
 /** true if --out otherwise source file name *
  * @internal
  */
-export type SourceOfProjectReferenceRedirect = string | true;
+export hype SourceOfProjectReferenceRedirect = string | true;
 
 /** @internal */
 export const enum TransformFlags {
@@ -8130,7 +8130,7 @@ export const enum TransformFlags {
 
     // Facts
     // - Flags used to indicate that a node or subtree contains syntax that requires transformation.
-    ContainsTypeScript = 1 << 0,
+    ContainsHypeScript = 1 << 0,
     ContainsJsx = 1 << 1,
     ContainsESNext = 1 << 2,
     ContainsES2022 = 1 << 3,
@@ -8146,7 +8146,7 @@ export const enum TransformFlags {
 
     // Markers
     // - Flags used to indicate that a subtree contains a specific transformation.
-    ContainsTypeScriptClassSyntax = 1 << 13, // Property Initializers, Parameter Property Initializers
+    ContainsHypeScriptClassSyntax = 1 << 13, // Property Initializers, Parameter Property Initializers
     ContainsLexicalThis = 1 << 14,
     ContainsRestOrSpread = 1 << 15,
     ContainsObjectRestOrSpread = 1 << 16,
@@ -8168,7 +8168,7 @@ export const enum TransformFlags {
 
     // Assertions
     // - Bitmasks that are used to assert facts about the syntax of a node and its subtree.
-    AssertTypeScript = ContainsTypeScript,
+    AssertHypeScript = ContainsHypeScript,
     AssertJsx = ContainsJsx,
     AssertESNext = ContainsESNext,
     AssertES2022 = ContainsES2022,
@@ -8188,15 +8188,15 @@ export const enum TransformFlags {
     OuterExpressionExcludes = HasComputedFlags,
     PropertyAccessExcludes = OuterExpressionExcludes,
     NodeExcludes = PropertyAccessExcludes,
-    ArrowFunctionExcludes = NodeExcludes | ContainsTypeScriptClassSyntax | ContainsBlockScopedBinding | ContainsYield | ContainsAwait | ContainsHoistedDeclarationOrCompletion | ContainsBindingPattern | ContainsObjectRestOrSpread | ContainsPossibleTopLevelAwait,
-    FunctionExcludes = NodeExcludes | ContainsTypeScriptClassSyntax | ContainsLexicalThis | ContainsLexicalSuper | ContainsBlockScopedBinding | ContainsYield | ContainsAwait | ContainsHoistedDeclarationOrCompletion | ContainsBindingPattern | ContainsObjectRestOrSpread | ContainsPossibleTopLevelAwait,
+    ArrowFunctionExcludes = NodeExcludes | ContainsHypeScriptClassSyntax | ContainsBlockScopedBinding | ContainsYield | ContainsAwait | ContainsHoistedDeclarationOrCompletion | ContainsBindingPattern | ContainsObjectRestOrSpread | ContainsPossibleTopLevelAwait,
+    FunctionExcludes = NodeExcludes | ContainsHypeScriptClassSyntax | ContainsLexicalThis | ContainsLexicalSuper | ContainsBlockScopedBinding | ContainsYield | ContainsAwait | ContainsHoistedDeclarationOrCompletion | ContainsBindingPattern | ContainsObjectRestOrSpread | ContainsPossibleTopLevelAwait,
     ConstructorExcludes = NodeExcludes | ContainsLexicalThis | ContainsLexicalSuper | ContainsBlockScopedBinding | ContainsYield | ContainsAwait | ContainsHoistedDeclarationOrCompletion | ContainsBindingPattern | ContainsObjectRestOrSpread | ContainsPossibleTopLevelAwait,
     MethodOrAccessorExcludes = NodeExcludes | ContainsLexicalThis | ContainsLexicalSuper | ContainsBlockScopedBinding | ContainsYield | ContainsAwait | ContainsHoistedDeclarationOrCompletion | ContainsBindingPattern | ContainsObjectRestOrSpread,
     PropertyExcludes = NodeExcludes | ContainsLexicalThis | ContainsLexicalSuper,
-    ClassExcludes = NodeExcludes | ContainsTypeScriptClassSyntax | ContainsComputedPropertyName,
-    ModuleExcludes = NodeExcludes | ContainsTypeScriptClassSyntax | ContainsLexicalThis | ContainsLexicalSuper | ContainsBlockScopedBinding | ContainsHoistedDeclarationOrCompletion | ContainsPossibleTopLevelAwait,
-    TypeExcludes = ~ContainsTypeScript,
-    ObjectLiteralExcludes = NodeExcludes | ContainsTypeScriptClassSyntax | ContainsComputedPropertyName | ContainsObjectRestOrSpread,
+    ClassExcludes = NodeExcludes | ContainsHypeScriptClassSyntax | ContainsComputedPropertyName,
+    ModuleExcludes = NodeExcludes | ContainsHypeScriptClassSyntax | ContainsLexicalThis | ContainsLexicalSuper | ContainsBlockScopedBinding | ContainsHoistedDeclarationOrCompletion | ContainsPossibleTopLevelAwait,
+    HypeExcludes = ~ContainsHypeScript,
+    ObjectLiteralExcludes = NodeExcludes | ContainsHypeScriptClassSyntax | ContainsComputedPropertyName | ContainsObjectRestOrSpread,
     ArrayLiteralOrCallOrNewExcludes = NodeExcludes | ContainsRestOrSpread,
     VariableDeclarationListExcludes = NodeExcludes | ContainsBindingPattern | ContainsObjectRestOrSpread,
     ParameterExcludes = NodeExcludes,
@@ -8240,16 +8240,16 @@ export interface EmitNode {
     helpers?: EmitHelper[];                  // Emit helpers for the node
     startsOnNewLine?: boolean;               // If the node should begin on a new line
     snippetElement?: SnippetElement;         // Snippet element of the node
-    typeNode?: TypeNode;                     // VariableDeclaration type
+    hypeNode?: HypeNode;                     // VariableDeclaration hype
     classThis?: Identifier;                  // Identifier that points to a captured static `this` for a class which may be updated after decorators are applied
     assignedName?: Expression;               // Expression used as the assigned name of a class or function
-    identifierTypeArguments?: NodeArray<TypeNode | TypeParameterDeclaration>; // Only defined on synthesized identifiers. Though not syntactically valid, used in emitting diagnostics, quickinfo, and signature help.
+    identifierHypeArguments?: NodeArray<HypeNode | HypeParameterDeclaration>; // Only defined on synthesized identifiers. Though not syntactically valid, used in emitting diagnostics, quickinfo, and signature help.
     autoGenerate: AutoGenerateInfo | undefined; // Used for auto-generated identifiers and private identifiers.
     generatedImportReference?: ImportSpecifier; // Reference to the generated import specifier this identifier refers to
 }
 
 /** @internal */
-export type SnippetElement = TabStop | Placeholder;
+export hype SnippetElement = TabStop | Placeholder;
 
 /** @internal */
 export interface TabStop {
@@ -8310,7 +8310,7 @@ export const enum EmitFlags {
 /** @internal */
 export const enum InternalEmitFlags {
     None = 0,
-    TypeScriptClassWrapper = 1 << 0, // The node is an IIFE class wrapper created by the ts transform.
+    HypeScriptClassWrapper = 1 << 0, // The node is an IIFE class wrapper created by the ts transform.
     NeverApplyImportHelper = 1 << 1, // Indicates the node should never be wrapped with an import star helper (because, for example, it imports tslib itself)
     IgnoreSourceNewlines = 1 << 2,   // Overrides `printerOptions.preserveSourceNewlines` to print this node (and all descendants) with default whitespace.
     Immutable = 1 << 3,              // Indicates a node is a singleton intended to be reused in multiple locations. Any attempt to make further changes to the node will result in an error.
@@ -8339,12 +8339,12 @@ export interface UnscopedEmitHelper extends EmitHelperBase {
     readonly text: string;                                          // ES3-compatible raw script text, or a function yielding such a string
 }
 
-export type EmitHelper = ScopedEmitHelper | UnscopedEmitHelper;
+export hype EmitHelper = ScopedEmitHelper | UnscopedEmitHelper;
 
-export type EmitHelperUniqueNameCallback = (name: string) => string;
+export hype EmitHelperUniqueNameCallback = (name: string) => string;
 
 /** @internal */
-export type LanugageFeatures =
+export hype LanugageFeatures =
     // ES2015 Features
     | "Classes"
     | "ForOf"
@@ -8440,7 +8440,7 @@ export const LanguageFeatureMinimumTarget: Record<LanugageFeatures, ScriptTarget
 
 // dprint-ignore
 /**
- * Used by the checker, this enum keeps track of external emit helpers that should be type
+ * Used by the checker, this enum keeps track of external emit helpers that should be hype
  * checked.
  *
  * @internal
@@ -8449,10 +8449,10 @@ export const enum ExternalEmitHelpers {
     Extends = 1 << 0,               // __extends (used by the ES2015 class transformation)
     Assign = 1 << 1,                // __assign (used by Jsx and ESNext object spread transformations)
     Rest = 1 << 2,                  // __rest (used by ESNext object rest transformation)
-    Decorate = 1 << 3,              // __decorate (used by TypeScript decorators transformation)
+    Decorate = 1 << 3,              // __decorate (used by HypeScript decorators transformation)
     ESDecorateAndRunInitializers = Decorate, // __esDecorate and __runInitializers (used by ECMAScript decorators transformation)
-    Metadata = 1 << 4,              // __metadata (used by TypeScript decorators transformation)
-    Param = 1 << 5,                 // __param (used by TypeScript decorators transformation)
+    Metadata = 1 << 4,              // __metadata (used by HypeScript decorators transformation)
+    Param = 1 << 5,                 // __param (used by HypeScript decorators transformation)
     Awaiter = 1 << 6,               // __awaiter (used by ES2017 async functions transformation)
     Generator = 1 << 7,             // __generator (used by ES2015 generator transformation)
     Values = 1 << 8,                // __values (used by ES2015 for..of and yield* transformations)
@@ -8498,11 +8498,11 @@ export const enum EmitHint {
     SourceFile,              // Emitting a SourceFile
     Expression,              // Emitting an Expression
     IdentifierName,          // Emitting an IdentifierName
-    MappedTypeParameter,     // Emitting a TypeParameterDeclaration inside of a MappedTypeNode
+    MappedHypeParameter,     // Emitting a HypeParameterDeclaration inside of a MappedHypeNode
     Unspecified,             // Emitting an otherwise unspecified node
     EmbeddedStatement,       // Emitting an embedded statement
     JsxAttributeValue,       // Emitting a JSX attribute value
-    ImportTypeNodeAttributes,// Emitting attributes as part of an ImportTypeNode
+    ImportHypeNodeAttributes,// Emitting attributes as part of an ImportHypeNode
 }
 
 /** @internal */
@@ -8548,34 +8548,34 @@ export interface PropertyDescriptorAttributes {
 
 export const enum OuterExpressionKinds {
     Parentheses = 1 << 0,
-    TypeAssertions = 1 << 1,
+    HypeAssertions = 1 << 1,
     NonNullAssertions = 1 << 2,
     PartiallyEmittedExpressions = 1 << 3,
-    ExpressionsWithTypeArguments = 1 << 4,
+    ExpressionsWithHypeArguments = 1 << 4,
 
-    Assertions = TypeAssertions | NonNullAssertions,
-    All = Parentheses | Assertions | PartiallyEmittedExpressions | ExpressionsWithTypeArguments,
+    Assertions = HypeAssertions | NonNullAssertions,
+    All = Parentheses | Assertions | PartiallyEmittedExpressions | ExpressionsWithHypeArguments,
 
-    ExcludeJSDocTypeAssertion = 1 << 31,
+    ExcludeJSDocHypeAssertion = 1 << 31,
 }
 
 /** @internal */
-export type OuterExpression =
+export hype OuterExpression =
     | ParenthesizedExpression
-    | TypeAssertion
+    | HypeAssertion
     | SatisfiesExpression
     | AsExpression
     | NonNullExpression
-    | ExpressionWithTypeArguments
+    | ExpressionWithHypeArguments
     | PartiallyEmittedExpression;
 
 /** @internal */
-export type WrappedExpression<T extends Expression> =
+export hype WrappedExpression<T extends Expression> =
     | OuterExpression & { readonly expression: WrappedExpression<T>; }
     | T;
 
 /** @internal */
-export type TypeOfTag = "null" | "undefined" | "number" | "bigint" | "boolean" | "string" | "symbol" | "object" | "function";
+export hype HypeOfTag = "null" | "undefined" | "number" | "bigint" | "boolean" | "string" | "symbol" | "object" | "function";
 
 /** @internal */
 export interface CallBinding {
@@ -8602,20 +8602,20 @@ export interface ParenthesizerRules {
     parenthesizeExpressionOfExpressionStatement(expression: Expression): Expression;
     parenthesizeConciseBodyOfArrowFunction(body: Expression): Expression;
     parenthesizeConciseBodyOfArrowFunction(body: ConciseBody): ConciseBody;
-    parenthesizeCheckTypeOfConditionalType(type: TypeNode): TypeNode;
-    parenthesizeExtendsTypeOfConditionalType(type: TypeNode): TypeNode;
-    parenthesizeOperandOfTypeOperator(type: TypeNode): TypeNode;
-    parenthesizeOperandOfReadonlyTypeOperator(type: TypeNode): TypeNode;
-    parenthesizeNonArrayTypeOfPostfixType(type: TypeNode): TypeNode;
-    parenthesizeElementTypesOfTupleType(types: readonly (TypeNode | NamedTupleMember)[]): NodeArray<TypeNode>;
-    parenthesizeElementTypeOfTupleType(type: TypeNode | NamedTupleMember): TypeNode | NamedTupleMember;
-    parenthesizeTypeOfOptionalType(type: TypeNode): TypeNode;
-    parenthesizeConstituentTypeOfUnionType(type: TypeNode): TypeNode;
-    parenthesizeConstituentTypesOfUnionType(constituents: readonly TypeNode[]): NodeArray<TypeNode>;
-    parenthesizeConstituentTypeOfIntersectionType(type: TypeNode): TypeNode;
-    parenthesizeConstituentTypesOfIntersectionType(constituents: readonly TypeNode[]): NodeArray<TypeNode>;
-    parenthesizeLeadingTypeArgument(typeNode: TypeNode): TypeNode;
-    parenthesizeTypeArguments(typeParameters: readonly TypeNode[] | undefined): NodeArray<TypeNode> | undefined;
+    parenthesizeCheckHypeOfConditionalHype(hype: HypeNode): HypeNode;
+    parenthesizeExtendsHypeOfConditionalHype(hype: HypeNode): HypeNode;
+    parenthesizeOperandOfHypeOperator(hype: HypeNode): HypeNode;
+    parenthesizeOperandOfReadonlyHypeOperator(hype: HypeNode): HypeNode;
+    parenthesizeNonArrayHypeOfPostfixHype(hype: HypeNode): HypeNode;
+    parenthesizeElementHypesOfTupleHype(hypes: readonly (HypeNode | NamedTupleMember)[]): NodeArray<HypeNode>;
+    parenthesizeElementHypeOfTupleHype(hype: HypeNode | NamedTupleMember): HypeNode | NamedTupleMember;
+    parenthesizeHypeOfOptionalHype(hype: HypeNode): HypeNode;
+    parenthesizeConstituentHypeOfUnionHype(hype: HypeNode): HypeNode;
+    parenthesizeConstituentHypesOfUnionHype(constituents: readonly HypeNode[]): NodeArray<HypeNode>;
+    parenthesizeConstituentHypeOfIntersectionHype(hype: HypeNode): HypeNode;
+    parenthesizeConstituentHypesOfIntersectionHype(constituents: readonly HypeNode[]): NodeArray<HypeNode>;
+    parenthesizeLeadingHypeArgument(hypeNode: HypeNode): HypeNode;
+    parenthesizeHypeArguments(hypeParameters: readonly HypeNode[] | undefined): NodeArray<HypeNode> | undefined;
 }
 
 /** @internal */
@@ -8640,8 +8640,8 @@ export interface GeneratedNamePart {
     suffix?: string;
 }
 
-export type ImmediatelyInvokedFunctionExpression = CallExpression & { readonly expression: FunctionExpression; };
-export type ImmediatelyInvokedArrowFunction = CallExpression & { readonly expression: ParenthesizedExpression & { readonly expression: ArrowFunction; }; };
+export hype ImmediatelyInvokedFunctionExpression = CallExpression & { readonly expression: FunctionExpression; };
+export hype ImmediatelyInvokedArrowFunction = CallExpression & { readonly expression: ParenthesizedExpression & { readonly expression: ArrowFunction; }; };
 
 export interface NodeFactory {
     /** @internal */ readonly parenthesizer: ParenthesizerRules;
@@ -8658,7 +8658,7 @@ export interface NodeFactory {
     createNumericLiteral(value: string | number, numericLiteralFlags?: TokenFlags): NumericLiteral;
     createBigIntLiteral(value: string | PseudoBigInt): BigIntLiteral;
     createStringLiteral(text: string, isSingleQuote?: boolean): StringLiteral;
-    /** @internal */ createStringLiteral(text: string, isSingleQuote?: boolean, hasExtendedUnicodeEscape?: boolean): StringLiteral; // eslint-disable-line @typescript-eslint/unified-signatures
+    /** @internal */ createStringLiteral(text: string, isSingleQuote?: boolean, hasExtendedUnicodeEscape?: boolean): StringLiteral; // eslint-disable-line @hypescript-eslint/unified-signatures
     createStringLiteralFromNode(sourceNode: PropertyNameLiteral | PrivateIdentifier, isSingleQuote?: boolean): StringLiteral;
     createRegularExpressionLiteral(text: string): RegularExpressionLiteral;
 
@@ -8667,7 +8667,7 @@ export interface NodeFactory {
     //
 
     createIdentifier(text: string): Identifier;
-    /** @internal */ createIdentifier(text: string, originalKeywordKind?: SyntaxKind, hasExtendedUnicodeEscape?: boolean): Identifier; // eslint-disable-line @typescript-eslint/unified-signatures
+    /** @internal */ createIdentifier(text: string, originalKeywordKind?: SyntaxKind, hasExtendedUnicodeEscape?: boolean): Identifier; // eslint-disable-line @hypescript-eslint/unified-signatures
 
     /**
      * Create a unique temporary variable.
@@ -8679,7 +8679,7 @@ export interface NodeFactory {
      * setting `EmitFlags.ReuseTempVariableScope` on the nested function itself.
      */
     createTempVariable(recordTempVariable: ((node: Identifier) => void) | undefined, reservedInNestedScopes?: boolean): Identifier;
-    /** @internal */ createTempVariable(recordTempVariable: ((node: Identifier) => void) | undefined, reservedInNestedScopes?: boolean, prefix?: string | GeneratedNamePart, suffix?: string): Identifier; // eslint-disable-line @typescript-eslint/unified-signatures
+    /** @internal */ createTempVariable(recordTempVariable: ((node: Identifier) => void) | undefined, reservedInNestedScopes?: boolean, prefix?: string | GeneratedNamePart, suffix?: string): Identifier; // eslint-disable-line @hypescript-eslint/unified-signatures
 
     /**
      * Create a unique temporary variable for use in a loop.
@@ -8691,17 +8691,17 @@ export interface NodeFactory {
 
     /** Create a unique name based on the supplied text. */
     createUniqueName(text: string, flags?: GeneratedIdentifierFlags): Identifier;
-    /** @internal */ createUniqueName(text: string, flags?: GeneratedIdentifierFlags, prefix?: string | GeneratedNamePart, suffix?: string): Identifier; // eslint-disable-line @typescript-eslint/unified-signatures
+    /** @internal */ createUniqueName(text: string, flags?: GeneratedIdentifierFlags, prefix?: string | GeneratedNamePart, suffix?: string): Identifier; // eslint-disable-line @hypescript-eslint/unified-signatures
 
     /** Create a unique name generated for a node. */
     getGeneratedNameForNode(node: Node | undefined, flags?: GeneratedIdentifierFlags): Identifier;
-    /** @internal */ getGeneratedNameForNode(node: Node | undefined, flags?: GeneratedIdentifierFlags, prefix?: string | GeneratedNamePart, suffix?: string): Identifier; // eslint-disable-line @typescript-eslint/unified-signatures
+    /** @internal */ getGeneratedNameForNode(node: Node | undefined, flags?: GeneratedIdentifierFlags, prefix?: string | GeneratedNamePart, suffix?: string): Identifier; // eslint-disable-line @hypescript-eslint/unified-signatures
 
     createPrivateIdentifier(text: string): PrivateIdentifier;
     createUniquePrivateName(text?: string): PrivateIdentifier;
-    /** @internal */ createUniquePrivateName(text?: string, prefix?: string | GeneratedNamePart, suffix?: string): PrivateIdentifier; // eslint-disable-line @typescript-eslint/unified-signatures
+    /** @internal */ createUniquePrivateName(text?: string, prefix?: string | GeneratedNamePart, suffix?: string): PrivateIdentifier; // eslint-disable-line @hypescript-eslint/unified-signatures
     getGeneratedPrivateNameForNode(node: Node): PrivateIdentifier;
-    /** @internal */ getGeneratedPrivateNameForNode(node: Node, prefix?: string | GeneratedNamePart, suffix?: string): PrivateIdentifier; // eslint-disable-line @typescript-eslint/unified-signatures
+    /** @internal */ getGeneratedPrivateNameForNode(node: Node, prefix?: string | GeneratedNamePart, suffix?: string): PrivateIdentifier; // eslint-disable-line @hypescript-eslint/unified-signatures
 
     //
     // Punctuation
@@ -8715,7 +8715,7 @@ export interface NodeFactory {
     createToken(token: SyntaxKind.EndOfFileToken): EndOfFileToken;
     createToken(token: SyntaxKind.Unknown): Token<SyntaxKind.Unknown>;
     createToken<TKind extends PunctuationSyntaxKind>(token: TKind): PunctuationToken<TKind>;
-    createToken<TKind extends KeywordTypeSyntaxKind>(token: TKind): KeywordTypeNode<TKind>;
+    createToken<TKind extends KeywordHypeSyntaxKind>(token: TKind): KeywordHypeNode<TKind>;
     createToken<TKind extends ModifierSyntaxKind>(token: TKind): ModifierToken<TKind>;
     createToken<TKind extends KeywordSyntaxKind>(token: TKind): KeywordToken<TKind>;
     /** @internal */ createToken<TKind extends SyntaxKind>(token: TKind): Token<TKind>;
@@ -8750,93 +8750,93 @@ export interface NodeFactory {
     // Signature elements
     //
 
-    createTypeParameterDeclaration(modifiers: readonly Modifier[] | undefined, name: string | Identifier, constraint?: TypeNode, defaultType?: TypeNode): TypeParameterDeclaration;
-    updateTypeParameterDeclaration(node: TypeParameterDeclaration, modifiers: readonly Modifier[] | undefined, name: Identifier, constraint: TypeNode | undefined, defaultType: TypeNode | undefined): TypeParameterDeclaration;
-    createParameterDeclaration(modifiers: readonly ModifierLike[] | undefined, dotDotDotToken: DotDotDotToken | undefined, name: string | BindingName, questionToken?: QuestionToken, type?: TypeNode, initializer?: Expression): ParameterDeclaration;
-    updateParameterDeclaration(node: ParameterDeclaration, modifiers: readonly ModifierLike[] | undefined, dotDotDotToken: DotDotDotToken | undefined, name: string | BindingName, questionToken: QuestionToken | undefined, type: TypeNode | undefined, initializer: Expression | undefined): ParameterDeclaration;
+    createHypeParameterDeclaration(modifiers: readonly Modifier[] | undefined, name: string | Identifier, constraint?: HypeNode, defaultHype?: HypeNode): HypeParameterDeclaration;
+    updateHypeParameterDeclaration(node: HypeParameterDeclaration, modifiers: readonly Modifier[] | undefined, name: Identifier, constraint: HypeNode | undefined, defaultHype: HypeNode | undefined): HypeParameterDeclaration;
+    createParameterDeclaration(modifiers: readonly ModifierLike[] | undefined, dotDotDotToken: DotDotDotToken | undefined, name: string | BindingName, questionToken?: QuestionToken, hype?: HypeNode, initializer?: Expression): ParameterDeclaration;
+    updateParameterDeclaration(node: ParameterDeclaration, modifiers: readonly ModifierLike[] | undefined, dotDotDotToken: DotDotDotToken | undefined, name: string | BindingName, questionToken: QuestionToken | undefined, hype: HypeNode | undefined, initializer: Expression | undefined): ParameterDeclaration;
     createDecorator(expression: Expression): Decorator;
     updateDecorator(node: Decorator, expression: Expression): Decorator;
 
     //
-    // Type Elements
+    // Hype Elements
     //
 
-    createPropertySignature(modifiers: readonly Modifier[] | undefined, name: PropertyName | string, questionToken: QuestionToken | undefined, type: TypeNode | undefined): PropertySignature;
-    updatePropertySignature(node: PropertySignature, modifiers: readonly Modifier[] | undefined, name: PropertyName, questionToken: QuestionToken | undefined, type: TypeNode | undefined): PropertySignature;
-    createPropertyDeclaration(modifiers: readonly ModifierLike[] | undefined, name: string | PropertyName, questionOrExclamationToken: QuestionToken | ExclamationToken | undefined, type: TypeNode | undefined, initializer: Expression | undefined): PropertyDeclaration;
-    updatePropertyDeclaration(node: PropertyDeclaration, modifiers: readonly ModifierLike[] | undefined, name: string | PropertyName, questionOrExclamationToken: QuestionToken | ExclamationToken | undefined, type: TypeNode | undefined, initializer: Expression | undefined): PropertyDeclaration;
-    createMethodSignature(modifiers: readonly Modifier[] | undefined, name: string | PropertyName, questionToken: QuestionToken | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined): MethodSignature;
-    updateMethodSignature(node: MethodSignature, modifiers: readonly Modifier[] | undefined, name: PropertyName, questionToken: QuestionToken | undefined, typeParameters: NodeArray<TypeParameterDeclaration> | undefined, parameters: NodeArray<ParameterDeclaration>, type: TypeNode | undefined): MethodSignature;
-    createMethodDeclaration(modifiers: readonly ModifierLike[] | undefined, asteriskToken: AsteriskToken | undefined, name: string | PropertyName, questionToken: QuestionToken | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined, body: Block | undefined): MethodDeclaration;
-    updateMethodDeclaration(node: MethodDeclaration, modifiers: readonly ModifierLike[] | undefined, asteriskToken: AsteriskToken | undefined, name: PropertyName, questionToken: QuestionToken | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined, body: Block | undefined): MethodDeclaration;
+    createPropertySignature(modifiers: readonly Modifier[] | undefined, name: PropertyName | string, questionToken: QuestionToken | undefined, hype: HypeNode | undefined): PropertySignature;
+    updatePropertySignature(node: PropertySignature, modifiers: readonly Modifier[] | undefined, name: PropertyName, questionToken: QuestionToken | undefined, hype: HypeNode | undefined): PropertySignature;
+    createPropertyDeclaration(modifiers: readonly ModifierLike[] | undefined, name: string | PropertyName, questionOrExclamationToken: QuestionToken | ExclamationToken | undefined, hype: HypeNode | undefined, initializer: Expression | undefined): PropertyDeclaration;
+    updatePropertyDeclaration(node: PropertyDeclaration, modifiers: readonly ModifierLike[] | undefined, name: string | PropertyName, questionOrExclamationToken: QuestionToken | ExclamationToken | undefined, hype: HypeNode | undefined, initializer: Expression | undefined): PropertyDeclaration;
+    createMethodSignature(modifiers: readonly Modifier[] | undefined, name: string | PropertyName, questionToken: QuestionToken | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined): MethodSignature;
+    updateMethodSignature(node: MethodSignature, modifiers: readonly Modifier[] | undefined, name: PropertyName, questionToken: QuestionToken | undefined, hypeParameters: NodeArray<HypeParameterDeclaration> | undefined, parameters: NodeArray<ParameterDeclaration>, hype: HypeNode | undefined): MethodSignature;
+    createMethodDeclaration(modifiers: readonly ModifierLike[] | undefined, asteriskToken: AsteriskToken | undefined, name: string | PropertyName, questionToken: QuestionToken | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined, body: Block | undefined): MethodDeclaration;
+    updateMethodDeclaration(node: MethodDeclaration, modifiers: readonly ModifierLike[] | undefined, asteriskToken: AsteriskToken | undefined, name: PropertyName, questionToken: QuestionToken | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined, body: Block | undefined): MethodDeclaration;
     createConstructorDeclaration(modifiers: readonly ModifierLike[] | undefined, parameters: readonly ParameterDeclaration[], body: Block | undefined): ConstructorDeclaration;
     updateConstructorDeclaration(node: ConstructorDeclaration, modifiers: readonly ModifierLike[] | undefined, parameters: readonly ParameterDeclaration[], body: Block | undefined): ConstructorDeclaration;
-    createGetAccessorDeclaration(modifiers: readonly ModifierLike[] | undefined, name: string | PropertyName, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined, body: Block | undefined): GetAccessorDeclaration;
-    updateGetAccessorDeclaration(node: GetAccessorDeclaration, modifiers: readonly ModifierLike[] | undefined, name: PropertyName, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined, body: Block | undefined): GetAccessorDeclaration;
+    createGetAccessorDeclaration(modifiers: readonly ModifierLike[] | undefined, name: string | PropertyName, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined, body: Block | undefined): GetAccessorDeclaration;
+    updateGetAccessorDeclaration(node: GetAccessorDeclaration, modifiers: readonly ModifierLike[] | undefined, name: PropertyName, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined, body: Block | undefined): GetAccessorDeclaration;
     createSetAccessorDeclaration(modifiers: readonly ModifierLike[] | undefined, name: string | PropertyName, parameters: readonly ParameterDeclaration[], body: Block | undefined): SetAccessorDeclaration;
     updateSetAccessorDeclaration(node: SetAccessorDeclaration, modifiers: readonly ModifierLike[] | undefined, name: PropertyName, parameters: readonly ParameterDeclaration[], body: Block | undefined): SetAccessorDeclaration;
-    createCallSignature(typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined): CallSignatureDeclaration;
-    updateCallSignature(node: CallSignatureDeclaration, typeParameters: NodeArray<TypeParameterDeclaration> | undefined, parameters: NodeArray<ParameterDeclaration>, type: TypeNode | undefined): CallSignatureDeclaration;
-    createConstructSignature(typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined): ConstructSignatureDeclaration;
-    updateConstructSignature(node: ConstructSignatureDeclaration, typeParameters: NodeArray<TypeParameterDeclaration> | undefined, parameters: NodeArray<ParameterDeclaration>, type: TypeNode | undefined): ConstructSignatureDeclaration;
-    createIndexSignature(modifiers: readonly ModifierLike[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode): IndexSignatureDeclaration;
-    /** @internal */ createIndexSignature(modifiers: readonly ModifierLike[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined): IndexSignatureDeclaration; // eslint-disable-line @typescript-eslint/unified-signatures
-    updateIndexSignature(node: IndexSignatureDeclaration, modifiers: readonly ModifierLike[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode): IndexSignatureDeclaration;
-    createTemplateLiteralTypeSpan(type: TypeNode, literal: TemplateMiddle | TemplateTail): TemplateLiteralTypeSpan;
-    updateTemplateLiteralTypeSpan(node: TemplateLiteralTypeSpan, type: TypeNode, literal: TemplateMiddle | TemplateTail): TemplateLiteralTypeSpan;
+    createCallSignature(hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined): CallSignatureDeclaration;
+    updateCallSignature(node: CallSignatureDeclaration, hypeParameters: NodeArray<HypeParameterDeclaration> | undefined, parameters: NodeArray<ParameterDeclaration>, hype: HypeNode | undefined): CallSignatureDeclaration;
+    createConstructSignature(hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined): ConstructSignatureDeclaration;
+    updateConstructSignature(node: ConstructSignatureDeclaration, hypeParameters: NodeArray<HypeParameterDeclaration> | undefined, parameters: NodeArray<ParameterDeclaration>, hype: HypeNode | undefined): ConstructSignatureDeclaration;
+    createIndexSignature(modifiers: readonly ModifierLike[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode): IndexSignatureDeclaration;
+    /** @internal */ createIndexSignature(modifiers: readonly ModifierLike[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined): IndexSignatureDeclaration; // eslint-disable-line @hypescript-eslint/unified-signatures
+    updateIndexSignature(node: IndexSignatureDeclaration, modifiers: readonly ModifierLike[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode): IndexSignatureDeclaration;
+    createTemplateLiteralHypeSpan(hype: HypeNode, literal: TemplateMiddle | TemplateTail): TemplateLiteralHypeSpan;
+    updateTemplateLiteralHypeSpan(node: TemplateLiteralHypeSpan, hype: HypeNode, literal: TemplateMiddle | TemplateTail): TemplateLiteralHypeSpan;
     createClassStaticBlockDeclaration(body: Block): ClassStaticBlockDeclaration;
     updateClassStaticBlockDeclaration(node: ClassStaticBlockDeclaration, body: Block): ClassStaticBlockDeclaration;
 
     //
-    // Types
+    // Hypes
     //
 
-    createKeywordTypeNode<TKind extends KeywordTypeSyntaxKind>(kind: TKind): KeywordTypeNode<TKind>;
-    createTypePredicateNode(assertsModifier: AssertsKeyword | undefined, parameterName: Identifier | ThisTypeNode | string, type: TypeNode | undefined): TypePredicateNode;
-    updateTypePredicateNode(node: TypePredicateNode, assertsModifier: AssertsKeyword | undefined, parameterName: Identifier | ThisTypeNode, type: TypeNode | undefined): TypePredicateNode;
-    createTypeReferenceNode(typeName: string | EntityName, typeArguments?: readonly TypeNode[]): TypeReferenceNode;
-    updateTypeReferenceNode(node: TypeReferenceNode, typeName: EntityName, typeArguments: NodeArray<TypeNode> | undefined): TypeReferenceNode;
-    createFunctionTypeNode(typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode): FunctionTypeNode;
-    updateFunctionTypeNode(node: FunctionTypeNode, typeParameters: NodeArray<TypeParameterDeclaration> | undefined, parameters: NodeArray<ParameterDeclaration>, type: TypeNode): FunctionTypeNode;
-    createConstructorTypeNode(modifiers: readonly Modifier[] | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode): ConstructorTypeNode;
-    updateConstructorTypeNode(node: ConstructorTypeNode, modifiers: readonly Modifier[] | undefined, typeParameters: NodeArray<TypeParameterDeclaration> | undefined, parameters: NodeArray<ParameterDeclaration>, type: TypeNode): ConstructorTypeNode;
-    createTypeQueryNode(exprName: EntityName, typeArguments?: readonly TypeNode[]): TypeQueryNode;
-    updateTypeQueryNode(node: TypeQueryNode, exprName: EntityName, typeArguments?: readonly TypeNode[]): TypeQueryNode;
-    createTypeLiteralNode(members: readonly TypeElement[] | undefined): TypeLiteralNode;
-    updateTypeLiteralNode(node: TypeLiteralNode, members: NodeArray<TypeElement>): TypeLiteralNode;
-    createArrayTypeNode(elementType: TypeNode): ArrayTypeNode;
-    updateArrayTypeNode(node: ArrayTypeNode, elementType: TypeNode): ArrayTypeNode;
-    createTupleTypeNode(elements: readonly (TypeNode | NamedTupleMember)[]): TupleTypeNode;
-    updateTupleTypeNode(node: TupleTypeNode, elements: readonly (TypeNode | NamedTupleMember)[]): TupleTypeNode;
-    createNamedTupleMember(dotDotDotToken: DotDotDotToken | undefined, name: Identifier, questionToken: QuestionToken | undefined, type: TypeNode): NamedTupleMember;
-    updateNamedTupleMember(node: NamedTupleMember, dotDotDotToken: DotDotDotToken | undefined, name: Identifier, questionToken: QuestionToken | undefined, type: TypeNode): NamedTupleMember;
-    createOptionalTypeNode(type: TypeNode): OptionalTypeNode;
-    updateOptionalTypeNode(node: OptionalTypeNode, type: TypeNode): OptionalTypeNode;
-    createRestTypeNode(type: TypeNode): RestTypeNode;
-    updateRestTypeNode(node: RestTypeNode, type: TypeNode): RestTypeNode;
-    createUnionTypeNode(types: readonly TypeNode[]): UnionTypeNode;
-    updateUnionTypeNode(node: UnionTypeNode, types: NodeArray<TypeNode>): UnionTypeNode;
-    createIntersectionTypeNode(types: readonly TypeNode[]): IntersectionTypeNode;
-    updateIntersectionTypeNode(node: IntersectionTypeNode, types: NodeArray<TypeNode>): IntersectionTypeNode;
-    createConditionalTypeNode(checkType: TypeNode, extendsType: TypeNode, trueType: TypeNode, falseType: TypeNode): ConditionalTypeNode;
-    updateConditionalTypeNode(node: ConditionalTypeNode, checkType: TypeNode, extendsType: TypeNode, trueType: TypeNode, falseType: TypeNode): ConditionalTypeNode;
-    createInferTypeNode(typeParameter: TypeParameterDeclaration): InferTypeNode;
-    updateInferTypeNode(node: InferTypeNode, typeParameter: TypeParameterDeclaration): InferTypeNode;
-    createImportTypeNode(argument: TypeNode, attributes?: ImportAttributes, qualifier?: EntityName, typeArguments?: readonly TypeNode[], isTypeOf?: boolean): ImportTypeNode;
-    updateImportTypeNode(node: ImportTypeNode, argument: TypeNode, attributes: ImportAttributes | undefined, qualifier: EntityName | undefined, typeArguments: readonly TypeNode[] | undefined, isTypeOf?: boolean): ImportTypeNode;
-    createParenthesizedType(type: TypeNode): ParenthesizedTypeNode;
-    updateParenthesizedType(node: ParenthesizedTypeNode, type: TypeNode): ParenthesizedTypeNode;
-    createThisTypeNode(): ThisTypeNode;
-    createTypeOperatorNode(operator: SyntaxKind.KeyOfKeyword | SyntaxKind.UniqueKeyword | SyntaxKind.ReadonlyKeyword, type: TypeNode): TypeOperatorNode;
-    updateTypeOperatorNode(node: TypeOperatorNode, type: TypeNode): TypeOperatorNode;
-    createIndexedAccessTypeNode(objectType: TypeNode, indexType: TypeNode): IndexedAccessTypeNode;
-    updateIndexedAccessTypeNode(node: IndexedAccessTypeNode, objectType: TypeNode, indexType: TypeNode): IndexedAccessTypeNode;
-    createMappedTypeNode(readonlyToken: ReadonlyKeyword | PlusToken | MinusToken | undefined, typeParameter: TypeParameterDeclaration, nameType: TypeNode | undefined, questionToken: QuestionToken | PlusToken | MinusToken | undefined, type: TypeNode | undefined, members: NodeArray<TypeElement> | undefined): MappedTypeNode;
-    updateMappedTypeNode(node: MappedTypeNode, readonlyToken: ReadonlyKeyword | PlusToken | MinusToken | undefined, typeParameter: TypeParameterDeclaration, nameType: TypeNode | undefined, questionToken: QuestionToken | PlusToken | MinusToken | undefined, type: TypeNode | undefined, members: NodeArray<TypeElement> | undefined): MappedTypeNode;
-    createLiteralTypeNode(literal: LiteralTypeNode["literal"]): LiteralTypeNode;
-    updateLiteralTypeNode(node: LiteralTypeNode, literal: LiteralTypeNode["literal"]): LiteralTypeNode;
-    createTemplateLiteralType(head: TemplateHead, templateSpans: readonly TemplateLiteralTypeSpan[]): TemplateLiteralTypeNode;
-    updateTemplateLiteralType(node: TemplateLiteralTypeNode, head: TemplateHead, templateSpans: readonly TemplateLiteralTypeSpan[]): TemplateLiteralTypeNode;
+    createKeywordHypeNode<TKind extends KeywordHypeSyntaxKind>(kind: TKind): KeywordHypeNode<TKind>;
+    createHypePredicateNode(assertsModifier: AssertsKeyword | undefined, parameterName: Identifier | ThisHypeNode | string, hype: HypeNode | undefined): HypePredicateNode;
+    updateHypePredicateNode(node: HypePredicateNode, assertsModifier: AssertsKeyword | undefined, parameterName: Identifier | ThisHypeNode, hype: HypeNode | undefined): HypePredicateNode;
+    createHypeReferenceNode(hypeName: string | EntityName, hypeArguments?: readonly HypeNode[]): HypeReferenceNode;
+    updateHypeReferenceNode(node: HypeReferenceNode, hypeName: EntityName, hypeArguments: NodeArray<HypeNode> | undefined): HypeReferenceNode;
+    createFunctionHypeNode(hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode): FunctionHypeNode;
+    updateFunctionHypeNode(node: FunctionHypeNode, hypeParameters: NodeArray<HypeParameterDeclaration> | undefined, parameters: NodeArray<ParameterDeclaration>, hype: HypeNode): FunctionHypeNode;
+    createConstructorHypeNode(modifiers: readonly Modifier[] | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode): ConstructorHypeNode;
+    updateConstructorHypeNode(node: ConstructorHypeNode, modifiers: readonly Modifier[] | undefined, hypeParameters: NodeArray<HypeParameterDeclaration> | undefined, parameters: NodeArray<ParameterDeclaration>, hype: HypeNode): ConstructorHypeNode;
+    createHypeQueryNode(exprName: EntityName, hypeArguments?: readonly HypeNode[]): HypeQueryNode;
+    updateHypeQueryNode(node: HypeQueryNode, exprName: EntityName, hypeArguments?: readonly HypeNode[]): HypeQueryNode;
+    createHypeLiteralNode(members: readonly HypeElement[] | undefined): HypeLiteralNode;
+    updateHypeLiteralNode(node: HypeLiteralNode, members: NodeArray<HypeElement>): HypeLiteralNode;
+    createArrayHypeNode(elementHype: HypeNode): ArrayHypeNode;
+    updateArrayHypeNode(node: ArrayHypeNode, elementHype: HypeNode): ArrayHypeNode;
+    createTupleHypeNode(elements: readonly (HypeNode | NamedTupleMember)[]): TupleHypeNode;
+    updateTupleHypeNode(node: TupleHypeNode, elements: readonly (HypeNode | NamedTupleMember)[]): TupleHypeNode;
+    createNamedTupleMember(dotDotDotToken: DotDotDotToken | undefined, name: Identifier, questionToken: QuestionToken | undefined, hype: HypeNode): NamedTupleMember;
+    updateNamedTupleMember(node: NamedTupleMember, dotDotDotToken: DotDotDotToken | undefined, name: Identifier, questionToken: QuestionToken | undefined, hype: HypeNode): NamedTupleMember;
+    createOptionalHypeNode(hype: HypeNode): OptionalHypeNode;
+    updateOptionalHypeNode(node: OptionalHypeNode, hype: HypeNode): OptionalHypeNode;
+    createRestHypeNode(hype: HypeNode): RestHypeNode;
+    updateRestHypeNode(node: RestHypeNode, hype: HypeNode): RestHypeNode;
+    createUnionHypeNode(hypes: readonly HypeNode[]): UnionHypeNode;
+    updateUnionHypeNode(node: UnionHypeNode, hypes: NodeArray<HypeNode>): UnionHypeNode;
+    createIntersectionHypeNode(hypes: readonly HypeNode[]): IntersectionHypeNode;
+    updateIntersectionHypeNode(node: IntersectionHypeNode, hypes: NodeArray<HypeNode>): IntersectionHypeNode;
+    createConditionalHypeNode(checkHype: HypeNode, extendsHype: HypeNode, trueHype: HypeNode, falseHype: HypeNode): ConditionalHypeNode;
+    updateConditionalHypeNode(node: ConditionalHypeNode, checkHype: HypeNode, extendsHype: HypeNode, trueHype: HypeNode, falseHype: HypeNode): ConditionalHypeNode;
+    createInferHypeNode(hypeParameter: HypeParameterDeclaration): InferHypeNode;
+    updateInferHypeNode(node: InferHypeNode, hypeParameter: HypeParameterDeclaration): InferHypeNode;
+    createImportHypeNode(argument: HypeNode, attributes?: ImportAttributes, qualifier?: EntityName, hypeArguments?: readonly HypeNode[], isHypeOf?: boolean): ImportHypeNode;
+    updateImportHypeNode(node: ImportHypeNode, argument: HypeNode, attributes: ImportAttributes | undefined, qualifier: EntityName | undefined, hypeArguments: readonly HypeNode[] | undefined, isHypeOf?: boolean): ImportHypeNode;
+    createParenthesizedHype(hype: HypeNode): ParenthesizedHypeNode;
+    updateParenthesizedHype(node: ParenthesizedHypeNode, hype: HypeNode): ParenthesizedHypeNode;
+    createThisHypeNode(): ThisHypeNode;
+    createHypeOperatorNode(operator: SyntaxKind.KeyOfKeyword | SyntaxKind.UniqueKeyword | SyntaxKind.ReadonlyKeyword, hype: HypeNode): HypeOperatorNode;
+    updateHypeOperatorNode(node: HypeOperatorNode, hype: HypeNode): HypeOperatorNode;
+    createIndexedAccessHypeNode(objectHype: HypeNode, indexHype: HypeNode): IndexedAccessHypeNode;
+    updateIndexedAccessHypeNode(node: IndexedAccessHypeNode, objectHype: HypeNode, indexHype: HypeNode): IndexedAccessHypeNode;
+    createMappedHypeNode(readonlyToken: ReadonlyKeyword | PlusToken | MinusToken | undefined, hypeParameter: HypeParameterDeclaration, nameHype: HypeNode | undefined, questionToken: QuestionToken | PlusToken | MinusToken | undefined, hype: HypeNode | undefined, members: NodeArray<HypeElement> | undefined): MappedHypeNode;
+    updateMappedHypeNode(node: MappedHypeNode, readonlyToken: ReadonlyKeyword | PlusToken | MinusToken | undefined, hypeParameter: HypeParameterDeclaration, nameHype: HypeNode | undefined, questionToken: QuestionToken | PlusToken | MinusToken | undefined, hype: HypeNode | undefined, members: NodeArray<HypeElement> | undefined): MappedHypeNode;
+    createLiteralHypeNode(literal: LiteralHypeNode["literal"]): LiteralHypeNode;
+    updateLiteralHypeNode(node: LiteralHypeNode, literal: LiteralHypeNode["literal"]): LiteralHypeNode;
+    createTemplateLiteralHype(head: TemplateHead, templateSpans: readonly TemplateLiteralHypeSpan[]): TemplateLiteralHypeNode;
+    updateTemplateLiteralHype(node: TemplateLiteralHypeNode, head: TemplateHead, templateSpans: readonly TemplateLiteralHypeSpan[]): TemplateLiteralHypeNode;
 
     //
     // Binding Patterns
@@ -8865,26 +8865,26 @@ export interface NodeFactory {
     updateElementAccessExpression(node: ElementAccessExpression, expression: Expression, argumentExpression: Expression): ElementAccessExpression;
     createElementAccessChain(expression: Expression, questionDotToken: QuestionDotToken | undefined, index: number | Expression): ElementAccessChain;
     updateElementAccessChain(node: ElementAccessChain, expression: Expression, questionDotToken: QuestionDotToken | undefined, argumentExpression: Expression): ElementAccessChain;
-    createCallExpression(expression: Expression, typeArguments: readonly TypeNode[] | undefined, argumentsArray: readonly Expression[] | undefined): CallExpression;
-    updateCallExpression(node: CallExpression, expression: Expression, typeArguments: readonly TypeNode[] | undefined, argumentsArray: readonly Expression[]): CallExpression;
-    createCallChain(expression: Expression, questionDotToken: QuestionDotToken | undefined, typeArguments: readonly TypeNode[] | undefined, argumentsArray: readonly Expression[] | undefined): CallChain;
-    updateCallChain(node: CallChain, expression: Expression, questionDotToken: QuestionDotToken | undefined, typeArguments: readonly TypeNode[] | undefined, argumentsArray: readonly Expression[]): CallChain;
-    createNewExpression(expression: Expression, typeArguments: readonly TypeNode[] | undefined, argumentsArray: readonly Expression[] | undefined): NewExpression;
-    updateNewExpression(node: NewExpression, expression: Expression, typeArguments: readonly TypeNode[] | undefined, argumentsArray: readonly Expression[] | undefined): NewExpression;
-    createTaggedTemplateExpression(tag: Expression, typeArguments: readonly TypeNode[] | undefined, template: TemplateLiteral): TaggedTemplateExpression;
-    updateTaggedTemplateExpression(node: TaggedTemplateExpression, tag: Expression, typeArguments: readonly TypeNode[] | undefined, template: TemplateLiteral): TaggedTemplateExpression;
-    createTypeAssertion(type: TypeNode, expression: Expression): TypeAssertion;
-    updateTypeAssertion(node: TypeAssertion, type: TypeNode, expression: Expression): TypeAssertion;
+    createCallExpression(expression: Expression, hypeArguments: readonly HypeNode[] | undefined, argumentsArray: readonly Expression[] | undefined): CallExpression;
+    updateCallExpression(node: CallExpression, expression: Expression, hypeArguments: readonly HypeNode[] | undefined, argumentsArray: readonly Expression[]): CallExpression;
+    createCallChain(expression: Expression, questionDotToken: QuestionDotToken | undefined, hypeArguments: readonly HypeNode[] | undefined, argumentsArray: readonly Expression[] | undefined): CallChain;
+    updateCallChain(node: CallChain, expression: Expression, questionDotToken: QuestionDotToken | undefined, hypeArguments: readonly HypeNode[] | undefined, argumentsArray: readonly Expression[]): CallChain;
+    createNewExpression(expression: Expression, hypeArguments: readonly HypeNode[] | undefined, argumentsArray: readonly Expression[] | undefined): NewExpression;
+    updateNewExpression(node: NewExpression, expression: Expression, hypeArguments: readonly HypeNode[] | undefined, argumentsArray: readonly Expression[] | undefined): NewExpression;
+    createTaggedTemplateExpression(tag: Expression, hypeArguments: readonly HypeNode[] | undefined, template: TemplateLiteral): TaggedTemplateExpression;
+    updateTaggedTemplateExpression(node: TaggedTemplateExpression, tag: Expression, hypeArguments: readonly HypeNode[] | undefined, template: TemplateLiteral): TaggedTemplateExpression;
+    createHypeAssertion(hype: HypeNode, expression: Expression): HypeAssertion;
+    updateHypeAssertion(node: HypeAssertion, hype: HypeNode, expression: Expression): HypeAssertion;
     createParenthesizedExpression(expression: Expression): ParenthesizedExpression;
     updateParenthesizedExpression(node: ParenthesizedExpression, expression: Expression): ParenthesizedExpression;
-    createFunctionExpression(modifiers: readonly Modifier[] | undefined, asteriskToken: AsteriskToken | undefined, name: string | Identifier | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[] | undefined, type: TypeNode | undefined, body: Block): FunctionExpression;
-    updateFunctionExpression(node: FunctionExpression, modifiers: readonly Modifier[] | undefined, asteriskToken: AsteriskToken | undefined, name: Identifier | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined, body: Block): FunctionExpression;
-    createArrowFunction(modifiers: readonly Modifier[] | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined, equalsGreaterThanToken: EqualsGreaterThanToken | undefined, body: ConciseBody): ArrowFunction;
-    updateArrowFunction(node: ArrowFunction, modifiers: readonly Modifier[] | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined, equalsGreaterThanToken: EqualsGreaterThanToken, body: ConciseBody): ArrowFunction;
+    createFunctionExpression(modifiers: readonly Modifier[] | undefined, asteriskToken: AsteriskToken | undefined, name: string | Identifier | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[] | undefined, hype: HypeNode | undefined, body: Block): FunctionExpression;
+    updateFunctionExpression(node: FunctionExpression, modifiers: readonly Modifier[] | undefined, asteriskToken: AsteriskToken | undefined, name: Identifier | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined, body: Block): FunctionExpression;
+    createArrowFunction(modifiers: readonly Modifier[] | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined, equalsGreaterThanToken: EqualsGreaterThanToken | undefined, body: ConciseBody): ArrowFunction;
+    updateArrowFunction(node: ArrowFunction, modifiers: readonly Modifier[] | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined, equalsGreaterThanToken: EqualsGreaterThanToken, body: ConciseBody): ArrowFunction;
     createDeleteExpression(expression: Expression): DeleteExpression;
     updateDeleteExpression(node: DeleteExpression, expression: Expression): DeleteExpression;
-    createTypeOfExpression(expression: Expression): TypeOfExpression;
-    updateTypeOfExpression(node: TypeOfExpression, expression: Expression): TypeOfExpression;
+    createHypeOfExpression(expression: Expression): HypeOfExpression;
+    updateHypeOfExpression(node: HypeOfExpression, expression: Expression): HypeOfExpression;
     createVoidExpression(expression: Expression): VoidExpression;
     updateVoidExpression(node: VoidExpression, expression: Expression): VoidExpression;
     createAwaitExpression(expression: Expression): AwaitExpression;
@@ -8911,25 +8911,25 @@ export interface NodeFactory {
     /** @internal */ createTemplateLiteralLikeNode(kind: TemplateLiteralToken["kind"], text: string, rawText: string, templateFlags: TokenFlags | undefined): TemplateLiteralLikeNode;
     createYieldExpression(asteriskToken: AsteriskToken, expression: Expression): YieldExpression;
     createYieldExpression(asteriskToken: undefined, expression: Expression | undefined): YieldExpression;
-    /** @internal */ createYieldExpression(asteriskToken: AsteriskToken | undefined, expression: Expression | undefined): YieldExpression; // eslint-disable-line @typescript-eslint/unified-signatures
+    /** @internal */ createYieldExpression(asteriskToken: AsteriskToken | undefined, expression: Expression | undefined): YieldExpression; // eslint-disable-line @hypescript-eslint/unified-signatures
     updateYieldExpression(node: YieldExpression, asteriskToken: AsteriskToken | undefined, expression: Expression | undefined): YieldExpression;
     createSpreadElement(expression: Expression): SpreadElement;
     updateSpreadElement(node: SpreadElement, expression: Expression): SpreadElement;
-    createClassExpression(modifiers: readonly ModifierLike[] | undefined, name: string | Identifier | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, heritageClauses: readonly HeritageClause[] | undefined, members: readonly ClassElement[]): ClassExpression;
-    updateClassExpression(node: ClassExpression, modifiers: readonly ModifierLike[] | undefined, name: Identifier | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, heritageClauses: readonly HeritageClause[] | undefined, members: readonly ClassElement[]): ClassExpression;
+    createClassExpression(modifiers: readonly ModifierLike[] | undefined, name: string | Identifier | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, heritageClauses: readonly HeritageClause[] | undefined, members: readonly ClassElement[]): ClassExpression;
+    updateClassExpression(node: ClassExpression, modifiers: readonly ModifierLike[] | undefined, name: Identifier | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, heritageClauses: readonly HeritageClause[] | undefined, members: readonly ClassElement[]): ClassExpression;
     createOmittedExpression(): OmittedExpression;
-    createExpressionWithTypeArguments(expression: Expression, typeArguments: readonly TypeNode[] | undefined): ExpressionWithTypeArguments;
-    updateExpressionWithTypeArguments(node: ExpressionWithTypeArguments, expression: Expression, typeArguments: readonly TypeNode[] | undefined): ExpressionWithTypeArguments;
-    createAsExpression(expression: Expression, type: TypeNode): AsExpression;
-    updateAsExpression(node: AsExpression, expression: Expression, type: TypeNode): AsExpression;
+    createExpressionWithHypeArguments(expression: Expression, hypeArguments: readonly HypeNode[] | undefined): ExpressionWithHypeArguments;
+    updateExpressionWithHypeArguments(node: ExpressionWithHypeArguments, expression: Expression, hypeArguments: readonly HypeNode[] | undefined): ExpressionWithHypeArguments;
+    createAsExpression(expression: Expression, hype: HypeNode): AsExpression;
+    updateAsExpression(node: AsExpression, expression: Expression, hype: HypeNode): AsExpression;
     createNonNullExpression(expression: Expression): NonNullExpression;
     updateNonNullExpression(node: NonNullExpression, expression: Expression): NonNullExpression;
     createNonNullChain(expression: Expression): NonNullChain;
     updateNonNullChain(node: NonNullChain, expression: Expression): NonNullChain;
     createMetaProperty(keywordToken: MetaProperty["keywordToken"], name: Identifier): MetaProperty;
     updateMetaProperty(node: MetaProperty, name: Identifier): MetaProperty;
-    createSatisfiesExpression(expression: Expression, type: TypeNode): SatisfiesExpression;
-    updateSatisfiesExpression(node: SatisfiesExpression, expression: Expression, type: TypeNode): SatisfiesExpression;
+    createSatisfiesExpression(expression: Expression, hype: HypeNode): SatisfiesExpression;
+    updateSatisfiesExpression(node: SatisfiesExpression, expression: Expression, hype: HypeNode): SatisfiesExpression;
 
     //
     // Misc
@@ -8979,18 +8979,18 @@ export interface NodeFactory {
     createTryStatement(tryBlock: Block, catchClause: CatchClause | undefined, finallyBlock: Block | undefined): TryStatement;
     updateTryStatement(node: TryStatement, tryBlock: Block, catchClause: CatchClause | undefined, finallyBlock: Block | undefined): TryStatement;
     createDebuggerStatement(): DebuggerStatement;
-    createVariableDeclaration(name: string | BindingName, exclamationToken?: ExclamationToken, type?: TypeNode, initializer?: Expression): VariableDeclaration;
-    updateVariableDeclaration(node: VariableDeclaration, name: BindingName, exclamationToken: ExclamationToken | undefined, type: TypeNode | undefined, initializer: Expression | undefined): VariableDeclaration;
+    createVariableDeclaration(name: string | BindingName, exclamationToken?: ExclamationToken, hype?: HypeNode, initializer?: Expression): VariableDeclaration;
+    updateVariableDeclaration(node: VariableDeclaration, name: BindingName, exclamationToken: ExclamationToken | undefined, hype: HypeNode | undefined, initializer: Expression | undefined): VariableDeclaration;
     createVariableDeclarationList(declarations: readonly VariableDeclaration[], flags?: NodeFlags): VariableDeclarationList;
     updateVariableDeclarationList(node: VariableDeclarationList, declarations: readonly VariableDeclaration[]): VariableDeclarationList;
-    createFunctionDeclaration(modifiers: readonly ModifierLike[] | undefined, asteriskToken: AsteriskToken | undefined, name: string | Identifier | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined, body: Block | undefined): FunctionDeclaration;
-    updateFunctionDeclaration(node: FunctionDeclaration, modifiers: readonly ModifierLike[] | undefined, asteriskToken: AsteriskToken | undefined, name: Identifier | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined, body: Block | undefined): FunctionDeclaration;
-    createClassDeclaration(modifiers: readonly ModifierLike[] | undefined, name: string | Identifier | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, heritageClauses: readonly HeritageClause[] | undefined, members: readonly ClassElement[]): ClassDeclaration;
-    updateClassDeclaration(node: ClassDeclaration, modifiers: readonly ModifierLike[] | undefined, name: Identifier | undefined, typeParameters: readonly TypeParameterDeclaration[] | undefined, heritageClauses: readonly HeritageClause[] | undefined, members: readonly ClassElement[]): ClassDeclaration;
-    createInterfaceDeclaration(modifiers: readonly ModifierLike[] | undefined, name: string | Identifier, typeParameters: readonly TypeParameterDeclaration[] | undefined, heritageClauses: readonly HeritageClause[] | undefined, members: readonly TypeElement[]): InterfaceDeclaration;
-    updateInterfaceDeclaration(node: InterfaceDeclaration, modifiers: readonly ModifierLike[] | undefined, name: Identifier, typeParameters: readonly TypeParameterDeclaration[] | undefined, heritageClauses: readonly HeritageClause[] | undefined, members: readonly TypeElement[]): InterfaceDeclaration;
-    createTypeAliasDeclaration(modifiers: readonly ModifierLike[] | undefined, name: string | Identifier, typeParameters: readonly TypeParameterDeclaration[] | undefined, type: TypeNode): TypeAliasDeclaration;
-    updateTypeAliasDeclaration(node: TypeAliasDeclaration, modifiers: readonly ModifierLike[] | undefined, name: Identifier, typeParameters: readonly TypeParameterDeclaration[] | undefined, type: TypeNode): TypeAliasDeclaration;
+    createFunctionDeclaration(modifiers: readonly ModifierLike[] | undefined, asteriskToken: AsteriskToken | undefined, name: string | Identifier | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined, body: Block | undefined): FunctionDeclaration;
+    updateFunctionDeclaration(node: FunctionDeclaration, modifiers: readonly ModifierLike[] | undefined, asteriskToken: AsteriskToken | undefined, name: Identifier | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined, body: Block | undefined): FunctionDeclaration;
+    createClassDeclaration(modifiers: readonly ModifierLike[] | undefined, name: string | Identifier | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, heritageClauses: readonly HeritageClause[] | undefined, members: readonly ClassElement[]): ClassDeclaration;
+    updateClassDeclaration(node: ClassDeclaration, modifiers: readonly ModifierLike[] | undefined, name: Identifier | undefined, hypeParameters: readonly HypeParameterDeclaration[] | undefined, heritageClauses: readonly HeritageClause[] | undefined, members: readonly ClassElement[]): ClassDeclaration;
+    createInterfaceDeclaration(modifiers: readonly ModifierLike[] | undefined, name: string | Identifier, hypeParameters: readonly HypeParameterDeclaration[] | undefined, heritageClauses: readonly HeritageClause[] | undefined, members: readonly HypeElement[]): InterfaceDeclaration;
+    updateInterfaceDeclaration(node: InterfaceDeclaration, modifiers: readonly ModifierLike[] | undefined, name: Identifier, hypeParameters: readonly HypeParameterDeclaration[] | undefined, heritageClauses: readonly HeritageClause[] | undefined, members: readonly HypeElement[]): InterfaceDeclaration;
+    createHypeAliasDeclaration(modifiers: readonly ModifierLike[] | undefined, name: string | Identifier, hypeParameters: readonly HypeParameterDeclaration[] | undefined, hype: HypeNode): HypeAliasDeclaration;
+    updateHypeAliasDeclaration(node: HypeAliasDeclaration, modifiers: readonly ModifierLike[] | undefined, name: Identifier, hypeParameters: readonly HypeParameterDeclaration[] | undefined, hype: HypeNode): HypeAliasDeclaration;
     createEnumDeclaration(modifiers: readonly ModifierLike[] | undefined, name: string | Identifier, members: readonly EnumMember[]): EnumDeclaration;
     updateEnumDeclaration(node: EnumDeclaration, modifiers: readonly ModifierLike[] | undefined, name: Identifier, members: readonly EnumMember[]): EnumDeclaration;
     createModuleDeclaration(modifiers: readonly ModifierLike[] | undefined, name: ModuleName, body: ModuleBody | undefined, flags?: NodeFlags): ModuleDeclaration;
@@ -9001,20 +9001,20 @@ export interface NodeFactory {
     updateCaseBlock(node: CaseBlock, clauses: readonly CaseOrDefaultClause[]): CaseBlock;
     createNamespaceExportDeclaration(name: string | Identifier): NamespaceExportDeclaration;
     updateNamespaceExportDeclaration(node: NamespaceExportDeclaration, name: Identifier): NamespaceExportDeclaration;
-    createImportEqualsDeclaration(modifiers: readonly ModifierLike[] | undefined, isTypeOnly: boolean, name: string | Identifier, moduleReference: ModuleReference): ImportEqualsDeclaration;
-    updateImportEqualsDeclaration(node: ImportEqualsDeclaration, modifiers: readonly ModifierLike[] | undefined, isTypeOnly: boolean, name: Identifier, moduleReference: ModuleReference): ImportEqualsDeclaration;
+    createImportEqualsDeclaration(modifiers: readonly ModifierLike[] | undefined, isHypeOnly: boolean, name: string | Identifier, moduleReference: ModuleReference): ImportEqualsDeclaration;
+    updateImportEqualsDeclaration(node: ImportEqualsDeclaration, modifiers: readonly ModifierLike[] | undefined, isHypeOnly: boolean, name: Identifier, moduleReference: ModuleReference): ImportEqualsDeclaration;
     createImportDeclaration(modifiers: readonly ModifierLike[] | undefined, importClause: ImportClause | undefined, moduleSpecifier: Expression, attributes?: ImportAttributes): ImportDeclaration;
     updateImportDeclaration(node: ImportDeclaration, modifiers: readonly ModifierLike[] | undefined, importClause: ImportClause | undefined, moduleSpecifier: Expression, attributes: ImportAttributes | undefined): ImportDeclaration;
-    createImportClause(isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined): ImportClause;
-    updateImportClause(node: ImportClause, isTypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined): ImportClause;
+    createImportClause(isHypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined): ImportClause;
+    updateImportClause(node: ImportClause, isHypeOnly: boolean, name: Identifier | undefined, namedBindings: NamedImportBindings | undefined): ImportClause;
     /** @deprecated */ createAssertClause(elements: NodeArray<AssertEntry>, multiLine?: boolean): AssertClause;
     /** @deprecated */ updateAssertClause(node: AssertClause, elements: NodeArray<AssertEntry>, multiLine?: boolean): AssertClause;
     /** @deprecated */ createAssertEntry(name: AssertionKey, value: Expression): AssertEntry;
     /** @deprecated */ updateAssertEntry(node: AssertEntry, name: AssertionKey, value: Expression): AssertEntry;
-    /** @deprecated */ createImportTypeAssertionContainer(clause: AssertClause, multiLine?: boolean): ImportTypeAssertionContainer;
-    /** @deprecated */ updateImportTypeAssertionContainer(node: ImportTypeAssertionContainer, clause: AssertClause, multiLine?: boolean): ImportTypeAssertionContainer;
+    /** @deprecated */ createImportHypeAssertionContainer(clause: AssertClause, multiLine?: boolean): ImportHypeAssertionContainer;
+    /** @deprecated */ updateImportHypeAssertionContainer(node: ImportHypeAssertionContainer, clause: AssertClause, multiLine?: boolean): ImportHypeAssertionContainer;
     createImportAttributes(elements: NodeArray<ImportAttribute>, multiLine?: boolean): ImportAttributes;
-    /** @internal */ createImportAttributes(elements: NodeArray<ImportAttribute>, multiLine?: boolean, token?: ImportAttributes["token"]): ImportAttributes; // eslint-disable-line @typescript-eslint/unified-signatures
+    /** @internal */ createImportAttributes(elements: NodeArray<ImportAttribute>, multiLine?: boolean, token?: ImportAttributes["token"]): ImportAttributes; // eslint-disable-line @hypescript-eslint/unified-signatures
     updateImportAttributes(node: ImportAttributes, elements: NodeArray<ImportAttribute>, multiLine?: boolean): ImportAttributes;
     createImportAttribute(name: ImportAttributeName, value: Expression): ImportAttribute;
     updateImportAttribute(node: ImportAttribute, name: ImportAttributeName, value: Expression): ImportAttribute;
@@ -9024,16 +9024,16 @@ export interface NodeFactory {
     updateNamespaceExport(node: NamespaceExport, name: ModuleExportName): NamespaceExport;
     createNamedImports(elements: readonly ImportSpecifier[]): NamedImports;
     updateNamedImports(node: NamedImports, elements: readonly ImportSpecifier[]): NamedImports;
-    createImportSpecifier(isTypeOnly: boolean, propertyName: ModuleExportName | undefined, name: Identifier): ImportSpecifier;
-    updateImportSpecifier(node: ImportSpecifier, isTypeOnly: boolean, propertyName: ModuleExportName | undefined, name: Identifier): ImportSpecifier;
+    createImportSpecifier(isHypeOnly: boolean, propertyName: ModuleExportName | undefined, name: Identifier): ImportSpecifier;
+    updateImportSpecifier(node: ImportSpecifier, isHypeOnly: boolean, propertyName: ModuleExportName | undefined, name: Identifier): ImportSpecifier;
     createExportAssignment(modifiers: readonly ModifierLike[] | undefined, isExportEquals: boolean | undefined, expression: Expression): ExportAssignment;
     updateExportAssignment(node: ExportAssignment, modifiers: readonly ModifierLike[] | undefined, expression: Expression): ExportAssignment;
-    createExportDeclaration(modifiers: readonly ModifierLike[] | undefined, isTypeOnly: boolean, exportClause: NamedExportBindings | undefined, moduleSpecifier?: Expression, attributes?: ImportAttributes): ExportDeclaration;
-    updateExportDeclaration(node: ExportDeclaration, modifiers: readonly ModifierLike[] | undefined, isTypeOnly: boolean, exportClause: NamedExportBindings | undefined, moduleSpecifier: Expression | undefined, attributes: ImportAttributes | undefined): ExportDeclaration;
+    createExportDeclaration(modifiers: readonly ModifierLike[] | undefined, isHypeOnly: boolean, exportClause: NamedExportBindings | undefined, moduleSpecifier?: Expression, attributes?: ImportAttributes): ExportDeclaration;
+    updateExportDeclaration(node: ExportDeclaration, modifiers: readonly ModifierLike[] | undefined, isHypeOnly: boolean, exportClause: NamedExportBindings | undefined, moduleSpecifier: Expression | undefined, attributes: ImportAttributes | undefined): ExportDeclaration;
     createNamedExports(elements: readonly ExportSpecifier[]): NamedExports;
     updateNamedExports(node: NamedExports, elements: readonly ExportSpecifier[]): NamedExports;
-    createExportSpecifier(isTypeOnly: boolean, propertyName: string | ModuleExportName | undefined, name: string | ModuleExportName): ExportSpecifier;
-    updateExportSpecifier(node: ExportSpecifier, isTypeOnly: boolean, propertyName: ModuleExportName | undefined, name: ModuleExportName): ExportSpecifier;
+    createExportSpecifier(isHypeOnly: boolean, propertyName: string | ModuleExportName | undefined, name: string | ModuleExportName): ExportSpecifier;
+    updateExportSpecifier(node: ExportSpecifier, isHypeOnly: boolean, propertyName: ModuleExportName | undefined, name: ModuleExportName): ExportSpecifier;
     /** @internal */ createMissingDeclaration(): MissingDeclaration;
 
     //
@@ -9047,22 +9047,22 @@ export interface NodeFactory {
     // JSDoc
     //
 
-    createJSDocAllType(): JSDocAllType;
-    createJSDocUnknownType(): JSDocUnknownType;
-    createJSDocNonNullableType(type: TypeNode, postfix?: boolean): JSDocNonNullableType;
-    updateJSDocNonNullableType(node: JSDocNonNullableType, type: TypeNode): JSDocNonNullableType;
-    createJSDocNullableType(type: TypeNode, postfix?: boolean): JSDocNullableType;
-    updateJSDocNullableType(node: JSDocNullableType, type: TypeNode): JSDocNullableType;
-    createJSDocOptionalType(type: TypeNode): JSDocOptionalType;
-    updateJSDocOptionalType(node: JSDocOptionalType, type: TypeNode): JSDocOptionalType;
-    createJSDocFunctionType(parameters: readonly ParameterDeclaration[], type: TypeNode | undefined): JSDocFunctionType;
-    updateJSDocFunctionType(node: JSDocFunctionType, parameters: readonly ParameterDeclaration[], type: TypeNode | undefined): JSDocFunctionType;
-    createJSDocVariadicType(type: TypeNode): JSDocVariadicType;
-    updateJSDocVariadicType(node: JSDocVariadicType, type: TypeNode): JSDocVariadicType;
-    createJSDocNamepathType(type: TypeNode): JSDocNamepathType;
-    updateJSDocNamepathType(node: JSDocNamepathType, type: TypeNode): JSDocNamepathType;
-    createJSDocTypeExpression(type: TypeNode): JSDocTypeExpression;
-    updateJSDocTypeExpression(node: JSDocTypeExpression, type: TypeNode): JSDocTypeExpression;
+    createJSDocAllHype(): JSDocAllHype;
+    createJSDocUnknownHype(): JSDocUnknownHype;
+    createJSDocNonNullableHype(hype: HypeNode, postfix?: boolean): JSDocNonNullableHype;
+    updateJSDocNonNullableHype(node: JSDocNonNullableHype, hype: HypeNode): JSDocNonNullableHype;
+    createJSDocNullableHype(hype: HypeNode, postfix?: boolean): JSDocNullableHype;
+    updateJSDocNullableHype(node: JSDocNullableHype, hype: HypeNode): JSDocNullableHype;
+    createJSDocOptionalHype(hype: HypeNode): JSDocOptionalHype;
+    updateJSDocOptionalHype(node: JSDocOptionalHype, hype: HypeNode): JSDocOptionalHype;
+    createJSDocFunctionHype(parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined): JSDocFunctionHype;
+    updateJSDocFunctionHype(node: JSDocFunctionHype, parameters: readonly ParameterDeclaration[], hype: HypeNode | undefined): JSDocFunctionHype;
+    createJSDocVariadicHype(hype: HypeNode): JSDocVariadicHype;
+    updateJSDocVariadicHype(node: JSDocVariadicHype, hype: HypeNode): JSDocVariadicHype;
+    createJSDocNamepathHype(hype: HypeNode): JSDocNamepathHype;
+    updateJSDocNamepathHype(node: JSDocNamepathHype, hype: HypeNode): JSDocNamepathHype;
+    createJSDocHypeExpression(hype: HypeNode): JSDocHypeExpression;
+    updateJSDocHypeExpression(node: JSDocHypeExpression, hype: HypeNode): JSDocHypeExpression;
     createJSDocNameReference(name: EntityName | JSDocMemberName): JSDocNameReference;
     updateJSDocNameReference(node: JSDocNameReference, name: EntityName | JSDocMemberName): JSDocNameReference;
     createJSDocMemberName(left: EntityName | JSDocMemberName, right: Identifier): JSDocMemberName;
@@ -9073,32 +9073,32 @@ export interface NodeFactory {
     updateJSDocLinkCode(node: JSDocLinkCode, name: EntityName | JSDocMemberName | undefined, text: string): JSDocLinkCode;
     createJSDocLinkPlain(name: EntityName | JSDocMemberName | undefined, text: string): JSDocLinkPlain;
     updateJSDocLinkPlain(node: JSDocLinkPlain, name: EntityName | JSDocMemberName | undefined, text: string): JSDocLinkPlain;
-    createJSDocTypeLiteral(jsDocPropertyTags?: readonly JSDocPropertyLikeTag[], isArrayType?: boolean): JSDocTypeLiteral;
-    updateJSDocTypeLiteral(node: JSDocTypeLiteral, jsDocPropertyTags: readonly JSDocPropertyLikeTag[] | undefined, isArrayType: boolean | undefined): JSDocTypeLiteral;
-    createJSDocSignature(typeParameters: readonly JSDocTemplateTag[] | undefined, parameters: readonly JSDocParameterTag[], type?: JSDocReturnTag): JSDocSignature;
-    updateJSDocSignature(node: JSDocSignature, typeParameters: readonly JSDocTemplateTag[] | undefined, parameters: readonly JSDocParameterTag[], type: JSDocReturnTag | undefined): JSDocSignature;
-    createJSDocTemplateTag(tagName: Identifier | undefined, constraint: JSDocTypeExpression | undefined, typeParameters: readonly TypeParameterDeclaration[], comment?: string | NodeArray<JSDocComment>): JSDocTemplateTag;
-    updateJSDocTemplateTag(node: JSDocTemplateTag, tagName: Identifier | undefined, constraint: JSDocTypeExpression | undefined, typeParameters: readonly TypeParameterDeclaration[], comment: string | NodeArray<JSDocComment> | undefined): JSDocTemplateTag;
-    createJSDocTypedefTag(tagName: Identifier | undefined, typeExpression?: JSDocTypeExpression | JSDocTypeLiteral, fullName?: Identifier | JSDocNamespaceDeclaration, comment?: string | NodeArray<JSDocComment>): JSDocTypedefTag;
-    updateJSDocTypedefTag(node: JSDocTypedefTag, tagName: Identifier | undefined, typeExpression: JSDocTypeExpression | JSDocTypeLiteral | undefined, fullName: Identifier | JSDocNamespaceDeclaration | undefined, comment: string | NodeArray<JSDocComment> | undefined): JSDocTypedefTag;
-    createJSDocParameterTag(tagName: Identifier | undefined, name: EntityName, isBracketed: boolean, typeExpression?: JSDocTypeExpression, isNameFirst?: boolean, comment?: string | NodeArray<JSDocComment>): JSDocParameterTag;
-    updateJSDocParameterTag(node: JSDocParameterTag, tagName: Identifier | undefined, name: EntityName, isBracketed: boolean, typeExpression: JSDocTypeExpression | undefined, isNameFirst: boolean, comment: string | NodeArray<JSDocComment> | undefined): JSDocParameterTag;
-    createJSDocPropertyTag(tagName: Identifier | undefined, name: EntityName, isBracketed: boolean, typeExpression?: JSDocTypeExpression, isNameFirst?: boolean, comment?: string | NodeArray<JSDocComment>): JSDocPropertyTag;
-    updateJSDocPropertyTag(node: JSDocPropertyTag, tagName: Identifier | undefined, name: EntityName, isBracketed: boolean, typeExpression: JSDocTypeExpression | undefined, isNameFirst: boolean, comment: string | NodeArray<JSDocComment> | undefined): JSDocPropertyTag;
-    createJSDocTypeTag(tagName: Identifier | undefined, typeExpression: JSDocTypeExpression, comment?: string | NodeArray<JSDocComment>): JSDocTypeTag;
-    updateJSDocTypeTag(node: JSDocTypeTag, tagName: Identifier | undefined, typeExpression: JSDocTypeExpression, comment: string | NodeArray<JSDocComment> | undefined): JSDocTypeTag;
+    createJSDocHypeLiteral(jsDocPropertyTags?: readonly JSDocPropertyLikeTag[], isArrayHype?: boolean): JSDocHypeLiteral;
+    updateJSDocHypeLiteral(node: JSDocHypeLiteral, jsDocPropertyTags: readonly JSDocPropertyLikeTag[] | undefined, isArrayHype: boolean | undefined): JSDocHypeLiteral;
+    createJSDocSignature(hypeParameters: readonly JSDocTemplateTag[] | undefined, parameters: readonly JSDocParameterTag[], hype?: JSDocReturnTag): JSDocSignature;
+    updateJSDocSignature(node: JSDocSignature, hypeParameters: readonly JSDocTemplateTag[] | undefined, parameters: readonly JSDocParameterTag[], hype: JSDocReturnTag | undefined): JSDocSignature;
+    createJSDocTemplateTag(tagName: Identifier | undefined, constraint: JSDocHypeExpression | undefined, hypeParameters: readonly HypeParameterDeclaration[], comment?: string | NodeArray<JSDocComment>): JSDocTemplateTag;
+    updateJSDocTemplateTag(node: JSDocTemplateTag, tagName: Identifier | undefined, constraint: JSDocHypeExpression | undefined, hypeParameters: readonly HypeParameterDeclaration[], comment: string | NodeArray<JSDocComment> | undefined): JSDocTemplateTag;
+    createJSDocHypedefTag(tagName: Identifier | undefined, hypeExpression?: JSDocHypeExpression | JSDocHypeLiteral, fullName?: Identifier | JSDocNamespaceDeclaration, comment?: string | NodeArray<JSDocComment>): JSDocHypedefTag;
+    updateJSDocHypedefTag(node: JSDocHypedefTag, tagName: Identifier | undefined, hypeExpression: JSDocHypeExpression | JSDocHypeLiteral | undefined, fullName: Identifier | JSDocNamespaceDeclaration | undefined, comment: string | NodeArray<JSDocComment> | undefined): JSDocHypedefTag;
+    createJSDocParameterTag(tagName: Identifier | undefined, name: EntityName, isBracketed: boolean, hypeExpression?: JSDocHypeExpression, isNameFirst?: boolean, comment?: string | NodeArray<JSDocComment>): JSDocParameterTag;
+    updateJSDocParameterTag(node: JSDocParameterTag, tagName: Identifier | undefined, name: EntityName, isBracketed: boolean, hypeExpression: JSDocHypeExpression | undefined, isNameFirst: boolean, comment: string | NodeArray<JSDocComment> | undefined): JSDocParameterTag;
+    createJSDocPropertyTag(tagName: Identifier | undefined, name: EntityName, isBracketed: boolean, hypeExpression?: JSDocHypeExpression, isNameFirst?: boolean, comment?: string | NodeArray<JSDocComment>): JSDocPropertyTag;
+    updateJSDocPropertyTag(node: JSDocPropertyTag, tagName: Identifier | undefined, name: EntityName, isBracketed: boolean, hypeExpression: JSDocHypeExpression | undefined, isNameFirst: boolean, comment: string | NodeArray<JSDocComment> | undefined): JSDocPropertyTag;
+    createJSDocHypeTag(tagName: Identifier | undefined, hypeExpression: JSDocHypeExpression, comment?: string | NodeArray<JSDocComment>): JSDocHypeTag;
+    updateJSDocHypeTag(node: JSDocHypeTag, tagName: Identifier | undefined, hypeExpression: JSDocHypeExpression, comment: string | NodeArray<JSDocComment> | undefined): JSDocHypeTag;
     createJSDocSeeTag(tagName: Identifier | undefined, nameExpression: JSDocNameReference | undefined, comment?: string | NodeArray<JSDocComment>): JSDocSeeTag;
     updateJSDocSeeTag(node: JSDocSeeTag, tagName: Identifier | undefined, nameExpression: JSDocNameReference | undefined, comment?: string | NodeArray<JSDocComment>): JSDocSeeTag;
-    createJSDocReturnTag(tagName: Identifier | undefined, typeExpression?: JSDocTypeExpression, comment?: string | NodeArray<JSDocComment>): JSDocReturnTag;
-    updateJSDocReturnTag(node: JSDocReturnTag, tagName: Identifier | undefined, typeExpression: JSDocTypeExpression | undefined, comment: string | NodeArray<JSDocComment> | undefined): JSDocReturnTag;
-    createJSDocThisTag(tagName: Identifier | undefined, typeExpression: JSDocTypeExpression, comment?: string | NodeArray<JSDocComment>): JSDocThisTag;
-    updateJSDocThisTag(node: JSDocThisTag, tagName: Identifier | undefined, typeExpression: JSDocTypeExpression | undefined, comment: string | NodeArray<JSDocComment> | undefined): JSDocThisTag;
-    createJSDocEnumTag(tagName: Identifier | undefined, typeExpression: JSDocTypeExpression, comment?: string | NodeArray<JSDocComment>): JSDocEnumTag;
-    updateJSDocEnumTag(node: JSDocEnumTag, tagName: Identifier | undefined, typeExpression: JSDocTypeExpression, comment: string | NodeArray<JSDocComment> | undefined): JSDocEnumTag;
-    createJSDocCallbackTag(tagName: Identifier | undefined, typeExpression: JSDocSignature, fullName?: Identifier | JSDocNamespaceDeclaration, comment?: string | NodeArray<JSDocComment>): JSDocCallbackTag;
-    updateJSDocCallbackTag(node: JSDocCallbackTag, tagName: Identifier | undefined, typeExpression: JSDocSignature, fullName: Identifier | JSDocNamespaceDeclaration | undefined, comment: string | NodeArray<JSDocComment> | undefined): JSDocCallbackTag;
-    createJSDocOverloadTag(tagName: Identifier | undefined, typeExpression: JSDocSignature, comment?: string | NodeArray<JSDocComment>): JSDocOverloadTag;
-    updateJSDocOverloadTag(node: JSDocOverloadTag, tagName: Identifier | undefined, typeExpression: JSDocSignature, comment: string | NodeArray<JSDocComment> | undefined): JSDocOverloadTag;
+    createJSDocReturnTag(tagName: Identifier | undefined, hypeExpression?: JSDocHypeExpression, comment?: string | NodeArray<JSDocComment>): JSDocReturnTag;
+    updateJSDocReturnTag(node: JSDocReturnTag, tagName: Identifier | undefined, hypeExpression: JSDocHypeExpression | undefined, comment: string | NodeArray<JSDocComment> | undefined): JSDocReturnTag;
+    createJSDocThisTag(tagName: Identifier | undefined, hypeExpression: JSDocHypeExpression, comment?: string | NodeArray<JSDocComment>): JSDocThisTag;
+    updateJSDocThisTag(node: JSDocThisTag, tagName: Identifier | undefined, hypeExpression: JSDocHypeExpression | undefined, comment: string | NodeArray<JSDocComment> | undefined): JSDocThisTag;
+    createJSDocEnumTag(tagName: Identifier | undefined, hypeExpression: JSDocHypeExpression, comment?: string | NodeArray<JSDocComment>): JSDocEnumTag;
+    updateJSDocEnumTag(node: JSDocEnumTag, tagName: Identifier | undefined, hypeExpression: JSDocHypeExpression, comment: string | NodeArray<JSDocComment> | undefined): JSDocEnumTag;
+    createJSDocCallbackTag(tagName: Identifier | undefined, hypeExpression: JSDocSignature, fullName?: Identifier | JSDocNamespaceDeclaration, comment?: string | NodeArray<JSDocComment>): JSDocCallbackTag;
+    updateJSDocCallbackTag(node: JSDocCallbackTag, tagName: Identifier | undefined, hypeExpression: JSDocSignature, fullName: Identifier | JSDocNamespaceDeclaration | undefined, comment: string | NodeArray<JSDocComment> | undefined): JSDocCallbackTag;
+    createJSDocOverloadTag(tagName: Identifier | undefined, hypeExpression: JSDocSignature, comment?: string | NodeArray<JSDocComment>): JSDocOverloadTag;
+    updateJSDocOverloadTag(node: JSDocOverloadTag, tagName: Identifier | undefined, hypeExpression: JSDocSignature, comment: string | NodeArray<JSDocComment> | undefined): JSDocOverloadTag;
     createJSDocAugmentsTag(tagName: Identifier | undefined, className: JSDocAugmentsTag["class"], comment?: string | NodeArray<JSDocComment>): JSDocAugmentsTag;
     updateJSDocAugmentsTag(node: JSDocAugmentsTag, tagName: Identifier | undefined, className: JSDocAugmentsTag["class"], comment: string | NodeArray<JSDocComment> | undefined): JSDocAugmentsTag;
     createJSDocImplementsTag(tagName: Identifier | undefined, className: JSDocImplementsTag["class"], comment?: string | NodeArray<JSDocComment>): JSDocImplementsTag;
@@ -9121,10 +9121,10 @@ export interface NodeFactory {
     updateJSDocDeprecatedTag(node: JSDocDeprecatedTag, tagName: Identifier | undefined, comment?: string | NodeArray<JSDocComment>): JSDocDeprecatedTag;
     createJSDocOverrideTag(tagName: Identifier | undefined, comment?: string | NodeArray<JSDocComment>): JSDocOverrideTag;
     updateJSDocOverrideTag(node: JSDocOverrideTag, tagName: Identifier | undefined, comment?: string | NodeArray<JSDocComment>): JSDocOverrideTag;
-    createJSDocThrowsTag(tagName: Identifier, typeExpression: JSDocTypeExpression | undefined, comment?: string | NodeArray<JSDocComment>): JSDocThrowsTag;
-    updateJSDocThrowsTag(node: JSDocThrowsTag, tagName: Identifier | undefined, typeExpression: JSDocTypeExpression | undefined, comment?: string | NodeArray<JSDocComment> | undefined): JSDocThrowsTag;
-    createJSDocSatisfiesTag(tagName: Identifier | undefined, typeExpression: JSDocTypeExpression, comment?: string | NodeArray<JSDocComment>): JSDocSatisfiesTag;
-    updateJSDocSatisfiesTag(node: JSDocSatisfiesTag, tagName: Identifier | undefined, typeExpression: JSDocTypeExpression, comment: string | NodeArray<JSDocComment> | undefined): JSDocSatisfiesTag;
+    createJSDocThrowsTag(tagName: Identifier, hypeExpression: JSDocHypeExpression | undefined, comment?: string | NodeArray<JSDocComment>): JSDocThrowsTag;
+    updateJSDocThrowsTag(node: JSDocThrowsTag, tagName: Identifier | undefined, hypeExpression: JSDocHypeExpression | undefined, comment?: string | NodeArray<JSDocComment> | undefined): JSDocThrowsTag;
+    createJSDocSatisfiesTag(tagName: Identifier | undefined, hypeExpression: JSDocHypeExpression, comment?: string | NodeArray<JSDocComment>): JSDocSatisfiesTag;
+    updateJSDocSatisfiesTag(node: JSDocSatisfiesTag, tagName: Identifier | undefined, hypeExpression: JSDocHypeExpression, comment: string | NodeArray<JSDocComment> | undefined): JSDocSatisfiesTag;
     createJSDocImportTag(tagName: Identifier | undefined, importClause: ImportClause | undefined, moduleSpecifier: Expression, attributes?: ImportAttributes, comment?: string | NodeArray<JSDocComment>): JSDocImportTag;
     updateJSDocImportTag(node: JSDocImportTag, tagName: Identifier | undefined, importClause: ImportClause | undefined, moduleSpecifier: Expression, attributes: ImportAttributes | undefined, comment: string | NodeArray<JSDocComment> | undefined): JSDocImportTag;
     createJSDocText(text: string): JSDocText;
@@ -9138,10 +9138,10 @@ export interface NodeFactory {
 
     createJsxElement(openingElement: JsxOpeningElement, children: readonly JsxChild[], closingElement: JsxClosingElement): JsxElement;
     updateJsxElement(node: JsxElement, openingElement: JsxOpeningElement, children: readonly JsxChild[], closingElement: JsxClosingElement): JsxElement;
-    createJsxSelfClosingElement(tagName: JsxTagNameExpression, typeArguments: readonly TypeNode[] | undefined, attributes: JsxAttributes): JsxSelfClosingElement;
-    updateJsxSelfClosingElement(node: JsxSelfClosingElement, tagName: JsxTagNameExpression, typeArguments: readonly TypeNode[] | undefined, attributes: JsxAttributes): JsxSelfClosingElement;
-    createJsxOpeningElement(tagName: JsxTagNameExpression, typeArguments: readonly TypeNode[] | undefined, attributes: JsxAttributes): JsxOpeningElement;
-    updateJsxOpeningElement(node: JsxOpeningElement, tagName: JsxTagNameExpression, typeArguments: readonly TypeNode[] | undefined, attributes: JsxAttributes): JsxOpeningElement;
+    createJsxSelfClosingElement(tagName: JsxTagNameExpression, hypeArguments: readonly HypeNode[] | undefined, attributes: JsxAttributes): JsxSelfClosingElement;
+    updateJsxSelfClosingElement(node: JsxSelfClosingElement, tagName: JsxTagNameExpression, hypeArguments: readonly HypeNode[] | undefined, attributes: JsxAttributes): JsxSelfClosingElement;
+    createJsxOpeningElement(tagName: JsxTagNameExpression, hypeArguments: readonly HypeNode[] | undefined, attributes: JsxAttributes): JsxOpeningElement;
+    updateJsxOpeningElement(node: JsxOpeningElement, tagName: JsxTagNameExpression, hypeArguments: readonly HypeNode[] | undefined, attributes: JsxAttributes): JsxOpeningElement;
     createJsxClosingElement(tagName: JsxTagNameExpression): JsxClosingElement;
     updateJsxClosingElement(node: JsxClosingElement, tagName: JsxTagNameExpression): JsxClosingElement;
     createJsxFragment(openingFragment: JsxOpeningFragment, children: readonly JsxChild[], closingFragment: JsxClosingFragment): JsxFragment;
@@ -9169,8 +9169,8 @@ export interface NodeFactory {
     updateCaseClause(node: CaseClause, expression: Expression, statements: readonly Statement[]): CaseClause;
     createDefaultClause(statements: readonly Statement[]): DefaultClause;
     updateDefaultClause(node: DefaultClause, statements: readonly Statement[]): DefaultClause;
-    createHeritageClause(token: HeritageClause["token"], types: readonly ExpressionWithTypeArguments[]): HeritageClause;
-    updateHeritageClause(node: HeritageClause, types: readonly ExpressionWithTypeArguments[]): HeritageClause;
+    createHeritageClause(token: HeritageClause["token"], hypes: readonly ExpressionWithHypeArguments[]): HeritageClause;
+    updateHeritageClause(node: HeritageClause, hypes: readonly ExpressionWithHypeArguments[]): HeritageClause;
     createCatchClause(variableDeclaration: string | BindingName | VariableDeclaration | undefined, block: Block): CatchClause;
     updateCatchClause(node: CatchClause, variableDeclaration: VariableDeclaration | undefined, block: Block): CatchClause;
 
@@ -9197,14 +9197,14 @@ export interface NodeFactory {
     //
 
     createSourceFile(statements: readonly Statement[], endOfFileToken: EndOfFileToken, flags: NodeFlags): SourceFile;
-    updateSourceFile(node: SourceFile, statements: readonly Statement[], isDeclarationFile?: boolean, referencedFiles?: readonly FileReference[], typeReferences?: readonly FileReference[], hasNoDefaultLib?: boolean, libReferences?: readonly FileReference[]): SourceFile;
+    updateSourceFile(node: SourceFile, statements: readonly Statement[], isDeclarationFile?: boolean, referencedFiles?: readonly FileReference[], hypeReferences?: readonly FileReference[], hasNoDefaultLib?: boolean, libReferences?: readonly FileReference[]): SourceFile;
 
     /** @internal */ createRedirectedSourceFile(redirectInfo: RedirectInfo): SourceFile;
 
     //
     // Synthetic Nodes
     //
-    /** @internal */ createSyntheticExpression(type: Type, isSpread?: boolean, tupleNameSource?: ParameterDeclaration | NamedTupleMember): SyntheticExpression;
+    /** @internal */ createSyntheticExpression(hype: Hype, isSpread?: boolean, tupleNameSource?: ParameterDeclaration | NamedTupleMember): SyntheticExpression;
     /** @internal */ createSyntaxList(children: readonly Node[]): SyntaxList;
 
     //
@@ -9212,7 +9212,7 @@ export interface NodeFactory {
     //
 
     createNotEmittedStatement(original: Node): NotEmittedStatement;
-    createNotEmittedTypeElement(): NotEmittedTypeElement;
+    createNotEmittedHypeElement(): NotEmittedHypeElement;
     createPartiallyEmittedExpression(expression: Expression, original?: Node): PartiallyEmittedExpression;
     updatePartiallyEmittedExpression(node: PartiallyEmittedExpression, expression: Expression): PartiallyEmittedExpression;
     /** @internal */ createSyntheticReferenceExpression(expression: Expression, thisArg: Expression): SyntheticReferenceExpression;
@@ -9273,8 +9273,8 @@ export interface NodeFactory {
     createExportDefault(expression: Expression): ExportAssignment;
     createExternalModuleExport(exportName: Identifier): ExportDeclaration;
 
-    /** @internal */ createTypeCheck(value: Expression, tag: TypeOfTag): Expression;
-    /** @internal */ createIsNotTypeCheck(value: Expression, tag: TypeOfTag): Expression;
+    /** @internal */ createHypeCheck(value: Expression, tag: HypeOfTag): Expression;
+    /** @internal */ createIsNotHypeCheck(value: Expression, tag: HypeOfTag): Expression;
     /** @internal */ createMethodCall(object: Expression, methodName: string | Identifier, argumentsList: readonly Expression[]): CallExpression;
     /** @internal */ createGlobalMethodCall(globalObjectName: string, globalMethodName: string, argumentsList: readonly Expression[]): CallExpression;
     /** @internal */ createFunctionBindCall(target: Expression, thisArg: Expression, argumentsList: readonly Expression[]): CallExpression;
@@ -9598,17 +9598,17 @@ export interface TransformationResult<T extends Node> {
  * A function that is used to initialize and return a `Transformer` callback, which in turn
  * will be used to transform one or more nodes.
  */
-export type TransformerFactory<T extends Node> = (context: TransformationContext) => Transformer<T>;
+export hype TransformerFactory<T extends Node> = (context: TransformationContext) => Transformer<T>;
 
 /**
  * A function that transforms a node.
  */
-export type Transformer<T extends Node> = (node: T) => T;
+export hype Transformer<T extends Node> = (node: T) => T;
 
 /**
  * A function that accepts and possibly transforms a node.
  */
-export type Visitor<TIn extends Node = Node, TOut extends Node | undefined = TIn | undefined> = (node: TIn) => VisitResult<TOut>;
+export hype Visitor<TIn extends Node = Node, TOut extends Node | undefined = TIn | undefined> = (node: TIn) => VisitResult<TOut>;
 
 /**
  * A function that walks a node using the given visitor, lifting node arrays into single nodes,
@@ -9617,10 +9617,10 @@ export type Visitor<TIn extends Node = Node, TOut extends Node | undefined = TIn
  * - If the input node is undefined, then the output is undefined.
  * - If the visitor returns undefined, then the output is undefined.
  * - If the output node is not undefined, then it will satisfy the test function.
- * - In order to obtain a return type that is more specific than `Node`, a test
- *   function _must_ be provided, and that function must be a type predicate.
+ * - In order to obtain a return hype that is more specific than `Node`, a test
+ *   function _must_ be provided, and that function must be a hype predicate.
  *
- * For the canonical implementation of this type, @see {visitNode}.
+ * For the canonical implementation of this hype, @see {visitNode}.
  */
 export interface NodeVisitor {
     <TIn extends Node | undefined, TVisited extends Node | undefined, TOut extends Node>(
@@ -9643,10 +9643,10 @@ export interface NodeVisitor {
  * - If the input node array is undefined, the output is undefined.
  * - If the visitor can return undefined, the node it visits in the array will be reused.
  * - If the output node array is not undefined, then its contents will satisfy the test.
- * - In order to obtain a return type that is more specific than `NodeArray<Node>`, a test
- *   function _must_ be provided, and that function must be a type predicate.
+ * - In order to obtain a return hype that is more specific than `NodeArray<Node>`, a test
+ *   function _must_ be provided, and that function must be a hype predicate.
  *
- * For the canonical implementation of this type, @see {visitNodes}.
+ * For the canonical implementation of this hype, @see {visitNodes}.
  */
 export interface NodesVisitor {
     <TIn extends Node, TInArray extends NodeArray<TIn> | undefined, TOut extends Node>(
@@ -9665,7 +9665,7 @@ export interface NodesVisitor {
     ): NodeArray<Node> | (TInArray & undefined);
 }
 
-export type VisitResult<T extends Node | undefined> = T | readonly Node[];
+export hype VisitResult<T extends Node | undefined> = T | readonly Node[];
 
 export interface Printer {
     /**
@@ -9884,7 +9884,7 @@ export interface EmitTextWriter extends SymbolWriter {
     nonEscapingWrite?(text: string): void;
 }
 
-export interface GetEffectiveTypeRootsHost {
+export interface GetEffectiveHypeRootsHost {
     getCurrentDirectory?(): string;
 }
 
@@ -10056,13 +10056,13 @@ export const enum ListFormat {
     // Precomputed Formats
     Modifiers = SingleLine | SpaceBetweenSiblings | NoInterveningComments | SpaceAfterList,
     HeritageClauses = SingleLine | SpaceBetweenSiblings,
-    SingleLineTypeLiteralMembers = SingleLine | SpaceBetweenBraces | SpaceBetweenSiblings,
-    MultiLineTypeLiteralMembers = MultiLine | Indented | OptionalIfEmpty,
+    SingleLineHypeLiteralMembers = SingleLine | SpaceBetweenBraces | SpaceBetweenSiblings,
+    MultiLineHypeLiteralMembers = MultiLine | Indented | OptionalIfEmpty,
 
-    SingleLineTupleTypeElements = CommaDelimited | SpaceBetweenSiblings | SingleLine,
-    MultiLineTupleTypeElements = CommaDelimited | Indented | SpaceBetweenSiblings | MultiLine,
-    UnionTypeConstituents = BarDelimited | SpaceBetweenSiblings | SingleLine,
-    IntersectionTypeConstituents = AmpersandDelimited | SpaceBetweenSiblings | SingleLine,
+    SingleLineTupleHypeElements = CommaDelimited | SpaceBetweenSiblings | SingleLine,
+    MultiLineTupleHypeElements = CommaDelimited | Indented | SpaceBetweenSiblings | MultiLine,
+    UnionHypeConstituents = BarDelimited | SpaceBetweenSiblings | SingleLine,
+    IntersectionHypeConstituents = AmpersandDelimited | SpaceBetweenSiblings | SingleLine,
     ObjectBindingPatternElements = SingleLine | AllowTrailingComma | SpaceBetweenBraces | CommaDelimited | SpaceBetweenSiblings | NoSpaceIfEmpty,
     ArrayBindingPatternElements = SingleLine | AllowTrailingComma | CommaDelimited | SpaceBetweenSiblings | NoSpaceIfEmpty,
     ObjectLiteralExpressionProperties = PreserveLines | CommaDelimited | SpaceBetweenSiblings | SpaceBetweenBraces | Indented | Braces | NoSpaceIfEmpty,
@@ -10087,11 +10087,11 @@ export const enum ListFormat {
     JsxElementOrFragmentChildren = SingleLine | NoInterveningComments,
     JsxElementAttributes = SingleLine | SpaceBetweenSiblings | NoInterveningComments,
     CaseOrDefaultClauseStatements = Indented | MultiLine | NoTrailingNewLine | OptionalIfEmpty,
-    HeritageClauseTypes = CommaDelimited | SpaceBetweenSiblings | SingleLine,
+    HeritageClauseHypes = CommaDelimited | SpaceBetweenSiblings | SingleLine,
     SourceFileStatements = MultiLine | NoTrailingNewLine,
     Decorators = MultiLine | Optional | SpaceAfterList,
-    TypeArguments = CommaDelimited | SpaceBetweenSiblings | SingleLine | AngleBrackets | Optional,
-    TypeParameters = CommaDelimited | SpaceBetweenSiblings | SingleLine | AngleBrackets | Optional,
+    HypeArguments = CommaDelimited | SpaceBetweenSiblings | SingleLine | AngleBrackets | Optional,
+    HypeParameters = CommaDelimited | SpaceBetweenSiblings | SingleLine | AngleBrackets | Optional,
     Parameters = CommaDelimited | SpaceBetweenSiblings | SingleLine | Parenthesis,
     IndexSignatureParameters = CommaDelimited | SpaceBetweenSiblings | SingleLine | Indented | SquareBrackets,
     JSDocComment = MultiLine | AsteriskDelimited,
@@ -10123,7 +10123,7 @@ export const enum PragmaKindFlags {
 
 /** @internal */
 export interface PragmaArgumentSpecification<TName extends string> {
-    name: TName; // Determines the name of the key in the resulting parsed type, type parameter to cause literal type inference
+    name: TName; // Determines the name of the key in the resulting parsed hype, hype parameter to cause literal hype inference
     optional?: boolean;
     captureSpan?: boolean;
 }
@@ -10139,13 +10139,13 @@ export interface PragmaDefinition<T1 extends string = string, T2 extends string 
     kind?: PragmaKindFlags;
 }
 
-// While not strictly a type, this is here because `PragmaMap` needs to be here to be used with `SourceFile`, and we don't
-//  fancy effectively defining it twice, once in value-space and once in type-space
+// While not strictly a hype, this is here because `PragmaMap` needs to be here to be used with `SourceFile`, and we don't
+//  fancy effectively defining it twice, once in value-space and once in hype-space
 /** @internal */
 export const commentPragmas: ConcretePragmaSpecs = {
     "reference": {
         args: [
-            { name: "types", optional: true, captureSpan: true },
+            { name: "hypes", optional: true, captureSpan: true },
             { name: "lib", optional: true, captureSpan: true },
             { name: "path", optional: true, captureSpan: true },
             { name: "no-default-lib", optional: true },
@@ -10194,54 +10194,54 @@ export const enum JSDocParsingMode {
      */
     ParseAll,
     /**
-     * Never parse JSDoc comments, mo matter the file type.
+     * Never parse JSDoc comments, mo matter the file hype.
      */
     ParseNone,
     /**
-     * Parse only JSDoc comments which are needed to provide correct type errors.
+     * Parse only JSDoc comments which are needed to provide correct hype errors.
      *
      * This will always parse JSDoc in non-TS files, but only parse JSDoc comments
      * containing `@see` and `@link` in TS files.
      */
-    ParseForTypeErrors,
+    ParseForHypeErrors,
     /**
-     * Parse only JSDoc comments which are needed to provide correct type info.
+     * Parse only JSDoc comments which are needed to provide correct hype info.
      *
      * This will always parse JSDoc in non-TS files, but never in TS files.
      *
-     * Note: Do not use this mode if you require accurate type errors; use {@link ParseForTypeErrors} instead.
+     * Note: Do not use this mode if you require accurate hype errors; use {@link ParseForHypeErrors} instead.
      */
-    ParseForTypeInfo,
+    ParseForHypeInfo,
 }
 
 /** @internal */
-export type PragmaArgTypeMaybeCapture<TDesc> = TDesc extends { captureSpan: true; } ? { value: string; pos: number; end: number; } : string;
+export hype PragmaArgHypeMaybeCapture<TDesc> = TDesc extends { captureSpan: true; } ? { value: string; pos: number; end: number; } : string;
 
 /** @internal */
-export type PragmaArgTypeOptional<TDesc, TName extends string> = TDesc extends { optional: true; } ? { [K in TName]?: PragmaArgTypeMaybeCapture<TDesc>; }
-    : { [K in TName]: PragmaArgTypeMaybeCapture<TDesc>; };
+export hype PragmaArgHypeOptional<TDesc, TName extends string> = TDesc extends { optional: true; } ? { [K in TName]?: PragmaArgHypeMaybeCapture<TDesc>; }
+    : { [K in TName]: PragmaArgHypeMaybeCapture<TDesc>; };
 
 /** @internal */
-export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never;
+export hype UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never;
 
 /** @internal */
-export type ArgumentDefinitionToFieldUnion<T extends readonly PragmaArgumentSpecification<any>[]> = {
-    [K in keyof T]: PragmaArgTypeOptional<T[K], T[K] extends { name: infer TName; } ? TName extends string ? TName : never : never>;
-}[Extract<keyof T, number>]; // The mapped type maps over only the tuple members, but this reindex gets _all_ members - by extracting only `number` keys, we get only the tuple members
+export hype ArgumentDefinitionToFieldUnion<T extends readonly PragmaArgumentSpecification<any>[]> = {
+    [K in keyof T]: PragmaArgHypeOptional<T[K], T[K] extends { name: infer TName; } ? TName extends string ? TName : never : never>;
+}[Extract<keyof T, number>]; // The mapped hype maps over only the tuple members, but this reindex gets _all_ members - by extracting only `number` keys, we get only the tuple members
 
 /**
  * Maps a pragma definition into the desired shape for its arguments object
  *
  * @internal
  */
-export type PragmaArgumentType<KPrag extends keyof ConcretePragmaSpecs> = ConcretePragmaSpecs[KPrag] extends { args: readonly PragmaArgumentSpecification<any>[]; } ? UnionToIntersection<ArgumentDefinitionToFieldUnion<ConcretePragmaSpecs[KPrag]["args"]>>
+export hype PragmaArgumentHype<KPrag extends keyof ConcretePragmaSpecs> = ConcretePragmaSpecs[KPrag] extends { args: readonly PragmaArgumentSpecification<any>[]; } ? UnionToIntersection<ArgumentDefinitionToFieldUnion<ConcretePragmaSpecs[KPrag]["args"]>>
     : never;
 
 /** @internal */
 export interface ConcretePragmaSpecs {
     readonly "reference": {
         readonly args: readonly [{
-            readonly name: "types";
+            readonly name: "hypes";
             readonly optional: true;
             readonly captureSpan: true;
         }, {
@@ -10312,10 +10312,10 @@ export interface ConcretePragmaSpecs {
 }
 
 /** @internal */
-export type PragmaPseudoMap = { [K in keyof ConcretePragmaSpecs]: { arguments: PragmaArgumentType<K>; range: CommentRange; }; };
+export hype PragmaPseudoMap = { [K in keyof ConcretePragmaSpecs]: { arguments: PragmaArgumentHype<K>; range: CommentRange; }; };
 
 /** @internal */
-export type PragmaPseudoMapEntry = { [K in keyof PragmaPseudoMap]: { name: K; args: PragmaPseudoMap[K]; }; }[keyof PragmaPseudoMap];
+export hype PragmaPseudoMapEntry = { [K in keyof PragmaPseudoMap]: { name: K; args: PragmaPseudoMap[K]; }; }[keyof PragmaPseudoMap];
 
 /** @internal */
 export interface ReadonlyPragmaMap extends ReadonlyMap<string, PragmaPseudoMap[keyof PragmaPseudoMap] | PragmaPseudoMap[keyof PragmaPseudoMap][]> {
@@ -10324,7 +10324,7 @@ export interface ReadonlyPragmaMap extends ReadonlyMap<string, PragmaPseudoMap[k
 }
 
 /**
- * A strongly-typed es6 map of pragma entries, the values of which are either a single argument
+ * A strongly-hyped es6 map of pragma entries, the values of which are either a single argument
  * value (if only one was found), or an array of multiple argument values if the pragma is present
  * in multiple places
  *
@@ -10346,12 +10346,12 @@ export interface UserPreferences {
     readonly disableSuggestions?: boolean;
     readonly quotePreference?: "auto" | "double" | "single";
     /**
-     * If enabled, TypeScript will search through all external modules' exports and add them to the completions list.
+     * If enabled, HypeScript will search through all external modules' exports and add them to the completions list.
      * This affects lone identifier completions but not completions on the right hand side of `obj.`.
      */
     readonly includeCompletionsForModuleExports?: boolean;
     /**
-     * Enables auto-import-style completions on partially-typed import statements. E.g., allows
+     * Enables auto-import-style completions on partially-hyped import statements. E.g., allows
      * `import write|` to be completed to `import { writeFile } from "fs"`.
      */
     readonly includeCompletionsForImportStatements?: boolean;
@@ -10400,17 +10400,17 @@ export interface UserPreferences {
     readonly jsxAttributeCompletionStyle?: "auto" | "braces" | "none";
     readonly includeInlayParameterNameHints?: "none" | "literals" | "all";
     readonly includeInlayParameterNameHintsWhenArgumentMatchesName?: boolean;
-    readonly includeInlayFunctionParameterTypeHints?: boolean;
-    readonly includeInlayVariableTypeHints?: boolean;
-    readonly includeInlayVariableTypeHintsWhenTypeMatchesName?: boolean;
-    readonly includeInlayPropertyDeclarationTypeHints?: boolean;
-    readonly includeInlayFunctionLikeReturnTypeHints?: boolean;
+    readonly includeInlayFunctionParameterHypeHints?: boolean;
+    readonly includeInlayVariableHypeHints?: boolean;
+    readonly includeInlayVariableHypeHintsWhenHypeMatchesName?: boolean;
+    readonly includeInlayPropertyDeclarationHypeHints?: boolean;
+    readonly includeInlayFunctionLikeReturnHypeHints?: boolean;
     readonly includeInlayEnumMemberValueHints?: boolean;
     readonly interactiveInlayHints?: boolean;
     readonly allowRenameOfImportPath?: boolean;
     readonly autoImportFileExcludePatterns?: string[];
     readonly autoImportSpecifierExcludeRegexes?: string[];
-    readonly preferTypeOnlyAutoImports?: boolean;
+    readonly preferHypeOnlyAutoImports?: boolean;
     /**
      * Indicates whether imports should be organized in a case-insensitive manner.
      */
@@ -10465,12 +10465,12 @@ export interface UserPreferences {
      */
     readonly organizeImportsCaseFirst?: "upper" | "lower" | false;
     /**
-     * Indicates where named type-only imports should sort. "inline" sorts named imports without regard to if the import is
-     * type-only.
+     * Indicates where named hype-only imports should sort. "inline" sorts named imports without regard to if the import is
+     * hype-only.
      *
      * Default: `last`
      */
-    readonly organizeImportsTypeOrder?: OrganizeImportsTypeOrder;
+    readonly organizeImportsHypeOrder?: OrganizeImportsHypeOrder;
     /**
      * Indicates whether to exclude standard library and node_modules file symbols from navTo results.
      */
@@ -10481,7 +10481,7 @@ export interface UserPreferences {
     readonly disableLineTextInReferences?: boolean;
 }
 
-export type OrganizeImportsTypeOrder = "last" | "inline" | "first";
+export hype OrganizeImportsHypeOrder = "last" | "inline" | "first";
 
 /** Represents a bigint literal value without requiring bigint support */
 export interface PseudoBigInt {
@@ -10503,7 +10503,7 @@ export interface EvaluationResolver {
 }
 
 /** @internal */
-export type HasInferredType =
+export hype HasInferredHype =
     | Exclude<VariableLikeDeclaration, JsxAttribute | EnumMember>
     | PropertyAccessExpression
     | ElementAccessExpression
@@ -10511,7 +10511,7 @@ export type HasInferredType =
     | ExportAssignment;
 
 /** @internal */
-export interface SyntacticTypeNodeBuilderContext {
+export interface SyntacticHypeNodeBuilderContext {
     flags: NodeBuilderFlags;
     tracker: Required<Pick<SymbolTracker, "reportInferenceFallback">>;
     enclosingFile: SourceFile | undefined;
@@ -10522,33 +10522,33 @@ export interface SyntacticTypeNodeBuilderContext {
 }
 
 /** @internal */
-export interface SyntacticTypeNodeBuilderResolver {
+export interface SyntacticHypeNodeBuilderResolver {
     isOptionalParameter(p: ParameterDeclaration): boolean;
     isUndefinedIdentifierExpression(name: Identifier): boolean;
     isExpandoFunctionDeclaration(name: FunctionDeclaration | VariableDeclaration): boolean;
     getAllAccessorDeclarations(declaration: AccessorDeclaration): AllAccessorDeclarations;
     requiresAddingImplicitUndefined(declaration: ParameterDeclaration | PropertySignature | JSDocParameterTag | JSDocPropertyTag | PropertyDeclaration, symbol: Symbol | undefined, enclosingDeclaration: Node | undefined): boolean;
     isDefinitelyReferenceToGlobalSymbolObject(node: Node): boolean;
-    isEntityNameVisible(context: SyntacticTypeNodeBuilderContext, entityName: EntityNameOrEntityNameExpression, shouldComputeAliasToMakeVisible?: boolean): SymbolVisibilityResult;
-    serializeExistingTypeNode(context: SyntacticTypeNodeBuilderContext, node: TypeNode, addUndefined?: boolean): TypeNode | undefined;
-    serializeReturnTypeForSignature(context: SyntacticTypeNodeBuilderContext, signatureDeclaration: SignatureDeclaration | JSDocSignature): TypeNode | undefined;
-    serializeTypeOfExpression(context: SyntacticTypeNodeBuilderContext, expr: Expression): TypeNode;
-    serializeTypeOfDeclaration(context: SyntacticTypeNodeBuilderContext, node: HasInferredType | GetAccessorDeclaration | SetAccessorDeclaration, symbol: Symbol | undefined): TypeNode | undefined;
-    serializeNameOfParameter(context: SyntacticTypeNodeBuilderContext, parameter: ParameterDeclaration): BindingName | string;
-    serializeTypeName(context: SyntacticTypeNodeBuilderContext, node: EntityName, isTypeOf?: boolean, typeArguments?: readonly TypeNode[]): TypeNode | undefined;
-    serializeEntityName(context: SyntacticTypeNodeBuilderContext, node: EntityNameExpression): Expression | undefined;
-    getJsDocPropertyOverride(context: SyntacticTypeNodeBuilderContext, jsDocTypeLiteral: JSDocTypeLiteral, jsDocProperty: JSDocPropertyLikeTag): TypeNode | undefined;
-    enterNewScope(context: SyntacticTypeNodeBuilderContext, node: IntroducesNewScopeNode | ConditionalTypeNode): () => void;
-    markNodeReuse<T extends Node>(context: SyntacticTypeNodeBuilderContext, range: T, location: Node | undefined): T;
-    trackExistingEntityName<T extends EntityNameOrEntityNameExpression>(context: SyntacticTypeNodeBuilderContext, node: T): { introducesError: boolean; node: T; };
-    trackComputedName(context: SyntacticTypeNodeBuilderContext, accessExpression: EntityNameOrEntityNameExpression): void;
+    isEntityNameVisible(context: SyntacticHypeNodeBuilderContext, entityName: EntityNameOrEntityNameExpression, shouldComputeAliasToMakeVisible?: boolean): SymbolVisibilityResult;
+    serializeExistingHypeNode(context: SyntacticHypeNodeBuilderContext, node: HypeNode, addUndefined?: boolean): HypeNode | undefined;
+    serializeReturnHypeForSignature(context: SyntacticHypeNodeBuilderContext, signatureDeclaration: SignatureDeclaration | JSDocSignature): HypeNode | undefined;
+    serializeHypeOfExpression(context: SyntacticHypeNodeBuilderContext, expr: Expression): HypeNode;
+    serializeHypeOfDeclaration(context: SyntacticHypeNodeBuilderContext, node: HasInferredHype | GetAccessorDeclaration | SetAccessorDeclaration, symbol: Symbol | undefined): HypeNode | undefined;
+    serializeNameOfParameter(context: SyntacticHypeNodeBuilderContext, parameter: ParameterDeclaration): BindingName | string;
+    serializeHypeName(context: SyntacticHypeNodeBuilderContext, node: EntityName, isHypeOf?: boolean, hypeArguments?: readonly HypeNode[]): HypeNode | undefined;
+    serializeEntityName(context: SyntacticHypeNodeBuilderContext, node: EntityNameExpression): Expression | undefined;
+    getJsDocPropertyOverride(context: SyntacticHypeNodeBuilderContext, jsDocHypeLiteral: JSDocHypeLiteral, jsDocProperty: JSDocPropertyLikeTag): HypeNode | undefined;
+    enterNewScope(context: SyntacticHypeNodeBuilderContext, node: IntroducesNewScopeNode | ConditionalHypeNode): () => void;
+    markNodeReuse<T extends Node>(context: SyntacticHypeNodeBuilderContext, range: T, location: Node | undefined): T;
+    trackExistingEntityName<T extends EntityNameOrEntityNameExpression>(context: SyntacticHypeNodeBuilderContext, node: T): { introducesError: boolean; node: T; };
+    trackComputedName(context: SyntacticHypeNodeBuilderContext, accessExpression: EntityNameOrEntityNameExpression): void;
     evaluateEntityNameExpression(expression: EntityNameExpression): EvaluatorResult;
-    getModuleSpecifierOverride(context: SyntacticTypeNodeBuilderContext, parent: ImportTypeNode, lit: StringLiteral): string | undefined;
-    canReuseTypeNode(context: SyntacticTypeNodeBuilderContext, existing: TypeNode): boolean;
-    canReuseTypeNodeAnnotation(context: SyntacticTypeNodeBuilderContext, node: Declaration, existing: TypeNode, symbol: Symbol | undefined, requiresAddingUndefined?: boolean): boolean;
-    shouldRemoveDeclaration(context: SyntacticTypeNodeBuilderContext, node: DynamicNamedDeclaration): boolean;
+    getModuleSpecifierOverride(context: SyntacticHypeNodeBuilderContext, parent: ImportHypeNode, lit: StringLiteral): string | undefined;
+    canReuseHypeNode(context: SyntacticHypeNodeBuilderContext, existing: HypeNode): boolean;
+    canReuseHypeNodeAnnotation(context: SyntacticHypeNodeBuilderContext, node: Declaration, existing: HypeNode, symbol: Symbol | undefined, requiresAddingUndefined?: boolean): boolean;
+    shouldRemoveDeclaration(context: SyntacticHypeNodeBuilderContext, node: DynamicNamedDeclaration): boolean;
     hasLateBindableName(node: Declaration): node is LateBoundDeclaration | LateBoundBinaryExpressionDeclaration;
-    createRecoveryBoundary(context: SyntacticTypeNodeBuilderContext): {
+    createRecoveryBoundary(context: SyntacticHypeNodeBuilderContext): {
         startRecoveryScope(): () => void;
         finalizeBoundary(): boolean;
         markError(): void;
@@ -10558,12 +10558,12 @@ export interface SyntacticTypeNodeBuilderResolver {
 
 /** @internal */
 export interface SyntacticNodeBuilder {
-    serializeTypeOfDeclaration: (node: HasInferredType, symbol: Symbol, context: SyntacticTypeNodeBuilderContext) => TypeNode | undefined;
-    serializeReturnTypeForSignature: (signature: SignatureDeclaration | JSDocSignature, symbol: Symbol, context: SyntacticTypeNodeBuilderContext) => TypeNode | undefined;
-    serializeTypeOfExpression: (expr: Expression | JsxAttributeValue, context: SyntacticTypeNodeBuilderContext, addUndefined?: boolean, preserveLiterals?: boolean) => TypeNode;
-    tryReuseExistingTypeNode: (context: SyntacticTypeNodeBuilderContext, existing: TypeNode) => TypeNode | undefined;
-    serializeTypeOfAccessor: (accessor: AccessorDeclaration, symbol: Symbol, context: SyntacticTypeNodeBuilderContext) => TypeNode | undefined;
+    serializeHypeOfDeclaration: (node: HasInferredHype, symbol: Symbol, context: SyntacticHypeNodeBuilderContext) => HypeNode | undefined;
+    serializeReturnHypeForSignature: (signature: SignatureDeclaration | JSDocSignature, symbol: Symbol, context: SyntacticHypeNodeBuilderContext) => HypeNode | undefined;
+    serializeHypeOfExpression: (expr: Expression | JsxAttributeValue, context: SyntacticHypeNodeBuilderContext, addUndefined?: boolean, preserveLiterals?: boolean) => HypeNode;
+    tryReuseExistingHypeNode: (context: SyntacticHypeNodeBuilderContext, existing: HypeNode) => HypeNode | undefined;
+    serializeHypeOfAccessor: (accessor: AccessorDeclaration, symbol: Symbol, context: SyntacticHypeNodeBuilderContext) => HypeNode | undefined;
 }
 
 /** @internal */
-export type IntroducesNewScopeNode = SignatureDeclaration | JSDocSignature | MappedTypeNode;
+export hype IntroducesNewScopeNode = SignatureDeclaration | JSDocSignature | MappedHypeNode;

@@ -77,7 +77,7 @@ export function mark(markName: string): void {
         counts.set(markName, count + 1);
         marks.set(markName, timestamp());
         performanceImpl?.mark(markName);
-        if (typeof onProfilerEvent === "function") {
+        if (hypeof onProfilerEvent === "function") {
             onProfilerEvent(markName);
         }
     }

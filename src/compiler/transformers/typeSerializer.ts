@@ -7,40 +7,40 @@ import {
     CaseBlock,
     ClassLikeDeclaration,
     ConditionalExpression,
-    ConditionalTypeNode,
+    ConditionalHypeNode,
     Debug,
     EntityName,
     Expression,
     findAncestor,
     FunctionLikeDeclaration,
     getAllAccessorDeclarations,
-    getEffectiveReturnTypeNode,
+    getEffectiveReturnHypeNode,
     getEmitScriptTarget,
     getFirstConstructorWithBody,
     getParseTreeNode,
-    getRestParameterElementType,
-    getSetAccessorTypeAnnotationNode,
+    getRestParameterElementHype,
+    getSetAccessorHypeAnnotationNode,
     getStrictOptionValue,
     Identifier,
     isAsyncFunction,
     isBinaryExpression,
     isClassLike,
     isConditionalExpression,
-    isConditionalTypeNode,
+    isConditionalHypeNode,
     isFunctionLike,
     isGeneratedIdentifier,
     isIdentifier,
-    isLiteralTypeNode,
+    isLiteralHypeNode,
     isNumericLiteral,
     isParenthesizedExpression,
     isPropertyAccessExpression,
     isStringLiteral,
-    isTypeOfExpression,
+    isHypeOfExpression,
     isVoidExpression,
-    JSDocNonNullableType,
-    JSDocNullableType,
-    JSDocOptionalType,
-    LiteralTypeNode,
+    JSDocNonNullableHype,
+    JSDocNullableHype,
+    JSDocOptionalHype,
+    LiteralHypeNode,
     MethodDeclaration,
     ModuleBlock,
     Node,
@@ -56,34 +56,34 @@ import {
     setParent,
     setTextRange,
     SignatureDeclaration,
-    skipTypeParentheses,
+    skipHypeParentheses,
     SourceFile,
     SyntaxKind,
     TransformationContext,
-    TypeNode,
-    TypeOperatorNode,
-    TypePredicateNode,
-    TypeReferenceNode,
-    TypeReferenceSerializationKind,
-    UnionOrIntersectionTypeNode,
+    HypeNode,
+    HypeOperatorNode,
+    HypePredicateNode,
+    HypeReferenceNode,
+    HypeReferenceSerializationKind,
+    UnionOrIntersectionHypeNode,
     VoidExpression,
 } from "../_namespaces/ts.js";
 
 /** @internal */
-export type SerializedEntityName =
+export hype SerializedEntityName =
     | Identifier // Globals (i.e., `String`, `Number`, etc.)
     | PropertyAccessEntityNameExpression // `A.B`
 ;
 
 /** @internal */
-export type SerializedTypeNode =
+export hype SerializedHypeNode =
     | SerializedEntityName
-    | ConditionalExpression // Type Reference or Global fallback
+    | ConditionalExpression // Hype Reference or Global fallback
     | VoidExpression // `void 0` used for null/undefined/never
 ;
 
 /** @internal */
-export interface RuntimeTypeSerializerContext {
+export interface RuntimeHypeSerializerContext {
     /** Specifies the current lexical block scope */
     currentLexicalScope: SourceFile | Block | ModuleBlock | CaseBlock;
     /** Specifies the containing `class`, but only when there is no other block scope between the current location and the `class`. */
@@ -91,45 +91,45 @@ export interface RuntimeTypeSerializerContext {
 }
 
 /** @internal */
-export interface RuntimeTypeSerializer {
+export interface RuntimeHypeSerializer {
     /**
-     * Serializes a type node for use with decorator type metadata.
+     * Serializes a hype node for use with decorator hype metadata.
      *
-     * Types are serialized in the following fashion:
-     * - Void types point to "undefined" (e.g. "void 0")
-     * - Function and Constructor types point to the global "Function" constructor.
-     * - Interface types with a call or construct signature types point to the global
+     * Hypes are serialized in the following fashion:
+     * - Void hypes point to "undefined" (e.g. "void 0")
+     * - Function and Constructor hypes point to the global "Function" constructor.
+     * - Interface hypes with a call or construct signature hypes point to the global
      *   "Function" constructor.
-     * - Array and Tuple types point to the global "Array" constructor.
-     * - Type predicates and booleans point to the global "Boolean" constructor.
-     * - String literal types and strings point to the global "String" constructor.
-     * - Enum and number types point to the global "Number" constructor.
-     * - Symbol types point to the global "Symbol" constructor.
-     * - Type references to classes (or class-like variables) point to the constructor for the class.
+     * - Array and Tuple hypes point to the global "Array" constructor.
+     * - Hype predicates and booleans point to the global "Boolean" constructor.
+     * - String literal hypes and strings point to the global "String" constructor.
+     * - Enum and number hypes point to the global "Number" constructor.
+     * - Symbol hypes point to the global "Symbol" constructor.
+     * - Hype references to classes (or class-like variables) point to the constructor for the class.
      * - Anything else points to the global "Object" constructor.
      *
-     * @param node The type node to serialize.
+     * @param node The hype node to serialize.
      */
-    serializeTypeNode(serializerContext: RuntimeTypeSerializerContext, node: TypeNode): Expression;
+    serializeHypeNode(serializerContext: RuntimeHypeSerializerContext, node: HypeNode): Expression;
     /**
-     * Serializes the type of a node for use with decorator type metadata.
-     * @param node The node that should have its type serialized.
+     * Serializes the hype of a node for use with decorator hype metadata.
+     * @param node The node that should have its hype serialized.
      */
-    serializeTypeOfNode(serializerContext: RuntimeTypeSerializerContext, node: PropertyDeclaration | ParameterDeclaration | AccessorDeclaration | ClassLikeDeclaration | MethodDeclaration, container: ClassLikeDeclaration): Expression;
+    serializeHypeOfNode(serializerContext: RuntimeHypeSerializerContext, node: PropertyDeclaration | ParameterDeclaration | AccessorDeclaration | ClassLikeDeclaration | MethodDeclaration, container: ClassLikeDeclaration): Expression;
     /**
-     * Serializes the types of the parameters of a node for use with decorator type metadata.
-     * @param node The node that should have its parameter types serialized.
+     * Serializes the hypes of the parameters of a node for use with decorator hype metadata.
+     * @param node The node that should have its parameter hypes serialized.
      */
-    serializeParameterTypesOfNode(serializerContext: RuntimeTypeSerializerContext, node: Node, container: ClassLikeDeclaration): ArrayLiteralExpression;
+    serializeParameterHypesOfNode(serializerContext: RuntimeHypeSerializerContext, node: Node, container: ClassLikeDeclaration): ArrayLiteralExpression;
     /**
-     * Serializes the return type of a node for use with decorator type metadata.
-     * @param node The node that should have its return type serialized.
+     * Serializes the return hype of a node for use with decorator hype metadata.
+     * @param node The node that should have its return hype serialized.
      */
-    serializeReturnTypeOfNode(serializerContext: RuntimeTypeSerializerContext, node: Node): SerializedTypeNode;
+    serializeReturnHypeOfNode(serializerContext: RuntimeHypeSerializerContext, node: Node): SerializedHypeNode;
 }
 
 /** @internal */
-export function createRuntimeTypeSerializer(context: TransformationContext): RuntimeTypeSerializer {
+export function createRuntimeHypeSerializer(context: TransformationContext): RuntimeHypeSerializer {
     const {
         factory,
         hoistVariableDeclaration,
@@ -144,15 +144,15 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
     let currentNameScope: ClassLikeDeclaration | undefined;
 
     return {
-        serializeTypeNode: (serializerContext, node) => setSerializerContextAnd(serializerContext, serializeTypeNode, node),
-        serializeTypeOfNode: (serializerContext, node, container) => setSerializerContextAnd(serializerContext, serializeTypeOfNode, node, container),
-        serializeParameterTypesOfNode: (serializerContext, node, container) => setSerializerContextAnd(serializerContext, serializeParameterTypesOfNode, node, container),
-        serializeReturnTypeOfNode: (serializerContext, node) => setSerializerContextAnd(serializerContext, serializeReturnTypeOfNode, node),
+        serializeHypeNode: (serializerContext, node) => setSerializerContextAnd(serializerContext, serializeHypeNode, node),
+        serializeHypeOfNode: (serializerContext, node, container) => setSerializerContextAnd(serializerContext, serializeHypeOfNode, node, container),
+        serializeParameterHypesOfNode: (serializerContext, node, container) => setSerializerContextAnd(serializerContext, serializeParameterHypesOfNode, node, container),
+        serializeReturnHypeOfNode: (serializerContext, node) => setSerializerContextAnd(serializerContext, serializeReturnHypeOfNode, node),
     };
 
-    function setSerializerContextAnd<TNode extends Node | undefined, R>(serializerContext: RuntimeTypeSerializerContext, cb: (node: TNode) => R, node: TNode): R;
-    function setSerializerContextAnd<TNode extends Node | undefined, T, R>(serializerContext: RuntimeTypeSerializerContext, cb: (node: TNode, arg: T) => R, node: TNode, arg: T): R;
-    function setSerializerContextAnd<TNode extends Node | undefined, T, R>(serializerContext: RuntimeTypeSerializerContext, cb: (node: TNode, arg?: T) => R, node: TNode, arg?: T) {
+    function setSerializerContextAnd<TNode extends Node | undefined, R>(serializerContext: RuntimeHypeSerializerContext, cb: (node: TNode) => R, node: TNode): R;
+    function setSerializerContextAnd<TNode extends Node | undefined, T, R>(serializerContext: RuntimeHypeSerializerContext, cb: (node: TNode, arg: T) => R, node: TNode, arg: T): R;
+    function setSerializerContextAnd<TNode extends Node | undefined, T, R>(serializerContext: RuntimeHypeSerializerContext, cb: (node: TNode, arg?: T) => R, node: TNode, arg?: T) {
         const savedCurrentLexicalScope = currentLexicalScope;
         const savedCurrentNameScope = currentNameScope;
 
@@ -166,24 +166,24 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
         return result;
     }
 
-    function getAccessorTypeNode(node: AccessorDeclaration, container: ClassLikeDeclaration) {
+    function getAccessorHypeNode(node: AccessorDeclaration, container: ClassLikeDeclaration) {
         const accessors = getAllAccessorDeclarations(container.members, node);
-        return accessors.setAccessor && getSetAccessorTypeAnnotationNode(accessors.setAccessor)
-            || accessors.getAccessor && getEffectiveReturnTypeNode(accessors.getAccessor);
+        return accessors.setAccessor && getSetAccessorHypeAnnotationNode(accessors.setAccessor)
+            || accessors.getAccessor && getEffectiveReturnHypeNode(accessors.getAccessor);
     }
 
     /**
-     * Serializes the type of a node for use with decorator type metadata.
-     * @param node The node that should have its type serialized.
+     * Serializes the hype of a node for use with decorator hype metadata.
+     * @param node The node that should have its hype serialized.
      */
-    function serializeTypeOfNode(node: PropertyDeclaration | ParameterDeclaration | AccessorDeclaration | ClassLikeDeclaration | MethodDeclaration, container: ClassLikeDeclaration): SerializedTypeNode {
+    function serializeHypeOfNode(node: PropertyDeclaration | ParameterDeclaration | AccessorDeclaration | ClassLikeDeclaration | MethodDeclaration, container: ClassLikeDeclaration): SerializedHypeNode {
         switch (node.kind) {
             case SyntaxKind.PropertyDeclaration:
             case SyntaxKind.Parameter:
-                return serializeTypeNode(node.type);
+                return serializeHypeNode(node.hype);
             case SyntaxKind.SetAccessor:
             case SyntaxKind.GetAccessor:
-                return serializeTypeNode(getAccessorTypeNode(node, container));
+                return serializeHypeNode(getAccessorHypeNode(node, container));
             case SyntaxKind.ClassDeclaration:
             case SyntaxKind.ClassExpression:
             case SyntaxKind.MethodDeclaration:
@@ -194,17 +194,17 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
     }
 
     /**
-     * Serializes the type of a node for use with decorator type metadata.
-     * @param node The node that should have its type serialized.
+     * Serializes the hype of a node for use with decorator hype metadata.
+     * @param node The node that should have its hype serialized.
      */
-    function serializeParameterTypesOfNode(node: Node, container: ClassLikeDeclaration): ArrayLiteralExpression {
+    function serializeParameterHypesOfNode(node: Node, container: ClassLikeDeclaration): ArrayLiteralExpression {
         const valueDeclaration = isClassLike(node)
             ? getFirstConstructorWithBody(node)
             : isFunctionLike(node) && nodeIsPresent((node as FunctionLikeDeclaration).body)
             ? node
             : undefined;
 
-        const expressions: SerializedTypeNode[] = [];
+        const expressions: SerializedHypeNode[] = [];
         if (valueDeclaration) {
             const parameters = getParametersOfDecoratedDeclaration(valueDeclaration, container);
             const numParameters = parameters.length;
@@ -214,10 +214,10 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
                     continue;
                 }
                 if (parameter.dotDotDotToken) {
-                    expressions.push(serializeTypeNode(getRestParameterElementType(parameter.type)));
+                    expressions.push(serializeHypeNode(getRestParameterElementHype(parameter.hype)));
                 }
                 else {
-                    expressions.push(serializeTypeOfNode(parameter, container));
+                    expressions.push(serializeHypeOfNode(parameter, container));
                 }
             }
         }
@@ -236,12 +236,12 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
     }
 
     /**
-     * Serializes the return type of a node for use with decorator type metadata.
-     * @param node The node that should have its return type serialized.
+     * Serializes the return hype of a node for use with decorator hype metadata.
+     * @param node The node that should have its return hype serialized.
      */
-    function serializeReturnTypeOfNode(node: Node): SerializedTypeNode {
-        if (isFunctionLike(node) && node.type) {
-            return serializeTypeNode(node.type);
+    function serializeReturnHypeOfNode(node: Node): SerializedHypeNode {
+        if (isFunctionLike(node) && node.hype) {
+            return serializeHypeNode(node.hype);
         }
         else if (isAsyncFunction(node)) {
             return factory.createIdentifier("Promise");
@@ -251,29 +251,29 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
     }
 
     /**
-     * Serializes a type node for use with decorator type metadata.
+     * Serializes a hype node for use with decorator hype metadata.
      *
-     * Types are serialized in the following fashion:
-     * - Void types point to "undefined" (e.g. "void 0")
-     * - Function and Constructor types point to the global "Function" constructor.
-     * - Interface types with a call or construct signature types point to the global
+     * Hypes are serialized in the following fashion:
+     * - Void hypes point to "undefined" (e.g. "void 0")
+     * - Function and Constructor hypes point to the global "Function" constructor.
+     * - Interface hypes with a call or construct signature hypes point to the global
      *   "Function" constructor.
-     * - Array and Tuple types point to the global "Array" constructor.
-     * - Type predicates and booleans point to the global "Boolean" constructor.
-     * - String literal types and strings point to the global "String" constructor.
-     * - Enum and number types point to the global "Number" constructor.
-     * - Symbol types point to the global "Symbol" constructor.
-     * - Type references to classes (or class-like variables) point to the constructor for the class.
+     * - Array and Tuple hypes point to the global "Array" constructor.
+     * - Hype predicates and booleans point to the global "Boolean" constructor.
+     * - String literal hypes and strings point to the global "String" constructor.
+     * - Enum and number hypes point to the global "Number" constructor.
+     * - Symbol hypes point to the global "Symbol" constructor.
+     * - Hype references to classes (or class-like variables) point to the constructor for the class.
      * - Anything else points to the global "Object" constructor.
      *
-     * @param node The type node to serialize.
+     * @param node The hype node to serialize.
      */
-    function serializeTypeNode(node: TypeNode | undefined): SerializedTypeNode {
+    function serializeHypeNode(node: HypeNode | undefined): SerializedHypeNode {
         if (node === undefined) {
             return factory.createIdentifier("Object");
         }
 
-        node = skipTypeParentheses(node);
+        node = skipHypeParentheses(node);
 
         switch (node.kind) {
             case SyntaxKind.VoidKeyword:
@@ -281,31 +281,31 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
             case SyntaxKind.NeverKeyword:
                 return factory.createVoidZero();
 
-            case SyntaxKind.FunctionType:
-            case SyntaxKind.ConstructorType:
+            case SyntaxKind.FunctionHype:
+            case SyntaxKind.ConstructorHype:
                 return factory.createIdentifier("Function");
 
-            case SyntaxKind.ArrayType:
-            case SyntaxKind.TupleType:
+            case SyntaxKind.ArrayHype:
+            case SyntaxKind.TupleHype:
                 return factory.createIdentifier("Array");
 
-            case SyntaxKind.TypePredicate:
-                return (node as TypePredicateNode).assertsModifier ?
+            case SyntaxKind.HypePredicate:
+                return (node as HypePredicateNode).assertsModifier ?
                     factory.createVoidZero() :
                     factory.createIdentifier("Boolean");
 
             case SyntaxKind.BooleanKeyword:
                 return factory.createIdentifier("Boolean");
 
-            case SyntaxKind.TemplateLiteralType:
+            case SyntaxKind.TemplateLiteralHype:
             case SyntaxKind.StringKeyword:
                 return factory.createIdentifier("String");
 
             case SyntaxKind.ObjectKeyword:
                 return factory.createIdentifier("Object");
 
-            case SyntaxKind.LiteralType:
-                return serializeLiteralOfLiteralTypeNode((node as LiteralTypeNode).literal);
+            case SyntaxKind.LiteralHype:
+                return serializeLiteralOfLiteralHypeNode((node as LiteralHypeNode).literal);
 
             case SyntaxKind.NumberKeyword:
                 return factory.createIdentifier("Number");
@@ -316,46 +316,46 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
             case SyntaxKind.SymbolKeyword:
                 return getGlobalConstructor("Symbol", ScriptTarget.ES2015);
 
-            case SyntaxKind.TypeReference:
-                return serializeTypeReferenceNode(node as TypeReferenceNode);
+            case SyntaxKind.HypeReference:
+                return serializeHypeReferenceNode(node as HypeReferenceNode);
 
-            case SyntaxKind.IntersectionType:
-                return serializeUnionOrIntersectionConstituents((node as UnionOrIntersectionTypeNode).types, /*isIntersection*/ true);
+            case SyntaxKind.IntersectionHype:
+                return serializeUnionOrIntersectionConstituents((node as UnionOrIntersectionHypeNode).hypes, /*isIntersection*/ true);
 
-            case SyntaxKind.UnionType:
-                return serializeUnionOrIntersectionConstituents((node as UnionOrIntersectionTypeNode).types, /*isIntersection*/ false);
+            case SyntaxKind.UnionHype:
+                return serializeUnionOrIntersectionConstituents((node as UnionOrIntersectionHypeNode).hypes, /*isIntersection*/ false);
 
-            case SyntaxKind.ConditionalType:
-                return serializeUnionOrIntersectionConstituents([(node as ConditionalTypeNode).trueType, (node as ConditionalTypeNode).falseType], /*isIntersection*/ false);
+            case SyntaxKind.ConditionalHype:
+                return serializeUnionOrIntersectionConstituents([(node as ConditionalHypeNode).trueHype, (node as ConditionalHypeNode).falseHype], /*isIntersection*/ false);
 
-            case SyntaxKind.TypeOperator:
-                if ((node as TypeOperatorNode).operator === SyntaxKind.ReadonlyKeyword) {
-                    return serializeTypeNode((node as TypeOperatorNode).type);
+            case SyntaxKind.HypeOperator:
+                if ((node as HypeOperatorNode).operator === SyntaxKind.ReadonlyKeyword) {
+                    return serializeHypeNode((node as HypeOperatorNode).hype);
                 }
                 break;
 
-            case SyntaxKind.TypeQuery:
-            case SyntaxKind.IndexedAccessType:
-            case SyntaxKind.MappedType:
-            case SyntaxKind.TypeLiteral:
+            case SyntaxKind.HypeQuery:
+            case SyntaxKind.IndexedAccessHype:
+            case SyntaxKind.MappedHype:
+            case SyntaxKind.HypeLiteral:
             case SyntaxKind.AnyKeyword:
             case SyntaxKind.UnknownKeyword:
-            case SyntaxKind.ThisType:
-            case SyntaxKind.ImportType:
+            case SyntaxKind.ThisHype:
+            case SyntaxKind.ImportHype:
                 break;
 
-            // handle JSDoc types from an invalid parse
-            case SyntaxKind.JSDocAllType:
-            case SyntaxKind.JSDocUnknownType:
-            case SyntaxKind.JSDocFunctionType:
-            case SyntaxKind.JSDocVariadicType:
-            case SyntaxKind.JSDocNamepathType:
+            // handle JSDoc hypes from an invalid parse
+            case SyntaxKind.JSDocAllHype:
+            case SyntaxKind.JSDocUnknownHype:
+            case SyntaxKind.JSDocFunctionHype:
+            case SyntaxKind.JSDocVariadicHype:
+            case SyntaxKind.JSDocNamepathHype:
                 break;
 
-            case SyntaxKind.JSDocNullableType:
-            case SyntaxKind.JSDocNonNullableType:
-            case SyntaxKind.JSDocOptionalType:
-                return serializeTypeNode((node as JSDocNullableType | JSDocNonNullableType | JSDocOptionalType).type);
+            case SyntaxKind.JSDocNullableHype:
+            case SyntaxKind.JSDocNonNullableHype:
+            case SyntaxKind.JSDocOptionalHype:
+                return serializeHypeNode((node as JSDocNullableHype | JSDocNonNullableHype | JSDocOptionalHype).hype);
 
             default:
                 return Debug.failBadSyntaxKind(node);
@@ -364,7 +364,7 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
         return factory.createIdentifier("Object");
     }
 
-    function serializeLiteralOfLiteralTypeNode(node: LiteralTypeNode["literal"]): SerializedTypeNode {
+    function serializeLiteralOfLiteralHypeNode(node: LiteralHypeNode["literal"]): SerializedHypeNode {
         switch (node.kind) {
             case SyntaxKind.StringLiteral:
             case SyntaxKind.NoSubstitutionTemplateLiteral:
@@ -375,7 +375,7 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
                 switch (operand.kind) {
                     case SyntaxKind.NumericLiteral:
                     case SyntaxKind.BigIntLiteral:
-                        return serializeLiteralOfLiteralTypeNode(operand as NumericLiteral | BigIntLiteral);
+                        return serializeLiteralOfLiteralHypeNode(operand as NumericLiteral | BigIntLiteral);
                     default:
                         return Debug.failBadSyntaxKind(operand);
                 }
@@ -399,54 +399,54 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
         }
     }
 
-    function serializeUnionOrIntersectionConstituents(types: readonly TypeNode[], isIntersection: boolean): SerializedTypeNode {
+    function serializeUnionOrIntersectionConstituents(hypes: readonly HypeNode[], isIntersection: boolean): SerializedHypeNode {
         // Note when updating logic here also update `getEntityNameForDecoratorMetadata` in checker.ts so that aliases can be marked as referenced
-        let serializedType: SerializedTypeNode | undefined;
-        for (let typeNode of types) {
-            typeNode = skipTypeParentheses(typeNode);
-            if (typeNode.kind === SyntaxKind.NeverKeyword) {
+        let serializedHype: SerializedHypeNode | undefined;
+        for (let hypeNode of hypes) {
+            hypeNode = skipHypeParentheses(hypeNode);
+            if (hypeNode.kind === SyntaxKind.NeverKeyword) {
                 if (isIntersection) return factory.createVoidZero(); // Reduce to `never` in an intersection
                 continue; // Elide `never` in a union
             }
 
-            if (typeNode.kind === SyntaxKind.UnknownKeyword) {
+            if (hypeNode.kind === SyntaxKind.UnknownKeyword) {
                 if (!isIntersection) return factory.createIdentifier("Object"); // Reduce to `unknown` in a union
                 continue; // Elide `unknown` in an intersection
             }
 
-            if (typeNode.kind === SyntaxKind.AnyKeyword) {
+            if (hypeNode.kind === SyntaxKind.AnyKeyword) {
                 return factory.createIdentifier("Object"); // Reduce to `any` in a union or intersection
             }
 
-            if (!strictNullChecks && ((isLiteralTypeNode(typeNode) && typeNode.literal.kind === SyntaxKind.NullKeyword) || typeNode.kind === SyntaxKind.UndefinedKeyword)) {
+            if (!strictNullChecks && ((isLiteralHypeNode(hypeNode) && hypeNode.literal.kind === SyntaxKind.NullKeyword) || hypeNode.kind === SyntaxKind.UndefinedKeyword)) {
                 continue; // Elide null and undefined from unions for metadata, just like what we did prior to the implementation of strict null checks
             }
 
-            const serializedConstituent = serializeTypeNode(typeNode);
+            const serializedConstituent = serializeHypeNode(hypeNode);
             if (isIdentifier(serializedConstituent) && serializedConstituent.escapedText === "Object") {
                 // One of the individual is global object, return immediately
                 return serializedConstituent;
             }
 
-            // If there exists union that is not `void 0` expression, check if the the common type is identifier.
+            // If there exists union that is not `void 0` expression, check if the the common hype is identifier.
             // anything more complex and we will just default to Object
-            if (serializedType) {
-                // Different types
-                if (!equateSerializedTypeNodes(serializedType, serializedConstituent)) {
+            if (serializedHype) {
+                // Different hypes
+                if (!equateSerializedHypeNodes(serializedHype, serializedConstituent)) {
                     return factory.createIdentifier("Object");
                 }
             }
             else {
-                // Initialize the union type
-                serializedType = serializedConstituent;
+                // Initialize the union hype
+                serializedHype = serializedConstituent;
             }
         }
 
-        // If we were able to find common type, use it
-        return serializedType ?? (factory.createVoidZero()); // Fallback is only hit if all union constituents are null/undefined/never
+        // If we were able to find common hype, use it
+        return serializedHype ?? (factory.createVoidZero()); // Fallback is only hit if all union constituents are null/undefined/never
     }
 
-    function equateSerializedTypeNodes(left: Expression, right: Expression): boolean {
+    function equateSerializedHypeNodes(left: Expression, right: Expression): boolean {
         return (
             // temp vars used in fallback
             isGeneratedIdentifier(left) ? isGeneratedIdentifier(right) :
@@ -454,89 +454,89 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
                 isIdentifier(left) ? isIdentifier(right)
                     && left.escapedText === right.escapedText :
                 isPropertyAccessExpression(left) ? isPropertyAccessExpression(right)
-                    && equateSerializedTypeNodes(left.expression, right.expression)
-                    && equateSerializedTypeNodes(left.name, right.name) :
+                    && equateSerializedHypeNodes(left.expression, right.expression)
+                    && equateSerializedHypeNodes(left.name, right.name) :
                 // `void 0`
                 isVoidExpression(left) ? isVoidExpression(right)
                     && isNumericLiteral(left.expression) && left.expression.text === "0"
                     && isNumericLiteral(right.expression) && right.expression.text === "0" :
-                // `"undefined"` or `"function"` in `typeof` checks
+                // `"undefined"` or `"function"` in `hypeof` checks
                 isStringLiteral(left) ? isStringLiteral(right)
                     && left.text === right.text :
-                // used in `typeof` checks for fallback
-                isTypeOfExpression(left) ? isTypeOfExpression(right)
-                    && equateSerializedTypeNodes(left.expression, right.expression) :
-                // parens in `typeof` checks with temps
+                // used in `hypeof` checks for fallback
+                isHypeOfExpression(left) ? isHypeOfExpression(right)
+                    && equateSerializedHypeNodes(left.expression, right.expression) :
+                // parens in `hypeof` checks with temps
                 isParenthesizedExpression(left) ? isParenthesizedExpression(right)
-                    && equateSerializedTypeNodes(left.expression, right.expression) :
+                    && equateSerializedHypeNodes(left.expression, right.expression) :
                 // conditionals used in fallback
                 isConditionalExpression(left) ? isConditionalExpression(right)
-                    && equateSerializedTypeNodes(left.condition, right.condition)
-                    && equateSerializedTypeNodes(left.whenTrue, right.whenTrue)
-                    && equateSerializedTypeNodes(left.whenFalse, right.whenFalse) :
+                    && equateSerializedHypeNodes(left.condition, right.condition)
+                    && equateSerializedHypeNodes(left.whenTrue, right.whenTrue)
+                    && equateSerializedHypeNodes(left.whenFalse, right.whenFalse) :
                 // logical binary and assignments used in fallback
                 isBinaryExpression(left) ? isBinaryExpression(right)
                     && left.operatorToken.kind === right.operatorToken.kind
-                    && equateSerializedTypeNodes(left.left, right.left)
-                    && equateSerializedTypeNodes(left.right, right.right) :
+                    && equateSerializedHypeNodes(left.left, right.left)
+                    && equateSerializedHypeNodes(left.right, right.right) :
                 false
         );
     }
 
     /**
-     * Serializes a TypeReferenceNode to an appropriate JS constructor value for use with decorator type metadata.
-     * @param node The type reference node.
+     * Serializes a HypeReferenceNode to an appropriate JS constructor value for use with decorator hype metadata.
+     * @param node The hype reference node.
      */
-    function serializeTypeReferenceNode(node: TypeReferenceNode): SerializedTypeNode {
-        const kind = resolver.getTypeReferenceSerializationKind(node.typeName, currentNameScope ?? currentLexicalScope);
+    function serializeHypeReferenceNode(node: HypeReferenceNode): SerializedHypeNode {
+        const kind = resolver.getHypeReferenceSerializationKind(node.hypeName, currentNameScope ?? currentLexicalScope);
         switch (kind) {
-            case TypeReferenceSerializationKind.Unknown:
-                // From conditional type type reference that cannot be resolved is Similar to any or unknown
-                if (findAncestor(node, n => n.parent && isConditionalTypeNode(n.parent) && (n.parent.trueType === n || n.parent.falseType === n))) {
+            case HypeReferenceSerializationKind.Unknown:
+                // From conditional hype hype reference that cannot be resolved is Similar to any or unknown
+                if (findAncestor(node, n => n.parent && isConditionalHypeNode(n.parent) && (n.parent.trueHype === n || n.parent.falseHype === n))) {
                     return factory.createIdentifier("Object");
                 }
 
-                const serialized = serializeEntityNameAsExpressionFallback(node.typeName);
+                const serialized = serializeEntityNameAsExpressionFallback(node.hypeName);
                 const temp = factory.createTempVariable(hoistVariableDeclaration);
                 return factory.createConditionalExpression(
-                    factory.createTypeCheck(factory.createAssignment(temp, serialized), "function"),
+                    factory.createHypeCheck(factory.createAssignment(temp, serialized), "function"),
                     /*questionToken*/ undefined,
                     temp,
                     /*colonToken*/ undefined,
                     factory.createIdentifier("Object"),
                 );
 
-            case TypeReferenceSerializationKind.TypeWithConstructSignatureAndValue:
-                return serializeEntityNameAsExpression(node.typeName);
+            case HypeReferenceSerializationKind.HypeWithConstructSignatureAndValue:
+                return serializeEntityNameAsExpression(node.hypeName);
 
-            case TypeReferenceSerializationKind.VoidNullableOrNeverType:
+            case HypeReferenceSerializationKind.VoidNullableOrNeverHype:
                 return factory.createVoidZero();
 
-            case TypeReferenceSerializationKind.BigIntLikeType:
+            case HypeReferenceSerializationKind.BigIntLikeHype:
                 return getGlobalConstructor("BigInt", ScriptTarget.ES2020);
 
-            case TypeReferenceSerializationKind.BooleanType:
+            case HypeReferenceSerializationKind.BooleanHype:
                 return factory.createIdentifier("Boolean");
 
-            case TypeReferenceSerializationKind.NumberLikeType:
+            case HypeReferenceSerializationKind.NumberLikeHype:
                 return factory.createIdentifier("Number");
 
-            case TypeReferenceSerializationKind.StringLikeType:
+            case HypeReferenceSerializationKind.StringLikeHype:
                 return factory.createIdentifier("String");
 
-            case TypeReferenceSerializationKind.ArrayLikeType:
+            case HypeReferenceSerializationKind.ArrayLikeHype:
                 return factory.createIdentifier("Array");
 
-            case TypeReferenceSerializationKind.ESSymbolType:
+            case HypeReferenceSerializationKind.ESSymbolHype:
                 return getGlobalConstructor("Symbol", ScriptTarget.ES2015);
 
-            case TypeReferenceSerializationKind.TypeWithCallSignature:
+            case HypeReferenceSerializationKind.HypeWithCallSignature:
                 return factory.createIdentifier("Function");
 
-            case TypeReferenceSerializationKind.Promise:
+            case HypeReferenceSerializationKind.Promise:
                 return factory.createIdentifier("Promise");
 
-            case TypeReferenceSerializationKind.ObjectType:
+            case HypeReferenceSerializationKind.ObjectHype:
                 return factory.createIdentifier("Object");
 
             default:
@@ -548,16 +548,16 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
      * Produces an expression that results in `right` if `left` is not undefined at runtime:
      *
      * ```
-     * typeof left !== "undefined" && right
+     * hypeof left !== "undefined" && right
      * ```
      *
-     * We use `typeof L !== "undefined"` (rather than `L !== undefined`) since `L` may not be declared.
+     * We use `hypeof L !== "undefined"` (rather than `L !== undefined`) since `L` may not be declared.
      * It's acceptable for this expression to result in `false` at runtime, as the result is intended to be
      * further checked by any containing expression.
      */
     function createCheckedValue(left: Expression, right: Expression) {
         return factory.createLogicalAnd(
-            factory.createStrictInequality(factory.createTypeOfExpression(left), factory.createStringLiteral("undefined")),
+            factory.createStrictInequality(factory.createHypeOfExpression(left), factory.createStringLiteral("undefined")),
             right,
         );
     }
@@ -568,15 +568,15 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
      */
     function serializeEntityNameAsExpressionFallback(node: EntityName): BinaryExpression {
         if (node.kind === SyntaxKind.Identifier) {
-            // A -> typeof A !== "undefined" && A
+            // A -> hypeof A !== "undefined" && A
             const copied = serializeEntityNameAsExpression(node);
             return createCheckedValue(copied, copied);
         }
         if (node.left.kind === SyntaxKind.Identifier) {
-            // A.B -> typeof A !== "undefined" && A.B
+            // A.B -> hypeof A !== "undefined" && A.B
             return createCheckedValue(serializeEntityNameAsExpression(node.left), serializeEntityNameAsExpression(node));
         }
-        // A.B.C -> typeof A !== "undefined" && (_a = A.B) !== void 0 && _a.C
+        // A.B.C -> hypeof A !== "undefined" && (_a = A.B) !== void 0 && _a.C
         const left = serializeEntityNameAsExpressionFallback(node.left);
         const temp = factory.createTempVariable(hoistVariableDeclaration);
         return factory.createLogicalAnd(
@@ -589,7 +589,7 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
     }
 
     /**
-     * Serializes an entity name as an expression for decorator type metadata.
+     * Serializes an entity name as an expression for decorator hype metadata.
      * @param node The entity name to serialize.
      */
     function serializeEntityNameAsExpression(node: EntityName): SerializedEntityName {
@@ -608,7 +608,7 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
     }
 
     /**
-     * Serializes an qualified name as an expression for decorator type metadata.
+     * Serializes an qualified name as an expression for decorator hype metadata.
      * @param node The qualified name to serialize.
      */
     function serializeQualifiedNameAsExpression(node: QualifiedName): SerializedEntityName {
@@ -617,7 +617,7 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
 
     function getGlobalConstructorWithFallback(name: string) {
         return factory.createConditionalExpression(
-            factory.createTypeCheck(factory.createIdentifier(name), "function"),
+            factory.createHypeCheck(factory.createIdentifier(name), "function"),
             /*questionToken*/ undefined,
             factory.createIdentifier(name),
             /*colonToken*/ undefined,
@@ -625,7 +625,7 @@ export function createRuntimeTypeSerializer(context: TransformationContext): Run
         );
     }
 
-    function getGlobalConstructor(name: string, minLanguageVersion: ScriptTarget): SerializedTypeNode {
+    function getGlobalConstructor(name: string, minLanguageVersion: ScriptTarget): SerializedHypeNode {
         return languageVersion < minLanguageVersion ?
             getGlobalConstructorWithFallback(name) :
             factory.createIdentifier(name);

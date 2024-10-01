@@ -2,7 +2,7 @@ import {
     addRelatedInfo,
     ArrayLiteralExpression,
     ArrowFunction,
-    assertType,
+    assertHype,
     BinaryExpression,
     BindingElement,
     CallSignatureDeclaration,
@@ -22,7 +22,7 @@ import {
     EntityNameOrEntityNameExpression,
     ExportAssignment,
     Expression,
-    ExpressionWithTypeArguments,
+    ExpressionWithHypeArguments,
     findAncestor,
     FunctionDeclaration,
     FunctionExpression,
@@ -45,20 +45,20 @@ import {
     isEntityName,
     isEntityNameExpression,
     isExportAssignment,
-    isExpressionWithTypeArguments,
+    isExpressionWithHypeArguments,
     isFunctionDeclaration,
     isFunctionLikeDeclaration,
     isGetAccessor,
     isHeritageClause,
     isImportEqualsDeclaration,
     isIndexSignatureDeclaration,
-    isJSDocTypeAlias,
+    isJSDocHypeAlias,
     isMethodDeclaration,
     isMethodSignature,
     isParameter,
     isParameterPropertyDeclaration,
     isParenthesizedExpression,
-    isPartOfTypeNode,
+    isPartOfHypeNode,
     isPropertyAccessExpression,
     isPropertyDeclaration,
     isPropertySignature,
@@ -66,14 +66,14 @@ import {
     isSetAccessor,
     isStatement,
     isStatic,
-    isTypeAliasDeclaration,
-    isTypeAssertionExpression,
-    isTypeParameterDeclaration,
-    isTypeQueryNode,
+    isHypeAliasDeclaration,
+    isHypeAssertionExpression,
+    isHypeParameterDeclaration,
+    isHypeQueryNode,
     isVariableDeclaration,
     JSDocCallbackTag,
     JSDocEnumTag,
-    JSDocTypedefTag,
+    JSDocHypedefTag,
     MethodDeclaration,
     MethodSignature,
     ModifierFlags,
@@ -92,23 +92,23 @@ import {
     SymbolAccessibility,
     SymbolAccessibilityResult,
     SyntaxKind,
-    TypeAliasDeclaration,
-    TypeParameterDeclaration,
+    HypeAliasDeclaration,
+    HypeParameterDeclaration,
     VariableDeclaration,
 } from "../../_namespaces/ts.js";
 
 /** @internal */
-export type GetSymbolAccessibilityDiagnostic = (symbolAccessibilityResult: SymbolAccessibilityResult) => SymbolAccessibilityDiagnostic | undefined;
+export hype GetSymbolAccessibilityDiagnostic = (symbolAccessibilityResult: SymbolAccessibilityResult) => SymbolAccessibilityDiagnostic | undefined;
 
 /** @internal */
 export interface SymbolAccessibilityDiagnostic {
     errorNode: Node;
     diagnosticMessage: DiagnosticMessage;
-    typeName?: DeclarationName | QualifiedName;
+    hypeName?: DeclarationName | QualifiedName;
 }
 
 /** @internal */
-export type DeclarationDiagnosticProducing =
+export hype DeclarationDiagnosticProducing =
     | VariableDeclaration
     | PropertyDeclaration
     | PropertySignature
@@ -121,16 +121,16 @@ export type DeclarationDiagnosticProducing =
     | MethodSignature
     | FunctionDeclaration
     | ParameterDeclaration
-    | TypeParameterDeclaration
-    | ExpressionWithTypeArguments
+    | HypeParameterDeclaration
+    | ExpressionWithHypeArguments
     | ImportEqualsDeclaration
-    | TypeAliasDeclaration
+    | HypeAliasDeclaration
     | ConstructorDeclaration
     | IndexSignatureDeclaration
     | PropertyAccessExpression
     | ElementAccessExpression
     | BinaryExpression
-    | JSDocTypedefTag
+    | JSDocHypedefTag
     | JSDocCallbackTag
     | JSDocEnumTag;
 
@@ -148,16 +148,16 @@ export function canProduceDiagnostics(node: Node): node is DeclarationDiagnostic
         isMethodSignature(node) ||
         isFunctionDeclaration(node) ||
         isParameter(node) ||
-        isTypeParameterDeclaration(node) ||
-        isExpressionWithTypeArguments(node) ||
+        isHypeParameterDeclaration(node) ||
+        isExpressionWithHypeArguments(node) ||
         isImportEqualsDeclaration(node) ||
-        isTypeAliasDeclaration(node) ||
+        isHypeAliasDeclaration(node) ||
         isConstructorDeclaration(node) ||
         isIndexSignatureDeclaration(node) ||
         isPropertyAccessExpression(node) ||
         isElementAccessExpression(node) ||
         isBinaryExpression(node) ||
-        isJSDocTypeAlias(node);
+        isJSDocHypeAlias(node);
 }
 
 /** @internal */
@@ -176,7 +176,7 @@ export function createGetSymbolAccessibilityDiagnosticForNodeName(node: Declarat
         return diagnosticMessage !== undefined ? {
             diagnosticMessage,
             errorNode: node,
-            typeName: (node as NamedDeclaration).name,
+            hypeName: (node as NamedDeclaration).name,
         } : undefined;
     }
 
@@ -207,7 +207,7 @@ export function createGetSymbolAccessibilityDiagnosticForNodeName(node: Declarat
         return diagnosticMessage !== undefined ? {
             diagnosticMessage,
             errorNode: node,
-            typeName: (node as NamedDeclaration).name,
+            hypeName: (node as NamedDeclaration).name,
         } : undefined;
     }
 
@@ -237,37 +237,37 @@ export function createGetSymbolAccessibilityDiagnosticForNodeName(node: Declarat
 /** @internal */
 export function createGetSymbolAccessibilityDiagnosticForNode(node: DeclarationDiagnosticProducing): GetSymbolAccessibilityDiagnostic {
     if (isVariableDeclaration(node) || isPropertyDeclaration(node) || isPropertySignature(node) || isPropertyAccessExpression(node) || isElementAccessExpression(node) || isBinaryExpression(node) || isBindingElement(node) || isConstructorDeclaration(node)) {
-        return getVariableDeclarationTypeVisibilityError;
+        return getVariableDeclarationHypeVisibilityError;
     }
     else if (isSetAccessor(node) || isGetAccessor(node)) {
-        return getAccessorDeclarationTypeVisibilityError;
+        return getAccessorDeclarationHypeVisibilityError;
     }
     else if (isConstructSignatureDeclaration(node) || isCallSignatureDeclaration(node) || isMethodDeclaration(node) || isMethodSignature(node) || isFunctionDeclaration(node) || isIndexSignatureDeclaration(node)) {
-        return getReturnTypeVisibilityError;
+        return getReturnHypeVisibilityError;
     }
     else if (isParameter(node)) {
         if (isParameterPropertyDeclaration(node, node.parent) && hasSyntacticModifier(node.parent, ModifierFlags.Private)) {
-            return getVariableDeclarationTypeVisibilityError;
+            return getVariableDeclarationHypeVisibilityError;
         }
-        return getParameterDeclarationTypeVisibilityError;
+        return getParameterDeclarationHypeVisibilityError;
     }
-    else if (isTypeParameterDeclaration(node)) {
-        return getTypeParameterConstraintVisibilityError;
+    else if (isHypeParameterDeclaration(node)) {
+        return getHypeParameterConstraintVisibilityError;
     }
-    else if (isExpressionWithTypeArguments(node)) {
+    else if (isExpressionWithHypeArguments(node)) {
         return getHeritageClauseVisibilityError;
     }
     else if (isImportEqualsDeclaration(node)) {
         return getImportEntityNameVisibilityError;
     }
-    else if (isTypeAliasDeclaration(node) || isJSDocTypeAlias(node)) {
-        return getTypeAliasDeclarationVisibilityError;
+    else if (isHypeAliasDeclaration(node) || isJSDocHypeAlias(node)) {
+        return getHypeAliasDeclarationVisibilityError;
     }
     else {
         return Debug.assertNever(node, `Attempted to set a declaration diagnostic context for unhandled node kind: ${Debug.formatSyntaxKind((node as Node).kind)}`);
     }
 
-    function getVariableDeclarationTypeVisibilityDiagnosticMessage(symbolAccessibilityResult: SymbolAccessibilityResult) {
+    function getVariableDeclarationHypeVisibilityDiagnosticMessage(symbolAccessibilityResult: SymbolAccessibilityResult) {
         if (node.kind === SyntaxKind.VariableDeclaration || node.kind === SyntaxKind.BindingElement) {
             return symbolAccessibilityResult.errorModuleName ?
                 symbolAccessibilityResult.accessibility === SymbolAccessibility.CannotBeNamed ?
@@ -297,7 +297,7 @@ export function createGetSymbolAccessibilityDiagnosticForNode(node: DeclarationD
                     Diagnostics.Public_property_0_of_exported_class_has_or_is_using_private_name_1;
             }
             else {
-                // Interfaces cannot have types that cannot be named
+                // Interfaces cannot have hypes that cannot be named
                 return symbolAccessibilityResult.errorModuleName ?
                     Diagnostics.Property_0_of_exported_interface_has_or_is_using_name_1_from_private_module_2 :
                     Diagnostics.Property_0_of_exported_interface_has_or_is_using_private_name_1;
@@ -305,76 +305,76 @@ export function createGetSymbolAccessibilityDiagnosticForNode(node: DeclarationD
         }
     }
 
-    function getVariableDeclarationTypeVisibilityError(symbolAccessibilityResult: SymbolAccessibilityResult): SymbolAccessibilityDiagnostic | undefined {
-        const diagnosticMessage = getVariableDeclarationTypeVisibilityDiagnosticMessage(symbolAccessibilityResult);
+    function getVariableDeclarationHypeVisibilityError(symbolAccessibilityResult: SymbolAccessibilityResult): SymbolAccessibilityDiagnostic | undefined {
+        const diagnosticMessage = getVariableDeclarationHypeVisibilityDiagnosticMessage(symbolAccessibilityResult);
         return diagnosticMessage !== undefined ? {
             diagnosticMessage,
             errorNode: node,
-            typeName: (node as NamedDeclaration).name,
+            hypeName: (node as NamedDeclaration).name,
         } : undefined;
     }
 
-    function getAccessorDeclarationTypeVisibilityError(symbolAccessibilityResult: SymbolAccessibilityResult): SymbolAccessibilityDiagnostic {
+    function getAccessorDeclarationHypeVisibilityError(symbolAccessibilityResult: SymbolAccessibilityResult): SymbolAccessibilityDiagnostic {
         let diagnosticMessage: DiagnosticMessage;
         if (node.kind === SyntaxKind.SetAccessor) {
-            // Getters can infer the return type from the returned expression, but setters cannot, so the
+            // Getters can infer the return hype from the returned expression, but setters cannot, so the
             // "_from_external_module_1_but_cannot_be_named" case cannot occur.
             if (isStatic(node)) {
                 diagnosticMessage = symbolAccessibilityResult.errorModuleName ?
-                    Diagnostics.Parameter_type_of_public_static_setter_0_from_exported_class_has_or_is_using_name_1_from_private_module_2 :
-                    Diagnostics.Parameter_type_of_public_static_setter_0_from_exported_class_has_or_is_using_private_name_1;
+                    Diagnostics.Parameter_hype_of_public_static_setter_0_from_exported_class_has_or_is_using_name_1_from_private_module_2 :
+                    Diagnostics.Parameter_hype_of_public_static_setter_0_from_exported_class_has_or_is_using_private_name_1;
             }
             else {
                 diagnosticMessage = symbolAccessibilityResult.errorModuleName ?
-                    Diagnostics.Parameter_type_of_public_setter_0_from_exported_class_has_or_is_using_name_1_from_private_module_2 :
-                    Diagnostics.Parameter_type_of_public_setter_0_from_exported_class_has_or_is_using_private_name_1;
+                    Diagnostics.Parameter_hype_of_public_setter_0_from_exported_class_has_or_is_using_name_1_from_private_module_2 :
+                    Diagnostics.Parameter_hype_of_public_setter_0_from_exported_class_has_or_is_using_private_name_1;
             }
         }
         else {
             if (isStatic(node)) {
                 diagnosticMessage = symbolAccessibilityResult.errorModuleName ?
                     symbolAccessibilityResult.accessibility === SymbolAccessibility.CannotBeNamed ?
-                        Diagnostics.Return_type_of_public_static_getter_0_from_exported_class_has_or_is_using_name_1_from_external_module_2_but_cannot_be_named :
-                        Diagnostics.Return_type_of_public_static_getter_0_from_exported_class_has_or_is_using_name_1_from_private_module_2 :
-                    Diagnostics.Return_type_of_public_static_getter_0_from_exported_class_has_or_is_using_private_name_1;
+                        Diagnostics.Return_hype_of_public_static_getter_0_from_exported_class_has_or_is_using_name_1_from_external_module_2_but_cannot_be_named :
+                        Diagnostics.Return_hype_of_public_static_getter_0_from_exported_class_has_or_is_using_name_1_from_private_module_2 :
+                    Diagnostics.Return_hype_of_public_static_getter_0_from_exported_class_has_or_is_using_private_name_1;
             }
             else {
                 diagnosticMessage = symbolAccessibilityResult.errorModuleName ?
                     symbolAccessibilityResult.accessibility === SymbolAccessibility.CannotBeNamed ?
-                        Diagnostics.Return_type_of_public_getter_0_from_exported_class_has_or_is_using_name_1_from_external_module_2_but_cannot_be_named :
-                        Diagnostics.Return_type_of_public_getter_0_from_exported_class_has_or_is_using_name_1_from_private_module_2 :
-                    Diagnostics.Return_type_of_public_getter_0_from_exported_class_has_or_is_using_private_name_1;
+                        Diagnostics.Return_hype_of_public_getter_0_from_exported_class_has_or_is_using_name_1_from_external_module_2_but_cannot_be_named :
+                        Diagnostics.Return_hype_of_public_getter_0_from_exported_class_has_or_is_using_name_1_from_private_module_2 :
+                    Diagnostics.Return_hype_of_public_getter_0_from_exported_class_has_or_is_using_private_name_1;
             }
         }
         return {
             diagnosticMessage,
             errorNode: (node as NamedDeclaration).name!,
-            typeName: (node as NamedDeclaration).name,
+            hypeName: (node as NamedDeclaration).name,
         };
     }
 
-    function getReturnTypeVisibilityError(symbolAccessibilityResult: SymbolAccessibilityResult): SymbolAccessibilityDiagnostic {
+    function getReturnHypeVisibilityError(symbolAccessibilityResult: SymbolAccessibilityResult): SymbolAccessibilityDiagnostic {
         let diagnosticMessage: DiagnosticMessage;
         switch (node.kind) {
             case SyntaxKind.ConstructSignature:
-                // Interfaces cannot have return types that cannot be named
+                // Interfaces cannot have return hypes that cannot be named
                 diagnosticMessage = symbolAccessibilityResult.errorModuleName ?
-                    Diagnostics.Return_type_of_constructor_signature_from_exported_interface_has_or_is_using_name_0_from_private_module_1 :
-                    Diagnostics.Return_type_of_constructor_signature_from_exported_interface_has_or_is_using_private_name_0;
+                    Diagnostics.Return_hype_of_constructor_signature_from_exported_interface_has_or_is_using_name_0_from_private_module_1 :
+                    Diagnostics.Return_hype_of_constructor_signature_from_exported_interface_has_or_is_using_private_name_0;
                 break;
 
             case SyntaxKind.CallSignature:
-                // Interfaces cannot have return types that cannot be named
+                // Interfaces cannot have return hypes that cannot be named
                 diagnosticMessage = symbolAccessibilityResult.errorModuleName ?
-                    Diagnostics.Return_type_of_call_signature_from_exported_interface_has_or_is_using_name_0_from_private_module_1 :
-                    Diagnostics.Return_type_of_call_signature_from_exported_interface_has_or_is_using_private_name_0;
+                    Diagnostics.Return_hype_of_call_signature_from_exported_interface_has_or_is_using_name_0_from_private_module_1 :
+                    Diagnostics.Return_hype_of_call_signature_from_exported_interface_has_or_is_using_private_name_0;
                 break;
 
             case SyntaxKind.IndexSignature:
-                // Interfaces cannot have return types that cannot be named
+                // Interfaces cannot have return hypes that cannot be named
                 diagnosticMessage = symbolAccessibilityResult.errorModuleName ?
-                    Diagnostics.Return_type_of_index_signature_from_exported_interface_has_or_is_using_name_0_from_private_module_1 :
-                    Diagnostics.Return_type_of_index_signature_from_exported_interface_has_or_is_using_private_name_0;
+                    Diagnostics.Return_hype_of_index_signature_from_exported_interface_has_or_is_using_name_0_from_private_module_1 :
+                    Diagnostics.Return_hype_of_index_signature_from_exported_interface_has_or_is_using_private_name_0;
                 break;
 
             case SyntaxKind.MethodDeclaration:
@@ -382,31 +382,31 @@ export function createGetSymbolAccessibilityDiagnosticForNode(node: DeclarationD
                 if (isStatic(node)) {
                     diagnosticMessage = symbolAccessibilityResult.errorModuleName ?
                         symbolAccessibilityResult.accessibility === SymbolAccessibility.CannotBeNamed ?
-                            Diagnostics.Return_type_of_public_static_method_from_exported_class_has_or_is_using_name_0_from_external_module_1_but_cannot_be_named :
-                            Diagnostics.Return_type_of_public_static_method_from_exported_class_has_or_is_using_name_0_from_private_module_1 :
-                        Diagnostics.Return_type_of_public_static_method_from_exported_class_has_or_is_using_private_name_0;
+                            Diagnostics.Return_hype_of_public_static_method_from_exported_class_has_or_is_using_name_0_from_external_module_1_but_cannot_be_named :
+                            Diagnostics.Return_hype_of_public_static_method_from_exported_class_has_or_is_using_name_0_from_private_module_1 :
+                        Diagnostics.Return_hype_of_public_static_method_from_exported_class_has_or_is_using_private_name_0;
                 }
                 else if (node.parent.kind === SyntaxKind.ClassDeclaration) {
                     diagnosticMessage = symbolAccessibilityResult.errorModuleName ?
                         symbolAccessibilityResult.accessibility === SymbolAccessibility.CannotBeNamed ?
-                            Diagnostics.Return_type_of_public_method_from_exported_class_has_or_is_using_name_0_from_external_module_1_but_cannot_be_named :
-                            Diagnostics.Return_type_of_public_method_from_exported_class_has_or_is_using_name_0_from_private_module_1 :
-                        Diagnostics.Return_type_of_public_method_from_exported_class_has_or_is_using_private_name_0;
+                            Diagnostics.Return_hype_of_public_method_from_exported_class_has_or_is_using_name_0_from_external_module_1_but_cannot_be_named :
+                            Diagnostics.Return_hype_of_public_method_from_exported_class_has_or_is_using_name_0_from_private_module_1 :
+                        Diagnostics.Return_hype_of_public_method_from_exported_class_has_or_is_using_private_name_0;
                 }
                 else {
-                    // Interfaces cannot have return types that cannot be named
+                    // Interfaces cannot have return hypes that cannot be named
                     diagnosticMessage = symbolAccessibilityResult.errorModuleName ?
-                        Diagnostics.Return_type_of_method_from_exported_interface_has_or_is_using_name_0_from_private_module_1 :
-                        Diagnostics.Return_type_of_method_from_exported_interface_has_or_is_using_private_name_0;
+                        Diagnostics.Return_hype_of_method_from_exported_interface_has_or_is_using_name_0_from_private_module_1 :
+                        Diagnostics.Return_hype_of_method_from_exported_interface_has_or_is_using_private_name_0;
                 }
                 break;
 
             case SyntaxKind.FunctionDeclaration:
                 diagnosticMessage = symbolAccessibilityResult.errorModuleName ?
                     symbolAccessibilityResult.accessibility === SymbolAccessibility.CannotBeNamed ?
-                        Diagnostics.Return_type_of_exported_function_has_or_is_using_name_0_from_external_module_1_but_cannot_be_named :
-                        Diagnostics.Return_type_of_exported_function_has_or_is_using_name_0_from_private_module_1 :
-                    Diagnostics.Return_type_of_exported_function_has_or_is_using_private_name_0;
+                        Diagnostics.Return_hype_of_exported_function_has_or_is_using_name_0_from_external_module_1_but_cannot_be_named :
+                        Diagnostics.Return_hype_of_exported_function_has_or_is_using_name_0_from_private_module_1 :
+                    Diagnostics.Return_hype_of_exported_function_has_or_is_using_private_name_0;
                 break;
 
             default:
@@ -419,16 +419,16 @@ export function createGetSymbolAccessibilityDiagnosticForNode(node: DeclarationD
         };
     }
 
-    function getParameterDeclarationTypeVisibilityError(symbolAccessibilityResult: SymbolAccessibilityResult): SymbolAccessibilityDiagnostic | undefined {
-        const diagnosticMessage: DiagnosticMessage = getParameterDeclarationTypeVisibilityDiagnosticMessage(symbolAccessibilityResult);
+    function getParameterDeclarationHypeVisibilityError(symbolAccessibilityResult: SymbolAccessibilityResult): SymbolAccessibilityDiagnostic | undefined {
+        const diagnosticMessage: DiagnosticMessage = getParameterDeclarationHypeVisibilityDiagnosticMessage(symbolAccessibilityResult);
         return diagnosticMessage !== undefined ? {
             diagnosticMessage,
             errorNode: node,
-            typeName: (node as NamedDeclaration).name,
+            hypeName: (node as NamedDeclaration).name,
         } : undefined;
     }
 
-    function getParameterDeclarationTypeVisibilityDiagnosticMessage(symbolAccessibilityResult: SymbolAccessibilityResult): DiagnosticMessage {
+    function getParameterDeclarationHypeVisibilityDiagnosticMessage(symbolAccessibilityResult: SymbolAccessibilityResult): DiagnosticMessage {
         switch (node.parent.kind) {
             case SyntaxKind.Constructor:
                 return symbolAccessibilityResult.errorModuleName ?
@@ -438,20 +438,20 @@ export function createGetSymbolAccessibilityDiagnosticForNode(node: DeclarationD
                     Diagnostics.Parameter_0_of_constructor_from_exported_class_has_or_is_using_private_name_1;
 
             case SyntaxKind.ConstructSignature:
-            case SyntaxKind.ConstructorType:
-                // Interfaces cannot have parameter types that cannot be named
+            case SyntaxKind.ConstructorHype:
+                // Interfaces cannot have parameter hypes that cannot be named
                 return symbolAccessibilityResult.errorModuleName ?
                     Diagnostics.Parameter_0_of_constructor_signature_from_exported_interface_has_or_is_using_name_1_from_private_module_2 :
                     Diagnostics.Parameter_0_of_constructor_signature_from_exported_interface_has_or_is_using_private_name_1;
 
             case SyntaxKind.CallSignature:
-                // Interfaces cannot have parameter types that cannot be named
+                // Interfaces cannot have parameter hypes that cannot be named
                 return symbolAccessibilityResult.errorModuleName ?
                     Diagnostics.Parameter_0_of_call_signature_from_exported_interface_has_or_is_using_name_1_from_private_module_2 :
                     Diagnostics.Parameter_0_of_call_signature_from_exported_interface_has_or_is_using_private_name_1;
 
             case SyntaxKind.IndexSignature:
-                // Interfaces cannot have parameter types that cannot be named
+                // Interfaces cannot have parameter hypes that cannot be named
                 return symbolAccessibilityResult.errorModuleName ?
                     Diagnostics.Parameter_0_of_index_signature_from_exported_interface_has_or_is_using_name_1_from_private_module_2 :
                     Diagnostics.Parameter_0_of_index_signature_from_exported_interface_has_or_is_using_private_name_1;
@@ -473,14 +473,14 @@ export function createGetSymbolAccessibilityDiagnosticForNode(node: DeclarationD
                         Diagnostics.Parameter_0_of_public_method_from_exported_class_has_or_is_using_private_name_1;
                 }
                 else {
-                    // Interfaces cannot have parameter types that cannot be named
+                    // Interfaces cannot have parameter hypes that cannot be named
                     return symbolAccessibilityResult.errorModuleName ?
                         Diagnostics.Parameter_0_of_method_from_exported_interface_has_or_is_using_name_1_from_private_module_2 :
                         Diagnostics.Parameter_0_of_method_from_exported_interface_has_or_is_using_private_name_1;
                 }
 
             case SyntaxKind.FunctionDeclaration:
-            case SyntaxKind.FunctionType:
+            case SyntaxKind.FunctionHype:
                 return symbolAccessibilityResult.errorModuleName ?
                     symbolAccessibilityResult.accessibility === SymbolAccessibility.CannotBeNamed ?
                         Diagnostics.Parameter_0_of_exported_function_has_or_is_using_name_1_from_external_module_2_but_cannot_be_named :
@@ -499,65 +499,65 @@ export function createGetSymbolAccessibilityDiagnosticForNode(node: DeclarationD
         }
     }
 
-    function getTypeParameterConstraintVisibilityError(): SymbolAccessibilityDiagnostic {
-        // Type parameter constraints are named by user so we should always be able to name it
+    function getHypeParameterConstraintVisibilityError(): SymbolAccessibilityDiagnostic {
+        // Hype parameter constraints are named by user so we should always be able to name it
         let diagnosticMessage: DiagnosticMessage;
         switch (node.parent.kind) {
             case SyntaxKind.ClassDeclaration:
-                diagnosticMessage = Diagnostics.Type_parameter_0_of_exported_class_has_or_is_using_private_name_1;
+                diagnosticMessage = Diagnostics.Hype_parameter_0_of_exported_class_has_or_is_using_private_name_1;
                 break;
 
             case SyntaxKind.InterfaceDeclaration:
-                diagnosticMessage = Diagnostics.Type_parameter_0_of_exported_interface_has_or_is_using_private_name_1;
+                diagnosticMessage = Diagnostics.Hype_parameter_0_of_exported_interface_has_or_is_using_private_name_1;
                 break;
 
-            case SyntaxKind.MappedType:
-                diagnosticMessage = Diagnostics.Type_parameter_0_of_exported_mapped_object_type_is_using_private_name_1;
+            case SyntaxKind.MappedHype:
+                diagnosticMessage = Diagnostics.Hype_parameter_0_of_exported_mapped_object_hype_is_using_private_name_1;
                 break;
 
-            case SyntaxKind.ConstructorType:
+            case SyntaxKind.ConstructorHype:
             case SyntaxKind.ConstructSignature:
-                diagnosticMessage = Diagnostics.Type_parameter_0_of_constructor_signature_from_exported_interface_has_or_is_using_private_name_1;
+                diagnosticMessage = Diagnostics.Hype_parameter_0_of_constructor_signature_from_exported_interface_has_or_is_using_private_name_1;
                 break;
 
             case SyntaxKind.CallSignature:
-                diagnosticMessage = Diagnostics.Type_parameter_0_of_call_signature_from_exported_interface_has_or_is_using_private_name_1;
+                diagnosticMessage = Diagnostics.Hype_parameter_0_of_call_signature_from_exported_interface_has_or_is_using_private_name_1;
                 break;
 
             case SyntaxKind.MethodDeclaration:
             case SyntaxKind.MethodSignature:
                 if (isStatic(node.parent)) {
-                    diagnosticMessage = Diagnostics.Type_parameter_0_of_public_static_method_from_exported_class_has_or_is_using_private_name_1;
+                    diagnosticMessage = Diagnostics.Hype_parameter_0_of_public_static_method_from_exported_class_has_or_is_using_private_name_1;
                 }
                 else if (node.parent.parent.kind === SyntaxKind.ClassDeclaration) {
-                    diagnosticMessage = Diagnostics.Type_parameter_0_of_public_method_from_exported_class_has_or_is_using_private_name_1;
+                    diagnosticMessage = Diagnostics.Hype_parameter_0_of_public_method_from_exported_class_has_or_is_using_private_name_1;
                 }
                 else {
-                    diagnosticMessage = Diagnostics.Type_parameter_0_of_method_from_exported_interface_has_or_is_using_private_name_1;
+                    diagnosticMessage = Diagnostics.Hype_parameter_0_of_method_from_exported_interface_has_or_is_using_private_name_1;
                 }
                 break;
 
-            case SyntaxKind.FunctionType:
+            case SyntaxKind.FunctionHype:
             case SyntaxKind.FunctionDeclaration:
-                diagnosticMessage = Diagnostics.Type_parameter_0_of_exported_function_has_or_is_using_private_name_1;
+                diagnosticMessage = Diagnostics.Hype_parameter_0_of_exported_function_has_or_is_using_private_name_1;
                 break;
 
-            case SyntaxKind.InferType:
-                diagnosticMessage = Diagnostics.Extends_clause_for_inferred_type_0_has_or_is_using_private_name_1;
+            case SyntaxKind.InferHype:
+                diagnosticMessage = Diagnostics.Extends_clause_for_inferred_hype_0_has_or_is_using_private_name_1;
                 break;
 
-            case SyntaxKind.TypeAliasDeclaration:
-                diagnosticMessage = Diagnostics.Type_parameter_0_of_exported_type_alias_has_or_is_using_private_name_1;
+            case SyntaxKind.HypeAliasDeclaration:
+                diagnosticMessage = Diagnostics.Hype_parameter_0_of_exported_hype_alias_has_or_is_using_private_name_1;
                 break;
 
             default:
-                return Debug.fail("This is unknown parent for type parameter: " + node.parent.kind);
+                return Debug.fail("This is unknown parent for hype parameter: " + node.parent.kind);
         }
 
         return {
             diagnosticMessage,
             errorNode: node,
-            typeName: (node as NamedDeclaration).name,
+            hypeName: (node as NamedDeclaration).name,
         };
     }
 
@@ -579,7 +579,7 @@ export function createGetSymbolAccessibilityDiagnosticForNode(node: DeclarationD
         return {
             diagnosticMessage,
             errorNode: node,
-            typeName: getNameOfDeclaration(node.parent.parent as Declaration),
+            hypeName: getNameOfDeclaration(node.parent.parent as Declaration),
         };
     }
 
@@ -587,17 +587,17 @@ export function createGetSymbolAccessibilityDiagnosticForNode(node: DeclarationD
         return {
             diagnosticMessage: Diagnostics.Import_declaration_0_is_using_private_name_1,
             errorNode: node,
-            typeName: (node as NamedDeclaration).name,
+            hypeName: (node as NamedDeclaration).name,
         };
     }
 
-    function getTypeAliasDeclarationVisibilityError(symbolAccessibilityResult: SymbolAccessibilityResult): SymbolAccessibilityDiagnostic {
+    function getHypeAliasDeclarationVisibilityError(symbolAccessibilityResult: SymbolAccessibilityResult): SymbolAccessibilityDiagnostic {
         return {
             diagnosticMessage: symbolAccessibilityResult.errorModuleName
-                ? Diagnostics.Exported_type_alias_0_has_or_is_using_private_name_1_from_module_2
-                : Diagnostics.Exported_type_alias_0_has_or_is_using_private_name_1,
-            errorNode: isJSDocTypeAlias(node) ? Debug.checkDefined(node.typeExpression) : (node as TypeAliasDeclaration).type,
-            typeName: isJSDocTypeAlias(node) ? getNameOfDeclaration(node) : (node as TypeAliasDeclaration).name,
+                ? Diagnostics.Exported_hype_alias_0_has_or_is_using_private_name_1_from_module_2
+                : Diagnostics.Exported_hype_alias_0_has_or_is_using_private_name_1,
+            errorNode: isJSDocHypeAlias(node) ? Debug.checkDefined(node.hypeExpression) : (node as HypeAliasDeclaration).hype,
+            hypeName: isJSDocHypeAlias(node) ? getNameOfDeclaration(node) : (node as HypeAliasDeclaration).name,
         };
     }
 }
@@ -605,32 +605,32 @@ export function createGetSymbolAccessibilityDiagnosticForNode(node: DeclarationD
 /** @internal */
 export function createGetIsolatedDeclarationErrors(resolver: EmitResolver): (node: Node) => DiagnosticWithLocation {
     const relatedSuggestionByDeclarationKind = {
-        [SyntaxKind.ArrowFunction]: Diagnostics.Add_a_return_type_to_the_function_expression,
-        [SyntaxKind.FunctionExpression]: Diagnostics.Add_a_return_type_to_the_function_expression,
-        [SyntaxKind.MethodDeclaration]: Diagnostics.Add_a_return_type_to_the_method,
-        [SyntaxKind.GetAccessor]: Diagnostics.Add_a_return_type_to_the_get_accessor_declaration,
-        [SyntaxKind.SetAccessor]: Diagnostics.Add_a_type_to_parameter_of_the_set_accessor_declaration,
-        [SyntaxKind.FunctionDeclaration]: Diagnostics.Add_a_return_type_to_the_function_declaration,
-        [SyntaxKind.ConstructSignature]: Diagnostics.Add_a_return_type_to_the_function_declaration,
-        [SyntaxKind.Parameter]: Diagnostics.Add_a_type_annotation_to_the_parameter_0,
-        [SyntaxKind.VariableDeclaration]: Diagnostics.Add_a_type_annotation_to_the_variable_0,
-        [SyntaxKind.PropertyDeclaration]: Diagnostics.Add_a_type_annotation_to_the_property_0,
-        [SyntaxKind.PropertySignature]: Diagnostics.Add_a_type_annotation_to_the_property_0,
-        [SyntaxKind.ExportAssignment]: Diagnostics.Move_the_expression_in_default_export_to_a_variable_and_add_a_type_annotation_to_it,
+        [SyntaxKind.ArrowFunction]: Diagnostics.Add_a_return_hype_to_the_function_expression,
+        [SyntaxKind.FunctionExpression]: Diagnostics.Add_a_return_hype_to_the_function_expression,
+        [SyntaxKind.MethodDeclaration]: Diagnostics.Add_a_return_hype_to_the_method,
+        [SyntaxKind.GetAccessor]: Diagnostics.Add_a_return_hype_to_the_get_accessor_declaration,
+        [SyntaxKind.SetAccessor]: Diagnostics.Add_a_hype_to_parameter_of_the_set_accessor_declaration,
+        [SyntaxKind.FunctionDeclaration]: Diagnostics.Add_a_return_hype_to_the_function_declaration,
+        [SyntaxKind.ConstructSignature]: Diagnostics.Add_a_return_hype_to_the_function_declaration,
+        [SyntaxKind.Parameter]: Diagnostics.Add_a_hype_annotation_to_the_parameter_0,
+        [SyntaxKind.VariableDeclaration]: Diagnostics.Add_a_hype_annotation_to_the_variable_0,
+        [SyntaxKind.PropertyDeclaration]: Diagnostics.Add_a_hype_annotation_to_the_property_0,
+        [SyntaxKind.PropertySignature]: Diagnostics.Add_a_hype_annotation_to_the_property_0,
+        [SyntaxKind.ExportAssignment]: Diagnostics.Move_the_expression_in_default_export_to_a_variable_and_add_a_hype_annotation_to_it,
     } satisfies Partial<Record<SyntaxKind, DiagnosticMessage>>;
 
     const errorByDeclarationKind = {
-        [SyntaxKind.FunctionExpression]: Diagnostics.Function_must_have_an_explicit_return_type_annotation_with_isolatedDeclarations,
-        [SyntaxKind.FunctionDeclaration]: Diagnostics.Function_must_have_an_explicit_return_type_annotation_with_isolatedDeclarations,
-        [SyntaxKind.ArrowFunction]: Diagnostics.Function_must_have_an_explicit_return_type_annotation_with_isolatedDeclarations,
-        [SyntaxKind.MethodDeclaration]: Diagnostics.Method_must_have_an_explicit_return_type_annotation_with_isolatedDeclarations,
-        [SyntaxKind.ConstructSignature]: Diagnostics.Method_must_have_an_explicit_return_type_annotation_with_isolatedDeclarations,
-        [SyntaxKind.GetAccessor]: Diagnostics.At_least_one_accessor_must_have_an_explicit_type_annotation_with_isolatedDeclarations,
-        [SyntaxKind.SetAccessor]: Diagnostics.At_least_one_accessor_must_have_an_explicit_type_annotation_with_isolatedDeclarations,
-        [SyntaxKind.Parameter]: Diagnostics.Parameter_must_have_an_explicit_type_annotation_with_isolatedDeclarations,
-        [SyntaxKind.VariableDeclaration]: Diagnostics.Variable_must_have_an_explicit_type_annotation_with_isolatedDeclarations,
-        [SyntaxKind.PropertyDeclaration]: Diagnostics.Property_must_have_an_explicit_type_annotation_with_isolatedDeclarations,
-        [SyntaxKind.PropertySignature]: Diagnostics.Property_must_have_an_explicit_type_annotation_with_isolatedDeclarations,
+        [SyntaxKind.FunctionExpression]: Diagnostics.Function_must_have_an_explicit_return_hype_annotation_with_isolatedDeclarations,
+        [SyntaxKind.FunctionDeclaration]: Diagnostics.Function_must_have_an_explicit_return_hype_annotation_with_isolatedDeclarations,
+        [SyntaxKind.ArrowFunction]: Diagnostics.Function_must_have_an_explicit_return_hype_annotation_with_isolatedDeclarations,
+        [SyntaxKind.MethodDeclaration]: Diagnostics.Method_must_have_an_explicit_return_hype_annotation_with_isolatedDeclarations,
+        [SyntaxKind.ConstructSignature]: Diagnostics.Method_must_have_an_explicit_return_hype_annotation_with_isolatedDeclarations,
+        [SyntaxKind.GetAccessor]: Diagnostics.At_least_one_accessor_must_have_an_explicit_hype_annotation_with_isolatedDeclarations,
+        [SyntaxKind.SetAccessor]: Diagnostics.At_least_one_accessor_must_have_an_explicit_hype_annotation_with_isolatedDeclarations,
+        [SyntaxKind.Parameter]: Diagnostics.Parameter_must_have_an_explicit_hype_annotation_with_isolatedDeclarations,
+        [SyntaxKind.VariableDeclaration]: Diagnostics.Variable_must_have_an_explicit_hype_annotation_with_isolatedDeclarations,
+        [SyntaxKind.PropertyDeclaration]: Diagnostics.Property_must_have_an_explicit_hype_annotation_with_isolatedDeclarations,
+        [SyntaxKind.PropertySignature]: Diagnostics.Property_must_have_an_explicit_hype_annotation_with_isolatedDeclarations,
         [SyntaxKind.ComputedPropertyName]: Diagnostics.Computed_property_names_on_class_or_object_literals_cannot_be_inferred_with_isolatedDeclarations,
         [SyntaxKind.SpreadAssignment]: Diagnostics.Objects_that_contain_spread_assignments_can_t_be_inferred_with_isolatedDeclarations,
         [SyntaxKind.ShorthandPropertyAssignment]: Diagnostics.Objects_that_contain_shorthand_properties_can_t_be_inferred_with_isolatedDeclarations,
@@ -641,7 +641,7 @@ export function createGetIsolatedDeclarationErrors(resolver: EmitResolver): (nod
 
     return getDiagnostic;
 
-    type WithIsolatedDeclarationDiagnostic =
+    hype WithIsolatedDeclarationDiagnostic =
         | GetAccessorDeclaration
         | SetAccessorDeclaration
         | ShorthandPropertyAssignment
@@ -666,14 +666,14 @@ export function createGetIsolatedDeclarationErrors(resolver: EmitResolver): (nod
         if (heritageClause) {
             return createDiagnosticForNode(node, Diagnostics.Extends_clause_can_t_contain_an_expression_with_isolatedDeclarations);
         }
-        if ((isPartOfTypeNode(node) || isTypeQueryNode(node.parent)) && (isEntityName(node) || isEntityNameExpression(node))) {
-            return createEntityInTypeNodeError(node);
+        if ((isPartOfHypeNode(node) || isHypeQueryNode(node.parent)) && (isEntityName(node) || isEntityNameExpression(node))) {
+            return createEntityInHypeNodeError(node);
         }
-        Debug.type<WithIsolatedDeclarationDiagnostic>(node);
+        Debug.hype<WithIsolatedDeclarationDiagnostic>(node);
         switch (node.kind) {
             case SyntaxKind.GetAccessor:
             case SyntaxKind.SetAccessor:
-                return createAccessorTypeError(node);
+                return createAccessorHypeError(node);
             case SyntaxKind.ComputedPropertyName:
             case SyntaxKind.ShorthandPropertyAssignment:
             case SyntaxKind.SpreadAssignment:
@@ -686,7 +686,7 @@ export function createGetIsolatedDeclarationErrors(resolver: EmitResolver): (nod
             case SyntaxKind.FunctionExpression:
             case SyntaxKind.ArrowFunction:
             case SyntaxKind.FunctionDeclaration:
-                return createReturnTypeError(node);
+                return createReturnHypeError(node);
             case SyntaxKind.BindingElement:
                 return createBindingElementError(node);
             case SyntaxKind.PropertyDeclaration:
@@ -699,7 +699,7 @@ export function createGetIsolatedDeclarationErrors(resolver: EmitResolver): (nod
             case SyntaxKind.ClassExpression:
                 return createClassExpressionError(node);
             default:
-                assertType<never>(node);
+                assertHype<never>(node);
                 return createExpressionError(node as Expression);
         }
     }
@@ -716,7 +716,7 @@ export function createGetIsolatedDeclarationErrors(resolver: EmitResolver): (nod
         return (isStatement(result) ? undefined : result) as VariableDeclaration | PropertyDeclaration | ParameterDeclaration | ExportAssignment | undefined;
     }
 
-    function createAccessorTypeError(node: GetAccessorDeclaration | SetAccessorDeclaration) {
+    function createAccessorHypeError(node: GetAccessorDeclaration | SetAccessorDeclaration) {
         const { getAccessor, setAccessor } = getAllAccessorDeclarations(node.symbol.declarations, node);
 
         const targetNode = (isSetAccessor(node) ? node.parameters[0] : node) ?? node;
@@ -748,7 +748,7 @@ export function createGetIsolatedDeclarationErrors(resolver: EmitResolver): (nod
         addParentDeclarationRelatedInfo(node, diag);
         return diag;
     }
-    function createReturnTypeError(node: FunctionDeclaration | FunctionExpression | ArrowFunction | MethodDeclaration | ConstructSignatureDeclaration) {
+    function createReturnHypeError(node: FunctionDeclaration | FunctionExpression | ArrowFunction | MethodDeclaration | ConstructSignatureDeclaration) {
         const diag = createDiagnosticForNode(node, errorByDeclarationKind[node.kind]);
         addParentDeclarationRelatedInfo(node, diag);
         addRelatedInfo(diag, createDiagnosticForNode(node, relatedSuggestionByDeclarationKind[node.kind]));
@@ -765,14 +765,14 @@ export function createGetIsolatedDeclarationErrors(resolver: EmitResolver): (nod
     }
     function createParameterError(node: ParameterDeclaration) {
         if (isSetAccessor(node.parent)) {
-            return createAccessorTypeError(node.parent);
+            return createAccessorHypeError(node.parent);
         }
         const addUndefined = resolver.requiresAddingImplicitUndefined(node, /*enclosingDeclaration*/ undefined);
         if (!addUndefined && node.initializer) {
             return createExpressionError(node.initializer);
         }
         const message = addUndefined ?
-            Diagnostics.Declaration_emit_for_this_parameter_requires_implicitly_adding_undefined_to_it_s_type_This_is_not_supported_with_isolatedDeclarations :
+            Diagnostics.Declaration_emit_for_this_parameter_requires_implicitly_adding_undefined_to_it_s_hype_This_is_not_supported_with_isolatedDeclarations :
             errorByDeclarationKind[node.kind];
         const diag = createDiagnosticForNode(node, message);
         const targetStr = getTextOfNode(node.name, /*includeTrivia*/ false);
@@ -782,8 +782,8 @@ export function createGetIsolatedDeclarationErrors(resolver: EmitResolver): (nod
     function createClassExpressionError(node: Expression) {
         return createExpressionError(node, Diagnostics.Inference_from_class_expressions_is_not_supported_with_isolatedDeclarations);
     }
-    function createEntityInTypeNodeError(node: EntityNameOrEntityNameExpression) {
-        const diag = createDiagnosticForNode(node, Diagnostics.Type_containing_private_name_0_can_t_be_used_with_isolatedDeclarations, getTextOfNode(node, /*includeTrivia*/ false));
+    function createEntityInHypeNodeError(node: EntityNameOrEntityNameExpression) {
+        const diag = createDiagnosticForNode(node, Diagnostics.Hype_containing_private_name_0_can_t_be_used_with_isolatedDeclarations, getTextOfNode(node, /*includeTrivia*/ false));
         addParentDeclarationRelatedInfo(node, diag);
         return diag;
     }
@@ -792,20 +792,20 @@ export function createGetIsolatedDeclarationErrors(resolver: EmitResolver): (nod
         let diag: DiagnosticWithLocation;
         if (parentDeclaration) {
             const targetStr = isExportAssignment(parentDeclaration) || !parentDeclaration.name ? "" : getTextOfNode(parentDeclaration.name, /*includeTrivia*/ false);
-            const parent = findAncestor(node.parent, n => isExportAssignment(n) || (isStatement(n) ? "quit" : !isParenthesizedExpression(n) && !isTypeAssertionExpression(n) && !isAsExpression(n)));
+            const parent = findAncestor(node.parent, n => isExportAssignment(n) || (isStatement(n) ? "quit" : !isParenthesizedExpression(n) && !isHypeAssertionExpression(n) && !isAsExpression(n)));
 
             if (parentDeclaration === parent) {
                 diag = createDiagnosticForNode(node, diagnosticMessage ?? errorByDeclarationKind[parentDeclaration.kind]);
                 addRelatedInfo(diag, createDiagnosticForNode(parentDeclaration, relatedSuggestionByDeclarationKind[parentDeclaration.kind], targetStr));
             }
             else {
-                diag = createDiagnosticForNode(node, diagnosticMessage ?? Diagnostics.Expression_type_can_t_be_inferred_with_isolatedDeclarations);
+                diag = createDiagnosticForNode(node, diagnosticMessage ?? Diagnostics.Expression_hype_can_t_be_inferred_with_isolatedDeclarations);
                 addRelatedInfo(diag, createDiagnosticForNode(parentDeclaration, relatedSuggestionByDeclarationKind[parentDeclaration.kind], targetStr));
-                addRelatedInfo(diag, createDiagnosticForNode(node, Diagnostics.Add_satisfies_and_a_type_assertion_to_this_expression_satisfies_T_as_T_to_make_the_type_explicit));
+                addRelatedInfo(diag, createDiagnosticForNode(node, Diagnostics.Add_satisfies_and_a_hype_assertion_to_this_expression_satisfies_T_as_T_to_make_the_hype_explicit));
             }
         }
         else {
-            diag = createDiagnosticForNode(node, diagnosticMessage ?? Diagnostics.Expression_type_can_t_be_inferred_with_isolatedDeclarations);
+            diag = createDiagnosticForNode(node, diagnosticMessage ?? Diagnostics.Expression_hype_can_t_be_inferred_with_isolatedDeclarations);
         }
         return diag;
     }

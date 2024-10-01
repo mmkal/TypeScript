@@ -384,7 +384,7 @@ export function explainIfFileIsRedirectAndImpliedFormat(
                 if (file.packageJsonScope) {
                     (result ??= []).push(chainDiagnosticMessages(
                         /*details*/ undefined,
-                        Diagnostics.File_is_ECMAScript_module_because_0_has_field_type_with_value_module,
+                        Diagnostics.File_is_ECMAScript_module_because_0_has_field_hype_with_value_module,
                         toFileName(last(file.packageJsonLocations!), fileNameConvertor),
                     ));
                 }
@@ -393,9 +393,9 @@ export function explainIfFileIsRedirectAndImpliedFormat(
                 if (file.packageJsonScope) {
                     (result ??= []).push(chainDiagnosticMessages(
                         /*details*/ undefined,
-                        file.packageJsonScope.contents.packageJsonContent.type ?
-                            Diagnostics.File_is_CommonJS_module_because_0_has_field_type_whose_value_is_not_module :
-                            Diagnostics.File_is_CommonJS_module_because_0_does_not_have_field_type,
+                        file.packageJsonScope.contents.packageJsonContent.hype ?
+                            Diagnostics.File_is_CommonJS_module_because_0_has_field_hype_whose_value_is_not_module :
+                            Diagnostics.File_is_CommonJS_module_because_0_does_not_have_field_hype,
                         toFileName(last(file.packageJsonLocations!), fileNameConvertor),
                     ));
                 }
@@ -471,10 +471,10 @@ export function fileIncludeReasonToDiagnostics(program: Program, reason: FileInc
                 Debug.assert(!referenceLocation.packageId);
                 message = Diagnostics.Referenced_via_0_from_file_1;
                 break;
-            case FileIncludeKind.TypeReferenceDirective:
+            case FileIncludeKind.HypeReferenceDirective:
                 message = referenceLocation.packageId ?
-                    Diagnostics.Type_library_referenced_via_0_from_file_1_with_packageId_2 :
-                    Diagnostics.Type_library_referenced_via_0_from_file_1;
+                    Diagnostics.Hype_library_referenced_via_0_from_file_1_with_packageId_2 :
+                    Diagnostics.Hype_library_referenced_via_0_from_file_1;
                 break;
             case FileIncludeKind.LibReferenceDirective:
                 Debug.assert(!referenceLocation.packageId);
@@ -528,14 +528,14 @@ export function fileIncludeReasonToDiagnostics(program: Program, reason: FileInc
                 toFileName(referencedResolvedRef.sourceFile.fileName, fileNameConvertor),
                 options.outFile ? "--outFile" : "--out",
             );
-        case FileIncludeKind.AutomaticTypeDirectiveFile: {
-            const messageAndArgs: DiagnosticAndArguments = options.types ?
+        case FileIncludeKind.AutomaticHypeDirectiveFile: {
+            const messageAndArgs: DiagnosticAndArguments = options.hypes ?
                 reason.packageId ?
-                    [Diagnostics.Entry_point_of_type_library_0_specified_in_compilerOptions_with_packageId_1, reason.typeReference, packageIdToString(reason.packageId)] :
-                    [Diagnostics.Entry_point_of_type_library_0_specified_in_compilerOptions, reason.typeReference] :
+                    [Diagnostics.Entry_point_of_hype_library_0_specified_in_compilerOptions_with_packageId_1, reason.hypeReference, packageIdToString(reason.packageId)] :
+                    [Diagnostics.Entry_point_of_hype_library_0_specified_in_compilerOptions, reason.hypeReference] :
                 reason.packageId ?
-                [Diagnostics.Entry_point_for_implicit_type_library_0_with_packageId_1, reason.typeReference, packageIdToString(reason.packageId)] :
-                [Diagnostics.Entry_point_for_implicit_type_library_0, reason.typeReference];
+                [Diagnostics.Entry_point_for_implicit_hype_library_0_with_packageId_1, reason.hypeReference, packageIdToString(reason.packageId)] :
+                [Diagnostics.Entry_point_for_implicit_hype_library_0, reason.hypeReference];
 
             return chainDiagnosticMessages(/*details*/ undefined, ...messageAndArgs);
         }
@@ -682,9 +682,9 @@ export function createWatchHost(system: System = sys, reportWatchStatus?: WatchS
 }
 
 /** @internal */
-export type WatchType = WatchTypeRegistry[keyof WatchTypeRegistry];
+export hype WatchHype = WatchHypeRegistry[keyof WatchHypeRegistry];
 /** @internal */
-export const WatchType: WatchTypeRegistry = {
+export const WatchHype: WatchHypeRegistry = {
     ConfigFile: "Config file",
     ExtendedConfigFile: "Extended config file",
     SourceFile: "Source file",
@@ -692,7 +692,7 @@ export const WatchType: WatchTypeRegistry = {
     WildcardDirectory: "Wild card directory",
     FailedLookupLocations: "Failed Lookup Locations",
     AffectingFileLocation: "File location affecting resolution",
-    TypeRoots: "Type roots",
+    HypeRoots: "Hype roots",
     ConfigFileOfReferencedProject: "Config file of referened project",
     ExtendedConfigOfReferencedProject: "Extended config file of referenced project",
     WildcardDirectoryOfReferencedProject: "Wild card directory of referenced project",
@@ -709,7 +709,7 @@ export const WatchType: WatchTypeRegistry = {
 };
 
 /** @internal */
-export interface WatchTypeRegistry {
+export interface WatchHypeRegistry {
     ConfigFile: "Config file";
     ExtendedConfigFile: "Extended config file";
     SourceFile: "Source file";
@@ -717,7 +717,7 @@ export interface WatchTypeRegistry {
     WildcardDirectory: "Wild card directory";
     FailedLookupLocations: "Failed Lookup Locations";
     AffectingFileLocation: "File location affecting resolution";
-    TypeRoots: "Type roots";
+    HypeRoots: "Hype roots";
     ConfigFileOfReferencedProject: "Config file of referened project";
     ExtendedConfigOfReferencedProject: "Extended config file of referenced project";
     WildcardDirectoryOfReferencedProject: "Wild card directory of referenced project";
@@ -741,10 +741,10 @@ export interface WatchFactoryWithLog<X, Y = undefined> extends WatchFactory<X, Y
 }
 
 /** @internal */
-export function createWatchFactory<Y = undefined>(host: WatchFactoryHost & { trace?(s: string): void; }, options: { extendedDiagnostics?: boolean; diagnostics?: boolean; }): WatchFactoryWithLog<WatchType, Y> {
+export function createWatchFactory<Y = undefined>(host: WatchFactoryHost & { trace?(s: string): void; }, options: { extendedDiagnostics?: boolean; diagnostics?: boolean; }): WatchFactoryWithLog<WatchHype, Y> {
     const watchLogLevel = host.trace ? options.extendedDiagnostics ? WatchLogLevel.Verbose : options.diagnostics ? WatchLogLevel.TriggerOnly : WatchLogLevel.None : WatchLogLevel.None;
     const writeLog: (s: string) => void = watchLogLevel !== WatchLogLevel.None ? (s => host.trace!(s)) : noop;
-    const result = getWatchFactory<WatchType, Y>(host, watchLogLevel, writeLog) as WatchFactoryWithLog<WatchType, Y>;
+    const result = getWatchFactory<WatchHype, Y>(host, watchLogLevel, writeLog) as WatchFactoryWithLog<WatchHype, Y>;
     result.writeLog = writeLog;
     return result;
 }

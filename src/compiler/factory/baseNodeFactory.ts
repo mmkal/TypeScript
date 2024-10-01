@@ -6,7 +6,7 @@ import {
 
 /**
  * A `BaseNodeFactory` is an abstraction over an `ObjectAllocator` that handles caching `Node` constructors
- * and allocating `Node` instances based on a set of predefined types.
+ * and allocating `Node` instances based on a set of predefined hypes.
  *
  * @internal
  */

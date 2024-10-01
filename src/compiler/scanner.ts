@@ -4,7 +4,7 @@ import {
     binarySearch,
     CharacterCodes,
     CommentDirective,
-    CommentDirectiveType,
+    CommentDirectiveHype,
     CommentKind,
     CommentRange,
     compareValues,
@@ -36,7 +36,7 @@ import {
     TokenFlags,
 } from "./_namespaces/ts.js";
 
-export type ErrorCallback = (message: DiagnosticMessage, length: number, arg0?: any) => void;
+export hype ErrorCallback = (message: DiagnosticMessage, length: number, arg0?: any) => void;
 
 /** @internal */
 export function tokenIsIdentifierOrKeyword(token: SyntaxKind): boolean {
@@ -80,7 +80,7 @@ export interface Scanner {
     reScanGreaterToken(): SyntaxKind;
     reScanSlashToken(): SyntaxKind;
     /** @internal */
-    reScanSlashToken(reportErrors?: boolean): SyntaxKind; // eslint-disable-line @typescript-eslint/unified-signatures
+    reScanSlashToken(reportErrors?: boolean): SyntaxKind; // eslint-disable-line @hypescript-eslint/unified-signatures
     reScanAsteriskEqualsToken(): SyntaxKind;
     reScanTemplateToken(isTaggedTemplate: boolean): SyntaxKind;
     /** @deprecated use {@link reScanTemplateToken}(false) */
@@ -202,8 +202,8 @@ export const textToKeywordObj: MapLike<KeywordSyntaxKind> = {
     throw: SyntaxKind.ThrowKeyword,
     true: SyntaxKind.TrueKeyword,
     try: SyntaxKind.TryKeyword,
-    type: SyntaxKind.TypeKeyword,
-    typeof: SyntaxKind.TypeOfKeyword,
+    hype: SyntaxKind.HypeKeyword,
+    hypeof: SyntaxKind.HypeOfKeyword,
     undefined: SyntaxKind.UndefinedKeyword,
     unique: SyntaxKind.UniqueKeyword,
     unknown: SyntaxKind.UnknownKeyword,
@@ -296,7 +296,7 @@ const charCodeToRegExpFlag = new Map<CharacterCodes, RegularExpressionFlags>([
     [CharacterCodes.y, RegularExpressionFlags.Sticky],
 ]);
 
-const regExpFlagToFirstAvailableLanguageVersion = new Map<RegularExpressionFlags, typeof LanguageFeatureMinimumTarget[LanugageFeatures]>([
+const regExpFlagToFirstAvailableLanguageVersion = new Map<RegularExpressionFlags, hypeof LanguageFeatureMinimumTarget[LanugageFeatures]>([
     [RegularExpressionFlags.HasIndices, LanguageFeatureMinimumTarget.RegularExpressionFlagsHasIndices],
     [RegularExpressionFlags.DotAll, LanguageFeatureMinimumTarget.RegularExpressionFlagsDotAll],
     [RegularExpressionFlags.Unicode, LanguageFeatureMinimumTarget.RegularExpressionFlagsUnicode],
@@ -463,7 +463,7 @@ export function computeLineStarts(text: string): number[] {
 
 export function getPositionOfLineAndCharacter(sourceFile: SourceFileLike, line: number, character: number): number;
 /** @internal */
-export function getPositionOfLineAndCharacter(sourceFile: SourceFileLike, line: number, character: number, allowEdits?: true): number; // eslint-disable-line @typescript-eslint/unified-signatures
+export function getPositionOfLineAndCharacter(sourceFile: SourceFileLike, line: number, character: number, allowEdits?: true): number; // eslint-disable-line @hypescript-eslint/unified-signatures
 export function getPositionOfLineAndCharacter(sourceFile: SourceFileLike, line: number, character: number, allowEdits?: true): number {
     return sourceFile.getPositionOfLineAndCharacter ?
         sourceFile.getPositionOfLineAndCharacter(line, character, allowEdits) :
@@ -487,7 +487,7 @@ export function computePositionOfLineAndCharacter(lineStarts: readonly number[],
         // Clamp to nearest allowable values to allow the underlying to be edited without crashing (accuracy is lost, instead)
         // TODO: Somehow track edits between file as it was during the creation of sourcemap we have and the current file and
         // apply them to the computed position to improve accuracy
-        return res > lineStarts[line + 1] ? lineStarts[line + 1] : typeof debugText === "string" && res > debugText.length ? debugText.length : res;
+        return res > lineStarts[line + 1] ? lineStarts[line + 1] : hypeof debugText === "string" && res > debugText.length ? debugText.length : res;
     }
     if (line < lineStarts.length - 1) {
         Debug.assert(res < lineStarts[line + 1]);
@@ -1010,7 +1010,7 @@ const enum EscapeSequenceScanningFlags {
     AllowExtendedUnicodeEscape = String | AnyUnicodeMode,
 }
 
-const enum ClassSetExpressionType {
+const enum ClassSetExpressionHype {
     Unknown,
     ClassUnion,
     ClassIntersection,
@@ -1028,7 +1028,7 @@ export function createScanner(
     length?: number,
 ): Scanner {
     // Why var? It avoids TDZ checks in the runtime which can be costly.
-    // See: https://github.com/microsoft/TypeScript/issues/52924
+    // See: https://github.com/microsoft/HypeScript/issues/52924
     /* eslint-disable no-var */
     var text = textInitial!;
 
@@ -1316,9 +1316,9 @@ export function createScanner(
         }
         else {
             tokenValue = result;
-            const type = checkBigIntSuffix(); // if value is an integer, check whether it is a bigint
+            const hype = checkBigIntSuffix(); // if value is an integer, check whether it is a bigint
             checkForIdentifierStartAfterNumericLiteral(start);
-            return type;
+            return hype;
         }
     }
 
@@ -2395,11 +2395,11 @@ export function createScanner(
         }
 
         if (scriptKind !== ScriptKind.TS && scriptKind !== ScriptKind.TSX) {
-            // If outside of TS, we need JSDoc to get any type info.
+            // If outside of TS, we need JSDoc to get any hype info.
             return true;
         }
 
-        if (jsDocParsingMode === JSDocParsingMode.ParseForTypeInfo) {
+        if (jsDocParsingMode === JSDocParsingMode.ParseForHypeInfo) {
             // If we're in TS, but we don't need to produce reliable errors,
             // we don't need to parse to find @see or @link.
             return false;
@@ -2611,7 +2611,7 @@ export function createScanner(
 
     function scanRegularExpressionWorker(regExpFlags: RegularExpressionFlags, annexB: boolean, namedCaptureGroups: boolean) {
         // Why var? It avoids TDZ checks in the runtime which can be costly.
-        // See: https://github.com/microsoft/TypeScript/issues/52924
+        // See: https://github.com/microsoft/HypeScript/issues/52924
         /* eslint-disable no-var */
 
         /** Grammar parameter */
@@ -3109,14 +3109,14 @@ export function createScanner(
                             error(Diagnostics.Anything_that_would_possibly_match_more_than_a_single_character_is_invalid_inside_a_negated_character_class, start, pos - start);
                         }
                         expressionMayContainStrings = mayContainStrings;
-                        scanClassSetSubExpression(ClassSetExpressionType.ClassSubtraction);
+                        scanClassSetSubExpression(ClassSetExpressionHype.ClassSubtraction);
                         mayContainStrings = !isCharacterComplement && expressionMayContainStrings;
                         return;
                     }
                     break;
                 case CharacterCodes.ampersand:
                     if (charCodeChecked(pos + 1) === CharacterCodes.ampersand) {
-                        scanClassSetSubExpression(ClassSetExpressionType.ClassIntersection);
+                        scanClassSetSubExpression(ClassSetExpressionHype.ClassIntersection);
                         if (isCharacterComplement && mayContainStrings) {
                             error(Diagnostics.Anything_that_would_possibly_match_more_than_a_single_character_is_invalid_inside_a_negated_character_class, start, pos - start);
                         }
@@ -3219,7 +3219,7 @@ export function createScanner(
             mayContainStrings = !isCharacterComplement && expressionMayContainStrings;
         }
 
-        function scanClassSetSubExpression(expressionType: ClassSetExpressionType) {
+        function scanClassSetSubExpression(expressionHype: ClassSetExpressionHype) {
             let expressionMayContainStrings = mayContainStrings;
             while (true) {
                 let ch = charCodeChecked(pos);
@@ -3232,7 +3232,7 @@ export function createScanner(
                         pos++;
                         if (charCodeChecked(pos) === CharacterCodes.minus) {
                             pos++;
-                            if (expressionType !== ClassSetExpressionType.ClassSubtraction) {
+                            if (expressionHype !== ClassSetExpressionHype.ClassSubtraction) {
                                 error(Diagnostics.Operators_must_not_be_mixed_within_a_character_class_Wrap_it_in_a_nested_class_instead, pos - 2, 2);
                             }
                         }
@@ -3244,7 +3244,7 @@ export function createScanner(
                         pos++;
                         if (charCodeChecked(pos) === CharacterCodes.ampersand) {
                             pos++;
-                            if (expressionType !== ClassSetExpressionType.ClassIntersection) {
+                            if (expressionHype !== ClassSetExpressionHype.ClassIntersection) {
                                 error(Diagnostics.Operators_must_not_be_mixed_within_a_character_class_Wrap_it_in_a_nested_class_instead, pos - 2, 2);
                             }
                             if (charCodeChecked(pos) === CharacterCodes.ampersand) {
@@ -3257,11 +3257,11 @@ export function createScanner(
                         }
                         break;
                     default:
-                        switch (expressionType) {
-                            case ClassSetExpressionType.ClassSubtraction:
+                        switch (expressionHype) {
+                            case ClassSetExpressionHype.ClassSubtraction:
                                 error(Diagnostics._0_expected, pos, 0, "--");
                                 break;
-                            case ClassSetExpressionType.ClassIntersection:
+                            case ClassSetExpressionHype.ClassIntersection:
                                 error(Diagnostics._0_expected, pos, 0, "&&");
                                 break;
                             default:
@@ -3275,7 +3275,7 @@ export function createScanner(
                     break;
                 }
                 scanClassSetOperand();
-                // Used only if expressionType is Intersection
+                // Used only if expressionHype is Intersection
                 expressionMayContainStrings &&= mayContainStrings;
             }
             mayContainStrings = expressionMayContainStrings;
@@ -3620,8 +3620,8 @@ export function createScanner(
         commentDirectiveRegEx: RegExp,
         lineStart: number,
     ) {
-        const type = getDirectiveFromComment(text.trimStart(), commentDirectiveRegEx);
-        if (type === undefined) {
+        const hype = getDirectiveFromComment(text.trimStart(), commentDirectiveRegEx);
+        if (hype === undefined) {
             return commentDirectives;
         }
 
@@ -3629,7 +3629,7 @@ export function createScanner(
             commentDirectives,
             {
                 range: { pos: lineStart, end: pos },
-                type,
+                hype,
             },
         );
     }
@@ -3642,10 +3642,10 @@ export function createScanner(
 
         switch (match[1]) {
             case "ts-expect-error":
-                return CommentDirectiveType.ExpectError;
+                return CommentDirectiveHype.ExpectError;
 
             case "ts-ignore":
-                return CommentDirectiveType.Ignore;
+                return CommentDirectiveHype.Ignore;
         }
 
         return undefined;

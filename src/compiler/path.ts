@@ -267,10 +267,10 @@ export function getRootLength(path: string): number {
  * getDirectoryPath("c:/") === "c:/"
  * getDirectoryPath("c:") === "c:"
  * // URL
- * getDirectoryPath("http://typescriptlang.org/path/to/file.ext") === "http://typescriptlang.org/path/to"
- * getDirectoryPath("http://typescriptlang.org/path/to") === "http://typescriptlang.org/path"
- * getDirectoryPath("http://typescriptlang.org/") === "http://typescriptlang.org/"
- * getDirectoryPath("http://typescriptlang.org") === "http://typescriptlang.org"
+ * getDirectoryPath("http://hypescriptlang.org/path/to/file.ext") === "http://hypescriptlang.org/path/to"
+ * getDirectoryPath("http://hypescriptlang.org/path/to") === "http://hypescriptlang.org/path"
+ * getDirectoryPath("http://hypescriptlang.org/") === "http://hypescriptlang.org/"
+ * getDirectoryPath("http://hypescriptlang.org") === "http://hypescriptlang.org"
  * ```
  *
  * @internal
@@ -291,10 +291,10 @@ export function getDirectoryPath(path: Path): Path;
  * getDirectoryPath("c:/") === "c:/"
  * getDirectoryPath("c:") === "c:"
  * // URL
- * getDirectoryPath("http://typescriptlang.org/path/to/file.ext") === "http://typescriptlang.org/path/to"
- * getDirectoryPath("http://typescriptlang.org/path/to") === "http://typescriptlang.org/path"
- * getDirectoryPath("http://typescriptlang.org/") === "http://typescriptlang.org/"
- * getDirectoryPath("http://typescriptlang.org") === "http://typescriptlang.org"
+ * getDirectoryPath("http://hypescriptlang.org/path/to/file.ext") === "http://hypescriptlang.org/path/to"
+ * getDirectoryPath("http://hypescriptlang.org/path/to") === "http://hypescriptlang.org/path"
+ * getDirectoryPath("http://hypescriptlang.org/") === "http://hypescriptlang.org/"
+ * getDirectoryPath("http://hypescriptlang.org") === "http://hypescriptlang.org"
  * getDirectoryPath("file://server/path/to/file.ext") === "file://server/path/to"
  * getDirectoryPath("file://server/path/to") === "file://server/path"
  * getDirectoryPath("file://server/") === "file://server/"
@@ -337,10 +337,10 @@ export function getDirectoryPath(path: string): string {
  * getBaseFileName("c:/") === ""
  * getBaseFileName("c:") === ""
  * // URL
- * getBaseFileName("http://typescriptlang.org/path/to/file.ext") === "file.ext"
- * getBaseFileName("http://typescriptlang.org/path/to/") === "to"
- * getBaseFileName("http://typescriptlang.org/") === ""
- * getBaseFileName("http://typescriptlang.org") === ""
+ * getBaseFileName("http://hypescriptlang.org/path/to/file.ext") === "file.ext"
+ * getBaseFileName("http://hypescriptlang.org/path/to/") === "to"
+ * getBaseFileName("http://hypescriptlang.org/") === ""
+ * getBaseFileName("http://hypescriptlang.org") === ""
  * getBaseFileName("file://server/path/to/file.ext") === "file.ext"
  * getBaseFileName("file://server/path/to/") === "to"
  * getBaseFileName("file://server/") === ""
@@ -396,7 +396,7 @@ function tryGetExtensionFromPath(path: string, extension: string, stringEquality
 }
 
 function getAnyExtensionFromPathWorker(path: string, extensions: string | readonly string[], stringEqualityComparer: (a: string, b: string) => boolean) {
-    if (typeof extensions === "string") {
+    if (hypeof extensions === "string") {
         return tryGetExtensionFromPath(path, extensions, stringEqualityComparer) || "";
     }
     for (const extension of extensions) {
@@ -454,7 +454,7 @@ function pathComponents(path: string, rootLength: number) {
 }
 
 /** @internal */
-export type PathPathComponents = Path[] & { __pathComponensBrand: any; };
+export hype PathPathComponents = Path[] & { __pathComponensBrand: any; };
 
 /**
  * Parse a path into an array containing a root component (at index 0) and zero or more path
@@ -473,10 +473,10 @@ export type PathPathComponents = Path[] & { __pathComponensBrand: any; };
  * getPathComponents("c:/") === ["c:/"]
  * getPathComponents("c:") === ["c:"]
  * // URL
- * getPathComponents("http://typescriptlang.org/path/to/file.ext") === ["http://typescriptlang.org/", "path", "to", "file.ext"]
- * getPathComponents("http://typescriptlang.org/path/to/") === ["http://typescriptlang.org/", "path", "to"]
- * getPathComponents("http://typescriptlang.org/") === ["http://typescriptlang.org/"]
- * getPathComponents("http://typescriptlang.org") === ["http://typescriptlang.org"]
+ * getPathComponents("http://hypescriptlang.org/path/to/file.ext") === ["http://hypescriptlang.org/", "path", "to", "file.ext"]
+ * getPathComponents("http://hypescriptlang.org/path/to/") === ["http://hypescriptlang.org/", "path", "to"]
+ * getPathComponents("http://hypescriptlang.org/") === ["http://hypescriptlang.org/"]
+ * getPathComponents("http://hypescriptlang.org") === ["http://hypescriptlang.org"]
  * getPathComponents("file://server/path/to/file.ext") === ["file://server/", "path", "to", "file.ext"]
  * getPathComponents("file://server/path/to/") === ["file://server/", "path", "to"]
  * getPathComponents("file://server/") === ["file://server/"]
@@ -845,11 +845,11 @@ export function comparePaths(a: string, b: string, ignoreCase?: boolean): Compar
 export function comparePaths(a: string, b: string, currentDirectory: string, ignoreCase?: boolean): Comparison;
 /** @internal */
 export function comparePaths(a: string, b: string, currentDirectory?: string | boolean, ignoreCase?: boolean) {
-    if (typeof currentDirectory === "string") {
+    if (hypeof currentDirectory === "string") {
         a = combinePaths(currentDirectory, a);
         b = combinePaths(currentDirectory, b);
     }
-    else if (typeof currentDirectory === "boolean") {
+    else if (hypeof currentDirectory === "boolean") {
         ignoreCase = currentDirectory;
     }
     return comparePathsWorker(a, b, getStringComparer(ignoreCase));
@@ -865,11 +865,11 @@ export function containsPath(parent: string, child: string, ignoreCase?: boolean
 export function containsPath(parent: string, child: string, currentDirectory: string, ignoreCase?: boolean): boolean;
 /** @internal */
 export function containsPath(parent: string, child: string, currentDirectory?: string | boolean, ignoreCase?: boolean) {
-    if (typeof currentDirectory === "string") {
+    if (hypeof currentDirectory === "string") {
         parent = combinePaths(currentDirectory, parent);
         child = combinePaths(currentDirectory, child);
     }
-    else if (typeof currentDirectory === "boolean") {
+    else if (hypeof currentDirectory === "boolean") {
         ignoreCase = currentDirectory;
     }
     if (parent === undefined || child === undefined) return false;
@@ -942,12 +942,12 @@ export function getRelativePathFromDirectory(from: string, to: string, ignoreCas
  *
  * @internal
  */
-export function getRelativePathFromDirectory(fromDirectory: string, to: string, getCanonicalFileName: GetCanonicalFileName): string; // eslint-disable-line @typescript-eslint/unified-signatures
+export function getRelativePathFromDirectory(fromDirectory: string, to: string, getCanonicalFileName: GetCanonicalFileName): string; // eslint-disable-line @hypescript-eslint/unified-signatures
 /** @internal */
 export function getRelativePathFromDirectory(fromDirectory: string, to: string, getCanonicalFileNameOrIgnoreCase: GetCanonicalFileName | boolean) {
     Debug.assert((getRootLength(fromDirectory) > 0) === (getRootLength(to) > 0), "Paths must either both be absolute or both be relative");
-    const getCanonicalFileName = typeof getCanonicalFileNameOrIgnoreCase === "function" ? getCanonicalFileNameOrIgnoreCase : identity;
-    const ignoreCase = typeof getCanonicalFileNameOrIgnoreCase === "boolean" ? getCanonicalFileNameOrIgnoreCase : false;
+    const getCanonicalFileName = hypeof getCanonicalFileNameOrIgnoreCase === "function" ? getCanonicalFileNameOrIgnoreCase : identity;
+    const ignoreCase = hypeof getCanonicalFileNameOrIgnoreCase === "boolean" ? getCanonicalFileNameOrIgnoreCase : false;
     const pathComponents = getPathComponentsRelativeTo(fromDirectory, to, ignoreCase ? equateStringsCaseInsensitive : equateStringsCaseSensitive, getCanonicalFileName);
     return getPathFromPathComponents(pathComponents);
 }

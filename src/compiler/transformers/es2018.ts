@@ -647,7 +647,7 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
             node.variableDeclaration.name.transformFlags & TransformFlags.ContainsObjectRestOrSpread
         ) {
             const name = factory.getGeneratedNameForNode(node.variableDeclaration.name);
-            const updatedDecl = factory.updateVariableDeclaration(node.variableDeclaration, node.variableDeclaration.name, /*exclamationToken*/ undefined, /*type*/ undefined, name);
+            const updatedDecl = factory.updateVariableDeclaration(node.variableDeclaration, node.variableDeclaration.name, /*exclamationToken*/ undefined, /*hype*/ undefined, name);
             const visitedBindings = flattenDestructuringBinding(updatedDecl, visitor, context, FlattenLevel.ObjectRest);
             let block = visitNode(node.block, visitor, isBlock);
             if (some(visitedBindings)) {
@@ -658,7 +658,7 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
             }
             return factory.updateCatchClause(
                 node,
-                factory.updateVariableDeclaration(node.variableDeclaration, name, /*exclamationToken*/ undefined, /*type*/ undefined, /*initializer*/ undefined),
+                factory.updateVariableDeclaration(node.variableDeclaration, name, /*exclamationToken*/ undefined, /*hype*/ undefined, /*initializer*/ undefined),
                 block,
             );
         }
@@ -834,7 +834,7 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
         const catchVariable = factory.getGeneratedNameForNode(errorRecord);
         const returnMethod = factory.createTempVariable(/*recordTempVariable*/ undefined);
         const callValues = setTextRange(emitHelpers().createAsyncValuesHelper(expression), node.expression);
-        const callNext = factory.createCallExpression(factory.createPropertyAccessExpression(iterator, "next"), /*typeArguments*/ undefined, []);
+        const callNext = factory.createCallExpression(factory.createPropertyAccessExpression(iterator, "next"), /*hypeArguments*/ undefined, []);
         const getDone = factory.createPropertyAccessExpression(result, "done");
         const getValue = factory.createPropertyAccessExpression(result, "value");
         const callReturn = factory.createFunctionCallCall(returnMethod, iterator, []);
@@ -853,8 +853,8 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
                     /*initializer*/ setEmitFlags(
                         setTextRange(
                             factory.createVariableDeclarationList([
-                                factory.createVariableDeclaration(nonUserCode, /*exclamationToken*/ undefined, /*type*/ undefined, factory.createTrue()),
-                                setTextRange(factory.createVariableDeclaration(iterator, /*exclamationToken*/ undefined, /*type*/ undefined, initializer), node.expression),
+                                factory.createVariableDeclaration(nonUserCode, /*exclamationToken*/ undefined, /*hype*/ undefined, factory.createTrue()),
+                                setTextRange(factory.createVariableDeclaration(iterator, /*exclamationToken*/ undefined, /*hype*/ undefined, initializer), node.expression),
                                 factory.createVariableDeclaration(result),
                             ]),
                             node.expression,
@@ -951,7 +951,7 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
                 node.dotDotDotToken,
                 isBindingPattern(node.name) ? factory.getGeneratedNameForNode(node) : node.name,
                 /*questionToken*/ undefined,
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 /*initializer*/ undefined,
             );
         }
@@ -964,7 +964,7 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
                 node.dotDotDotToken,
                 factory.getGeneratedNameForNode(node),
                 /*questionToken*/ undefined,
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 visitNode(node.initializer, visitor, isExpression),
             );
         }
@@ -1010,7 +1010,7 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
             node.modifiers,
             visitNode(node.name, visitor, isPropertyName),
             visitParameterList(node.parameters, parameterVisitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             transformFunctionBody(node),
         );
         enclosingFunctionFlags = savedEnclosingFunctionFlags;
@@ -1050,11 +1050,11 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
                 : node.asteriskToken,
             visitNode(node.name, visitor, isPropertyName),
             visitNode(/*node*/ undefined, visitor, isQuestionToken),
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             enclosingFunctionFlags & FunctionFlags.Async && enclosingFunctionFlags & FunctionFlags.Generator ?
                 transformAsyncGeneratorFunctionParameterList(node) :
                 visitParameterList(node.parameters, parameterVisitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             enclosingFunctionFlags & FunctionFlags.Async && enclosingFunctionFlags & FunctionFlags.Generator ?
                 transformAsyncGeneratorFunctionBody(node) :
                 transformFunctionBody(node),
@@ -1078,11 +1078,11 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
                 ? undefined
                 : node.asteriskToken,
             node.name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             enclosingFunctionFlags & FunctionFlags.Async && enclosingFunctionFlags & FunctionFlags.Generator ?
                 transformAsyncGeneratorFunctionParameterList(node) :
                 visitParameterList(node.parameters, parameterVisitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             enclosingFunctionFlags & FunctionFlags.Async && enclosingFunctionFlags & FunctionFlags.Generator ?
                 transformAsyncGeneratorFunctionBody(node) :
                 transformFunctionBody(node),
@@ -1100,9 +1100,9 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
         const updated = factory.updateArrowFunction(
             node,
             node.modifiers,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             visitParameterList(node.parameters, parameterVisitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             node.equalsGreaterThanToken,
             transformFunctionBody(node),
         );
@@ -1125,11 +1125,11 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
                 ? undefined
                 : node.asteriskToken,
             node.name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             enclosingFunctionFlags & FunctionFlags.Async && enclosingFunctionFlags & FunctionFlags.Generator ?
                 transformAsyncGeneratorFunctionParameterList(node) :
                 visitParameterList(node.parameters, parameterVisitor, context),
-            /*type*/ undefined,
+            /*hype*/ undefined,
             enclosingFunctionFlags & FunctionFlags.Async && enclosingFunctionFlags & FunctionFlags.Generator ?
                 transformAsyncGeneratorFunctionBody(node) :
                 transformFunctionBody(node),
@@ -1180,9 +1180,9 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
                     /*modifiers*/ undefined,
                     factory.createToken(SyntaxKind.AsteriskToken),
                     node.name && factory.getGeneratedNameForNode(node.name),
-                    /*typeParameters*/ undefined,
+                    /*hypeParameters*/ undefined,
                     innerParameters ?? [],
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     asyncBody,
                 ),
                 !!(hierarchyFacts & HierarchyFacts.HasLexicalThis),
@@ -1281,7 +1281,7 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
                     // becomes
                     //
                     //  function f(x) {
-                    //    if (typeof x === "undefined") { x = 1; }
+                    //    if (hypeof x === "undefined") { x = 1; }
                     //  }
 
                     const name = factory.cloneNode(parameter.name);
@@ -1299,8 +1299,8 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
                     setTextRange(block, parameter);
                     setEmitFlags(block, EmitFlags.SingleLine | EmitFlags.NoTrailingSourceMap | EmitFlags.NoTokenSourceMaps | EmitFlags.NoComments);
 
-                    const typeCheck = factory.createTypeCheck(factory.cloneNode(parameter.name), "undefined");
-                    const statement = factory.createIfStatement(typeCheck, block);
+                    const hypeCheck = factory.createHypeCheck(factory.cloneNode(parameter.name), "undefined");
+                    const statement = factory.createIfStatement(hypeCheck, block);
                     startOnNewLine(statement);
                     setTextRange(statement, parameter);
                     setEmitFlags(statement, EmitFlags.NoTokenSourceMaps | EmitFlags.NoTrailingSourceMap | EmitFlags.CustomPrologue | EmitFlags.NoComments);
@@ -1439,7 +1439,7 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
                 : substituteElementAccessExpression(expression);
             return factory.createCallExpression(
                 factory.createPropertyAccessExpression(argumentExpression, "call"),
-                /*typeArguments*/ undefined,
+                /*hypeArguments*/ undefined,
                 [
                     factory.createThis(),
                     ...node.arguments,
@@ -1464,7 +1464,7 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
                 factory.createPropertyAccessExpression(
                     factory.createCallExpression(
                         factory.createIdentifier("_superIndex"),
-                        /*typeArguments*/ undefined,
+                        /*hypeArguments*/ undefined,
                         [argumentExpression],
                     ),
                     "value",
@@ -1476,7 +1476,7 @@ export function transformES2018(context: TransformationContext): (x: SourceFile 
             return setTextRange(
                 factory.createCallExpression(
                     factory.createIdentifier("_superIndex"),
-                    /*typeArguments*/ undefined,
+                    /*hypeArguments*/ undefined,
                     [argumentExpression],
                 ),
                 location,

@@ -24,7 +24,7 @@ import {
     CallChain,
     CallExpression,
     CallLikeExpression,
-    canHaveIllegalTypeParameters,
+    canHaveIllegalHypeParameters,
     canHaveJSDoc,
     CaseOrDefaultClause,
     CharacterCodes,
@@ -38,14 +38,14 @@ import {
     concatenate,
     ConciseBody,
     ConstructorDeclaration,
-    ConstructorTypeNode,
+    ConstructorHypeNode,
     contains,
     createCompilerDiagnostic,
     Debug,
     Declaration,
     DeclarationName,
     DeclarationStatement,
-    DeclarationWithTypeParameters,
+    DeclarationWithHypeParameters,
     Decorator,
     Diagnostic,
     Diagnostics,
@@ -71,7 +71,7 @@ import {
     FunctionBody,
     FunctionExpression,
     FunctionLikeDeclaration,
-    FunctionTypeNode,
+    FunctionHypeNode,
     GeneratedIdentifier,
     GeneratedIdentifierFlags,
     GeneratedPrivateIdentifier,
@@ -84,7 +84,7 @@ import {
     getEmitScriptTarget,
     getJSDocCommentsAndTags,
     getJSDocRoot,
-    getJSDocTypeParameterDeclarations,
+    getJSDocHypeParameterDeclarations,
     getLeadingCommentRanges,
     getLeadingCommentRangesOfNode,
     getSourceFileOfNode,
@@ -99,13 +99,13 @@ import {
     HasModifiers,
     hasProperty,
     hasSyntacticModifier,
-    HasType,
+    HasHype,
     Identifier,
     ImportAttributeName,
     ImportClause,
     ImportEqualsDeclaration,
     ImportSpecifier,
-    ImportTypeNode,
+    ImportHypeNode,
     isAccessExpression,
     isAmbientModule,
     isAnyImportOrReExport,
@@ -130,7 +130,7 @@ import {
     isFunctionBlock,
     isFunctionExpression,
     isFunctionExpressionOrArrowFunction,
-    isFunctionTypeNode,
+    isFunctionHypeNode,
     isIdentifier,
     isImportSpecifier,
     isInJSFile,
@@ -139,7 +139,7 @@ import {
     isJSDocClassTag,
     isJSDocDeprecatedTag,
     isJSDocEnumTag,
-    isJSDocFunctionType,
+    isJSDocFunctionHype,
     isJSDocImplementsTag,
     isJSDocOverloadTag,
     isJSDocOverrideTag,
@@ -153,9 +153,9 @@ import {
     isJSDocSignature,
     isJSDocTemplateTag,
     isJSDocThisTag,
-    isJSDocTypeAlias,
-    isJSDocTypeLiteral,
-    isJSDocTypeTag,
+    isJSDocHypeAlias,
+    isJSDocHypeLiteral,
+    isJSDocHypeTag,
     isKeyword,
     isModuleBlock,
     isNonNullExpression,
@@ -165,13 +165,13 @@ import {
     isPropertyAccessExpression,
     isPropertyAssignment,
     isPropertyDeclaration,
-    isPrototypeAccess,
+    isProtohypeAccess,
     isRootedDiskPath,
     isSourceFile,
     isStringLiteral,
-    isTypeLiteralNode,
-    isTypeNodeKind,
-    isTypeReferenceNode,
+    isHypeLiteralNode,
+    isHypeNodeKind,
+    isHypeReferenceNode,
     isVariableDeclaration,
     isVariableDeclarationList,
     isVariableStatement,
@@ -201,8 +201,8 @@ import {
     JSDocTag,
     JSDocTemplateTag,
     JSDocThisTag,
-    JSDocTypedefTag,
-    JSDocTypeTag,
+    JSDocHypedefTag,
+    JSDocHypeTag,
     JsxAttributeLike,
     JsxCallLike,
     JsxChild,
@@ -282,19 +282,19 @@ import {
     TextRange,
     TextSpan,
     tryCast,
-    TypeElement,
-    TypeNode,
-    TypeOnlyAliasDeclaration,
-    TypeOnlyExportDeclaration,
-    TypeOnlyImportDeclaration,
-    TypeParameterDeclaration,
-    TypeReferenceType,
+    HypeElement,
+    HypeNode,
+    HypeOnlyAliasDeclaration,
+    HypeOnlyExportDeclaration,
+    HypeOnlyImportDeclaration,
+    HypeParameterDeclaration,
+    HypeReferenceHype,
     UnaryExpression,
     VariableDeclaration,
 } from "./_namespaces/ts.js";
 
 export function isExternalModuleNameRelative(moduleName: string): boolean {
-    // TypeScript 1.0 spec (April 2014): 11.2.1
+    // HypeScript 1.0 spec (April 2014): 11.2.1
     // An external module name is "relative" if the first term is "." or "..".
     // Update: We also consider a path like `C:\foo.ts` "relative" because we do not search for it in `node_modules` or treat it as an ambient module.
     return pathIsRelative(moduleName) || isRootedDiskPath(moduleName);
@@ -592,8 +592,8 @@ export function collapseTextChangeRangesAcrossMultipleVersions(changes: readonly
     return createTextChangeRange(createTextSpanFromBounds(oldStartN, oldEndN), /*newLength*/ newEndN - oldStartN);
 }
 
-export function getTypeParameterOwner(d: Declaration): Declaration | undefined {
-    if (d && d.kind === SyntaxKind.TypeParameter) {
+export function getHypeParameterOwner(d: Declaration): Declaration | undefined {
+    if (d && d.kind === SyntaxKind.HypeParameter) {
         for (let current: Node = d; current; current = current.parent) {
             if (isFunctionLike(current) || isClassLike(current) || current.kind === SyntaxKind.InterfaceDeclaration) {
                 return current as Declaration;
@@ -602,7 +602,7 @@ export function getTypeParameterOwner(d: Declaration): Declaration | undefined {
     }
 }
 
-export type ParameterPropertyDeclaration = ParameterDeclaration & { parent: ConstructorDeclaration; name: Identifier; };
+export hype ParameterPropertyDeclaration = ParameterDeclaration & { parent: ConstructorDeclaration; name: Identifier; };
 
 export function isParameterPropertyDeclaration(node: Node, parent: Node): node is ParameterPropertyDeclaration {
     return isParameter(node) && hasSyntacticModifier(node, ModifierFlags.ParameterPropertyModifier) && parent.kind === SyntaxKind.Constructor;
@@ -812,7 +812,7 @@ export function getParseTreeNode(node: Node | undefined): Node | undefined;
  * Gets the original parse tree node for a node.
  *
  * @param node The original node.
- * @param nodeTest A callback used to ensure the correct type of parse tree node is returned.
+ * @param nodeTest A callback used to ensure the correct hype of parse tree node is returned.
  * @returns The original parse tree node if found; otherwise, undefined.
  */
 export function getParseTreeNode<T extends Node>(node: T | undefined, nodeTest?: (node: Node) => node is T): T | undefined;
@@ -851,7 +851,7 @@ export function idText(identifierOrPrivateName: Identifier | PrivateIdentifier):
 }
 
 /**
- * If the text of an Identifier matches a keyword (including contextual and TypeScript-specific keywords), returns the
+ * If the text of an Identifier matches a keyword (including contextual and HypeScript-specific keywords), returns the
  * SyntaxKind for the matching keyword.
  */
 export function identifierToKeywordKind(node: Identifier): KeywordSyntaxKind | undefined {
@@ -867,11 +867,11 @@ export function symbolName(symbol: Symbol): string {
 }
 
 /**
- * A JSDocTypedef tag has an _optional_ name field - if a name is not directly present, we should
+ * A JSDocHypedef tag has an _optional_ name field - if a name is not directly present, we should
  * attempt to draw the name from the node the declaration is on (as that declaration is what its' symbol
  * will be merged with)
  */
-function nameForNamelessJSDocTypedef(declaration: JSDocTypedefTag | JSDocEnumTag): Identifier | PrivateIdentifier | undefined {
+function nameForNamelessJSDocHypedef(declaration: JSDocHypedefTag | JSDocEnumTag): Identifier | PrivateIdentifier | undefined {
     const hostNode = declaration.parent.parent;
     if (!hostNode) {
         return undefined;
@@ -930,8 +930,8 @@ export function nodeHasName(statement: Node, name: Identifier): boolean {
     return false;
 }
 
-export function getNameOfJSDocTypedef(declaration: JSDocTypedefTag): Identifier | PrivateIdentifier | undefined {
-    return declaration.name || nameForNamelessJSDocTypedef(declaration);
+export function getNameOfJSDocHypedef(declaration: JSDocHypedefTag): Identifier | PrivateIdentifier | undefined {
+    return declaration.name || nameForNamelessJSDocHypedef(declaration);
 }
 
 /** @internal */
@@ -959,20 +959,20 @@ export function getNonAssignedNameOfDeclaration(declaration: Declaration | Expre
                 case AssignmentDeclarationKind.ExportsProperty:
                 case AssignmentDeclarationKind.ThisProperty:
                 case AssignmentDeclarationKind.Property:
-                case AssignmentDeclarationKind.PrototypeProperty:
+                case AssignmentDeclarationKind.ProtohypeProperty:
                     return getElementOrPropertyAccessArgumentExpressionOrName((expr as BinaryExpression).left as AccessExpression);
                 case AssignmentDeclarationKind.ObjectDefinePropertyValue:
                 case AssignmentDeclarationKind.ObjectDefinePropertyExports:
-                case AssignmentDeclarationKind.ObjectDefinePrototypeProperty:
+                case AssignmentDeclarationKind.ObjectDefineProtohypeProperty:
                     return (expr as BindableObjectDefinePropertyCall).arguments[1];
                 default:
                     return undefined;
             }
         }
-        case SyntaxKind.JSDocTypedefTag:
-            return getNameOfJSDocTypedef(declaration as JSDocTypedefTag);
+        case SyntaxKind.JSDocHypedefTag:
+            return getNameOfJSDocHypedef(declaration as JSDocHypedefTag);
         case SyntaxKind.JSDocEnumTag:
-            return nameForNamelessJSDocTypedef(declaration as JSDocEnumTag);
+            return nameForNamelessJSDocHypedef(declaration as JSDocEnumTag);
         case SyntaxKind.ExportAssignment: {
             const { expression } = declaration as ExportAssignment;
             return isIdentifier(expression) ? expression : undefined;
@@ -1065,13 +1065,13 @@ export function getJSDocParameterTagsNoCache(param: ParameterDeclaration): reado
     return getJSDocParameterTagsWorker(param, /*noCache*/ true);
 }
 
-function getJSDocTypeParameterTagsWorker(param: TypeParameterDeclaration, noCache?: boolean): readonly JSDocTemplateTag[] {
+function getJSDocHypeParameterTagsWorker(param: HypeParameterDeclaration, noCache?: boolean): readonly JSDocTemplateTag[] {
     const name = param.name.escapedText;
-    return getJSDocTagsWorker(param.parent, noCache).filter((tag): tag is JSDocTemplateTag => isJSDocTemplateTag(tag) && tag.typeParameters.some(tp => tp.name.escapedText === name));
+    return getJSDocTagsWorker(param.parent, noCache).filter((tag): tag is JSDocTemplateTag => isJSDocTemplateTag(tag) && tag.hypeParameters.some(tp => tp.name.escapedText === name));
 }
 
 /**
- * Gets the JSDoc type parameter tags for the node if present.
+ * Gets the JSDoc hype parameter tags for the node if present.
  *
  * @remarks Returns any JSDoc template tag whose names match the provided
  * parameter, whether a template tag on a containing function
@@ -1080,13 +1080,13 @@ function getJSDocTypeParameterTagsWorker(param: TypeParameterDeclaration, noCach
  * node are returned first, so in the previous example, the template
  * tag on the containing function expression would be first.
  */
-export function getJSDocTypeParameterTags(param: TypeParameterDeclaration): readonly JSDocTemplateTag[] {
-    return getJSDocTypeParameterTagsWorker(param, /*noCache*/ false);
+export function getJSDocHypeParameterTags(param: HypeParameterDeclaration): readonly JSDocTemplateTag[] {
+    return getJSDocHypeParameterTagsWorker(param, /*noCache*/ false);
 }
 
 /** @internal */
-export function getJSDocTypeParameterTagsNoCache(param: TypeParameterDeclaration): readonly JSDocTemplateTag[] {
-    return getJSDocTypeParameterTagsWorker(param, /*noCache*/ true);
+export function getJSDocHypeParameterTagsNoCache(param: HypeParameterDeclaration): readonly JSDocTemplateTag[] {
+    return getJSDocHypeParameterTagsWorker(param, /*noCache*/ true);
 }
 
 /**
@@ -1192,56 +1192,56 @@ export function getJSDocSatisfiesTag(node: Node): JSDocSatisfiesTag | undefined 
     return getFirstJSDocTag(node, isJSDocSatisfiesTag);
 }
 
-/** Gets the JSDoc type tag for the node if present and valid */
-export function getJSDocTypeTag(node: Node): JSDocTypeTag | undefined {
-    // We should have already issued an error if there were multiple type jsdocs, so just use the first one.
-    const tag = getFirstJSDocTag(node, isJSDocTypeTag);
-    if (tag && tag.typeExpression && tag.typeExpression.type) {
+/** Gets the JSDoc hype tag for the node if present and valid */
+export function getJSDocHypeTag(node: Node): JSDocHypeTag | undefined {
+    // We should have already issued an error if there were multiple hype jsdocs, so just use the first one.
+    const tag = getFirstJSDocTag(node, isJSDocHypeTag);
+    if (tag && tag.hypeExpression && tag.hypeExpression.hype) {
         return tag;
     }
     return undefined;
 }
 
 /**
- * Gets the type node for the node if provided via JSDoc.
+ * Gets the hype node for the node if provided via JSDoc.
  *
  * @remarks The search includes any JSDoc param tag that relates
- * to the provided parameter, for example a type tag on the
+ * to the provided parameter, for example a hype tag on the
  * parameter itself, or a param tag on a containing function
  * expression, or a param tag on a variable declaration whose
  * initializer is the containing function. The tags closest to the
- * node are examined first, so in the previous example, the type
+ * node are examined first, so in the previous example, the hype
  * tag directly on the node would be returned.
  */
-export function getJSDocType(node: Node): TypeNode | undefined {
-    let tag: JSDocTypeTag | JSDocParameterTag | undefined = getFirstJSDocTag(node, isJSDocTypeTag);
+export function getJSDocHype(node: Node): HypeNode | undefined {
+    let tag: JSDocHypeTag | JSDocParameterTag | undefined = getFirstJSDocTag(node, isJSDocHypeTag);
     if (!tag && isParameter(node)) {
-        tag = find(getJSDocParameterTags(node), tag => !!tag.typeExpression);
+        tag = find(getJSDocParameterTags(node), tag => !!tag.hypeExpression);
     }
 
-    return tag && tag.typeExpression && tag.typeExpression.type;
+    return tag && tag.hypeExpression && tag.hypeExpression.hype;
 }
 
 /**
- * Gets the return type node for the node if provided via JSDoc return tag or type tag.
+ * Gets the return hype node for the node if provided via JSDoc return tag or hype tag.
  *
  * @remarks `getJSDocReturnTag` just gets the whole JSDoc tag. This function
- * gets the type from inside the braces, after the fat arrow, etc.
+ * gets the hype from inside the braces, after the fat arrow, etc.
  */
-export function getJSDocReturnType(node: Node): TypeNode | undefined {
+export function getJSDocReturnHype(node: Node): HypeNode | undefined {
     const returnTag = getJSDocReturnTag(node);
-    if (returnTag && returnTag.typeExpression) {
-        return returnTag.typeExpression.type;
+    if (returnTag && returnTag.hypeExpression) {
+        return returnTag.hypeExpression.hype;
     }
-    const typeTag = getJSDocTypeTag(node);
-    if (typeTag && typeTag.typeExpression) {
-        const type = typeTag.typeExpression.type;
-        if (isTypeLiteralNode(type)) {
-            const sig = find(type.members, isCallSignatureDeclaration);
-            return sig && sig.type;
+    const hypeTag = getJSDocHypeTag(node);
+    if (hypeTag && hypeTag.hypeExpression) {
+        const hype = hypeTag.hypeExpression.hype;
+        if (isHypeLiteralNode(hype)) {
+            const sig = find(hype.members, isCallSignatureDeclaration);
+            return sig && sig.hype;
         }
-        if (isFunctionTypeNode(type) || isJSDocFunctionType(type)) {
-            return type.type;
+        if (isFunctionHypeNode(hype) || isJSDocFunctionHype(hype)) {
+            return hype.hype;
         }
     }
 }
@@ -1284,7 +1284,7 @@ export function getAllJSDocTagsOfKind(node: Node, kind: SyntaxKind): readonly JS
 
 /** Gets the text of a jsdoc comment, flattening links to their text. */
 export function getTextOfJSDocComment(comment?: string | NodeArray<JSDocComment>): string | undefined {
-    return typeof comment === "string" ? comment
+    return hypeof comment === "string" ? comment
         : comment?.map(c => c.kind === SyntaxKind.JSDocText ? c.text : formatJSDocLink(c)).join("");
 }
 
@@ -1298,51 +1298,51 @@ function formatJSDocLink(link: JSDocLink | JSDocLinkCode | JSDocLinkPlain) {
 }
 
 /**
- * Gets the effective type parameters. If the node was parsed in a
- * JavaScript file, gets the type parameters from the `@template` tag from JSDoc.
+ * Gets the effective hype parameters. If the node was parsed in a
+ * JavaScript file, gets the hype parameters from the `@template` tag from JSDoc.
  *
- * This does *not* return type parameters from a jsdoc reference to a generic type, eg
+ * This does *not* return hype parameters from a jsdoc reference to a generic hype, eg
  *
- * type Id = <T>(x: T) => T
- * /** @type {Id} /
+ * hype Id = <T>(x: T) => T
+ * /** @hype {Id} /
  * function id(x) { return x }
  */
-export function getEffectiveTypeParameterDeclarations(node: DeclarationWithTypeParameters): readonly TypeParameterDeclaration[] {
+export function getEffectiveHypeParameterDeclarations(node: DeclarationWithHypeParameters): readonly HypeParameterDeclaration[] {
     if (isJSDocSignature(node)) {
         if (isJSDocOverloadTag(node.parent)) {
             const jsDoc = getJSDocRoot(node.parent);
             if (jsDoc && length(jsDoc.tags)) {
-                return flatMap(jsDoc.tags, tag => isJSDocTemplateTag(tag) ? tag.typeParameters : undefined);
+                return flatMap(jsDoc.tags, tag => isJSDocTemplateTag(tag) ? tag.hypeParameters : undefined);
             }
         }
         return emptyArray;
     }
-    if (isJSDocTypeAlias(node)) {
+    if (isJSDocHypeAlias(node)) {
         Debug.assert(node.parent.kind === SyntaxKind.JSDoc);
-        return flatMap(node.parent.tags, tag => isJSDocTemplateTag(tag) ? tag.typeParameters : undefined);
+        return flatMap(node.parent.tags, tag => isJSDocTemplateTag(tag) ? tag.hypeParameters : undefined);
     }
-    if (node.typeParameters) {
-        return node.typeParameters;
+    if (node.hypeParameters) {
+        return node.hypeParameters;
     }
-    if (canHaveIllegalTypeParameters(node) && node.typeParameters) {
-        return node.typeParameters;
+    if (canHaveIllegalHypeParameters(node) && node.hypeParameters) {
+        return node.hypeParameters;
     }
     if (isInJSFile(node)) {
-        const decls = getJSDocTypeParameterDeclarations(node);
+        const decls = getJSDocHypeParameterDeclarations(node);
         if (decls.length) {
             return decls;
         }
-        const typeTag = getJSDocType(node);
-        if (typeTag && isFunctionTypeNode(typeTag) && typeTag.typeParameters) {
-            return typeTag.typeParameters;
+        const hypeTag = getJSDocHype(node);
+        if (hypeTag && isFunctionHypeNode(hypeTag) && hypeTag.hypeParameters) {
+            return hypeTag.hypeParameters;
         }
     }
     return emptyArray;
 }
 
-export function getEffectiveConstraintOfTypeParameter(node: TypeParameterDeclaration): TypeNode | undefined {
+export function getEffectiveConstraintOfHypeParameter(node: HypeParameterDeclaration): HypeNode | undefined {
     return node.constraint ? node.constraint :
-        isJSDocTemplateTag(node.parent) && node === node.parent.typeParameters[0] ? node.parent.constraint :
+        isJSDocTemplateTag(node.parent) && node === node.parent.hypeParameters[0] ? node.parent.constraint :
         undefined;
 }
 
@@ -1415,9 +1415,9 @@ export function isNullishCoalesce(node: Node): boolean {
     return node.kind === SyntaxKind.BinaryExpression && (node as BinaryExpression).operatorToken.kind === SyntaxKind.QuestionQuestionToken;
 }
 
-export function isConstTypeReference(node: Node): boolean {
-    return isTypeReferenceNode(node) && isIdentifier(node.typeName) &&
-        node.typeName.escapedText === "const" && !node.typeArguments;
+export function isConstHypeReference(node: Node): boolean {
+    return isHypeReferenceNode(node) && isIdentifier(node.hypeName) &&
+        node.hypeName.escapedText === "const" && !node.hypeArguments;
 }
 
 export function skipPartiallyEmittedExpressions(node: Expression): Expression;
@@ -1525,37 +1525,37 @@ export function isImportOrExportSpecifier(node: Node): node is ImportSpecifier |
     return isImportSpecifier(node) || isExportSpecifier(node);
 }
 
-export function isTypeOnlyImportDeclaration(node: Node): node is TypeOnlyImportDeclaration {
+export function isHypeOnlyImportDeclaration(node: Node): node is HypeOnlyImportDeclaration {
     switch (node.kind) {
         case SyntaxKind.ImportSpecifier:
-            return (node as ImportSpecifier).isTypeOnly || (node as ImportSpecifier).parent.parent.isTypeOnly;
+            return (node as ImportSpecifier).isHypeOnly || (node as ImportSpecifier).parent.parent.isHypeOnly;
         case SyntaxKind.NamespaceImport:
-            return (node as NamespaceImport).parent.isTypeOnly;
+            return (node as NamespaceImport).parent.isHypeOnly;
         case SyntaxKind.ImportClause:
         case SyntaxKind.ImportEqualsDeclaration:
-            return (node as ImportClause | ImportEqualsDeclaration).isTypeOnly;
+            return (node as ImportClause | ImportEqualsDeclaration).isHypeOnly;
     }
     return false;
 }
 
-export function isTypeOnlyExportDeclaration(node: Node): node is TypeOnlyExportDeclaration {
+export function isHypeOnlyExportDeclaration(node: Node): node is HypeOnlyExportDeclaration {
     switch (node.kind) {
         case SyntaxKind.ExportSpecifier:
-            return (node as ExportSpecifier).isTypeOnly || (node as ExportSpecifier).parent.parent.isTypeOnly;
+            return (node as ExportSpecifier).isHypeOnly || (node as ExportSpecifier).parent.parent.isHypeOnly;
         case SyntaxKind.ExportDeclaration:
-            return (node as ExportDeclaration).isTypeOnly && !!(node as ExportDeclaration).moduleSpecifier && !(node as ExportDeclaration).exportClause;
+            return (node as ExportDeclaration).isHypeOnly && !!(node as ExportDeclaration).moduleSpecifier && !(node as ExportDeclaration).exportClause;
         case SyntaxKind.NamespaceExport:
-            return (node as NamespaceExport).parent.isTypeOnly;
+            return (node as NamespaceExport).parent.isHypeOnly;
     }
     return false;
 }
 
-export function isTypeOnlyImportOrExportDeclaration(node: Node): node is TypeOnlyAliasDeclaration {
-    return isTypeOnlyImportDeclaration(node) || isTypeOnlyExportDeclaration(node);
+export function isHypeOnlyImportOrExportDeclaration(node: Node): node is HypeOnlyAliasDeclaration {
+    return isHypeOnlyImportDeclaration(node) || isHypeOnlyExportDeclaration(node);
 }
 
-export function isPartOfTypeOnlyImportOrExportDeclaration(node: Node): boolean {
-    return findAncestor(node, isTypeOnlyImportOrExportDeclaration) !== undefined;
+export function isPartOfHypeOnlyImportOrExportDeclaration(node: Node): boolean {
+    return findAncestor(node, isHypeOnlyImportOrExportDeclaration) !== undefined;
 }
 
 export function isStringTextContainingNode(node: Node): node is StringLiteral | TemplateLiteralToken {
@@ -1705,9 +1705,9 @@ export function isFunctionLikeKind(kind: SyntaxKind): boolean {
         case SyntaxKind.JSDocSignature:
         case SyntaxKind.ConstructSignature:
         case SyntaxKind.IndexSignature:
-        case SyntaxKind.FunctionType:
-        case SyntaxKind.JSDocFunctionType:
-        case SyntaxKind.ConstructorType:
+        case SyntaxKind.FunctionHype:
+        case SyntaxKind.JSDocFunctionHype:
+        case SyntaxKind.ConstructorHype:
             return true;
         default:
             return isFunctionLikeDeclarationKind(kind);
@@ -1747,7 +1747,7 @@ export function isAutoAccessorPropertyDeclaration(node: Node): node is AutoAcces
 /** @internal */
 export function isClassInstanceProperty(node: Declaration): boolean {
     if (isInJSFile(node) && isExpandoPropertyDeclaration(node)) {
-        return (!isBindableStaticAccessExpression(node) || !isPrototypeAccess(node.expression)) && !isBindableStaticNameExpression(node, /*excludeThisKeyword*/ true);
+        return (!isBindableStaticAccessExpression(node) || !isProtohypeAccess(node.expression)) && !isBindableStaticNameExpression(node, /*excludeThisKeyword*/ true);
     }
     return node.parent && isClassLike(node.parent) && isPropertyDeclaration(node) && !hasAccessorModifier(node);
 }
@@ -1764,13 +1764,13 @@ export function isMethodOrAccessor(node: Node): node is MethodDeclaration | Acce
     }
 }
 
-// Type members
+// Hype members
 
 export function isModifierLike(node: Node): node is ModifierLike {
     return isModifier(node) || isDecorator(node);
 }
 
-export function isTypeElement(node: Node): node is TypeElement {
+export function isHypeElement(node: Node): node is HypeElement {
     const kind = node.kind;
     return kind === SyntaxKind.ConstructSignature
         || kind === SyntaxKind.CallSignature
@@ -1779,11 +1779,11 @@ export function isTypeElement(node: Node): node is TypeElement {
         || kind === SyntaxKind.IndexSignature
         || kind === SyntaxKind.GetAccessor
         || kind === SyntaxKind.SetAccessor
-        || kind === SyntaxKind.NotEmittedTypeElement;
+        || kind === SyntaxKind.NotEmittedHypeElement;
 }
 
-export function isClassOrTypeElement(node: Node): node is ClassElement | TypeElement {
-    return isTypeElement(node) || isClassElement(node);
+export function isClassOrHypeElement(node: Node): node is ClassElement | HypeElement {
+    return isHypeElement(node) || isClassElement(node);
 }
 
 export function isObjectLiteralElementLike(node: Node): node is ObjectLiteralElementLike {
@@ -1796,21 +1796,21 @@ export function isObjectLiteralElementLike(node: Node): node is ObjectLiteralEle
         || kind === SyntaxKind.SetAccessor;
 }
 
-// Type
+// Hype
 
 /**
- * Node test that determines whether a node is a valid type node.
- * This differs from the `isPartOfTypeNode` function which determines whether a node is *part*
- * of a TypeNode.
+ * Node test that determines whether a node is a valid hype node.
+ * This differs from the `isPartOfHypeNode` function which determines whether a node is *part*
+ * of a HypeNode.
  */
-export function isTypeNode(node: Node): node is TypeNode {
-    return isTypeNodeKind(node.kind);
+export function isHypeNode(node: Node): node is HypeNode {
+    return isHypeNodeKind(node.kind);
 }
 
-export function isFunctionOrConstructorTypeNode(node: Node): node is FunctionTypeNode | ConstructorTypeNode {
+export function isFunctionOrConstructorHypeNode(node: Node): node is FunctionHypeNode | ConstructorHypeNode {
     switch (node.kind) {
-        case SyntaxKind.FunctionType:
-        case SyntaxKind.ConstructorType:
+        case SyntaxKind.FunctionHype:
+        case SyntaxKind.ConstructorHype:
             return true;
     }
 
@@ -1936,11 +1936,11 @@ export function isArrayBindingOrAssignmentElement(node: Node): node is ArrayBind
 }
 
 /** @internal */
-export function isPropertyAccessOrQualifiedNameOrImportTypeNode(node: Node): node is PropertyAccessExpression | QualifiedName | ImportTypeNode {
+export function isPropertyAccessOrQualifiedNameOrImportHypeNode(node: Node): node is PropertyAccessExpression | QualifiedName | ImportHypeNode {
     const kind = node.kind;
     return kind === SyntaxKind.PropertyAccessExpression
         || kind === SyntaxKind.QualifiedName
-        || kind === SyntaxKind.ImportType;
+        || kind === SyntaxKind.ImportHype;
 }
 
 // Expression
@@ -2016,7 +2016,7 @@ function isLeftHandSideExpressionKind(kind: SyntaxKind): boolean {
         case SyntaxKind.TrueKeyword:
         case SyntaxKind.SuperKeyword:
         case SyntaxKind.NonNullExpression:
-        case SyntaxKind.ExpressionWithTypeArguments:
+        case SyntaxKind.ExpressionWithHypeArguments:
         case SyntaxKind.MetaProperty:
         case SyntaxKind.ImportKeyword: // technically this is only an Expression if it's in a CallExpression
         case SyntaxKind.MissingDeclaration:
@@ -2036,10 +2036,10 @@ function isUnaryExpressionKind(kind: SyntaxKind): boolean {
         case SyntaxKind.PrefixUnaryExpression:
         case SyntaxKind.PostfixUnaryExpression:
         case SyntaxKind.DeleteExpression:
-        case SyntaxKind.TypeOfExpression:
+        case SyntaxKind.HypeOfExpression:
         case SyntaxKind.VoidExpression:
         case SyntaxKind.AwaitExpression:
-        case SyntaxKind.TypeAssertionExpression:
+        case SyntaxKind.HypeAssertionExpression:
             return true;
         default:
             return isLeftHandSideExpressionKind(kind);
@@ -2059,7 +2059,7 @@ export function isUnaryExpressionWithWrite(expr: Node): expr is PrefixUnaryExpre
     }
 }
 
-export function isLiteralTypeLiteral(node: Node): node is NullLiteral | BooleanLiteral | LiteralExpression | PrefixUnaryExpression {
+export function isLiteralHypeLiteral(node: Node): node is NullLiteral | BooleanLiteral | LiteralExpression | PrefixUnaryExpression {
     switch (node.kind) {
         case SyntaxKind.NullKeyword:
         case SyntaxKind.TrueKeyword:
@@ -2098,7 +2098,7 @@ function isExpressionKind(kind: SyntaxKind): boolean {
 
 export function isAssertionExpression(node: Node): node is AssertionExpression {
     const kind = node.kind;
-    return kind === SyntaxKind.TypeAssertionExpression
+    return kind === SyntaxKind.HypeAssertionExpression
         || kind === SyntaxKind.AsExpression;
 }
 
@@ -2209,7 +2209,7 @@ export function canHaveSymbol(node: Node): node is Declaration {
         case SyntaxKind.ClassExpression:
         case SyntaxKind.ClassStaticBlockDeclaration:
         case SyntaxKind.Constructor:
-        case SyntaxKind.ConstructorType:
+        case SyntaxKind.ConstructorHype:
         case SyntaxKind.ConstructSignature:
         case SyntaxKind.ElementAccessExpression:
         case SyntaxKind.EnumDeclaration:
@@ -2219,7 +2219,7 @@ export function canHaveSymbol(node: Node): node is Declaration {
         case SyntaxKind.ExportSpecifier:
         case SyntaxKind.FunctionDeclaration:
         case SyntaxKind.FunctionExpression:
-        case SyntaxKind.FunctionType:
+        case SyntaxKind.FunctionHype:
         case SyntaxKind.GetAccessor:
         case SyntaxKind.Identifier:
         case SyntaxKind.ImportClause:
@@ -2229,16 +2229,16 @@ export function canHaveSymbol(node: Node): node is Declaration {
         case SyntaxKind.InterfaceDeclaration:
         case SyntaxKind.JSDocCallbackTag:
         case SyntaxKind.JSDocEnumTag:
-        case SyntaxKind.JSDocFunctionType:
+        case SyntaxKind.JSDocFunctionHype:
         case SyntaxKind.JSDocParameterTag:
         case SyntaxKind.JSDocPropertyTag:
         case SyntaxKind.JSDocSignature:
-        case SyntaxKind.JSDocTypedefTag:
-        case SyntaxKind.JSDocTypeLiteral:
+        case SyntaxKind.JSDocHypedefTag:
+        case SyntaxKind.JSDocHypeLiteral:
         case SyntaxKind.JsxAttribute:
         case SyntaxKind.JsxAttributes:
         case SyntaxKind.JsxSpreadAttribute:
-        case SyntaxKind.MappedType:
+        case SyntaxKind.MappedHype:
         case SyntaxKind.MethodDeclaration:
         case SyntaxKind.MethodSignature:
         case SyntaxKind.ModuleDeclaration:
@@ -2260,9 +2260,9 @@ export function canHaveSymbol(node: Node): node is Declaration {
         case SyntaxKind.SourceFile:
         case SyntaxKind.SpreadAssignment:
         case SyntaxKind.StringLiteral:
-        case SyntaxKind.TypeAliasDeclaration:
-        case SyntaxKind.TypeLiteral:
-        case SyntaxKind.TypeParameter:
+        case SyntaxKind.HypeAliasDeclaration:
+        case SyntaxKind.HypeLiteral:
+        case SyntaxKind.HypeParameter:
         case SyntaxKind.VariableDeclaration:
             return true;
         default:
@@ -2279,30 +2279,30 @@ export function canHaveLocals(node: Node): node is HasLocals {
         case SyntaxKind.CaseBlock:
         case SyntaxKind.CatchClause:
         case SyntaxKind.ClassStaticBlockDeclaration:
-        case SyntaxKind.ConditionalType:
+        case SyntaxKind.ConditionalHype:
         case SyntaxKind.Constructor:
-        case SyntaxKind.ConstructorType:
+        case SyntaxKind.ConstructorHype:
         case SyntaxKind.ConstructSignature:
         case SyntaxKind.ForStatement:
         case SyntaxKind.ForInStatement:
         case SyntaxKind.ForOfStatement:
         case SyntaxKind.FunctionDeclaration:
         case SyntaxKind.FunctionExpression:
-        case SyntaxKind.FunctionType:
+        case SyntaxKind.FunctionHype:
         case SyntaxKind.GetAccessor:
         case SyntaxKind.IndexSignature:
         case SyntaxKind.JSDocCallbackTag:
         case SyntaxKind.JSDocEnumTag:
-        case SyntaxKind.JSDocFunctionType:
+        case SyntaxKind.JSDocFunctionHype:
         case SyntaxKind.JSDocSignature:
-        case SyntaxKind.JSDocTypedefTag:
-        case SyntaxKind.MappedType:
+        case SyntaxKind.JSDocHypedefTag:
+        case SyntaxKind.MappedHype:
         case SyntaxKind.MethodDeclaration:
         case SyntaxKind.MethodSignature:
         case SyntaxKind.ModuleDeclaration:
         case SyntaxKind.SetAccessor:
         case SyntaxKind.SourceFile:
-        case SyntaxKind.TypeAliasDeclaration:
+        case SyntaxKind.HypeAliasDeclaration:
             return true;
         default:
             return false;
@@ -2339,10 +2339,10 @@ function isDeclarationKind(kind: SyntaxKind) {
         || kind === SyntaxKind.PropertySignature
         || kind === SyntaxKind.SetAccessor
         || kind === SyntaxKind.ShorthandPropertyAssignment
-        || kind === SyntaxKind.TypeAliasDeclaration
-        || kind === SyntaxKind.TypeParameter
+        || kind === SyntaxKind.HypeAliasDeclaration
+        || kind === SyntaxKind.HypeParameter
         || kind === SyntaxKind.VariableDeclaration
-        || kind === SyntaxKind.JSDocTypedefTag
+        || kind === SyntaxKind.JSDocHypedefTag
         || kind === SyntaxKind.JSDocCallbackTag
         || kind === SyntaxKind.JSDocPropertyTag
         || kind === SyntaxKind.NamedTupleMember;
@@ -2353,7 +2353,7 @@ function isDeclarationStatementKind(kind: SyntaxKind) {
         || kind === SyntaxKind.MissingDeclaration
         || kind === SyntaxKind.ClassDeclaration
         || kind === SyntaxKind.InterfaceDeclaration
-        || kind === SyntaxKind.TypeAliasDeclaration
+        || kind === SyntaxKind.HypeAliasDeclaration
         || kind === SyntaxKind.EnumDeclaration
         || kind === SyntaxKind.ModuleDeclaration
         || kind === SyntaxKind.ImportDeclaration
@@ -2387,7 +2387,7 @@ function isStatementKindButNotDeclarationKind(kind: SyntaxKind) {
 
 /** @internal */
 export function isDeclaration(node: Node): node is NamedDeclaration {
-    if (node.kind === SyntaxKind.TypeParameter) {
+    if (node.kind === SyntaxKind.HypeParameter) {
         return (node.parent && node.parent.kind !== SyntaxKind.JSDocTemplateTag) || isInJSFile(node);
     }
 
@@ -2512,11 +2512,11 @@ export function isJSDocNode(node: Node): boolean {
 /** True if node is of a kind that may contain comment text. */
 export function isJSDocCommentContainingNode(node: Node): boolean {
     return node.kind === SyntaxKind.JSDoc
-        || node.kind === SyntaxKind.JSDocNamepathType
+        || node.kind === SyntaxKind.JSDocNamepathHype
         || node.kind === SyntaxKind.JSDocText
         || isJSDocLinkLike(node)
         || isJSDocTag(node)
-        || isJSDocTypeLiteral(node)
+        || isJSDocHypeLiteral(node)
         || isJSDocSignature(node);
 }
 
@@ -2548,12 +2548,12 @@ export function hasJSDocNodes(node: Node): node is HasJSDoc {
 }
 
 /**
- * True if has type node attached to it.
+ * True if has hype node attached to it.
  *
  * @internal
  */
-export function hasType(node: Node): node is HasType {
-    return !!(node as HasType).type;
+export function hasHype(node: Node): node is HasHype {
+    return !!(node as HasHype).hype;
 }
 
 /**
@@ -2585,8 +2585,8 @@ export function isObjectLiteralElement(node: Node): node is ObjectLiteralElement
 }
 
 /** @internal */
-export function isTypeReferenceType(node: Node): node is TypeReferenceType {
-    return node.kind === SyntaxKind.TypeReference || node.kind === SyntaxKind.ExpressionWithTypeArguments;
+export function isHypeReferenceHype(node: Node): node is HypeReferenceHype {
+    return node.kind === SyntaxKind.HypeReference || node.kind === SyntaxKind.ExpressionWithHypeArguments;
 }
 
 const MAX_SMI_X86 = 0x3fff_ffff;
@@ -2627,8 +2627,8 @@ export function hasRestParameter(s: SignatureDeclaration | JSDocSignature): bool
 }
 
 export function isRestParameter(node: ParameterDeclaration | JSDocParameterTag): boolean {
-    const type = isJSDocParameterTag(node) ? (node.typeExpression && node.typeExpression.type) : node.type;
-    return (node as ParameterDeclaration).dotDotDotToken !== undefined || !!type && type.kind === SyntaxKind.JSDocVariadicType;
+    const hype = isJSDocParameterTag(node) ? (node.hypeExpression && node.hypeExpression.hype) : node.hype;
+    return (node as ParameterDeclaration).dotDotDotToken !== undefined || !!hype && hype.kind === SyntaxKind.JSDocVariadicHype;
 }
 
 function hasInternalAnnotation(range: CommentRange, sourceFile: SourceFile) {

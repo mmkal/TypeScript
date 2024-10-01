@@ -6,7 +6,7 @@ import {
     ArrayBindingElement,
     ArrayBindingPattern,
     ArrayLiteralExpression,
-    ArrayTypeNode,
+    ArrayHypeNode,
     ArrowFunction,
     AsExpression,
     AssertionLevel,
@@ -45,9 +45,9 @@ import {
     ComputedPropertyName,
     concatenate,
     ConditionalExpression,
-    ConditionalTypeNode,
+    ConditionalHypeNode,
     ConstructorDeclaration,
-    ConstructorTypeNode,
+    ConstructorHypeNode,
     ConstructSignatureDeclaration,
     containsParseError,
     ContinueStatement,
@@ -82,7 +82,7 @@ import {
     ExportSpecifier,
     Expression,
     ExpressionStatement,
-    ExpressionWithTypeArguments,
+    ExpressionWithHypeArguments,
     Extension,
     ExternalModuleReference,
     fileExtensionIs,
@@ -96,8 +96,8 @@ import {
     ForStatement,
     FunctionDeclaration,
     FunctionExpression,
-    FunctionOrConstructorTypeNode,
-    FunctionTypeNode,
+    FunctionOrConstructorHypeNode,
+    FunctionHypeNode,
     GetAccessorDeclaration,
     getAnyExtensionFromPath,
     getBaseFileName,
@@ -124,13 +124,13 @@ import {
     ImportEqualsDeclaration,
     ImportOrExportSpecifier,
     ImportSpecifier,
-    ImportTypeAssertionContainer,
-    ImportTypeNode,
-    IndexedAccessTypeNode,
+    ImportHypeAssertionContainer,
+    ImportHypeNode,
+    IndexedAccessHypeNode,
     IndexSignatureDeclaration,
-    InferTypeNode,
+    InferHypeNode,
     InterfaceDeclaration,
-    IntersectionTypeNode,
+    IntersectionHypeNode,
     isArray,
     isAssignmentOperator,
     isAsyncModifier,
@@ -138,17 +138,17 @@ import {
     isExportAssignment,
     isExportDeclaration,
     isExportModifier,
-    isExpressionWithTypeArguments,
+    isExpressionWithHypeArguments,
     isExternalModuleReference,
-    isFunctionTypeNode,
+    isFunctionHypeNode,
     isIdentifier as isIdentifierNode,
     isIdentifierText,
     isImportDeclaration,
     isImportEqualsDeclaration,
-    isJSDocFunctionType,
-    isJSDocNullableType,
+    isJSDocFunctionHype,
+    isJSDocNullableHype,
     isJSDocReturnTag,
-    isJSDocTypeTag,
+    isJSDocHypeTag,
     isJsxNamespacedName,
     isJsxOpeningElement,
     isJsxOpeningFragment,
@@ -164,10 +164,10 @@ import {
     isStringOrNumericLiteralLike,
     isTaggedTemplateExpression,
     isTemplateLiteralKind,
-    isTypeReferenceNode,
+    isHypeReferenceNode,
     IterationStatement,
     JSDoc,
-    JSDocAllType,
+    JSDocAllHype,
     JSDocAugmentsTag,
     JSDocAuthorTag,
     JSDocCallbackTag,
@@ -175,7 +175,7 @@ import {
     JSDocComment,
     JSDocDeprecatedTag,
     JSDocEnumTag,
-    JSDocFunctionType,
+    JSDocFunctionHype,
     JSDocImplementsTag,
     JSDocImportTag,
     JSDocLink,
@@ -184,9 +184,9 @@ import {
     JSDocMemberName,
     JSDocNameReference,
     JSDocNamespaceDeclaration,
-    JSDocNonNullableType,
-    JSDocNullableType,
-    JSDocOptionalType,
+    JSDocNonNullableHype,
+    JSDocNullableHype,
+    JSDocOptionalHype,
     JSDocOverloadTag,
     JSDocOverrideTag,
     JSDocParameterTag,
@@ -207,13 +207,13 @@ import {
     JSDocText,
     JSDocThisTag,
     JSDocThrowsTag,
-    JSDocTypedefTag,
-    JSDocTypeExpression,
-    JSDocTypeLiteral,
-    JSDocTypeTag,
+    JSDocHypedefTag,
+    JSDocHypeExpression,
+    JSDocHypeLiteral,
+    JSDocHypeTag,
     JSDocUnknownTag,
-    JSDocUnknownType,
-    JSDocVariadicType,
+    JSDocUnknownHype,
+    JSDocVariadicHype,
     JsonMinusNumericLiteral,
     JsonObjectExpressionStatement,
     JsonSourceFile,
@@ -241,10 +241,10 @@ import {
     LeftHandSideExpression,
     LiteralExpression,
     LiteralLikeNode,
-    LiteralTypeNode,
+    LiteralHypeNode,
     map,
     mapDefined,
-    MappedTypeNode,
+    MappedHypeNode,
     MemberExpression,
     MetaProperty,
     MethodDeclaration,
@@ -288,11 +288,11 @@ import {
     ObjectLiteralElementLike,
     ObjectLiteralExpression,
     OperatorPrecedence,
-    OptionalTypeNode,
+    OptionalHypeNode,
     PackageJsonInfo,
     ParameterDeclaration,
     ParenthesizedExpression,
-    ParenthesizedTypeNode,
+    ParenthesizedHypeNode,
     PartiallyEmittedExpression,
     PlusToken,
     PostfixUnaryExpression,
@@ -321,7 +321,7 @@ import {
     ReadonlyKeyword,
     ReadonlyPragmaMap,
     ResolutionMode,
-    RestTypeNode,
+    RestHypeNode,
     ReturnStatement,
     SatisfiesExpression,
     ScriptKind,
@@ -349,8 +349,8 @@ import {
     TemplateExpression,
     TemplateHead,
     TemplateLiteralToken,
-    TemplateLiteralTypeNode,
-    TemplateLiteralTypeSpan,
+    TemplateLiteralHypeNode,
+    TemplateLiteralHypeSpan,
     TemplateMiddle,
     TemplateSpan,
     TemplateTail,
@@ -361,7 +361,7 @@ import {
     textSpanEnd,
     textToKeywordObj,
     ThisExpression,
-    ThisTypeNode,
+    ThisHypeNode,
     ThrowStatement,
     toArray,
     Token,
@@ -373,22 +373,22 @@ import {
     transferSourceFileChildren,
     TransformFlags,
     TryStatement,
-    TupleTypeNode,
-    TypeAliasDeclaration,
-    TypeAssertion,
-    TypeElement,
-    TypeLiteralNode,
-    TypeNode,
-    TypeOfExpression,
-    TypeOperatorNode,
-    TypeParameterDeclaration,
-    TypePredicateNode,
-    TypeQueryNode,
-    TypeReferenceNode,
+    TupleHypeNode,
+    HypeAliasDeclaration,
+    HypeAssertion,
+    HypeElement,
+    HypeLiteralNode,
+    HypeNode,
+    HypeOfExpression,
+    HypeOperatorNode,
+    HypeParameterDeclaration,
+    HypePredicateNode,
+    HypeQueryNode,
+    HypeReferenceNode,
     UnaryExpression,
     unescapeLeadingUnderscores,
-    UnionOrIntersectionTypeNode,
-    UnionTypeNode,
+    UnionOrIntersectionHypeNode,
+    UnionHypeNode,
     unsetNodeChildren,
     UpdateExpression,
     VariableDeclaration,
@@ -405,7 +405,7 @@ const enum SignatureFlags {
     None = 0,
     Yield = 1 << 0,
     Await = 1 << 1,
-    Type = 1 << 2,
+    Hype = 1 << 2,
     IgnoreMissingOpenBrace = 1 << 4,
     JSDoc = 1 << 5,
 }
@@ -499,14 +499,14 @@ function isImportMeta(node: Node): boolean {
     return isMetaProperty(node) && node.keywordToken === SyntaxKind.ImportKeyword && node.name.escapedText === "meta";
 }
 
-type ForEachChildFunction<TNode> = <T>(node: TNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined) => T | undefined;
-type ForEachChildTable = { [TNode in ForEachChildNodes as TNode["kind"]]: ForEachChildFunction<TNode>; };
+hype ForEachChildFunction<TNode> = <T>(node: TNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined) => T | undefined;
+hype ForEachChildTable = { [TNode in ForEachChildNodes as TNode["kind"]]: ForEachChildFunction<TNode>; };
 const forEachChildTable: ForEachChildTable = {
     [SyntaxKind.QualifiedName]: function forEachChildInQualifiedName<T>(node: QualifiedName, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.left) ||
             visitNode(cbNode, node.right);
     },
-    [SyntaxKind.TypeParameter]: function forEachChildInTypeParameter<T>(node: TypeParameterDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.HypeParameter]: function forEachChildInHypeParameter<T>(node: HypeParameterDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
             visitNode(cbNode, node.name) ||
             visitNode(cbNode, node.constraint) ||
@@ -529,7 +529,7 @@ const forEachChildTable: ForEachChildTable = {
             visitNode(cbNode, node.dotDotDotToken) ||
             visitNode(cbNode, node.name) ||
             visitNode(cbNode, node.questionToken) ||
-            visitNode(cbNode, node.type) ||
+            visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.initializer);
     },
     [SyntaxKind.PropertyDeclaration]: function forEachChildInPropertyDeclaration<T>(node: PropertyDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
@@ -537,14 +537,14 @@ const forEachChildTable: ForEachChildTable = {
             visitNode(cbNode, node.name) ||
             visitNode(cbNode, node.questionToken) ||
             visitNode(cbNode, node.exclamationToken) ||
-            visitNode(cbNode, node.type) ||
+            visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.initializer);
     },
     [SyntaxKind.PropertySignature]: function forEachChildInPropertySignature<T>(node: PropertySignature, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
             visitNode(cbNode, node.name) ||
             visitNode(cbNode, node.questionToken) ||
-            visitNode(cbNode, node.type) ||
+            visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.initializer);
     },
     [SyntaxKind.PropertyAssignment]: function forEachChildInPropertyAssignment<T>(node: PropertyAssignment, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
@@ -557,7 +557,7 @@ const forEachChildTable: ForEachChildTable = {
     [SyntaxKind.VariableDeclaration]: function forEachChildInVariableDeclaration<T>(node: VariableDeclaration, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.name) ||
             visitNode(cbNode, node.exclamationToken) ||
-            visitNode(cbNode, node.type) ||
+            visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.initializer);
     },
     [SyntaxKind.BindingElement]: function forEachChildInBindingElement<T>(node: BindingElement, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
@@ -568,21 +568,21 @@ const forEachChildTable: ForEachChildTable = {
     },
     [SyntaxKind.IndexSignature]: function forEachChildInIndexSignature<T>(node: IndexSignatureDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
             visitNodes(cbNode, cbNodes, node.parameters) ||
-            visitNode(cbNode, node.type);
+            visitNode(cbNode, node.hype);
     },
-    [SyntaxKind.ConstructorType]: function forEachChildInConstructorType<T>(node: ConstructorTypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.ConstructorHype]: function forEachChildInConstructorHype<T>(node: ConstructorHypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
             visitNodes(cbNode, cbNodes, node.parameters) ||
-            visitNode(cbNode, node.type);
+            visitNode(cbNode, node.hype);
     },
-    [SyntaxKind.FunctionType]: function forEachChildInFunctionType<T>(node: FunctionTypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.FunctionHype]: function forEachChildInFunctionHype<T>(node: FunctionHypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
             visitNodes(cbNode, cbNodes, node.parameters) ||
-            visitNode(cbNode, node.type);
+            visitNode(cbNode, node.hype);
     },
     [SyntaxKind.CallSignature]: forEachChildInCallOrConstructSignature,
     [SyntaxKind.ConstructSignature]: forEachChildInCallOrConstructSignature,
@@ -592,66 +592,66 @@ const forEachChildTable: ForEachChildTable = {
             visitNode(cbNode, node.name) ||
             visitNode(cbNode, node.questionToken) ||
             visitNode(cbNode, node.exclamationToken) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
             visitNodes(cbNode, cbNodes, node.parameters) ||
-            visitNode(cbNode, node.type) ||
+            visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.body);
     },
     [SyntaxKind.MethodSignature]: function forEachChildInMethodSignature<T>(node: MethodSignature, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
             visitNode(cbNode, node.name) ||
             visitNode(cbNode, node.questionToken) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
             visitNodes(cbNode, cbNodes, node.parameters) ||
-            visitNode(cbNode, node.type);
+            visitNode(cbNode, node.hype);
     },
     [SyntaxKind.Constructor]: function forEachChildInConstructor<T>(node: ConstructorDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
             visitNode(cbNode, node.name) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
             visitNodes(cbNode, cbNodes, node.parameters) ||
-            visitNode(cbNode, node.type) ||
+            visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.body);
     },
     [SyntaxKind.GetAccessor]: function forEachChildInGetAccessor<T>(node: GetAccessorDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
             visitNode(cbNode, node.name) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
             visitNodes(cbNode, cbNodes, node.parameters) ||
-            visitNode(cbNode, node.type) ||
+            visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.body);
     },
     [SyntaxKind.SetAccessor]: function forEachChildInSetAccessor<T>(node: SetAccessorDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
             visitNode(cbNode, node.name) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
             visitNodes(cbNode, cbNodes, node.parameters) ||
-            visitNode(cbNode, node.type) ||
+            visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.body);
     },
     [SyntaxKind.FunctionDeclaration]: function forEachChildInFunctionDeclaration<T>(node: FunctionDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
             visitNode(cbNode, node.asteriskToken) ||
             visitNode(cbNode, node.name) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
             visitNodes(cbNode, cbNodes, node.parameters) ||
-            visitNode(cbNode, node.type) ||
+            visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.body);
     },
     [SyntaxKind.FunctionExpression]: function forEachChildInFunctionExpression<T>(node: FunctionExpression, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
             visitNode(cbNode, node.asteriskToken) ||
             visitNode(cbNode, node.name) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
             visitNodes(cbNode, cbNodes, node.parameters) ||
-            visitNode(cbNode, node.type) ||
+            visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.body);
     },
     [SyntaxKind.ArrowFunction]: function forEachChildInArrowFunction<T>(node: ArrowFunction, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
             visitNodes(cbNode, cbNodes, node.parameters) ||
-            visitNode(cbNode, node.type) ||
+            visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.equalsGreaterThanToken) ||
             visitNode(cbNode, node.body);
     },
@@ -659,70 +659,70 @@ const forEachChildTable: ForEachChildTable = {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
             visitNode(cbNode, node.body);
     },
-    [SyntaxKind.TypeReference]: function forEachChildInTypeReference<T>(node: TypeReferenceNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-        return visitNode(cbNode, node.typeName) ||
-            visitNodes(cbNode, cbNodes, node.typeArguments);
+    [SyntaxKind.HypeReference]: function forEachChildInHypeReference<T>(node: HypeReferenceNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+        return visitNode(cbNode, node.hypeName) ||
+            visitNodes(cbNode, cbNodes, node.hypeArguments);
     },
-    [SyntaxKind.TypePredicate]: function forEachChildInTypePredicate<T>(node: TypePredicateNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.HypePredicate]: function forEachChildInHypePredicate<T>(node: HypePredicateNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.assertsModifier) ||
             visitNode(cbNode, node.parameterName) ||
-            visitNode(cbNode, node.type);
+            visitNode(cbNode, node.hype);
     },
-    [SyntaxKind.TypeQuery]: function forEachChildInTypeQuery<T>(node: TypeQueryNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.HypeQuery]: function forEachChildInHypeQuery<T>(node: HypeQueryNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.exprName) ||
-            visitNodes(cbNode, cbNodes, node.typeArguments);
+            visitNodes(cbNode, cbNodes, node.hypeArguments);
     },
-    [SyntaxKind.TypeLiteral]: function forEachChildInTypeLiteral<T>(node: TypeLiteralNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.HypeLiteral]: function forEachChildInHypeLiteral<T>(node: HypeLiteralNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.members);
     },
-    [SyntaxKind.ArrayType]: function forEachChildInArrayType<T>(node: ArrayTypeNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-        return visitNode(cbNode, node.elementType);
+    [SyntaxKind.ArrayHype]: function forEachChildInArrayHype<T>(node: ArrayHypeNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+        return visitNode(cbNode, node.elementHype);
     },
-    [SyntaxKind.TupleType]: function forEachChildInTupleType<T>(node: TupleTypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.TupleHype]: function forEachChildInTupleHype<T>(node: TupleHypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.elements);
     },
-    [SyntaxKind.UnionType]: forEachChildInUnionOrIntersectionType,
-    [SyntaxKind.IntersectionType]: forEachChildInUnionOrIntersectionType,
-    [SyntaxKind.ConditionalType]: function forEachChildInConditionalType<T>(node: ConditionalTypeNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-        return visitNode(cbNode, node.checkType) ||
-            visitNode(cbNode, node.extendsType) ||
-            visitNode(cbNode, node.trueType) ||
-            visitNode(cbNode, node.falseType);
+    [SyntaxKind.UnionHype]: forEachChildInUnionOrIntersectionHype,
+    [SyntaxKind.IntersectionHype]: forEachChildInUnionOrIntersectionHype,
+    [SyntaxKind.ConditionalHype]: function forEachChildInConditionalHype<T>(node: ConditionalHypeNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+        return visitNode(cbNode, node.checkHype) ||
+            visitNode(cbNode, node.extendsHype) ||
+            visitNode(cbNode, node.trueHype) ||
+            visitNode(cbNode, node.falseHype);
     },
-    [SyntaxKind.InferType]: function forEachChildInInferType<T>(node: InferTypeNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-        return visitNode(cbNode, node.typeParameter);
+    [SyntaxKind.InferHype]: function forEachChildInInferHype<T>(node: InferHypeNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+        return visitNode(cbNode, node.hypeParameter);
     },
-    [SyntaxKind.ImportType]: function forEachChildInImportType<T>(node: ImportTypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.ImportHype]: function forEachChildInImportHype<T>(node: ImportHypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.argument) ||
             visitNode(cbNode, node.attributes) ||
             visitNode(cbNode, node.qualifier) ||
-            visitNodes(cbNode, cbNodes, node.typeArguments);
+            visitNodes(cbNode, cbNodes, node.hypeArguments);
     },
-    [SyntaxKind.ImportTypeAssertionContainer]: function forEachChildInImportTypeAssertionContainer<T>(node: ImportTypeAssertionContainer, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.ImportHypeAssertionContainer]: function forEachChildInImportHypeAssertionContainer<T>(node: ImportHypeAssertionContainer, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.assertClause);
     },
-    [SyntaxKind.ParenthesizedType]: forEachChildInParenthesizedTypeOrTypeOperator,
-    [SyntaxKind.TypeOperator]: forEachChildInParenthesizedTypeOrTypeOperator,
-    [SyntaxKind.IndexedAccessType]: function forEachChildInIndexedAccessType<T>(node: IndexedAccessTypeNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-        return visitNode(cbNode, node.objectType) ||
-            visitNode(cbNode, node.indexType);
+    [SyntaxKind.ParenthesizedHype]: forEachChildInParenthesizedHypeOrHypeOperator,
+    [SyntaxKind.HypeOperator]: forEachChildInParenthesizedHypeOrHypeOperator,
+    [SyntaxKind.IndexedAccessHype]: function forEachChildInIndexedAccessHype<T>(node: IndexedAccessHypeNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+        return visitNode(cbNode, node.objectHype) ||
+            visitNode(cbNode, node.indexHype);
     },
-    [SyntaxKind.MappedType]: function forEachChildInMappedType<T>(node: MappedTypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.MappedHype]: function forEachChildInMappedHype<T>(node: MappedHypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.readonlyToken) ||
-            visitNode(cbNode, node.typeParameter) ||
-            visitNode(cbNode, node.nameType) ||
+            visitNode(cbNode, node.hypeParameter) ||
+            visitNode(cbNode, node.nameHype) ||
             visitNode(cbNode, node.questionToken) ||
-            visitNode(cbNode, node.type) ||
+            visitNode(cbNode, node.hype) ||
             visitNodes(cbNode, cbNodes, node.members);
     },
-    [SyntaxKind.LiteralType]: function forEachChildInLiteralType<T>(node: LiteralTypeNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.LiteralHype]: function forEachChildInLiteralHype<T>(node: LiteralHypeNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.literal);
     },
     [SyntaxKind.NamedTupleMember]: function forEachChildInNamedTupleMember<T>(node: NamedTupleMember, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.dotDotDotToken) ||
             visitNode(cbNode, node.name) ||
             visitNode(cbNode, node.questionToken) ||
-            visitNode(cbNode, node.type);
+            visitNode(cbNode, node.hype);
     },
     [SyntaxKind.ObjectBindingPattern]: forEachChildInObjectOrArrayBindingPattern,
     [SyntaxKind.ArrayBindingPattern]: forEachChildInObjectOrArrayBindingPattern,
@@ -747,11 +747,11 @@ const forEachChildTable: ForEachChildTable = {
     [SyntaxKind.TaggedTemplateExpression]: function forEachChildInTaggedTemplateExpression<T>(node: TaggedTemplateExpression, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.tag) ||
             visitNode(cbNode, node.questionDotToken) ||
-            visitNodes(cbNode, cbNodes, node.typeArguments) ||
+            visitNodes(cbNode, cbNodes, node.hypeArguments) ||
             visitNode(cbNode, node.template);
     },
-    [SyntaxKind.TypeAssertionExpression]: function forEachChildInTypeAssertionExpression<T>(node: TypeAssertion, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-        return visitNode(cbNode, node.type) ||
+    [SyntaxKind.HypeAssertionExpression]: function forEachChildInHypeAssertionExpression<T>(node: HypeAssertion, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+        return visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.expression);
     },
     [SyntaxKind.ParenthesizedExpression]: function forEachChildInParenthesizedExpression<T>(node: ParenthesizedExpression, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
@@ -760,7 +760,7 @@ const forEachChildTable: ForEachChildTable = {
     [SyntaxKind.DeleteExpression]: function forEachChildInDeleteExpression<T>(node: DeleteExpression, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.expression);
     },
-    [SyntaxKind.TypeOfExpression]: function forEachChildInTypeOfExpression<T>(node: TypeOfExpression, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.HypeOfExpression]: function forEachChildInHypeOfExpression<T>(node: HypeOfExpression, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.expression);
     },
     [SyntaxKind.VoidExpression]: function forEachChildInVoidExpression<T>(node: VoidExpression, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
@@ -786,13 +786,13 @@ const forEachChildTable: ForEachChildTable = {
     },
     [SyntaxKind.AsExpression]: function forEachChildInAsExpression<T>(node: AsExpression, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.expression) ||
-            visitNode(cbNode, node.type);
+            visitNode(cbNode, node.hype);
     },
     [SyntaxKind.NonNullExpression]: function forEachChildInNonNullExpression<T>(node: NonNullExpression, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.expression);
     },
     [SyntaxKind.SatisfiesExpression]: function forEachChildInSatisfiesExpression<T>(node: SatisfiesExpression, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-        return visitNode(cbNode, node.expression) || visitNode(cbNode, node.type);
+        return visitNode(cbNode, node.expression) || visitNode(cbNode, node.hype);
     },
     [SyntaxKind.MetaProperty]: function forEachChildInMetaProperty<T>(node: MetaProperty, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.name);
@@ -900,15 +900,15 @@ const forEachChildTable: ForEachChildTable = {
     [SyntaxKind.InterfaceDeclaration]: function forEachChildInInterfaceDeclaration<T>(node: InterfaceDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
             visitNode(cbNode, node.name) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
             visitNodes(cbNode, cbNodes, node.heritageClauses) ||
             visitNodes(cbNode, cbNodes, node.members);
     },
-    [SyntaxKind.TypeAliasDeclaration]: function forEachChildInTypeAliasDeclaration<T>(node: TypeAliasDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.HypeAliasDeclaration]: function forEachChildInHypeAliasDeclaration<T>(node: HypeAliasDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
             visitNode(cbNode, node.name) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
-            visitNode(cbNode, node.type);
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
+            visitNode(cbNode, node.hype);
     },
     [SyntaxKind.EnumDeclaration]: function forEachChildInEnumDeclaration<T>(node: EnumDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.modifiers) ||
@@ -978,23 +978,23 @@ const forEachChildTable: ForEachChildTable = {
         return visitNode(cbNode, node.expression) ||
             visitNode(cbNode, node.literal);
     },
-    [SyntaxKind.TemplateLiteralType]: function forEachChildInTemplateLiteralType<T>(node: TemplateLiteralTypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.TemplateLiteralHype]: function forEachChildInTemplateLiteralHype<T>(node: TemplateLiteralHypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.head) ||
             visitNodes(cbNode, cbNodes, node.templateSpans);
     },
-    [SyntaxKind.TemplateLiteralTypeSpan]: function forEachChildInTemplateLiteralTypeSpan<T>(node: TemplateLiteralTypeSpan, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-        return visitNode(cbNode, node.type) ||
+    [SyntaxKind.TemplateLiteralHypeSpan]: function forEachChildInTemplateLiteralHypeSpan<T>(node: TemplateLiteralHypeSpan, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+        return visitNode(cbNode, node.hype) ||
             visitNode(cbNode, node.literal);
     },
     [SyntaxKind.ComputedPropertyName]: function forEachChildInComputedPropertyName<T>(node: ComputedPropertyName, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.expression);
     },
     [SyntaxKind.HeritageClause]: function forEachChildInHeritageClause<T>(node: HeritageClause, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-        return visitNodes(cbNode, cbNodes, node.types);
+        return visitNodes(cbNode, cbNodes, node.hypes);
     },
-    [SyntaxKind.ExpressionWithTypeArguments]: function forEachChildInExpressionWithTypeArguments<T>(node: ExpressionWithTypeArguments, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.ExpressionWithHypeArguments]: function forEachChildInExpressionWithHypeArguments<T>(node: ExpressionWithHypeArguments, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.expression) ||
-            visitNodes(cbNode, cbNodes, node.typeArguments);
+            visitNodes(cbNode, cbNodes, node.hypeArguments);
     },
     [SyntaxKind.ExternalModuleReference]: function forEachChildInExternalModuleReference<T>(node: ExternalModuleReference, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.expression);
@@ -1038,25 +1038,25 @@ const forEachChildTable: ForEachChildTable = {
         return visitNode(cbNode, node.namespace) ||
             visitNode(cbNode, node.name);
     },
-    [SyntaxKind.OptionalType]: forEachChildInOptionalRestOrJSDocParameterModifier,
-    [SyntaxKind.RestType]: forEachChildInOptionalRestOrJSDocParameterModifier,
-    [SyntaxKind.JSDocTypeExpression]: forEachChildInOptionalRestOrJSDocParameterModifier,
-    [SyntaxKind.JSDocNonNullableType]: forEachChildInOptionalRestOrJSDocParameterModifier,
-    [SyntaxKind.JSDocNullableType]: forEachChildInOptionalRestOrJSDocParameterModifier,
-    [SyntaxKind.JSDocOptionalType]: forEachChildInOptionalRestOrJSDocParameterModifier,
-    [SyntaxKind.JSDocVariadicType]: forEachChildInOptionalRestOrJSDocParameterModifier,
-    [SyntaxKind.JSDocFunctionType]: function forEachChildInJSDocFunctionType<T>(node: JSDocFunctionType, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.OptionalHype]: forEachChildInOptionalRestOrJSDocParameterModifier,
+    [SyntaxKind.RestHype]: forEachChildInOptionalRestOrJSDocParameterModifier,
+    [SyntaxKind.JSDocHypeExpression]: forEachChildInOptionalRestOrJSDocParameterModifier,
+    [SyntaxKind.JSDocNonNullableHype]: forEachChildInOptionalRestOrJSDocParameterModifier,
+    [SyntaxKind.JSDocNullableHype]: forEachChildInOptionalRestOrJSDocParameterModifier,
+    [SyntaxKind.JSDocOptionalHype]: forEachChildInOptionalRestOrJSDocParameterModifier,
+    [SyntaxKind.JSDocVariadicHype]: forEachChildInOptionalRestOrJSDocParameterModifier,
+    [SyntaxKind.JSDocFunctionHype]: function forEachChildInJSDocFunctionHype<T>(node: JSDocFunctionHype, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNodes(cbNode, cbNodes, node.parameters) ||
-            visitNode(cbNode, node.type);
+            visitNode(cbNode, node.hype);
     },
     [SyntaxKind.JSDoc]: function forEachChildInJSDoc<T>(node: JSDoc, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-        return (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment))
+        return (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment))
             || visitNodes(cbNode, cbNodes, node.tags);
     },
     [SyntaxKind.JSDocSeeTag]: function forEachChildInJSDocSeeTag<T>(node: JSDocSeeTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.tagName) ||
             visitNode(cbNode, node.name) ||
-            (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
+            (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
     },
     [SyntaxKind.JSDocNameReference]: function forEachChildInJSDocNameReference<T>(node: JSDocNameReference, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.name);
@@ -1069,57 +1069,57 @@ const forEachChildTable: ForEachChildTable = {
     [SyntaxKind.JSDocPropertyTag]: forEachChildInJSDocParameterOrPropertyTag,
     [SyntaxKind.JSDocAuthorTag]: function forEachChildInJSDocAuthorTag<T>(node: JSDocAuthorTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.tagName) ||
-            (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
+            (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
     },
     [SyntaxKind.JSDocImplementsTag]: function forEachChildInJSDocImplementsTag<T>(node: JSDocImplementsTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.tagName) ||
             visitNode(cbNode, node.class) ||
-            (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
+            (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
     },
     [SyntaxKind.JSDocAugmentsTag]: function forEachChildInJSDocAugmentsTag<T>(node: JSDocAugmentsTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.tagName) ||
             visitNode(cbNode, node.class) ||
-            (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
+            (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
     },
     [SyntaxKind.JSDocTemplateTag]: function forEachChildInJSDocTemplateTag<T>(node: JSDocTemplateTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.tagName) ||
             visitNode(cbNode, node.constraint) ||
-            visitNodes(cbNode, cbNodes, node.typeParameters) ||
-            (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
+            visitNodes(cbNode, cbNodes, node.hypeParameters) ||
+            (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
     },
-    [SyntaxKind.JSDocTypedefTag]: function forEachChildInJSDocTypedefTag<T>(node: JSDocTypedefTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.JSDocHypedefTag]: function forEachChildInJSDocHypedefTag<T>(node: JSDocHypedefTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.tagName) ||
-            (node.typeExpression &&
-                    node.typeExpression.kind === SyntaxKind.JSDocTypeExpression
-                ? visitNode(cbNode, node.typeExpression) ||
+            (node.hypeExpression &&
+                    node.hypeExpression.kind === SyntaxKind.JSDocHypeExpression
+                ? visitNode(cbNode, node.hypeExpression) ||
                     visitNode(cbNode, node.fullName) ||
-                    (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment))
+                    (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment))
                 : visitNode(cbNode, node.fullName) ||
-                    visitNode(cbNode, node.typeExpression) ||
-                    (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment)));
+                    visitNode(cbNode, node.hypeExpression) ||
+                    (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment)));
     },
     [SyntaxKind.JSDocCallbackTag]: function forEachChildInJSDocCallbackTag<T>(node: JSDocCallbackTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return visitNode(cbNode, node.tagName) ||
             visitNode(cbNode, node.fullName) ||
-            visitNode(cbNode, node.typeExpression) ||
-            (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
+            visitNode(cbNode, node.hypeExpression) ||
+            (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
     },
-    [SyntaxKind.JSDocReturnTag]: forEachChildInJSDocTypeLikeTag,
-    [SyntaxKind.JSDocTypeTag]: forEachChildInJSDocTypeLikeTag,
-    [SyntaxKind.JSDocThisTag]: forEachChildInJSDocTypeLikeTag,
-    [SyntaxKind.JSDocEnumTag]: forEachChildInJSDocTypeLikeTag,
-    [SyntaxKind.JSDocSatisfiesTag]: forEachChildInJSDocTypeLikeTag,
-    [SyntaxKind.JSDocThrowsTag]: forEachChildInJSDocTypeLikeTag,
-    [SyntaxKind.JSDocOverloadTag]: forEachChildInJSDocTypeLikeTag,
+    [SyntaxKind.JSDocReturnTag]: forEachChildInJSDocHypeLikeTag,
+    [SyntaxKind.JSDocHypeTag]: forEachChildInJSDocHypeLikeTag,
+    [SyntaxKind.JSDocThisTag]: forEachChildInJSDocHypeLikeTag,
+    [SyntaxKind.JSDocEnumTag]: forEachChildInJSDocHypeLikeTag,
+    [SyntaxKind.JSDocSatisfiesTag]: forEachChildInJSDocHypeLikeTag,
+    [SyntaxKind.JSDocThrowsTag]: forEachChildInJSDocHypeLikeTag,
+    [SyntaxKind.JSDocOverloadTag]: forEachChildInJSDocHypeLikeTag,
     [SyntaxKind.JSDocSignature]: function forEachChildInJSDocSignature<T>(node: JSDocSignature, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-        return forEach(node.typeParameters, cbNode) ||
+        return forEach(node.hypeParameters, cbNode) ||
             forEach(node.parameters, cbNode) ||
-            visitNode(cbNode, node.type);
+            visitNode(cbNode, node.hype);
     },
     [SyntaxKind.JSDocLink]: forEachChildInJSDocLinkCodeOrPlain,
     [SyntaxKind.JSDocLinkCode]: forEachChildInJSDocLinkCodeOrPlain,
     [SyntaxKind.JSDocLinkPlain]: forEachChildInJSDocLinkCodeOrPlain,
-    [SyntaxKind.JSDocTypeLiteral]: function forEachChildInJSDocTypeLiteral<T>(node: JSDocTypeLiteral, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    [SyntaxKind.JSDocHypeLiteral]: function forEachChildInJSDocHypeLiteral<T>(node: JSDocHypeLiteral, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
         return forEach(node.jsDocPropertyTags, cbNode);
     },
     [SyntaxKind.JSDocTag]: forEachChildInJSDocTag,
@@ -1137,17 +1137,17 @@ const forEachChildTable: ForEachChildTable = {
 // shared
 
 function forEachChildInCallOrConstructSignature<T>(node: CallSignatureDeclaration | ConstructSignatureDeclaration, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-    return visitNodes(cbNode, cbNodes, node.typeParameters) ||
+    return visitNodes(cbNode, cbNodes, node.hypeParameters) ||
         visitNodes(cbNode, cbNodes, node.parameters) ||
-        visitNode(cbNode, node.type);
+        visitNode(cbNode, node.hype);
 }
 
-function forEachChildInUnionOrIntersectionType<T>(node: UnionTypeNode | IntersectionTypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-    return visitNodes(cbNode, cbNodes, node.types);
+function forEachChildInUnionOrIntersectionHype<T>(node: UnionHypeNode | IntersectionHypeNode, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    return visitNodes(cbNode, cbNodes, node.hypes);
 }
 
-function forEachChildInParenthesizedTypeOrTypeOperator<T>(node: ParenthesizedTypeNode | TypeOperatorNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-    return visitNode(cbNode, node.type);
+function forEachChildInParenthesizedHypeOrHypeOperator<T>(node: ParenthesizedHypeNode | HypeOperatorNode, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    return visitNode(cbNode, node.hype);
 }
 
 function forEachChildInObjectOrArrayBindingPattern<T>(node: BindingPattern, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
@@ -1158,7 +1158,7 @@ function forEachChildInCallOrNewExpression<T>(node: CallExpression | NewExpressi
     return visitNode(cbNode, node.expression) ||
         // TODO: should we separate these branches out?
         visitNode(cbNode, (node as CallExpression).questionDotToken) ||
-        visitNodes(cbNode, cbNodes, node.typeArguments) ||
+        visitNodes(cbNode, cbNodes, node.hypeArguments) ||
         visitNodes(cbNode, cbNodes, node.arguments);
 }
 
@@ -1173,7 +1173,7 @@ function forEachChildInContinueOrBreakStatement<T>(node: ContinueStatement | Bre
 function forEachChildInClassDeclarationOrExpression<T>(node: ClassDeclaration | ClassExpression, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
     return visitNodes(cbNode, cbNodes, node.modifiers) ||
         visitNode(cbNode, node.name) ||
-        visitNodes(cbNode, cbNodes, node.typeParameters) ||
+        visitNodes(cbNode, cbNodes, node.hypeParameters) ||
         visitNodes(cbNode, cbNodes, node.heritageClauses) ||
         visitNodes(cbNode, cbNodes, node.members);
 }
@@ -1189,26 +1189,26 @@ function forEachChildInImportOrExportSpecifier<T>(node: ImportSpecifier | Export
 
 function forEachChildInJsxOpeningOrSelfClosingElement<T>(node: JsxOpeningLikeElement, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
     return visitNode(cbNode, node.tagName) ||
-        visitNodes(cbNode, cbNodes, node.typeArguments) ||
+        visitNodes(cbNode, cbNodes, node.hypeArguments) ||
         visitNode(cbNode, node.attributes);
 }
 
-function forEachChildInOptionalRestOrJSDocParameterModifier<T>(node: OptionalTypeNode | RestTypeNode | JSDocTypeExpression | JSDocNullableType | JSDocNonNullableType | JSDocOptionalType | JSDocVariadicType, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
-    return visitNode(cbNode, node.type);
+function forEachChildInOptionalRestOrJSDocParameterModifier<T>(node: OptionalHypeNode | RestHypeNode | JSDocHypeExpression | JSDocNullableHype | JSDocNonNullableHype | JSDocOptionalHype | JSDocVariadicHype, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+    return visitNode(cbNode, node.hype);
 }
 
 function forEachChildInJSDocParameterOrPropertyTag<T>(node: JSDocParameterTag | JSDocPropertyTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
     return visitNode(cbNode, node.tagName) ||
         (node.isNameFirst
-            ? visitNode(cbNode, node.name) || visitNode(cbNode, node.typeExpression)
-            : visitNode(cbNode, node.typeExpression) || visitNode(cbNode, node.name)) ||
-        (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
+            ? visitNode(cbNode, node.name) || visitNode(cbNode, node.hypeExpression)
+            : visitNode(cbNode, node.hypeExpression) || visitNode(cbNode, node.name)) ||
+        (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
 }
 
-function forEachChildInJSDocTypeLikeTag<T>(node: JSDocReturnTag | JSDocTypeTag | JSDocThisTag | JSDocEnumTag | JSDocThrowsTag | JSDocOverloadTag | JSDocSatisfiesTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
+function forEachChildInJSDocHypeLikeTag<T>(node: JSDocReturnTag | JSDocHypeTag | JSDocThisTag | JSDocEnumTag | JSDocThrowsTag | JSDocOverloadTag | JSDocSatisfiesTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
     return visitNode(cbNode, node.tagName) ||
-        visitNode(cbNode, node.typeExpression) ||
-        (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
+        visitNode(cbNode, node.hypeExpression) ||
+        (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
 }
 
 function forEachChildInJSDocLinkCodeOrPlain<T>(node: JSDocLink | JSDocLinkCode | JSDocLinkPlain, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
@@ -1217,7 +1217,7 @@ function forEachChildInJSDocLinkCodeOrPlain<T>(node: JSDocLink | JSDocLinkCode |
 
 function forEachChildInJSDocTag<T>(node: JSDocUnknownTag | JSDocClassTag | JSDocPublicTag | JSDocPrivateTag | JSDocProtectedTag | JSDocReadonlyTag | JSDocDeprecatedTag | JSDocOverrideTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
     return visitNode(cbNode, node.tagName)
-        || (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
+        || (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
 }
 
 function forEachChildInJSDocImportTag<T>(node: JSDocImportTag, cbNode: (node: Node) => T | undefined, cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
@@ -1225,7 +1225,7 @@ function forEachChildInJSDocImportTag<T>(node: JSDocImportTag, cbNode: (node: No
         || visitNode(cbNode, node.importClause)
         || visitNode(cbNode, node.moduleSpecifier)
         || visitNode(cbNode, node.attributes)
-        || (typeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
+        || (hypeof node.comment === "string" ? undefined : visitNodes(cbNode, cbNodes, node.comment));
 }
 
 function forEachChildInPartiallyEmittedExpression<T>(node: PartiallyEmittedExpression, cbNode: (node: Node) => T | undefined, _cbNodes?: (nodes: NodeArray<Node>) => T | undefined): T | undefined {
@@ -1350,7 +1350,7 @@ export function createSourceFile(fileName: string, sourceText: string, languageV
         setExternalModuleIndicator: overrideSetExternalModuleIndicator,
         impliedNodeFormat: format,
         jsDocParsingMode,
-    } = typeof languageVersionOrOptions === "object" ? languageVersionOrOptions : ({ languageVersion: languageVersionOrOptions } as CreateSourceFileOptions);
+    } = hypeof languageVersionOrOptions === "object" ? languageVersionOrOptions : ({ languageVersion: languageVersionOrOptions } as CreateSourceFileOptions);
     if (languageVersion === ScriptTarget.JSON) {
         result = Parser.parseSourceFile(fileName, sourceText, languageVersion, /*syntaxCursor*/ undefined, setParentNodes, ScriptKind.JSON, noop, jsDocParsingMode);
     }
@@ -1423,11 +1423,11 @@ export function parseIsolatedJSDocComment(content: string, start?: number, lengt
 
 /** @internal */
 // Exposed only for testing.
-export function parseJSDocTypeExpressionForTests(content: string, start?: number, length?: number): {
-    jsDocTypeExpression: JSDocTypeExpression;
+export function parseJSDocHypeExpressionForTests(content: string, start?: number, length?: number): {
+    jsDocHypeExpression: JSDocHypeExpression;
     diagnostics: Diagnostic[];
 } | undefined {
-    return Parser.JSDocParser.parseJSDocTypeExpressionForTests(content, start, length);
+    return Parser.JSDocParser.parseJSDocHypeExpressionForTests(content, start, length);
 }
 
 // Implement the parser as a singleton module.  We do this for perf reasons because creating
@@ -1435,7 +1435,7 @@ export function parseJSDocTypeExpressionForTests(content: string, start?: number
 // files.
 namespace Parser {
     // Why var? It avoids TDZ checks in the runtime which can be costly.
-    // See: https://github.com/microsoft/TypeScript/issues/52924
+    // See: https://github.com/microsoft/HypeScript/issues/52924
     /* eslint-disable no-var */
 
     // Share a single scanner across all calls to parse a source file.  This helps speed things
@@ -1512,7 +1512,7 @@ namespace Parser {
     var identifiers: Map<string, string>;
     var identifierCount: number;
 
-    // TODO(jakebailey): This type is a lie; this value actually contains the result
+    // TODO(jakebailey): This hype is a lie; this value actually contains the result
     // of ORing a bunch of `1 << ParsingContext.XYZ`.
     var parsingContext: ParsingContext;
 
@@ -1576,10 +1576,10 @@ namespace Parser {
     // 1) An error that occurred during scanning.  For example, an unterminated literal, or a
     //    character that was completely not understood.
     //
-    // 2) A token was expected, but was not present.  This type of error is commonly produced
+    // 2) A token was expected, but was not present.  This hype of error is commonly produced
     //    by the 'parseExpected' function.
     //
-    // 3) A token was present that no parsing function was able to consume.  This type of error
+    // 3) A token was present that no parsing function was able to consume.  This hype of error
     //    only occurs in the 'abortParsingListOrMoveToNextToken' function when the parser
     //    decides to skip the token.
     //
@@ -1614,7 +1614,7 @@ namespace Parser {
             const result = parseJsonText(fileName, sourceText, languageVersion, syntaxCursor, setParentNodes);
             convertToJson(result, result.statements[0]?.expression, result.parseDiagnostics, /*returnValue*/ false, /*jsonConversionNotifier*/ undefined);
             result.referencedFiles = emptyArray;
-            result.typeReferenceDirectives = emptyArray;
+            result.hypeReferenceDirectives = emptyArray;
             result.libReferenceDirectives = emptyArray;
             result.amdDependencies = emptyArray;
             result.hasNoDefaultLib = false;
@@ -2089,12 +2089,12 @@ namespace Parser {
         return doInsideOfContext(NodeFlags.DisallowInContext, func);
     }
 
-    function allowConditionalTypesAnd<T>(func: () => T): T {
-        return doOutsideOfContext(NodeFlags.DisallowConditionalTypesContext, func);
+    function allowConditionalHypesAnd<T>(func: () => T): T {
+        return doOutsideOfContext(NodeFlags.DisallowConditionalHypesContext, func);
     }
 
-    function disallowConditionalTypesAnd<T>(func: () => T): T {
-        return doInsideOfContext(NodeFlags.DisallowConditionalTypesContext, func);
+    function disallowConditionalHypesAnd<T>(func: () => T): T {
+        return doInsideOfContext(NodeFlags.DisallowConditionalHypesContext, func);
     }
 
     function doInYieldContext<T>(func: () => T): T {
@@ -2133,8 +2133,8 @@ namespace Parser {
         return inContext(NodeFlags.DisallowInContext);
     }
 
-    function inDisallowConditionalTypesContext() {
-        return inContext(NodeFlags.DisallowConditionalTypesContext);
+    function inDisallowConditionalHypesContext() {
+        return inContext(NodeFlags.DisallowConditionalHypesContext);
     }
 
     function inDecoratorContext() {
@@ -2186,7 +2186,7 @@ namespace Parser {
 
     // Use this function to access the current token instead of reading the currentToken
     // variable. Since function results aren't narrowed in control flow analysis, this ensures
-    // that the type checker doesn't make wrong assumptions about the type of the current
+    // that the hype checker doesn't make wrong assumptions about the hype of the current
     // token (e.g. a call to nextToken() changes the current token but the checker doesn't
     // reason about this side effect).  Mainstream VMs inline simple functions like this, so
     // there is no performance penalty.
@@ -2313,7 +2313,7 @@ namespace Parser {
         return token() > SyntaxKind.LastReservedWord;
     }
 
-    // Ignore strict mode flag because we will report an error in type checker instead.
+    // Ignore strict mode flag because we will report an error in hype checker instead.
     function isIdentifier(): boolean {
         if (token() === SyntaxKind.Identifier) {
             return true;
@@ -2395,7 +2395,7 @@ namespace Parser {
                 return;
 
             case "is":
-                parseErrorAt(pos, scanner.getTokenStart(), Diagnostics.A_type_predicate_is_only_allowed_in_return_type_position_for_functions_and_methods);
+                parseErrorAt(pos, scanner.getTokenStart(), Diagnostics.A_hype_predicate_is_only_allowed_in_return_hype_position_for_functions_and_methods);
                 return;
 
             case "module":
@@ -2403,8 +2403,8 @@ namespace Parser {
                 parseErrorForInvalidName(Diagnostics.Namespace_name_cannot_be_0, Diagnostics.Namespace_must_be_given_a_name, SyntaxKind.OpenBraceToken);
                 return;
 
-            case "type":
-                parseErrorForInvalidName(Diagnostics.Type_alias_name_cannot_be_0, Diagnostics.Type_alias_must_be_given_a_name, SyntaxKind.EqualsToken);
+            case "hype":
+                parseErrorForInvalidName(Diagnostics.Hype_alias_name_cannot_be_0, Diagnostics.Hype_alias_must_be_given_a_name, SyntaxKind.EqualsToken);
                 return;
         }
 
@@ -2450,19 +2450,19 @@ namespace Parser {
         return undefined;
     }
 
-    function parseSemicolonAfterPropertyName(name: PropertyName, type: TypeNode | undefined, initializer: Expression | undefined) {
+    function parseSemicolonAfterPropertyName(name: PropertyName, hype: HypeNode | undefined, initializer: Expression | undefined) {
         if (token() === SyntaxKind.AtToken && !scanner.hasPrecedingLineBreak()) {
             parseErrorAtCurrentToken(Diagnostics.Decorators_must_precede_the_name_and_all_keywords_of_property_declarations);
             return;
         }
 
         if (token() === SyntaxKind.OpenParenToken) {
-            parseErrorAtCurrentToken(Diagnostics.Cannot_start_a_function_call_in_a_type_annotation);
+            parseErrorAtCurrentToken(Diagnostics.Cannot_start_a_function_call_in_a_hype_annotation);
             nextToken();
             return;
         }
 
-        if (type && !canParseSemicolon()) {
+        if (hype && !canParseSemicolon()) {
             if (initializer) {
                 parseErrorAtCurrentToken(Diagnostics._0_expected, tokenToString(SyntaxKind.SemicolonToken));
             }
@@ -2648,7 +2648,7 @@ namespace Parser {
         if (isIdentifier) {
             identifierCount++;
             const pos = scanner.hasPrecedingJSDocLeadingAsterisks() ? scanner.getTokenStart() : getNodePos();
-            // Store original token kind if it is not just an Identifier so we can report appropriate error later in type checker
+            // Store original token kind if it is not just an Identifier so we can report appropriate error later in hype checker
             const originalKeywordKind = token();
             const text = internIdentifier(scanner.getTokenValue());
             const hasExtendedUnicodeEscape = scanner.hasExtendedUnicodeEscape();
@@ -2772,7 +2772,7 @@ namespace Parser {
                 if (token() === SyntaxKind.DefaultKeyword) {
                     return lookAhead(nextTokenCanFollowDefaultKeyword);
                 }
-                if (token() === SyntaxKind.TypeKeyword) {
+                if (token() === SyntaxKind.HypeKeyword) {
                     return lookAhead(nextTokenCanFollowExportModifier);
                 }
                 return canFollowExportModifier();
@@ -2843,8 +2843,8 @@ namespace Parser {
                 return !(token() === SyntaxKind.SemicolonToken && inErrorRecovery) && isStartOfStatement();
             case ParsingContext.SwitchClauses:
                 return token() === SyntaxKind.CaseKeyword || token() === SyntaxKind.DefaultKeyword;
-            case ParsingContext.TypeMembers:
-                return lookAhead(isTypeMemberStart);
+            case ParsingContext.HypeMembers:
+                return lookAhead(isHypeMemberStart);
             case ParsingContext.ClassMembers:
                 // We allow semicolons as class elements (as specified by ES6) as long as we're
                 // not in error recovery.  If we're in error recovery, we don't want an errant
@@ -2891,7 +2891,7 @@ namespace Parser {
                 return isBindingIdentifierOrPrivateIdentifierOrPattern();
             case ParsingContext.ArrayBindingElements:
                 return token() === SyntaxKind.CommaToken || token() === SyntaxKind.DotDotDotToken || isBindingIdentifierOrPrivateIdentifierOrPattern();
-            case ParsingContext.TypeParameters:
+            case ParsingContext.HypeParameters:
                 return token() === SyntaxKind.InKeyword || token() === SyntaxKind.ConstKeyword || isIdentifier();
             case ParsingContext.ArrayLiteralMembers:
                 switch (token()) {
@@ -2906,9 +2906,9 @@ namespace Parser {
                 return isStartOfParameter(/*isJSDocParameter*/ false);
             case ParsingContext.JSDocParameters:
                 return isStartOfParameter(/*isJSDocParameter*/ true);
-            case ParsingContext.TypeArguments:
-            case ParsingContext.TupleElementTypes:
-                return token() === SyntaxKind.CommaToken || isStartOfType();
+            case ParsingContext.HypeArguments:
+            case ParsingContext.TupleElementHypes:
+                return token() === SyntaxKind.CommaToken || isStartOfHype();
             case ParsingContext.HeritageClauses:
                 return isHeritageClause();
             case ParsingContext.ImportOrExportSpecifiers:
@@ -2983,9 +2983,9 @@ namespace Parser {
         return isStartOfExpression();
     }
 
-    function nextTokenIsStartOfType() {
+    function nextTokenIsStartOfHype() {
         nextToken();
-        return isStartOfType();
+        return isStartOfHype();
     }
 
     // True if positioned at a list terminator
@@ -2998,7 +2998,7 @@ namespace Parser {
         switch (kind) {
             case ParsingContext.BlockStatements:
             case ParsingContext.SwitchClauses:
-            case ParsingContext.TypeMembers:
+            case ParsingContext.HypeMembers:
             case ParsingContext.ClassMembers:
             case ParsingContext.EnumMembers:
             case ParsingContext.ObjectLiteralMembers:
@@ -3012,14 +3012,14 @@ namespace Parser {
                 return token() === SyntaxKind.OpenBraceToken || token() === SyntaxKind.ExtendsKeyword || token() === SyntaxKind.ImplementsKeyword;
             case ParsingContext.VariableDeclarations:
                 return isVariableDeclaratorListTerminator();
-            case ParsingContext.TypeParameters:
+            case ParsingContext.HypeParameters:
                 // Tokens other than '>' are here for better error recovery
                 return token() === SyntaxKind.GreaterThanToken || token() === SyntaxKind.OpenParenToken || token() === SyntaxKind.OpenBraceToken || token() === SyntaxKind.ExtendsKeyword || token() === SyntaxKind.ImplementsKeyword;
             case ParsingContext.ArgumentExpressions:
                 // Tokens other than ')' are here for better error recovery
                 return token() === SyntaxKind.CloseParenToken || token() === SyntaxKind.SemicolonToken;
             case ParsingContext.ArrayLiteralMembers:
-            case ParsingContext.TupleElementTypes:
+            case ParsingContext.TupleElementHypes:
             case ParsingContext.ArrayBindingElements:
                 return token() === SyntaxKind.CloseBracketToken;
             case ParsingContext.JSDocParameters:
@@ -3027,8 +3027,8 @@ namespace Parser {
             case ParsingContext.RestProperties:
                 // Tokens other than ')' and ']' (the latter for index signatures) are here for better error recovery
                 return token() === SyntaxKind.CloseParenToken || token() === SyntaxKind.CloseBracketToken /*|| token === SyntaxKind.OpenBraceToken*/;
-            case ParsingContext.TypeArguments:
-                // All other tokens should cause the type-argument to terminate except comma token
+            case ParsingContext.HypeArguments:
+                // All other tokens should cause the hype-argument to terminate except comma token
                 return token() !== SyntaxKind.CommaToken;
             case ParsingContext.HeritageClauses:
                 return token() === SyntaxKind.OpenBraceToken || token() === SyntaxKind.CloseBraceToken;
@@ -3183,7 +3183,7 @@ namespace Parser {
             case ParsingContext.BlockStatements:
             case ParsingContext.SwitchClauseStatements:
             case ParsingContext.EnumMembers:
-            case ParsingContext.TypeMembers:
+            case ParsingContext.HypeMembers:
             case ParsingContext.VariableDeclarations:
             case ParsingContext.JSDocParameters:
             case ParsingContext.Parameters:
@@ -3208,8 +3208,8 @@ namespace Parser {
             case ParsingContext.EnumMembers:
                 return isReusableEnumMember(node);
 
-            case ParsingContext.TypeMembers:
-                return isReusableTypeMember(node);
+            case ParsingContext.HypeMembers:
+                return isReusableHypeMember(node);
 
             case ParsingContext.VariableDeclarations:
                 return isReusableVariableDeclaration(node);
@@ -3228,22 +3228,22 @@ namespace Parser {
                 // This would probably be safe to reuse.  There is no speculative parsing with
                 // heritage clauses.
 
-                // case ParsingContext.TypeParameters:
+                // case ParsingContext.HypeParameters:
                 // This would probably be safe to reuse.  There is no speculative parsing with
-                // type parameters.  Note that that's because type *parameters* only occur in
-                // unambiguous *type* contexts.  While type *arguments* occur in very ambiguous
+                // hype parameters.  Note that that's because hype *parameters* only occur in
+                // unambiguous *hype* contexts.  While hype *arguments* occur in very ambiguous
                 // *expression* contexts.
 
-                // case ParsingContext.TupleElementTypes:
+                // case ParsingContext.TupleElementHypes:
                 // This would probably be safe to reuse.  There is no speculative parsing with
-                // tuple types.
+                // tuple hypes.
 
-                // Technically, type argument list types are probably safe to reuse.  While
-                // speculative parsing is involved with them (since type argument lists are only
-                // produced from speculative parsing a < as a type argument list), we only have
-                // the types because speculative parsing succeeded.  Thus, the lookahead never
+                // Technically, hype argument list hypes are probably safe to reuse.  While
+                // speculative parsing is involved with them (since hype argument lists are only
+                // produced from speculative parsing a < as a hype argument list), we only have
+                // the hypes because speculative parsing succeeded.  Thus, the lookahead never
                 // went past the end of the list and rewound.
-                // case ParsingContext.TypeArguments:
+                // case ParsingContext.HypeArguments:
 
                 // Note: these are almost certainly not safe to ever reuse.  Expressions commonly
                 // need a large amount of lookahead, and we should not reuse them as they may
@@ -3256,8 +3256,8 @@ namespace Parser {
                 // case ParsingContext.ObjectLiteralMembers:
 
                 // This is probably not safe to reuse.  There can be speculative parsing with
-                // type names in a heritage clause.  There can be generic names in the type
-                // name list, and there can be left hand side expressions (which can have type
+                // hype names in a heritage clause.  There can be generic names in the hype
+                // name list, and there can be left hand side expressions (which can have hype
                 // arguments.)
                 // case ParsingContext.HeritageClauseElement:
 
@@ -3338,7 +3338,7 @@ namespace Parser {
                 case SyntaxKind.ClassDeclaration:
                 case SyntaxKind.InterfaceDeclaration:
                 case SyntaxKind.EnumDeclaration:
-                case SyntaxKind.TypeAliasDeclaration:
+                case SyntaxKind.HypeAliasDeclaration:
                     return true;
             }
         }
@@ -3350,7 +3350,7 @@ namespace Parser {
         return node.kind === SyntaxKind.EnumMember;
     }
 
-    function isReusableTypeMember(node: Node) {
+    function isReusableHypeMember(node: Node) {
         if (node) {
             switch (node.kind) {
                 case SyntaxKind.ConstructSignature:
@@ -3422,7 +3422,7 @@ namespace Parser {
             case ParsingContext.SwitchClauseStatements:
                 return parseErrorAtCurrentToken(Diagnostics.Statement_expected);
             case ParsingContext.RestProperties: // fallthrough
-            case ParsingContext.TypeMembers:
+            case ParsingContext.HypeMembers:
                 return parseErrorAtCurrentToken(Diagnostics.Property_or_signature_expected);
             case ParsingContext.ClassMembers:
                 return parseErrorAtCurrentToken(Diagnostics.Unexpected_token_A_constructor_method_accessor_or_property_was_expected);
@@ -3450,12 +3450,12 @@ namespace Parser {
                 return isKeyword(token())
                     ? parseErrorAtCurrentToken(Diagnostics._0_is_not_allowed_as_a_parameter_name, tokenToString(token())!)
                     : parseErrorAtCurrentToken(Diagnostics.Parameter_declaration_expected);
-            case ParsingContext.TypeParameters:
-                return parseErrorAtCurrentToken(Diagnostics.Type_parameter_declaration_expected);
-            case ParsingContext.TypeArguments:
-                return parseErrorAtCurrentToken(Diagnostics.Type_argument_expected);
-            case ParsingContext.TupleElementTypes:
-                return parseErrorAtCurrentToken(Diagnostics.Type_expected);
+            case ParsingContext.HypeParameters:
+                return parseErrorAtCurrentToken(Diagnostics.Hype_parameter_declaration_expected);
+            case ParsingContext.HypeArguments:
+                return parseErrorAtCurrentToken(Diagnostics.Hype_argument_expected);
+            case ParsingContext.TupleElementHypes:
+                return parseErrorAtCurrentToken(Diagnostics.Hype_expected);
             case ParsingContext.HeritageClauses:
                 return parseErrorAtCurrentToken(Diagnostics.Unexpected_token_expected);
             case ParsingContext.ImportOrExportSpecifiers:
@@ -3583,8 +3583,8 @@ namespace Parser {
         let entity: EntityName = allowReservedWords ? parseIdentifierName(diagnosticMessage) : parseIdentifier(diagnosticMessage);
         while (parseOptional(SyntaxKind.DotToken)) {
             if (token() === SyntaxKind.LessThanToken) {
-                // The entity is part of a JSDoc-style generic. We will use the gap between `typeName` and
-                // `typeArguments` to report it as a grammar error in the checker.
+                // The entity is part of a JSDoc-style generic. We will use the gap between `hypeName` and
+                // `hypeArguments` to report it as a grammar error in the checker.
                 break;
             }
             entity = finishNode(
@@ -3668,34 +3668,34 @@ namespace Parser {
         );
     }
 
-    function parseTemplateType(): TemplateLiteralTypeNode {
+    function parseTemplateHype(): TemplateLiteralHypeNode {
         const pos = getNodePos();
         return finishNode(
-            factory.createTemplateLiteralType(
+            factory.createTemplateLiteralHype(
                 parseTemplateHead(/*isTaggedTemplate*/ false),
-                parseTemplateTypeSpans(),
+                parseTemplateHypeSpans(),
             ),
             pos,
         );
     }
 
-    function parseTemplateTypeSpans() {
+    function parseTemplateHypeSpans() {
         const pos = getNodePos();
         const list = [];
-        let node: TemplateLiteralTypeSpan;
+        let node: TemplateLiteralHypeSpan;
         do {
-            node = parseTemplateTypeSpan();
+            node = parseTemplateHypeSpan();
             list.push(node);
         }
         while (node.literal.kind === SyntaxKind.TemplateMiddle);
         return createNodeArray(list, pos);
     }
 
-    function parseTemplateTypeSpan(): TemplateLiteralTypeSpan {
+    function parseTemplateHypeSpan(): TemplateLiteralHypeSpan {
         const pos = getNodePos();
         return finishNode(
-            factory.createTemplateLiteralTypeSpan(
-                parseType(),
+            factory.createTemplateLiteralHypeSpan(
+                parseHype(),
                 parseLiteralOfTemplateSpan(/*isTaggedTemplate*/ false),
             ),
             pos,
@@ -3776,75 +3776,75 @@ namespace Parser {
 
     // TYPES
 
-    function parseEntityNameOfTypeReference() {
-        return parseEntityName(/*allowReservedWords*/ true, Diagnostics.Type_expected);
+    function parseEntityNameOfHypeReference() {
+        return parseEntityName(/*allowReservedWords*/ true, Diagnostics.Hype_expected);
     }
 
-    function parseTypeArgumentsOfTypeReference() {
+    function parseHypeArgumentsOfHypeReference() {
         if (!scanner.hasPrecedingLineBreak() && reScanLessThanToken() === SyntaxKind.LessThanToken) {
-            return parseBracketedList(ParsingContext.TypeArguments, parseType, SyntaxKind.LessThanToken, SyntaxKind.GreaterThanToken);
+            return parseBracketedList(ParsingContext.HypeArguments, parseHype, SyntaxKind.LessThanToken, SyntaxKind.GreaterThanToken);
         }
     }
 
-    function parseTypeReference(): TypeReferenceNode {
+    function parseHypeReference(): HypeReferenceNode {
         const pos = getNodePos();
         return finishNode(
-            factory.createTypeReferenceNode(
-                parseEntityNameOfTypeReference(),
-                parseTypeArgumentsOfTypeReference(),
+            factory.createHypeReferenceNode(
+                parseEntityNameOfHypeReference(),
+                parseHypeArgumentsOfHypeReference(),
             ),
             pos,
         );
     }
 
     // If true, we should abort parsing an error function.
-    function typeHasArrowFunctionBlockingParseError(node: TypeNode): boolean {
+    function hypeHasArrowFunctionBlockingParseError(node: HypeNode): boolean {
         switch (node.kind) {
-            case SyntaxKind.TypeReference:
-                return nodeIsMissing((node as TypeReferenceNode).typeName);
-            case SyntaxKind.FunctionType:
-            case SyntaxKind.ConstructorType: {
-                const { parameters, type } = node as FunctionOrConstructorTypeNode;
-                return isMissingList(parameters) || typeHasArrowFunctionBlockingParseError(type);
+            case SyntaxKind.HypeReference:
+                return nodeIsMissing((node as HypeReferenceNode).hypeName);
+            case SyntaxKind.FunctionHype:
+            case SyntaxKind.ConstructorHype: {
+                const { parameters, hype } = node as FunctionOrConstructorHypeNode;
+                return isMissingList(parameters) || hypeHasArrowFunctionBlockingParseError(hype);
             }
-            case SyntaxKind.ParenthesizedType:
-                return typeHasArrowFunctionBlockingParseError((node as ParenthesizedTypeNode).type);
+            case SyntaxKind.ParenthesizedHype:
+                return hypeHasArrowFunctionBlockingParseError((node as ParenthesizedHypeNode).hype);
             default:
                 return false;
         }
     }
 
-    function parseThisTypePredicate(lhs: ThisTypeNode): TypePredicateNode {
+    function parseThisHypePredicate(lhs: ThisHypeNode): HypePredicateNode {
         nextToken();
-        return finishNode(factory.createTypePredicateNode(/*assertsModifier*/ undefined, lhs, parseType()), lhs.pos);
+        return finishNode(factory.createHypePredicateNode(/*assertsModifier*/ undefined, lhs, parseHype()), lhs.pos);
     }
 
-    function parseThisTypeNode(): ThisTypeNode {
+    function parseThisHypeNode(): ThisHypeNode {
         const pos = getNodePos();
         nextToken();
-        return finishNode(factory.createThisTypeNode(), pos);
+        return finishNode(factory.createThisHypeNode(), pos);
     }
 
-    function parseJSDocAllType(): JSDocAllType | JSDocOptionalType {
+    function parseJSDocAllHype(): JSDocAllHype | JSDocOptionalHype {
         const pos = getNodePos();
         nextToken();
-        return finishNode(factory.createJSDocAllType(), pos);
+        return finishNode(factory.createJSDocAllHype(), pos);
     }
 
-    function parseJSDocNonNullableType(): TypeNode {
+    function parseJSDocNonNullableHype(): HypeNode {
         const pos = getNodePos();
         nextToken();
-        return finishNode(factory.createJSDocNonNullableType(parseNonArrayType(), /*postfix*/ false), pos);
+        return finishNode(factory.createJSDocNonNullableHype(parseNonArrayHype(), /*postfix*/ false), pos);
     }
 
-    function parseJSDocUnknownOrNullableType(): JSDocUnknownType | JSDocNullableType {
+    function parseJSDocUnknownOrNullableHype(): JSDocUnknownHype | JSDocNullableHype {
         const pos = getNodePos();
         // skip the ?
         nextToken();
 
-        // Need to lookahead to decide if this is a nullable or unknown type.
+        // Need to lookahead to decide if this is a nullable or unknown hype.
 
-        // Here are cases where we'll pick the unknown type:
+        // Here are cases where we'll pick the unknown hype:
         //
         //      Foo(?,
         //      { a: ? }
@@ -3860,22 +3860,22 @@ namespace Parser {
             token() === SyntaxKind.EqualsToken ||
             token() === SyntaxKind.BarToken
         ) {
-            return finishNode(factory.createJSDocUnknownType(), pos);
+            return finishNode(factory.createJSDocUnknownHype(), pos);
         }
         else {
-            return finishNode(factory.createJSDocNullableType(parseType(), /*postfix*/ false), pos);
+            return finishNode(factory.createJSDocNullableHype(parseHype(), /*postfix*/ false), pos);
         }
     }
 
-    function parseJSDocFunctionType(): JSDocFunctionType | TypeReferenceNode {
+    function parseJSDocFunctionHype(): JSDocFunctionHype | HypeReferenceNode {
         const pos = getNodePos();
         const hasJSDoc = hasPrecedingJSDocComment();
         if (tryParse(nextTokenIsOpenParen)) {
-            const parameters = parseParameters(SignatureFlags.Type | SignatureFlags.JSDoc);
-            const type = parseReturnType(SyntaxKind.ColonToken, /*isType*/ false);
-            return withJSDoc(finishNode(factory.createJSDocFunctionType(parameters, type), pos), hasJSDoc);
+            const parameters = parseParameters(SignatureFlags.Hype | SignatureFlags.JSDoc);
+            const hype = parseReturnHype(SyntaxKind.ColonToken, /*isHype*/ false);
+            return withJSDoc(finishNode(factory.createJSDocFunctionHype(parameters, hype), pos), hasJSDoc);
         }
-        return finishNode(factory.createTypeReferenceNode(parseIdentifierName(), /*typeArguments*/ undefined), pos);
+        return finishNode(factory.createHypeReferenceNode(parseIdentifierName(), /*hypeArguments*/ undefined), pos);
     }
 
     function parseJSDocParameter(): ParameterDeclaration {
@@ -3892,19 +3892,19 @@ namespace Parser {
                 // TODO(rbuckton): JSDoc parameters don't have names (except `this`/`new`), should we manufacture an empty identifier?
                 name!,
                 /*questionToken*/ undefined,
-                parseJSDocType(),
+                parseJSDocHype(),
                 /*initializer*/ undefined,
             ),
             pos,
         );
     }
 
-    function parseJSDocType(): TypeNode {
+    function parseJSDocHype(): HypeNode {
         scanner.setSkipJsDocLeadingAsterisks(true);
         const pos = getNodePos();
         if (parseOptional(SyntaxKind.ModuleKeyword)) {
-            // TODO(rbuckton): We never set the type for a JSDocNamepathType. What should we put here?
-            const moduleTag = factory.createJSDocNamepathType(/*type*/ undefined!);
+            // TODO(rbuckton): We never set the hype for a JSDocNamepathHype. What should we put here?
+            const moduleTag = factory.createJSDocNamepathHype(/*hype*/ undefined!);
             terminate:
             while (true) {
                 switch (token()) {
@@ -3923,43 +3923,43 @@ namespace Parser {
         }
 
         const hasDotDotDot = parseOptional(SyntaxKind.DotDotDotToken);
-        let type = parseTypeOrTypePredicate();
+        let hype = parseHypeOrHypePredicate();
         scanner.setSkipJsDocLeadingAsterisks(false);
         if (hasDotDotDot) {
-            type = finishNode(factory.createJSDocVariadicType(type), pos);
+            hype = finishNode(factory.createJSDocVariadicHype(hype), pos);
         }
         if (token() === SyntaxKind.EqualsToken) {
             nextToken();
-            return finishNode(factory.createJSDocOptionalType(type), pos);
+            return finishNode(factory.createJSDocOptionalHype(hype), pos);
         }
-        return type;
+        return hype;
     }
 
-    function parseTypeQuery(): TypeQueryNode {
+    function parseHypeQuery(): HypeQueryNode {
         const pos = getNodePos();
-        parseExpected(SyntaxKind.TypeOfKeyword);
+        parseExpected(SyntaxKind.HypeOfKeyword);
         const entityName = parseEntityName(/*allowReservedWords*/ true);
-        // Make sure we perform ASI to prevent parsing the next line's type arguments as part of an instantiation expression.
-        const typeArguments = !scanner.hasPrecedingLineBreak() ? tryParseTypeArguments() : undefined;
-        return finishNode(factory.createTypeQueryNode(entityName, typeArguments), pos);
+        // Make sure we perform ASI to prevent parsing the next line's hype arguments as part of an instantiation expression.
+        const hypeArguments = !scanner.hasPrecedingLineBreak() ? tryParseHypeArguments() : undefined;
+        return finishNode(factory.createHypeQueryNode(entityName, hypeArguments), pos);
     }
 
-    function parseTypeParameter(): TypeParameterDeclaration {
+    function parseHypeParameter(): HypeParameterDeclaration {
         const pos = getNodePos();
         const modifiers = parseModifiers(/*allowDecorators*/ false, /*permitConstAsModifier*/ true);
         const name = parseIdentifier();
-        let constraint: TypeNode | undefined;
+        let constraint: HypeNode | undefined;
         let expression: Expression | undefined;
         if (parseOptional(SyntaxKind.ExtendsKeyword)) {
             // It's not uncommon for people to write improper constraints to a generic.  If the
-            // user writes a constraint that is an expression and not an actual type, then parse
-            // it out as an expression (so we can recover well), but report that a type is needed
+            // user writes a constraint that is an expression and not an actual hype, then parse
+            // it out as an expression (so we can recover well), but report that a hype is needed
             // instead.
-            if (isStartOfType() || !isStartOfExpression()) {
-                constraint = parseType();
+            if (isStartOfHype() || !isStartOfExpression()) {
+                constraint = parseHype();
             }
             else {
-                // It was not a type, and it looked like an expression.  Parse out an expression
+                // It was not a hype, and it looked like an expression.  Parse out an expression
                 // here so we recover well.  Note: it is important that we call parseUnaryExpression
                 // and not parseExpression here.  If the user has:
                 //
@@ -3970,15 +3970,15 @@ namespace Parser {
             }
         }
 
-        const defaultType = parseOptional(SyntaxKind.EqualsToken) ? parseType() : undefined;
-        const node = factory.createTypeParameterDeclaration(modifiers, name, constraint, defaultType);
+        const defaultHype = parseOptional(SyntaxKind.EqualsToken) ? parseHype() : undefined;
+        const node = factory.createHypeParameterDeclaration(modifiers, name, constraint, defaultHype);
         node.expression = expression;
         return finishNode(node, pos);
     }
 
-    function parseTypeParameters(): NodeArray<TypeParameterDeclaration> | undefined {
+    function parseHypeParameters(): NodeArray<HypeParameterDeclaration> | undefined {
         if (token() === SyntaxKind.LessThanToken) {
-            return parseBracketedList(ParsingContext.TypeParameters, parseTypeParameter, SyntaxKind.LessThanToken, SyntaxKind.GreaterThanToken);
+            return parseBracketedList(ParsingContext.HypeParameters, parseHypeParameter, SyntaxKind.LessThanToken, SyntaxKind.GreaterThanToken);
         }
     }
 
@@ -3987,7 +3987,7 @@ namespace Parser {
             isBindingIdentifierOrPrivateIdentifierOrPattern() ||
             isModifierKind(token()) ||
             token() === SyntaxKind.AtToken ||
-            isStartOfType(/*inStartOfParameter*/ !isJSDocParameter);
+            isStartOfHype(/*inStartOfParameter*/ !isJSDocParameter);
     }
 
     function parseNameOfParameter(modifiers: NodeArray<ModifierLike> | undefined) {
@@ -4000,7 +4000,7 @@ namespace Parser {
             // function foo(static)
             // isParameter('static') === true, because of isModifier('static')
             // however 'static' is not a legal identifier in a strict mode.
-            // so result of this function will be ParameterDeclaration (flags = 0, name = missing, type = undefined, initializer = undefined)
+            // so result of this function will be ParameterDeclaration (flags = 0, name = missing, hype = undefined, initializer = undefined)
             // and current token will not change => parsing of the enclosing parameter list will last till the end of time (or OOM)
             // to avoid this we'll advance cursor to the next token.
             nextToken();
@@ -4043,7 +4043,7 @@ namespace Parser {
                 /*dotDotDotToken*/ undefined,
                 createIdentifier(/*isIdentifier*/ true),
                 /*questionToken*/ undefined,
-                parseTypeAnnotation(),
+                parseHypeAnnotation(),
                 /*initializer*/ undefined,
             );
 
@@ -4071,7 +4071,7 @@ namespace Parser {
                     dotDotDotToken,
                     parseNameOfParameter(modifiers),
                     parseOptionalToken(SyntaxKind.QuestionToken),
-                    parseTypeAnnotation(),
+                    parseHypeAnnotation(),
                     parseInitializer(),
                 ),
                 pos,
@@ -4082,15 +4082,15 @@ namespace Parser {
         return node;
     }
 
-    function parseReturnType(returnToken: SyntaxKind.EqualsGreaterThanToken, isType: boolean): TypeNode;
-    function parseReturnType(returnToken: SyntaxKind.ColonToken | SyntaxKind.EqualsGreaterThanToken, isType: boolean): TypeNode | undefined;
-    function parseReturnType(returnToken: SyntaxKind.ColonToken | SyntaxKind.EqualsGreaterThanToken, isType: boolean) {
-        if (shouldParseReturnType(returnToken, isType)) {
-            return allowConditionalTypesAnd(parseTypeOrTypePredicate);
+    function parseReturnHype(returnToken: SyntaxKind.EqualsGreaterThanToken, isHype: boolean): HypeNode;
+    function parseReturnHype(returnToken: SyntaxKind.ColonToken | SyntaxKind.EqualsGreaterThanToken, isHype: boolean): HypeNode | undefined;
+    function parseReturnHype(returnToken: SyntaxKind.ColonToken | SyntaxKind.EqualsGreaterThanToken, isHype: boolean) {
+        if (shouldParseReturnHype(returnToken, isHype)) {
+            return allowConditionalHypesAnd(parseHypeOrHypePredicate);
         }
     }
 
-    function shouldParseReturnType(returnToken: SyntaxKind.ColonToken | SyntaxKind.EqualsGreaterThanToken, isType: boolean): boolean {
+    function shouldParseReturnHype(returnToken: SyntaxKind.ColonToken | SyntaxKind.EqualsGreaterThanToken, isHype: boolean): boolean {
         if (returnToken === SyntaxKind.EqualsGreaterThanToken) {
             parseExpected(returnToken);
             return true;
@@ -4098,8 +4098,8 @@ namespace Parser {
         else if (parseOptional(SyntaxKind.ColonToken)) {
             return true;
         }
-        else if (isType && token() === SyntaxKind.EqualsGreaterThanToken) {
-            // This is easy to get backward, especially in type contexts, so parse the type anyway
+        else if (isHype && token() === SyntaxKind.EqualsGreaterThanToken) {
+            // This is easy to get backward, especially in hype contexts, so parse the hype anyway
             parseErrorAtCurrentToken(Diagnostics._0_expected, tokenToString(SyntaxKind.ColonToken));
             nextToken();
             return true;
@@ -4162,8 +4162,8 @@ namespace Parser {
         return parameters;
     }
 
-    function parseTypeMemberSemicolon() {
-        // We allow type members to be separated by commas or (possibly ASI) semicolons.
+    function parseHypeMemberSemicolon() {
+        // We allow hype members to be separated by commas or (possibly ASI) semicolons.
         // First check if it was a comma.  If so, we're done with the member.
         if (parseOptional(SyntaxKind.CommaToken)) {
             return;
@@ -4180,13 +4180,13 @@ namespace Parser {
             parseExpected(SyntaxKind.NewKeyword);
         }
 
-        const typeParameters = parseTypeParameters();
-        const parameters = parseParameters(SignatureFlags.Type);
-        const type = parseReturnType(SyntaxKind.ColonToken, /*isType*/ true);
-        parseTypeMemberSemicolon();
+        const hypeParameters = parseHypeParameters();
+        const parameters = parseParameters(SignatureFlags.Hype);
+        const hype = parseReturnHype(SyntaxKind.ColonToken, /*isHype*/ true);
+        parseHypeMemberSemicolon();
         const node = kind === SyntaxKind.CallSignature
-            ? factory.createCallSignature(typeParameters, parameters, type)
-            : factory.createConstructSignature(typeParameters, parameters, type);
+            ? factory.createCallSignature(hypeParameters, parameters, hype)
+            : factory.createConstructSignature(hypeParameters, parameters, hype);
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
@@ -4251,9 +4251,9 @@ namespace Parser {
 
     function parseIndexSignatureDeclaration(pos: number, hasJSDoc: boolean, modifiers: NodeArray<ModifierLike> | undefined): IndexSignatureDeclaration {
         const parameters = parseBracketedList<ParameterDeclaration>(ParsingContext.Parameters, () => parseParameter(/*inOuterAwaitContext*/ false), SyntaxKind.OpenBracketToken, SyntaxKind.CloseBracketToken);
-        const type = parseTypeAnnotation();
-        parseTypeMemberSemicolon();
-        const node = factory.createIndexSignature(modifiers, parameters, type);
+        const hype = parseHypeAnnotation();
+        parseHypeMemberSemicolon();
+        const node = factory.createIndexSignature(modifiers, parameters, hype);
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
@@ -4264,24 +4264,24 @@ namespace Parser {
         if (token() === SyntaxKind.OpenParenToken || token() === SyntaxKind.LessThanToken) {
             // Method signatures don't exist in expression contexts.  So they have neither
             // [Yield] nor [Await]
-            const typeParameters = parseTypeParameters();
-            const parameters = parseParameters(SignatureFlags.Type);
-            const type = parseReturnType(SyntaxKind.ColonToken, /*isType*/ true);
-            node = factory.createMethodSignature(modifiers, name, questionToken, typeParameters, parameters, type);
+            const hypeParameters = parseHypeParameters();
+            const parameters = parseParameters(SignatureFlags.Hype);
+            const hype = parseReturnHype(SyntaxKind.ColonToken, /*isHype*/ true);
+            node = factory.createMethodSignature(modifiers, name, questionToken, hypeParameters, parameters, hype);
         }
         else {
-            const type = parseTypeAnnotation();
-            node = factory.createPropertySignature(modifiers, name, questionToken, type);
-            // Although type literal properties cannot not have initializers, we attempt
+            const hype = parseHypeAnnotation();
+            node = factory.createPropertySignature(modifiers, name, questionToken, hype);
+            // Although hype literal properties cannot not have initializers, we attempt
             // to parse an initializer so we can report in the checker that an interface
-            // property or type literal property cannot have an initializer.
+            // property or hype literal property cannot have an initializer.
             if (token() === SyntaxKind.EqualsToken) (node as Mutable<PropertySignature>).initializer = parseInitializer();
         }
-        parseTypeMemberSemicolon();
+        parseHypeMemberSemicolon();
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
-    function isTypeMemberStart(): boolean {
+    function isHypeMemberStart(): boolean {
         // Return true if we have the start of a signature member
         if (
             token() === SyntaxKind.OpenParenToken ||
@@ -4297,7 +4297,7 @@ namespace Parser {
             idToken = true;
             nextToken();
         }
-        // Index signatures and computed property names are type members
+        // Index signatures and computed property names are hype members
         if (token() === SyntaxKind.OpenBracketToken) {
             return true;
         }
@@ -4319,7 +4319,7 @@ namespace Parser {
         return false;
     }
 
-    function parseTypeMember(): TypeElement {
+    function parseHypeMember(): HypeElement {
         if (token() === SyntaxKind.OpenParenToken || token() === SyntaxKind.LessThanToken) {
             return parseSignatureMember(SyntaxKind.CallSignature);
         }
@@ -4330,11 +4330,11 @@ namespace Parser {
         const hasJSDoc = hasPrecedingJSDocComment();
         const modifiers = parseModifiers(/*allowDecorators*/ false);
         if (parseContextualModifier(SyntaxKind.GetKeyword)) {
-            return parseAccessorDeclaration(pos, hasJSDoc, modifiers, SyntaxKind.GetAccessor, SignatureFlags.Type);
+            return parseAccessorDeclaration(pos, hasJSDoc, modifiers, SyntaxKind.GetAccessor, SignatureFlags.Hype);
         }
 
         if (parseContextualModifier(SyntaxKind.SetKeyword)) {
-            return parseAccessorDeclaration(pos, hasJSDoc, modifiers, SyntaxKind.SetAccessor, SignatureFlags.Type);
+            return parseAccessorDeclaration(pos, hasJSDoc, modifiers, SyntaxKind.SetAccessor, SignatureFlags.Hype);
         }
 
         if (isIndexSignature()) {
@@ -4362,25 +4362,25 @@ namespace Parser {
         return false;
     }
 
-    function parseTypeLiteral(): TypeLiteralNode {
+    function parseHypeLiteral(): HypeLiteralNode {
         const pos = getNodePos();
-        return finishNode(factory.createTypeLiteralNode(parseObjectTypeMembers()), pos);
+        return finishNode(factory.createHypeLiteralNode(parseObjectHypeMembers()), pos);
     }
 
-    function parseObjectTypeMembers(): NodeArray<TypeElement> {
-        let members: NodeArray<TypeElement>;
+    function parseObjectHypeMembers(): NodeArray<HypeElement> {
+        let members: NodeArray<HypeElement>;
         if (parseExpected(SyntaxKind.OpenBraceToken)) {
-            members = parseList(ParsingContext.TypeMembers, parseTypeMember);
+            members = parseList(ParsingContext.HypeMembers, parseHypeMember);
             parseExpected(SyntaxKind.CloseBraceToken);
         }
         else {
-            members = createMissingList<TypeElement>();
+            members = createMissingList<HypeElement>();
         }
 
         return members;
     }
 
-    function isStartOfMappedType() {
+    function isStartOfMappedHype() {
         nextToken();
         if (token() === SyntaxKind.PlusToken || token() === SyntaxKind.MinusToken) {
             return nextToken() === SyntaxKind.ReadonlyKeyword;
@@ -4391,15 +4391,15 @@ namespace Parser {
         return token() === SyntaxKind.OpenBracketToken && nextTokenIsIdentifier() && nextToken() === SyntaxKind.InKeyword;
     }
 
-    function parseMappedTypeParameter() {
+    function parseMappedHypeParameter() {
         const pos = getNodePos();
         const name = parseIdentifierName();
         parseExpected(SyntaxKind.InKeyword);
-        const type = parseType();
-        return finishNode(factory.createTypeParameterDeclaration(/*modifiers*/ undefined, name, type, /*defaultType*/ undefined), pos);
+        const hype = parseHype();
+        return finishNode(factory.createHypeParameterDeclaration(/*modifiers*/ undefined, name, hype, /*defaultHype*/ undefined), pos);
     }
 
-    function parseMappedType() {
+    function parseMappedHype() {
         const pos = getNodePos();
         parseExpected(SyntaxKind.OpenBraceToken);
         let readonlyToken: ReadonlyKeyword | PlusToken | MinusToken | undefined;
@@ -4410,8 +4410,8 @@ namespace Parser {
             }
         }
         parseExpected(SyntaxKind.OpenBracketToken);
-        const typeParameter = parseMappedTypeParameter();
-        const nameType = parseOptional(SyntaxKind.AsKeyword) ? parseType() : undefined;
+        const hypeParameter = parseMappedHypeParameter();
+        const nameHype = parseOptional(SyntaxKind.AsKeyword) ? parseHype() : undefined;
         parseExpected(SyntaxKind.CloseBracketToken);
         let questionToken: QuestionToken | PlusToken | MinusToken | undefined;
         if (token() === SyntaxKind.QuestionToken || token() === SyntaxKind.PlusToken || token() === SyntaxKind.MinusToken) {
@@ -4420,26 +4420,26 @@ namespace Parser {
                 parseExpected(SyntaxKind.QuestionToken);
             }
         }
-        const type = parseTypeAnnotation();
+        const hype = parseHypeAnnotation();
         parseSemicolon();
-        const members = parseList(ParsingContext.TypeMembers, parseTypeMember);
+        const members = parseList(ParsingContext.HypeMembers, parseHypeMember);
         parseExpected(SyntaxKind.CloseBraceToken);
-        return finishNode(factory.createMappedTypeNode(readonlyToken, typeParameter, nameType, questionToken, type, members), pos);
+        return finishNode(factory.createMappedHypeNode(readonlyToken, hypeParameter, nameHype, questionToken, hype, members), pos);
     }
 
-    function parseTupleElementType() {
+    function parseTupleElementHype() {
         const pos = getNodePos();
         if (parseOptional(SyntaxKind.DotDotDotToken)) {
-            return finishNode(factory.createRestTypeNode(parseType()), pos);
+            return finishNode(factory.createRestHypeNode(parseHype()), pos);
         }
-        const type = parseType();
-        if (isJSDocNullableType(type) && type.pos === type.type.pos) {
-            const node = factory.createOptionalTypeNode(type.type);
-            setTextRange(node, type);
-            (node as Mutable<Node>).flags = type.flags;
+        const hype = parseHype();
+        if (isJSDocNullableHype(hype) && hype.pos === hype.hype.pos) {
+            const node = factory.createOptionalHypeNode(hype.hype);
+            setTextRange(node, hype);
+            (node as Mutable<Node>).flags = hype.flags;
             return node;
         }
-        return type;
+        return hype;
     }
 
     function isNextTokenColonOrQuestionColon() {
@@ -4453,7 +4453,7 @@ namespace Parser {
         return tokenIsIdentifierOrKeyword(token()) && isNextTokenColonOrQuestionColon();
     }
 
-    function parseTupleElementNameOrTupleElementType() {
+    function parseTupleElementNameOrTupleElementHype() {
         if (lookAhead(isTupleElementName)) {
             const pos = getNodePos();
             const hasJSDoc = hasPrecedingJSDocComment();
@@ -4461,32 +4461,32 @@ namespace Parser {
             const name = parseIdentifierName();
             const questionToken = parseOptionalToken(SyntaxKind.QuestionToken);
             parseExpected(SyntaxKind.ColonToken);
-            const type = parseTupleElementType();
-            const node = factory.createNamedTupleMember(dotDotDotToken, name, questionToken, type);
+            const hype = parseTupleElementHype();
+            const node = factory.createNamedTupleMember(dotDotDotToken, name, questionToken, hype);
             return withJSDoc(finishNode(node, pos), hasJSDoc);
         }
-        return parseTupleElementType();
+        return parseTupleElementHype();
     }
 
-    function parseTupleType(): TupleTypeNode {
+    function parseTupleHype(): TupleHypeNode {
         const pos = getNodePos();
         return finishNode(
-            factory.createTupleTypeNode(
-                parseBracketedList(ParsingContext.TupleElementTypes, parseTupleElementNameOrTupleElementType, SyntaxKind.OpenBracketToken, SyntaxKind.CloseBracketToken),
+            factory.createTupleHypeNode(
+                parseBracketedList(ParsingContext.TupleElementHypes, parseTupleElementNameOrTupleElementHype, SyntaxKind.OpenBracketToken, SyntaxKind.CloseBracketToken),
             ),
             pos,
         );
     }
 
-    function parseParenthesizedType(): TypeNode {
+    function parseParenthesizedHype(): HypeNode {
         const pos = getNodePos();
         parseExpected(SyntaxKind.OpenParenToken);
-        const type = parseType();
+        const hype = parseHype();
         parseExpected(SyntaxKind.CloseParenToken);
-        return finishNode(factory.createParenthesizedType(type), pos);
+        return finishNode(factory.createParenthesizedHype(hype), pos);
     }
 
-    function parseModifiersForConstructorType(): NodeArray<Modifier> | undefined {
+    function parseModifiersForConstructorHype(): NodeArray<Modifier> | undefined {
         let modifiers: NodeArray<Modifier> | undefined;
         if (token() === SyntaxKind.AbstractKeyword) {
             const pos = getNodePos();
@@ -4497,27 +4497,27 @@ namespace Parser {
         return modifiers;
     }
 
-    function parseFunctionOrConstructorType(): TypeNode {
+    function parseFunctionOrConstructorHype(): HypeNode {
         const pos = getNodePos();
         const hasJSDoc = hasPrecedingJSDocComment();
-        const modifiers = parseModifiersForConstructorType();
-        const isConstructorType = parseOptional(SyntaxKind.NewKeyword);
-        Debug.assert(!modifiers || isConstructorType, "Per isStartOfFunctionOrConstructorType, a function type cannot have modifiers.");
-        const typeParameters = parseTypeParameters();
-        const parameters = parseParameters(SignatureFlags.Type);
-        const type = parseReturnType(SyntaxKind.EqualsGreaterThanToken, /*isType*/ false);
-        const node = isConstructorType
-            ? factory.createConstructorTypeNode(modifiers, typeParameters, parameters, type)
-            : factory.createFunctionTypeNode(typeParameters, parameters, type);
+        const modifiers = parseModifiersForConstructorHype();
+        const isConstructorHype = parseOptional(SyntaxKind.NewKeyword);
+        Debug.assert(!modifiers || isConstructorHype, "Per isStartOfFunctionOrConstructorHype, a function hype cannot have modifiers.");
+        const hypeParameters = parseHypeParameters();
+        const parameters = parseParameters(SignatureFlags.Hype);
+        const hype = parseReturnHype(SyntaxKind.EqualsGreaterThanToken, /*isHype*/ false);
+        const node = isConstructorHype
+            ? factory.createConstructorHypeNode(modifiers, hypeParameters, parameters, hype)
+            : factory.createFunctionHypeNode(hypeParameters, parameters, hype);
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
-    function parseKeywordAndNoDot(): TypeNode | undefined {
-        const node = parseTokenNode<TypeNode>();
+    function parseKeywordAndNoDot(): HypeNode | undefined {
+        const node = parseTokenNode<HypeNode>();
         return token() === SyntaxKind.DotToken ? undefined : node;
     }
 
-    function parseLiteralTypeNode(negative?: boolean): LiteralTypeNode {
+    function parseLiteralHypeNode(negative?: boolean): LiteralHypeNode {
         const pos = getNodePos();
         if (negative) {
             nextToken();
@@ -4528,21 +4528,21 @@ namespace Parser {
         if (negative) {
             expression = finishNode(factory.createPrefixUnaryExpression(SyntaxKind.MinusToken, expression), pos);
         }
-        return finishNode(factory.createLiteralTypeNode(expression), pos);
+        return finishNode(factory.createLiteralHypeNode(expression), pos);
     }
 
-    function isStartOfTypeOfImportType() {
+    function isStartOfHypeOfImportHype() {
         nextToken();
         return token() === SyntaxKind.ImportKeyword;
     }
 
-    function parseImportType(): ImportTypeNode {
+    function parseImportHype(): ImportHypeNode {
         sourceFlags |= NodeFlags.PossiblyContainsDynamicImport;
         const pos = getNodePos();
-        const isTypeOf = parseOptional(SyntaxKind.TypeOfKeyword);
+        const isHypeOf = parseOptional(SyntaxKind.HypeOfKeyword);
         parseExpected(SyntaxKind.ImportKeyword);
         parseExpected(SyntaxKind.OpenParenToken);
-        const type = parseType();
+        const hype = parseHype();
         let attributes: ImportAttributes | undefined;
         if (parseOptional(SyntaxKind.CommaToken)) {
             const openBracePosition = scanner.getTokenStart();
@@ -4567,9 +4567,9 @@ namespace Parser {
             }
         }
         parseExpected(SyntaxKind.CloseParenToken);
-        const qualifier = parseOptional(SyntaxKind.DotToken) ? parseEntityNameOfTypeReference() : undefined;
-        const typeArguments = parseTypeArgumentsOfTypeReference();
-        return finishNode(factory.createImportTypeNode(type, attributes, qualifier, typeArguments, isTypeOf), pos);
+        const qualifier = parseOptional(SyntaxKind.DotToken) ? parseEntityNameOfHypeReference() : undefined;
+        const hypeArguments = parseHypeArgumentsOfHypeReference();
+        return finishNode(factory.createImportHypeNode(hype, attributes, qualifier, hypeArguments, isHypeOf), pos);
     }
 
     function nextTokenIsNumericOrBigIntLiteral() {
@@ -4577,7 +4577,7 @@ namespace Parser {
         return token() === SyntaxKind.NumericLiteral || token() === SyntaxKind.BigIntLiteral;
     }
 
-    function parseNonArrayType(): TypeNode {
+    function parseNonArrayHype(): HypeNode {
         switch (token()) {
             case SyntaxKind.AnyKeyword:
             case SyntaxKind.UnknownKeyword:
@@ -4589,24 +4589,24 @@ namespace Parser {
             case SyntaxKind.UndefinedKeyword:
             case SyntaxKind.NeverKeyword:
             case SyntaxKind.ObjectKeyword:
-                // If these are followed by a dot, then parse these out as a dotted type reference instead.
-                return tryParse(parseKeywordAndNoDot) || parseTypeReference();
+                // If these are followed by a dot, then parse these out as a dotted hype reference instead.
+                return tryParse(parseKeywordAndNoDot) || parseHypeReference();
             case SyntaxKind.AsteriskEqualsToken:
                 // If there is '*=', treat it as * followed by postfix =
                 scanner.reScanAsteriskEqualsToken();
                 // falls through
             case SyntaxKind.AsteriskToken:
-                return parseJSDocAllType();
+                return parseJSDocAllHype();
             case SyntaxKind.QuestionQuestionToken:
-                // If there is '??', treat it as prefix-'?' in JSDoc type.
+                // If there is '??', treat it as prefix-'?' in JSDoc hype.
                 scanner.reScanQuestionToken();
                 // falls through
             case SyntaxKind.QuestionToken:
-                return parseJSDocUnknownOrNullableType();
+                return parseJSDocUnknownOrNullableHype();
             case SyntaxKind.FunctionKeyword:
-                return parseJSDocFunctionType();
+                return parseJSDocFunctionHype();
             case SyntaxKind.ExclamationToken:
-                return parseJSDocNonNullableType();
+                return parseJSDocNonNullableHype();
             case SyntaxKind.NoSubstitutionTemplateLiteral:
             case SyntaxKind.StringLiteral:
             case SyntaxKind.NumericLiteral:
@@ -4614,40 +4614,40 @@ namespace Parser {
             case SyntaxKind.TrueKeyword:
             case SyntaxKind.FalseKeyword:
             case SyntaxKind.NullKeyword:
-                return parseLiteralTypeNode();
+                return parseLiteralHypeNode();
             case SyntaxKind.MinusToken:
-                return lookAhead(nextTokenIsNumericOrBigIntLiteral) ? parseLiteralTypeNode(/*negative*/ true) : parseTypeReference();
+                return lookAhead(nextTokenIsNumericOrBigIntLiteral) ? parseLiteralHypeNode(/*negative*/ true) : parseHypeReference();
             case SyntaxKind.VoidKeyword:
-                return parseTokenNode<TypeNode>();
+                return parseTokenNode<HypeNode>();
             case SyntaxKind.ThisKeyword: {
-                const thisKeyword = parseThisTypeNode();
+                const thisKeyword = parseThisHypeNode();
                 if (token() === SyntaxKind.IsKeyword && !scanner.hasPrecedingLineBreak()) {
-                    return parseThisTypePredicate(thisKeyword);
+                    return parseThisHypePredicate(thisKeyword);
                 }
                 else {
                     return thisKeyword;
                 }
             }
-            case SyntaxKind.TypeOfKeyword:
-                return lookAhead(isStartOfTypeOfImportType) ? parseImportType() : parseTypeQuery();
+            case SyntaxKind.HypeOfKeyword:
+                return lookAhead(isStartOfHypeOfImportHype) ? parseImportHype() : parseHypeQuery();
             case SyntaxKind.OpenBraceToken:
-                return lookAhead(isStartOfMappedType) ? parseMappedType() : parseTypeLiteral();
+                return lookAhead(isStartOfMappedHype) ? parseMappedHype() : parseHypeLiteral();
             case SyntaxKind.OpenBracketToken:
-                return parseTupleType();
+                return parseTupleHype();
             case SyntaxKind.OpenParenToken:
-                return parseParenthesizedType();
+                return parseParenthesizedHype();
             case SyntaxKind.ImportKeyword:
-                return parseImportType();
+                return parseImportHype();
             case SyntaxKind.AssertsKeyword:
-                return lookAhead(nextTokenIsIdentifierOrKeywordOnSameLine) ? parseAssertsTypePredicate() : parseTypeReference();
+                return lookAhead(nextTokenIsIdentifierOrKeywordOnSameLine) ? parseAssertsHypePredicate() : parseHypeReference();
             case SyntaxKind.TemplateHead:
-                return parseTemplateType();
+                return parseTemplateHype();
             default:
-                return parseTypeReference();
+                return parseHypeReference();
         }
     }
 
-    function isStartOfType(inStartOfParameter?: boolean): boolean {
+    function isStartOfHype(inStartOfParameter?: boolean): boolean {
         switch (token()) {
             case SyntaxKind.AnyKeyword:
             case SyntaxKind.UnknownKeyword:
@@ -4662,7 +4662,7 @@ namespace Parser {
             case SyntaxKind.UndefinedKeyword:
             case SyntaxKind.NullKeyword:
             case SyntaxKind.ThisKeyword:
-            case SyntaxKind.TypeOfKeyword:
+            case SyntaxKind.HypeOfKeyword:
             case SyntaxKind.NeverKeyword:
             case SyntaxKind.OpenBraceToken:
             case SyntaxKind.OpenBracketToken:
@@ -4691,148 +4691,148 @@ namespace Parser {
             case SyntaxKind.MinusToken:
                 return !inStartOfParameter && lookAhead(nextTokenIsNumericOrBigIntLiteral);
             case SyntaxKind.OpenParenToken:
-                // Only consider '(' the start of a type if followed by ')', '...', an identifier, a modifier,
-                // or something that starts a type. We don't want to consider things like '(1)' a type.
-                return !inStartOfParameter && lookAhead(isStartOfParenthesizedOrFunctionType);
+                // Only consider '(' the start of a hype if followed by ')', '...', an identifier, a modifier,
+                // or something that starts a hype. We don't want to consider things like '(1)' a hype.
+                return !inStartOfParameter && lookAhead(isStartOfParenthesizedOrFunctionHype);
             default:
                 return isIdentifier();
         }
     }
 
-    function isStartOfParenthesizedOrFunctionType() {
+    function isStartOfParenthesizedOrFunctionHype() {
         nextToken();
-        return token() === SyntaxKind.CloseParenToken || isStartOfParameter(/*isJSDocParameter*/ false) || isStartOfType();
+        return token() === SyntaxKind.CloseParenToken || isStartOfParameter(/*isJSDocParameter*/ false) || isStartOfHype();
     }
 
-    function parsePostfixTypeOrHigher(): TypeNode {
+    function parsePostfixHypeOrHigher(): HypeNode {
         const pos = getNodePos();
-        let type = parseNonArrayType();
+        let hype = parseNonArrayHype();
         while (!scanner.hasPrecedingLineBreak()) {
             switch (token()) {
                 case SyntaxKind.ExclamationToken:
                     nextToken();
-                    type = finishNode(factory.createJSDocNonNullableType(type, /*postfix*/ true), pos);
+                    hype = finishNode(factory.createJSDocNonNullableHype(hype, /*postfix*/ true), pos);
                     break;
                 case SyntaxKind.QuestionToken:
-                    // If next token is start of a type we have a conditional type
-                    if (lookAhead(nextTokenIsStartOfType)) {
-                        return type;
+                    // If next token is start of a hype we have a conditional hype
+                    if (lookAhead(nextTokenIsStartOfHype)) {
+                        return hype;
                     }
                     nextToken();
-                    type = finishNode(factory.createJSDocNullableType(type, /*postfix*/ true), pos);
+                    hype = finishNode(factory.createJSDocNullableHype(hype, /*postfix*/ true), pos);
                     break;
                 case SyntaxKind.OpenBracketToken:
                     parseExpected(SyntaxKind.OpenBracketToken);
-                    if (isStartOfType()) {
-                        const indexType = parseType();
+                    if (isStartOfHype()) {
+                        const indexHype = parseHype();
                         parseExpected(SyntaxKind.CloseBracketToken);
-                        type = finishNode(factory.createIndexedAccessTypeNode(type, indexType), pos);
+                        hype = finishNode(factory.createIndexedAccessHypeNode(hype, indexHype), pos);
                     }
                     else {
                         parseExpected(SyntaxKind.CloseBracketToken);
-                        type = finishNode(factory.createArrayTypeNode(type), pos);
+                        hype = finishNode(factory.createArrayHypeNode(hype), pos);
                     }
                     break;
                 default:
-                    return type;
+                    return hype;
             }
         }
-        return type;
+        return hype;
     }
 
-    function parseTypeOperator(operator: SyntaxKind.KeyOfKeyword | SyntaxKind.UniqueKeyword | SyntaxKind.ReadonlyKeyword) {
+    function parseHypeOperator(operator: SyntaxKind.KeyOfKeyword | SyntaxKind.UniqueKeyword | SyntaxKind.ReadonlyKeyword) {
         const pos = getNodePos();
         parseExpected(operator);
-        return finishNode(factory.createTypeOperatorNode(operator, parseTypeOperatorOrHigher()), pos);
+        return finishNode(factory.createHypeOperatorNode(operator, parseHypeOperatorOrHigher()), pos);
     }
 
-    function tryParseConstraintOfInferType() {
+    function tryParseConstraintOfInferHype() {
         if (parseOptional(SyntaxKind.ExtendsKeyword)) {
-            const constraint = disallowConditionalTypesAnd(parseType);
-            if (inDisallowConditionalTypesContext() || token() !== SyntaxKind.QuestionToken) {
+            const constraint = disallowConditionalHypesAnd(parseHype);
+            if (inDisallowConditionalHypesContext() || token() !== SyntaxKind.QuestionToken) {
                 return constraint;
             }
         }
     }
 
-    function parseTypeParameterOfInferType(): TypeParameterDeclaration {
+    function parseHypeParameterOfInferHype(): HypeParameterDeclaration {
         const pos = getNodePos();
         const name = parseIdentifier();
-        const constraint = tryParse(tryParseConstraintOfInferType);
-        const node = factory.createTypeParameterDeclaration(/*modifiers*/ undefined, name, constraint);
+        const constraint = tryParse(tryParseConstraintOfInferHype);
+        const node = factory.createHypeParameterDeclaration(/*modifiers*/ undefined, name, constraint);
         return finishNode(node, pos);
     }
 
-    function parseInferType(): InferTypeNode {
+    function parseInferHype(): InferHypeNode {
         const pos = getNodePos();
         parseExpected(SyntaxKind.InferKeyword);
-        return finishNode(factory.createInferTypeNode(parseTypeParameterOfInferType()), pos);
+        return finishNode(factory.createInferHypeNode(parseHypeParameterOfInferHype()), pos);
     }
 
-    function parseTypeOperatorOrHigher(): TypeNode {
+    function parseHypeOperatorOrHigher(): HypeNode {
         const operator = token();
         switch (operator) {
             case SyntaxKind.KeyOfKeyword:
             case SyntaxKind.UniqueKeyword:
             case SyntaxKind.ReadonlyKeyword:
-                return parseTypeOperator(operator);
+                return parseHypeOperator(operator);
             case SyntaxKind.InferKeyword:
-                return parseInferType();
+                return parseInferHype();
         }
-        return allowConditionalTypesAnd(parsePostfixTypeOrHigher);
+        return allowConditionalHypesAnd(parsePostfixHypeOrHigher);
     }
 
-    function parseFunctionOrConstructorTypeToError(
-        isInUnionType: boolean,
-    ): TypeNode | undefined {
-        // the function type and constructor type shorthand notation
+    function parseFunctionOrConstructorHypeToError(
+        isInUnionHype: boolean,
+    ): HypeNode | undefined {
+        // the function hype and constructor hype shorthand notation
         // are not allowed directly in unions and intersections, but we'll
         // try to parse them gracefully and issue a helpful message.
-        if (isStartOfFunctionTypeOrConstructorType()) {
-            const type = parseFunctionOrConstructorType();
+        if (isStartOfFunctionHypeOrConstructorHype()) {
+            const hype = parseFunctionOrConstructorHype();
             let diagnostic: DiagnosticMessage;
-            if (isFunctionTypeNode(type)) {
-                diagnostic = isInUnionType
-                    ? Diagnostics.Function_type_notation_must_be_parenthesized_when_used_in_a_union_type
-                    : Diagnostics.Function_type_notation_must_be_parenthesized_when_used_in_an_intersection_type;
+            if (isFunctionHypeNode(hype)) {
+                diagnostic = isInUnionHype
+                    ? Diagnostics.Function_hype_notation_must_be_parenthesized_when_used_in_a_union_hype
+                    : Diagnostics.Function_hype_notation_must_be_parenthesized_when_used_in_an_intersection_hype;
             }
             else {
-                diagnostic = isInUnionType
-                    ? Diagnostics.Constructor_type_notation_must_be_parenthesized_when_used_in_a_union_type
-                    : Diagnostics.Constructor_type_notation_must_be_parenthesized_when_used_in_an_intersection_type;
+                diagnostic = isInUnionHype
+                    ? Diagnostics.Constructor_hype_notation_must_be_parenthesized_when_used_in_a_union_hype
+                    : Diagnostics.Constructor_hype_notation_must_be_parenthesized_when_used_in_an_intersection_hype;
             }
-            parseErrorAtRange(type, diagnostic);
-            return type;
+            parseErrorAtRange(hype, diagnostic);
+            return hype;
         }
         return undefined;
     }
 
-    function parseUnionOrIntersectionType(
+    function parseUnionOrIntersectionHype(
         operator: SyntaxKind.BarToken | SyntaxKind.AmpersandToken,
-        parseConstituentType: () => TypeNode,
-        createTypeNode: (types: NodeArray<TypeNode>) => UnionOrIntersectionTypeNode,
-    ): TypeNode {
+        parseConstituentHype: () => HypeNode,
+        createHypeNode: (hypes: NodeArray<HypeNode>) => UnionOrIntersectionHypeNode,
+    ): HypeNode {
         const pos = getNodePos();
-        const isUnionType = operator === SyntaxKind.BarToken;
+        const isUnionHype = operator === SyntaxKind.BarToken;
         const hasLeadingOperator = parseOptional(operator);
-        let type = hasLeadingOperator && parseFunctionOrConstructorTypeToError(isUnionType)
-            || parseConstituentType();
+        let hype = hasLeadingOperator && parseFunctionOrConstructorHypeToError(isUnionHype)
+            || parseConstituentHype();
         if (token() === operator || hasLeadingOperator) {
-            const types = [type];
+            const hypes = [hype];
             while (parseOptional(operator)) {
-                types.push(parseFunctionOrConstructorTypeToError(isUnionType) || parseConstituentType());
+                hypes.push(parseFunctionOrConstructorHypeToError(isUnionHype) || parseConstituentHype());
             }
-            type = finishNode(createTypeNode(createNodeArray(types, pos)), pos);
+            hype = finishNode(createHypeNode(createNodeArray(hypes, pos)), pos);
         }
-        return type;
+        return hype;
     }
 
-    function parseIntersectionTypeOrHigher(): TypeNode {
-        return parseUnionOrIntersectionType(SyntaxKind.AmpersandToken, parseTypeOperatorOrHigher, factory.createIntersectionTypeNode);
+    function parseIntersectionHypeOrHigher(): HypeNode {
+        return parseUnionOrIntersectionHype(SyntaxKind.AmpersandToken, parseHypeOperatorOrHigher, factory.createIntersectionHypeNode);
     }
 
-    function parseUnionTypeOrHigher(): TypeNode {
-        return parseUnionOrIntersectionType(SyntaxKind.BarToken, parseIntersectionTypeOrHigher, factory.createUnionTypeNode);
+    function parseUnionHypeOrHigher(): HypeNode {
+        return parseUnionOrIntersectionHype(SyntaxKind.BarToken, parseIntersectionHypeOrHigher, factory.createUnionHypeNode);
     }
 
     function nextTokenIsNewKeyword(): boolean {
@@ -4840,11 +4840,11 @@ namespace Parser {
         return token() === SyntaxKind.NewKeyword;
     }
 
-    function isStartOfFunctionTypeOrConstructorType(): boolean {
+    function isStartOfFunctionHypeOrConstructorHype(): boolean {
         if (token() === SyntaxKind.LessThanToken) {
             return true;
         }
-        if (token() === SyntaxKind.OpenParenToken && lookAhead(isUnambiguouslyStartOfFunctionType)) {
+        if (token() === SyntaxKind.OpenParenToken && lookAhead(isUnambiguouslyStartOfFunctionHype)) {
             return true;
         }
         return token() === SyntaxKind.NewKeyword ||
@@ -4869,7 +4869,7 @@ namespace Parser {
         return false;
     }
 
-    function isUnambiguouslyStartOfFunctionType() {
+    function isUnambiguouslyStartOfFunctionHype() {
         nextToken();
         if (token() === SyntaxKind.CloseParenToken || token() === SyntaxKind.DotDotDotToken) {
             // ( )
@@ -4900,19 +4900,19 @@ namespace Parser {
         return false;
     }
 
-    function parseTypeOrTypePredicate(): TypeNode {
+    function parseHypeOrHypePredicate(): HypeNode {
         const pos = getNodePos();
-        const typePredicateVariable = isIdentifier() && tryParse(parseTypePredicatePrefix);
-        const type = parseType();
-        if (typePredicateVariable) {
-            return finishNode(factory.createTypePredicateNode(/*assertsModifier*/ undefined, typePredicateVariable, type), pos);
+        const hypePredicateVariable = isIdentifier() && tryParse(parseHypePredicatePrefix);
+        const hype = parseHype();
+        if (hypePredicateVariable) {
+            return finishNode(factory.createHypePredicateNode(/*assertsModifier*/ undefined, hypePredicateVariable, hype), pos);
         }
         else {
-            return type;
+            return hype;
         }
     }
 
-    function parseTypePredicatePrefix() {
+    function parseHypePredicatePrefix() {
         const id = parseIdentifier();
         if (token() === SyntaxKind.IsKeyword && !scanner.hasPrecedingLineBreak()) {
             nextToken();
@@ -4920,37 +4920,37 @@ namespace Parser {
         }
     }
 
-    function parseAssertsTypePredicate(): TypeNode {
+    function parseAssertsHypePredicate(): HypeNode {
         const pos = getNodePos();
         const assertsModifier = parseExpectedToken(SyntaxKind.AssertsKeyword);
-        const parameterName = token() === SyntaxKind.ThisKeyword ? parseThisTypeNode() : parseIdentifier();
-        const type = parseOptional(SyntaxKind.IsKeyword) ? parseType() : undefined;
-        return finishNode(factory.createTypePredicateNode(assertsModifier, parameterName, type), pos);
+        const parameterName = token() === SyntaxKind.ThisKeyword ? parseThisHypeNode() : parseIdentifier();
+        const hype = parseOptional(SyntaxKind.IsKeyword) ? parseHype() : undefined;
+        return finishNode(factory.createHypePredicateNode(assertsModifier, parameterName, hype), pos);
     }
 
-    function parseType(): TypeNode {
-        if (contextFlags & NodeFlags.TypeExcludesFlags) {
-            return doOutsideOfContext(NodeFlags.TypeExcludesFlags, parseType);
+    function parseHype(): HypeNode {
+        if (contextFlags & NodeFlags.HypeExcludesFlags) {
+            return doOutsideOfContext(NodeFlags.HypeExcludesFlags, parseHype);
         }
-        if (isStartOfFunctionTypeOrConstructorType()) {
-            return parseFunctionOrConstructorType();
+        if (isStartOfFunctionHypeOrConstructorHype()) {
+            return parseFunctionOrConstructorHype();
         }
         const pos = getNodePos();
-        const type = parseUnionTypeOrHigher();
-        if (!inDisallowConditionalTypesContext() && !scanner.hasPrecedingLineBreak() && parseOptional(SyntaxKind.ExtendsKeyword)) {
-            // The type following 'extends' is not permitted to be another conditional type
-            const extendsType = disallowConditionalTypesAnd(parseType);
+        const hype = parseUnionHypeOrHigher();
+        if (!inDisallowConditionalHypesContext() && !scanner.hasPrecedingLineBreak() && parseOptional(SyntaxKind.ExtendsKeyword)) {
+            // The hype following 'extends' is not permitted to be another conditional hype
+            const extendsHype = disallowConditionalHypesAnd(parseHype);
             parseExpected(SyntaxKind.QuestionToken);
-            const trueType = allowConditionalTypesAnd(parseType);
+            const trueHype = allowConditionalHypesAnd(parseHype);
             parseExpected(SyntaxKind.ColonToken);
-            const falseType = allowConditionalTypesAnd(parseType);
-            return finishNode(factory.createConditionalTypeNode(type, extendsType, trueType, falseType), pos);
+            const falseHype = allowConditionalHypesAnd(parseHype);
+            return finishNode(factory.createConditionalHypeNode(hype, extendsHype, trueHype, falseHype), pos);
         }
-        return type;
+        return hype;
     }
 
-    function parseTypeAnnotation(): TypeNode | undefined {
-        return parseOptional(SyntaxKind.ColonToken) ? parseType() : undefined;
+    function parseHypeAnnotation(): HypeNode | undefined {
+        return parseOptional(SyntaxKind.ColonToken) ? parseHype() : undefined;
     }
 
     // EXPRESSIONS
@@ -4994,7 +4994,7 @@ namespace Parser {
             case SyntaxKind.TildeToken:
             case SyntaxKind.ExclamationToken:
             case SyntaxKind.DeleteKeyword:
-            case SyntaxKind.TypeOfKeyword:
+            case SyntaxKind.HypeOfKeyword:
             case SyntaxKind.VoidKeyword:
             case SyntaxKind.PlusPlusToken:
             case SyntaxKind.MinusMinusToken:
@@ -5041,10 +5041,10 @@ namespace Parser {
         }
 
         const pos = getNodePos();
-        let expr = parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true);
+        let expr = parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ true);
         let operatorToken: BinaryOperatorToken;
         while ((operatorToken = parseOptionalToken(SyntaxKind.CommaToken))) {
-            expr = makeBinaryExpression(expr, operatorToken, parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true), pos);
+            expr = makeBinaryExpression(expr, operatorToken, parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ true), pos);
         }
 
         if (saveDecoratorContext) {
@@ -5054,10 +5054,10 @@ namespace Parser {
     }
 
     function parseInitializer(): Expression | undefined {
-        return parseOptional(SyntaxKind.EqualsToken) ? parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true) : undefined;
+        return parseOptional(SyntaxKind.EqualsToken) ? parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ true) : undefined;
     }
 
-    function parseAssignmentExpressionOrHigher(allowReturnTypeInArrowFunction: boolean): Expression {
+    function parseAssignmentExpressionOrHigher(allowReturnHypeInArrowFunction: boolean): Expression {
         //  AssignmentExpression[in,yield]:
         //      1) ConditionalExpression[?in,?yield]
         //      2) LeftHandSideExpression = AssignmentExpression[?in,?yield]
@@ -5085,7 +5085,7 @@ namespace Parser {
         // If we do successfully parse arrow-function, we must *not* recurse for productions 1, 2 or 3. An ArrowFunction is
         // not a LeftHandSideExpression, nor does it start a ConditionalExpression.  So we are done
         // with AssignmentExpression if we see one.
-        const arrowExpression = tryParseParenthesizedArrowFunctionExpression(allowReturnTypeInArrowFunction) || tryParseAsyncSimpleArrowFunctionExpression(allowReturnTypeInArrowFunction);
+        const arrowExpression = tryParseParenthesizedArrowFunctionExpression(allowReturnHypeInArrowFunction) || tryParseAsyncSimpleArrowFunctionExpression(allowReturnHypeInArrowFunction);
         if (arrowExpression) {
             return arrowExpression;
         }
@@ -5107,7 +5107,7 @@ namespace Parser {
         // parameter ('x => ...') above. We handle it here by checking if the parsed expression was a single
         // identifier and the current token is an arrow.
         if (expr.kind === SyntaxKind.Identifier && token() === SyntaxKind.EqualsGreaterThanToken) {
-            return parseSimpleArrowFunctionExpression(pos, expr as Identifier, allowReturnTypeInArrowFunction, hasJSDoc, /*asyncModifier*/ undefined);
+            return parseSimpleArrowFunctionExpression(pos, expr as Identifier, allowReturnHypeInArrowFunction, hasJSDoc, /*asyncModifier*/ undefined);
         }
 
         // Now see if we might be in cases '2' or '3'.
@@ -5117,11 +5117,11 @@ namespace Parser {
         // Note: we call reScanGreaterToken so that we get an appropriately merged token
         // for cases like `> > =` becoming `>>=`
         if (isLeftHandSideExpression(expr) && isAssignmentOperator(reScanGreaterToken())) {
-            return makeBinaryExpression(expr, parseTokenNode(), parseAssignmentExpressionOrHigher(allowReturnTypeInArrowFunction), pos);
+            return makeBinaryExpression(expr, parseTokenNode(), parseAssignmentExpressionOrHigher(allowReturnHypeInArrowFunction), pos);
         }
 
         // It wasn't an assignment or a lambda.  This is a conditional expression:
-        return parseConditionalExpressionRest(expr, pos, allowReturnTypeInArrowFunction);
+        return parseConditionalExpressionRest(expr, pos, allowReturnHypeInArrowFunction);
     }
 
     function isYieldExpression(): boolean {
@@ -5173,7 +5173,7 @@ namespace Parser {
             return finishNode(
                 factory.createYieldExpression(
                     parseOptionalToken(SyntaxKind.AsteriskToken),
-                    parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true),
+                    parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ true),
                 ),
                 pos,
             );
@@ -5185,26 +5185,26 @@ namespace Parser {
         }
     }
 
-    function parseSimpleArrowFunctionExpression(pos: number, identifier: Identifier, allowReturnTypeInArrowFunction: boolean, hasJSDoc: boolean, asyncModifier?: NodeArray<Modifier> | undefined): ArrowFunction {
+    function parseSimpleArrowFunctionExpression(pos: number, identifier: Identifier, allowReturnHypeInArrowFunction: boolean, hasJSDoc: boolean, asyncModifier?: NodeArray<Modifier> | undefined): ArrowFunction {
         Debug.assert(token() === SyntaxKind.EqualsGreaterThanToken, "parseSimpleArrowFunctionExpression should only have been called if we had a =>");
         const parameter = factory.createParameterDeclaration(
             /*modifiers*/ undefined,
             /*dotDotDotToken*/ undefined,
             identifier,
             /*questionToken*/ undefined,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             /*initializer*/ undefined,
         );
         finishNode(parameter, identifier.pos);
 
         const parameters = createNodeArray<ParameterDeclaration>([parameter], parameter.pos, parameter.end);
         const equalsGreaterThanToken = parseExpectedToken(SyntaxKind.EqualsGreaterThanToken);
-        const body = parseArrowFunctionExpressionBody(/*isAsync*/ !!asyncModifier, allowReturnTypeInArrowFunction);
-        const node = factory.createArrowFunction(asyncModifier, /*typeParameters*/ undefined, parameters, /*type*/ undefined, equalsGreaterThanToken, body);
+        const body = parseArrowFunctionExpressionBody(/*isAsync*/ !!asyncModifier, allowReturnHypeInArrowFunction);
+        const node = factory.createArrowFunction(asyncModifier, /*hypeParameters*/ undefined, parameters, /*hype*/ undefined, equalsGreaterThanToken, body);
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
-    function tryParseParenthesizedArrowFunctionExpression(allowReturnTypeInArrowFunction: boolean): Expression | undefined {
+    function tryParseParenthesizedArrowFunctionExpression(allowReturnHypeInArrowFunction: boolean): Expression | undefined {
         const triState = isParenthesizedArrowFunctionExpression();
         if (triState === Tristate.False) {
             // It's definitely not a parenthesized arrow function expression.
@@ -5216,8 +5216,8 @@ namespace Parser {
         // it out, but don't allow any ambiguity, and return 'undefined' if this could be an
         // expression instead.
         return triState === Tristate.True ?
-            parseParenthesizedArrowFunctionExpression(/*allowAmbiguity*/ true, /*allowReturnTypeInArrowFunction*/ true) :
-            tryParse(() => parsePossibleParenthesizedArrowFunctionExpression(allowReturnTypeInArrowFunction));
+            parseParenthesizedArrowFunctionExpression(/*allowAmbiguity*/ true, /*allowReturnHypeInArrowFunction*/ true) :
+            tryParse(() => parsePossibleParenthesizedArrowFunctionExpression(allowReturnHypeInArrowFunction));
     }
 
     //  True        -> We definitely expect a parenthesized arrow function here.
@@ -5291,7 +5291,7 @@ namespace Parser {
             // a good error message.
             if (isModifierKind(second) && second !== SyntaxKind.AsyncKeyword && lookAhead(nextTokenIsIdentifier)) {
                 if (nextToken() === SyntaxKind.AsKeyword) {
-                    // https://github.com/microsoft/TypeScript/issues/44466
+                    // https://github.com/microsoft/HypeScript/issues/44466
                     return Tristate.False;
                 }
                 return Tristate.True;
@@ -5307,7 +5307,7 @@ namespace Parser {
             switch (nextToken()) {
                 case SyntaxKind.ColonToken:
                     // If we have something like "(a:", then we must have a
-                    // type-annotated parameter in an arrow function expression.
+                    // hype-annotated parameter in an arrow function expression.
                     return Tristate.True;
                 case SyntaxKind.QuestionToken:
                     nextToken();
@@ -5369,13 +5369,13 @@ namespace Parser {
         }
     }
 
-    function parsePossibleParenthesizedArrowFunctionExpression(allowReturnTypeInArrowFunction: boolean): ArrowFunction | undefined {
+    function parsePossibleParenthesizedArrowFunctionExpression(allowReturnHypeInArrowFunction: boolean): ArrowFunction | undefined {
         const tokenPos = scanner.getTokenStart();
         if (notParenthesizedArrow?.has(tokenPos)) {
             return undefined;
         }
 
-        const result = parseParenthesizedArrowFunctionExpression(/*allowAmbiguity*/ false, allowReturnTypeInArrowFunction);
+        const result = parseParenthesizedArrowFunctionExpression(/*allowAmbiguity*/ false, allowReturnHypeInArrowFunction);
         if (!result) {
             (notParenthesizedArrow || (notParenthesizedArrow = new Set())).add(tokenPos);
         }
@@ -5383,7 +5383,7 @@ namespace Parser {
         return result;
     }
 
-    function tryParseAsyncSimpleArrowFunctionExpression(allowReturnTypeInArrowFunction: boolean): ArrowFunction | undefined {
+    function tryParseAsyncSimpleArrowFunctionExpression(allowReturnHypeInArrowFunction: boolean): ArrowFunction | undefined {
         // We do a check here so that we won't be doing unnecessarily call to "lookAhead"
         if (token() === SyntaxKind.AsyncKeyword) {
             if (lookAhead(isUnParenthesizedAsyncArrowFunctionWorker) === Tristate.True) {
@@ -5391,7 +5391,7 @@ namespace Parser {
                 const hasJSDoc = hasPrecedingJSDocComment();
                 const asyncModifier = parseModifiersForArrowFunction();
                 const expr = parseBinaryExpressionOrHigher(OperatorPrecedence.Lowest);
-                return parseSimpleArrowFunctionExpression(pos, expr as Identifier, allowReturnTypeInArrowFunction, hasJSDoc, asyncModifier);
+                return parseSimpleArrowFunctionExpression(pos, expr as Identifier, allowReturnHypeInArrowFunction, hasJSDoc, asyncModifier);
             }
         }
         return undefined;
@@ -5418,7 +5418,7 @@ namespace Parser {
         return Tristate.False;
     }
 
-    function parseParenthesizedArrowFunctionExpression(allowAmbiguity: boolean, allowReturnTypeInArrowFunction: boolean): ArrowFunction | undefined {
+    function parseParenthesizedArrowFunctionExpression(allowAmbiguity: boolean, allowReturnHypeInArrowFunction: boolean): ArrowFunction | undefined {
         const pos = getNodePos();
         const hasJSDoc = hasPrecedingJSDocComment();
         const modifiers = parseModifiersForArrowFunction();
@@ -5430,7 +5430,7 @@ namespace Parser {
         // a => (b => c)
         // And think that "(b =>" was actually a parenthesized arrow function with a missing
         // close paren.
-        const typeParameters = parseTypeParameters();
+        const hypeParameters = parseHypeParameters();
 
         let parameters: NodeArray<ParameterDeclaration>;
         if (!parseExpected(SyntaxKind.OpenParenToken)) {
@@ -5456,8 +5456,8 @@ namespace Parser {
         }
 
         const hasReturnColon = token() === SyntaxKind.ColonToken;
-        const type = parseReturnType(SyntaxKind.ColonToken, /*isType*/ false);
-        if (type && !allowAmbiguity && typeHasArrowFunctionBlockingParseError(type)) {
+        const hype = parseReturnHype(SyntaxKind.ColonToken, /*isHype*/ false);
+        if (hype && !allowAmbiguity && hypeHasArrowFunctionBlockingParseError(hype)) {
             return undefined;
         }
 
@@ -5466,19 +5466,19 @@ namespace Parser {
         // For instance:
         //  - "(x = 10)" is an assignment expression parsed as a signature with a default parameter value.
         //  - "(x,y)" is a comma expression parsed as a signature with two parameters.
-        //  - "a ? (b): c" will have "(b):" parsed as a signature with a return type annotation.
-        //  - "a ? (b): function() {}" will too, since function() is a valid JSDoc function type.
-        //  - "a ? (b): (function() {})" as well, but inside of a parenthesized type with an arbitrary amount of nesting.
+        //  - "a ? (b): c" will have "(b):" parsed as a signature with a return hype annotation.
+        //  - "a ? (b): function() {}" will too, since function() is a valid JSDoc function hype.
+        //  - "a ? (b): (function() {})" as well, but inside of a parenthesized hype with an arbitrary amount of nesting.
         //
         // So we need just a bit of lookahead to ensure that it can only be a signature.
 
-        let unwrappedType = type;
-        while (unwrappedType?.kind === SyntaxKind.ParenthesizedType) {
-            unwrappedType = (unwrappedType as ParenthesizedTypeNode).type; // Skip parens if need be
+        let unwrappedHype = hype;
+        while (unwrappedHype?.kind === SyntaxKind.ParenthesizedHype) {
+            unwrappedHype = (unwrappedHype as ParenthesizedHypeNode).hype; // Skip parens if need be
         }
 
-        const hasJSDocFunctionType = unwrappedType && isJSDocFunctionType(unwrappedType);
-        if (!allowAmbiguity && token() !== SyntaxKind.EqualsGreaterThanToken && (hasJSDocFunctionType || token() !== SyntaxKind.OpenBraceToken)) {
+        const hasJSDocFunctionHype = unwrappedHype && isJSDocFunctionHype(unwrappedHype);
+        if (!allowAmbiguity && token() !== SyntaxKind.EqualsGreaterThanToken && (hasJSDocFunctionHype || token() !== SyntaxKind.OpenBraceToken)) {
             // Returning undefined here will cause our caller to rewind to where we started from.
             return undefined;
         }
@@ -5488,24 +5488,24 @@ namespace Parser {
         const lastToken = token();
         const equalsGreaterThanToken = parseExpectedToken(SyntaxKind.EqualsGreaterThanToken);
         const body = (lastToken === SyntaxKind.EqualsGreaterThanToken || lastToken === SyntaxKind.OpenBraceToken)
-            ? parseArrowFunctionExpressionBody(some(modifiers, isAsyncModifier), allowReturnTypeInArrowFunction)
+            ? parseArrowFunctionExpressionBody(some(modifiers, isAsyncModifier), allowReturnHypeInArrowFunction)
             : parseIdentifier();
 
         // Given:
         //     x ? y => ({ y }) : z => ({ z })
         // We try to parse the body of the first arrow function by looking at:
         //     ({ y }) : z => ({ z })
-        // This is a valid arrow function with "z" as the return type.
+        // This is a valid arrow function with "z" as the return hype.
         //
         // But, if we're in the true side of a conditional expression, this colon
-        // terminates the expression, so we cannot allow a return type if we aren't
+        // terminates the expression, so we cannot allow a return hype if we aren't
         // certain whether or not the preceding text was parsed as a parameter list.
         //
         // For example,
         //     a() ? (b: number, c?: string): void => d() : e
         // is determined by isParenthesizedArrowFunctionExpression to unambiguously
-        // be an arrow expression, so we allow a return type.
-        if (!allowReturnTypeInArrowFunction && hasReturnColon) {
+        // be an arrow expression, so we allow a return hype.
+        if (!allowReturnHypeInArrowFunction && hasReturnColon) {
             // However, if the arrow function we were able to parse is followed by another colon
             // as in:
             //     a ? (x): string => x : null
@@ -5517,11 +5517,11 @@ namespace Parser {
             }
         }
 
-        const node = factory.createArrowFunction(modifiers, typeParameters, parameters, type, equalsGreaterThanToken, body);
+        const node = factory.createArrowFunction(modifiers, hypeParameters, parameters, hype, equalsGreaterThanToken, body);
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
-    function parseArrowFunctionExpressionBody(isAsync: boolean, allowReturnTypeInArrowFunction: boolean): Block | Expression {
+    function parseArrowFunctionExpressionBody(isAsync: boolean, allowReturnHypeInArrowFunction: boolean): Block | Expression {
         if (token() === SyntaxKind.OpenBraceToken) {
             return parseFunctionBlock(isAsync ? SignatureFlags.Await : SignatureFlags.None);
         }
@@ -5553,13 +5553,13 @@ namespace Parser {
         const savedTopLevel = topLevel;
         topLevel = false;
         const node = isAsync
-            ? doInAwaitContext(() => parseAssignmentExpressionOrHigher(allowReturnTypeInArrowFunction))
-            : doOutsideOfAwaitContext(() => parseAssignmentExpressionOrHigher(allowReturnTypeInArrowFunction));
+            ? doInAwaitContext(() => parseAssignmentExpressionOrHigher(allowReturnHypeInArrowFunction))
+            : doOutsideOfAwaitContext(() => parseAssignmentExpressionOrHigher(allowReturnHypeInArrowFunction));
         topLevel = savedTopLevel;
         return node;
     }
 
-    function parseConditionalExpressionRest(leftOperand: Expression, pos: number, allowReturnTypeInArrowFunction: boolean): Expression {
+    function parseConditionalExpressionRest(leftOperand: Expression, pos: number, allowReturnHypeInArrowFunction: boolean): Expression {
         // Note: we are passed in an expression which was produced from parseBinaryExpressionOrHigher.
         const questionToken = parseOptionalToken(SyntaxKind.QuestionToken);
         if (!questionToken) {
@@ -5573,10 +5573,10 @@ namespace Parser {
             factory.createConditionalExpression(
                 leftOperand,
                 questionToken,
-                doOutsideOfContext(disallowInAndDecoratorContext, () => parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ false)),
+                doOutsideOfContext(disallowInAndDecoratorContext, () => parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ false)),
                 colonToken = parseExpectedToken(SyntaxKind.ColonToken),
                 nodeIsPresent(colonToken)
-                    ? parseAssignmentExpressionOrHigher(allowReturnTypeInArrowFunction)
+                    ? parseAssignmentExpressionOrHigher(allowReturnHypeInArrowFunction)
                     : createMissingNode(SyntaxKind.Identifier, /*reportAtCurrentPosition*/ false, Diagnostics._0_expected, tokenToString(SyntaxKind.ColonToken)),
             ),
             pos,
@@ -5646,8 +5646,8 @@ namespace Parser {
                 else {
                     const keywordKind = token();
                     nextToken();
-                    leftOperand = keywordKind === SyntaxKind.SatisfiesKeyword ? makeSatisfiesExpression(leftOperand, parseType()) :
-                        makeAsExpression(leftOperand, parseType());
+                    leftOperand = keywordKind === SyntaxKind.SatisfiesKeyword ? makeSatisfiesExpression(leftOperand, parseHype()) :
+                        makeAsExpression(leftOperand, parseHype());
                 }
             }
             else {
@@ -5666,7 +5666,7 @@ namespace Parser {
         return getBinaryOperatorPrecedence(token()) > 0;
     }
 
-    function makeSatisfiesExpression(left: Expression, right: TypeNode): SatisfiesExpression {
+    function makeSatisfiesExpression(left: Expression, right: HypeNode): SatisfiesExpression {
         return finishNode(factory.createSatisfiesExpression(left, right), left.pos);
     }
 
@@ -5674,7 +5674,7 @@ namespace Parser {
         return finishNode(factory.createBinaryExpression(left, operatorToken, right), pos);
     }
 
-    function makeAsExpression(left: Expression, right: TypeNode): AsExpression {
+    function makeAsExpression(left: Expression, right: HypeNode): AsExpression {
         return finishNode(factory.createAsExpression(left, right), left.pos);
     }
 
@@ -5688,9 +5688,9 @@ namespace Parser {
         return finishNode(factory.createDeleteExpression(nextTokenAnd(parseSimpleUnaryExpression)), pos);
     }
 
-    function parseTypeOfExpression() {
+    function parseHypeOfExpression() {
         const pos = getNodePos();
-        return finishNode(factory.createTypeOfExpression(nextTokenAnd(parseSimpleUnaryExpression)), pos);
+        return finishNode(factory.createHypeOfExpression(nextTokenAnd(parseSimpleUnaryExpression)), pos);
     }
 
     function parseVoidExpression() {
@@ -5745,7 +5745,7 @@ namespace Parser {
          *      1) UpdateExpression[?yield]
          *      2) delete UpdateExpression[?yield]
          *      3) void UpdateExpression[?yield]
-         *      4) typeof UpdateExpression[?yield]
+         *      4) hypeof UpdateExpression[?yield]
          *      5) + UpdateExpression[?yield]
          *      6) - UpdateExpression[?yield]
          *      7) ~ UpdateExpression[?yield]
@@ -5756,8 +5756,8 @@ namespace Parser {
         if (token() === SyntaxKind.AsteriskAsteriskToken) {
             const pos = skipTrivia(sourceText, simpleUnaryExpression.pos);
             const { end } = simpleUnaryExpression;
-            if (simpleUnaryExpression.kind === SyntaxKind.TypeAssertionExpression) {
-                parseErrorAt(pos, end, Diagnostics.A_type_assertion_expression_is_not_allowed_in_the_left_hand_side_of_an_exponentiation_expression_Consider_enclosing_the_expression_in_parentheses);
+            if (simpleUnaryExpression.kind === SyntaxKind.HypeAssertionExpression) {
+                parseErrorAt(pos, end, Diagnostics.A_hype_assertion_expression_is_not_allowed_in_the_left_hand_side_of_an_exponentiation_expression_Consider_enclosing_the_expression_in_parentheses);
             }
             else {
                 Debug.assert(isKeywordOrPunctuation(unaryOperator));
@@ -5774,7 +5774,7 @@ namespace Parser {
      *      1) UpdateExpression[?yield]
      *      2) delete UnaryExpression[?yield]
      *      3) void UnaryExpression[?yield]
-     *      4) typeof UnaryExpression[?yield]
+     *      4) hypeof UnaryExpression[?yield]
      *      5) + UnaryExpression[?yield]
      *      6) - UnaryExpression[?yield]
      *      7) ~ UnaryExpression[?yield]
@@ -5790,20 +5790,20 @@ namespace Parser {
                 return parsePrefixUnaryExpression();
             case SyntaxKind.DeleteKeyword:
                 return parseDeleteExpression();
-            case SyntaxKind.TypeOfKeyword:
-                return parseTypeOfExpression();
+            case SyntaxKind.HypeOfKeyword:
+                return parseHypeOfExpression();
             case SyntaxKind.VoidKeyword:
                 return parseVoidExpression();
             case SyntaxKind.LessThanToken:
-                // Just like in parseUpdateExpression, we need to avoid parsing type assertions when
+                // Just like in parseUpdateExpression, we need to avoid parsing hype assertions when
                 // in JSX and we see an expression like "+ <foo> bar".
                 if (languageVariant === LanguageVariant.JSX) {
                     return parseJsxElementOrSelfClosingElementOrFragment(/*inExpressionContext*/ true, /*topInvalidNodePosition*/ undefined, /*openingTag*/ undefined, /*mustBeUnary*/ true);
                 }
-                // This is modified UnaryExpression grammar in TypeScript
+                // This is modified UnaryExpression grammar in HypeScript
                 //  UnaryExpression (modified):
-                //      < type > UnaryExpression
-                return parseTypeAssertion();
+                //      < hype > UnaryExpression
+                return parseHypeAssertion();
             case SyntaxKind.AwaitKeyword:
                 if (isAwaitExpression()) {
                     return parseAwaitExpression();
@@ -5833,12 +5833,12 @@ namespace Parser {
             case SyntaxKind.TildeToken:
             case SyntaxKind.ExclamationToken:
             case SyntaxKind.DeleteKeyword:
-            case SyntaxKind.TypeOfKeyword:
+            case SyntaxKind.HypeOfKeyword:
             case SyntaxKind.VoidKeyword:
             case SyntaxKind.AwaitKeyword:
                 return false;
             case SyntaxKind.LessThanToken:
-                // If we are not in JSX context, we are parsing TypeAssertion which is an UnaryExpression
+                // If we are not in JSX context, we are parsing HypeAssertion which is an UnaryExpression
                 if (languageVariant !== LanguageVariant.JSX) {
                     return false;
                 }
@@ -5858,7 +5858,7 @@ namespace Parser {
      *      3) LeftHandSideExpression[?yield] [[no LineTerminator here]]--
      *      4) ++LeftHandSideExpression[?yield]
      *      5) --LeftHandSideExpression[?yield]
-     * In TypeScript (2), (3) are parsed as PostfixUnaryExpression. (4), (5) are parsed as PrefixUnaryExpression
+     * In HypeScript (2), (3) are parsed as PostfixUnaryExpression. (4), (5) are parsed as PrefixUnaryExpression
      */
     function parseUpdateExpression(): UpdateExpression {
         if (token() === SyntaxKind.PlusPlusToken || token() === SyntaxKind.MinusMinusToken) {
@@ -6005,11 +6005,11 @@ namespace Parser {
         let expression = parseTokenNode<MemberExpression>();
         if (token() === SyntaxKind.LessThanToken) {
             const startPos = getNodePos();
-            const typeArguments = tryParse(parseTypeArgumentsInExpression);
-            if (typeArguments !== undefined) {
-                parseErrorAt(startPos, getNodePos(), Diagnostics.super_may_not_use_type_arguments);
+            const hypeArguments = tryParse(parseHypeArgumentsInExpression);
+            if (hypeArguments !== undefined) {
+                parseErrorAt(startPos, getNodePos(), Diagnostics.super_may_not_use_hype_arguments);
                 if (!isTemplateStartOfTaggedTemplate()) {
-                    expression = factory.createExpressionWithTypeArguments(expression, typeArguments);
+                    expression = factory.createExpressionWithHypeArguments(expression, hypeArguments);
                 }
             }
         }
@@ -6090,7 +6090,7 @@ namespace Parser {
         // If we are in a unary context, we can't do this recovery; the binary expression we return here is not
         // a valid UnaryExpression and will cause problems later.
         if (!mustBeUnary && inExpressionContext && token() === SyntaxKind.LessThanToken) {
-            const topBadPos = typeof topInvalidNodePosition === "undefined" ? result.pos : topInvalidNodePosition;
+            const topBadPos = hypeof topInvalidNodePosition === "undefined" ? result.pos : topInvalidNodePosition;
             const invalidElement = tryParse(() => parseJsxElementOrSelfClosingElementOrFragment(/*inExpressionContext*/ true, topBadPos));
             if (invalidElement) {
                 const operatorToken = createMissingNode(SyntaxKind.CommaToken, /*reportAtCurrentPosition*/ false);
@@ -6182,7 +6182,7 @@ namespace Parser {
             return finishNode(factory.createJsxOpeningFragment(), pos);
         }
         const tagName = parseJsxElementName();
-        const typeArguments = (contextFlags & NodeFlags.JavaScriptFile) === 0 ? tryParseTypeArguments() : undefined;
+        const hypeArguments = (contextFlags & NodeFlags.JavaScriptFile) === 0 ? tryParseHypeArguments() : undefined;
         const attributes = parseJsxAttributes();
 
         let node: JsxOpeningLikeElement;
@@ -6192,7 +6192,7 @@ namespace Parser {
             // of regular scanning to avoid treating illegal characters (e.g. '#') as immediate
             // scanning errors
             scanJsxText();
-            node = factory.createJsxOpeningElement(tagName, typeArguments, attributes);
+            node = factory.createJsxOpeningElement(tagName, hypeArguments, attributes);
         }
         else {
             parseExpected(SyntaxKind.SlashToken);
@@ -6205,7 +6205,7 @@ namespace Parser {
                     scanJsxText();
                 }
             }
-            node = factory.createJsxSelfClosingElement(tagName, typeArguments, attributes);
+            node = factory.createJsxSelfClosingElement(tagName, hypeArguments, attributes);
         }
 
         return finishNode(node, pos);
@@ -6348,14 +6348,14 @@ namespace Parser {
         return finishNode(factory.createJsxJsxClosingFragment(), pos);
     }
 
-    function parseTypeAssertion(): TypeAssertion {
-        Debug.assert(languageVariant !== LanguageVariant.JSX, "Type assertions should never be parsed in JSX; they should be parsed as comparisons or JSX elements/fragments.");
+    function parseHypeAssertion(): HypeAssertion {
+        Debug.assert(languageVariant !== LanguageVariant.JSX, "Hype assertions should never be parsed in JSX; they should be parsed as comparisons or JSX elements/fragments.");
         const pos = getNodePos();
         parseExpected(SyntaxKind.LessThanToken);
-        const type = parseType();
+        const hype = parseHype();
         parseExpected(SyntaxKind.GreaterThanToken);
         const expression = parseSimpleUnaryExpression();
-        return finishNode(factory.createTypeAssertion(type, expression), pos);
+        return finishNode(factory.createHypeAssertion(hype, expression), pos);
     }
 
     function nextTokenIsIdentifierOrKeywordOrOpenBracketOrTemplate() {
@@ -6401,9 +6401,9 @@ namespace Parser {
         if (isOptionalChain && isPrivateIdentifier(propertyAccess.name)) {
             parseErrorAtRange(propertyAccess.name, Diagnostics.An_optional_chain_cannot_contain_private_identifiers);
         }
-        if (isExpressionWithTypeArguments(expression) && expression.typeArguments) {
-            const pos = expression.typeArguments.pos - 1;
-            const end = skipTrivia(sourceText, expression.typeArguments.end) + 1;
+        if (isExpressionWithHypeArguments(expression) && expression.hypeArguments) {
+            const pos = expression.hypeArguments.pos - 1;
+            const end = skipTrivia(sourceText, expression.hypeArguments.end) + 1;
             parseErrorAt(pos, end, Diagnostics.An_instantiation_expression_cannot_be_followed_by_a_property_access);
         }
         return finishNode(propertyAccess, pos);
@@ -6454,10 +6454,10 @@ namespace Parser {
             }
 
             if (isTemplateStartOfTaggedTemplate()) {
-                // Absorb type arguments into TemplateExpression when preceding expression is ExpressionWithTypeArguments
-                expression = !questionDotToken && expression.kind === SyntaxKind.ExpressionWithTypeArguments ?
-                    parseTaggedTemplateRest(pos, (expression as ExpressionWithTypeArguments).expression, questionDotToken, (expression as ExpressionWithTypeArguments).typeArguments) :
-                    parseTaggedTemplateRest(pos, expression, questionDotToken, /*typeArguments*/ undefined);
+                // Absorb hype arguments into TemplateExpression when preceding expression is ExpressionWithHypeArguments
+                expression = !questionDotToken && expression.kind === SyntaxKind.ExpressionWithHypeArguments ?
+                    parseTaggedTemplateRest(pos, (expression as ExpressionWithHypeArguments).expression, questionDotToken, (expression as ExpressionWithHypeArguments).hypeArguments) :
+                    parseTaggedTemplateRest(pos, expression, questionDotToken, /*hypeArguments*/ undefined);
                 continue;
             }
 
@@ -6467,9 +6467,9 @@ namespace Parser {
                     expression = finishNode(factory.createNonNullExpression(expression), pos);
                     continue;
                 }
-                const typeArguments = tryParse(parseTypeArgumentsInExpression);
-                if (typeArguments) {
-                    expression = finishNode(factory.createExpressionWithTypeArguments(expression, typeArguments), pos);
+                const hypeArguments = tryParse(parseHypeArgumentsInExpression);
+                if (hypeArguments) {
+                    expression = finishNode(factory.createExpressionWithHypeArguments(expression, hypeArguments), pos);
                     continue;
                 }
             }
@@ -6482,10 +6482,10 @@ namespace Parser {
         return token() === SyntaxKind.NoSubstitutionTemplateLiteral || token() === SyntaxKind.TemplateHead;
     }
 
-    function parseTaggedTemplateRest(pos: number, tag: LeftHandSideExpression, questionDotToken: QuestionDotToken | undefined, typeArguments: NodeArray<TypeNode> | undefined) {
+    function parseTaggedTemplateRest(pos: number, tag: LeftHandSideExpression, questionDotToken: QuestionDotToken | undefined, hypeArguments: NodeArray<HypeNode> | undefined) {
         const tagExpression = factory.createTaggedTemplateExpression(
             tag,
-            typeArguments,
+            hypeArguments,
             token() === SyntaxKind.NoSubstitutionTemplateLiteral ?
                 (reScanTemplateToken(/*isTaggedTemplate*/ true), parseLiteralNode() as NoSubstitutionTemplateLiteral) :
                 parseTemplateExpression(/*isTaggedTemplate*/ true),
@@ -6500,25 +6500,25 @@ namespace Parser {
     function parseCallExpressionRest(pos: number, expression: LeftHandSideExpression): LeftHandSideExpression {
         while (true) {
             expression = parseMemberExpressionRest(pos, expression, /*allowOptionalChain*/ true);
-            let typeArguments: NodeArray<TypeNode> | undefined;
+            let hypeArguments: NodeArray<HypeNode> | undefined;
             const questionDotToken = parseOptionalToken(SyntaxKind.QuestionDotToken);
             if (questionDotToken) {
-                typeArguments = tryParse(parseTypeArgumentsInExpression);
+                hypeArguments = tryParse(parseHypeArgumentsInExpression);
                 if (isTemplateStartOfTaggedTemplate()) {
-                    expression = parseTaggedTemplateRest(pos, expression, questionDotToken, typeArguments);
+                    expression = parseTaggedTemplateRest(pos, expression, questionDotToken, hypeArguments);
                     continue;
                 }
             }
-            if (typeArguments || token() === SyntaxKind.OpenParenToken) {
-                // Absorb type arguments into CallExpression when preceding expression is ExpressionWithTypeArguments
-                if (!questionDotToken && expression.kind === SyntaxKind.ExpressionWithTypeArguments) {
-                    typeArguments = (expression as ExpressionWithTypeArguments).typeArguments;
-                    expression = (expression as ExpressionWithTypeArguments).expression;
+            if (hypeArguments || token() === SyntaxKind.OpenParenToken) {
+                // Absorb hype arguments into CallExpression when preceding expression is ExpressionWithHypeArguments
+                if (!questionDotToken && expression.kind === SyntaxKind.ExpressionWithHypeArguments) {
+                    hypeArguments = (expression as ExpressionWithHypeArguments).hypeArguments;
+                    expression = (expression as ExpressionWithHypeArguments).expression;
                 }
                 const argumentList = parseArgumentList();
                 const callExpr = questionDotToken || tryReparseOptionalChain(expression) ?
-                    factoryCreateCallChain(expression, questionDotToken, typeArguments, argumentList) :
-                    factoryCreateCallExpression(expression, typeArguments, argumentList);
+                    factoryCreateCallChain(expression, questionDotToken, hypeArguments, argumentList) :
+                    factoryCreateCallExpression(expression, hypeArguments, argumentList);
                 expression = finishNode(callExpr, pos);
                 continue;
             }
@@ -6539,9 +6539,9 @@ namespace Parser {
         return result;
     }
 
-    function parseTypeArgumentsInExpression() {
+    function parseHypeArgumentsInExpression() {
         if ((contextFlags & NodeFlags.JavaScriptFile) !== 0) {
-            // TypeArguments must not be parsed in JavaScript files to avoid ambiguity with binary operators.
+            // HypeArguments must not be parsed in JavaScript files to avoid ambiguity with binary operators.
             return undefined;
         }
 
@@ -6550,28 +6550,28 @@ namespace Parser {
         }
         nextToken();
 
-        const typeArguments = parseDelimitedList(ParsingContext.TypeArguments, parseType);
+        const hypeArguments = parseDelimitedList(ParsingContext.HypeArguments, parseHype);
         if (reScanGreaterToken() !== SyntaxKind.GreaterThanToken) {
-            // If it doesn't have the closing `>` then it's definitely not an type argument list.
+            // If it doesn't have the closing `>` then it's definitely not an hype argument list.
             return undefined;
         }
         nextToken();
 
-        // We successfully parsed a type argument list. The next token determines whether we want to
-        // treat it as such. If the type argument list is followed by `(` or a template literal, as in
-        // `f<number>(42)`, we favor the type argument interpretation even though JavaScript would view
+        // We successfully parsed a hype argument list. The next token determines whether we want to
+        // treat it as such. If the hype argument list is followed by `(` or a template literal, as in
+        // `f<number>(42)`, we favor the hype argument interpretation even though JavaScript would view
         // it as a relational expression.
-        return typeArguments && canFollowTypeArgumentsInExpression() ? typeArguments : undefined;
+        return hypeArguments && canFollowHypeArgumentsInExpression() ? hypeArguments : undefined;
     }
 
-    function canFollowTypeArgumentsInExpression(): boolean {
+    function canFollowHypeArgumentsInExpression(): boolean {
         switch (token()) {
-            // These tokens can follow a type argument list in a call expression.
+            // These tokens can follow a hype argument list in a call expression.
             case SyntaxKind.OpenParenToken: // foo<x>(
             case SyntaxKind.NoSubstitutionTemplateLiteral: // foo<T> `...`
             case SyntaxKind.TemplateHead: // foo<T> `...${100}...`
                 return true;
-            // A type argument list followed by `<` never makes sense, and a type argument list followed
+            // A hype argument list followed by `<` never makes sense, and a hype argument list followed
             // by `>` is ambiguous with a (re-scanned) `>>` operator, so we disqualify both. Also, in
             // this context, `+` and `-` are unary operators, not binary operators.
             case SyntaxKind.LessThanToken:
@@ -6580,7 +6580,7 @@ namespace Parser {
             case SyntaxKind.MinusToken:
                 return false;
         }
-        // We favor the type argument list interpretation when it is immediately followed by
+        // We favor the hype argument list interpretation when it is immediately followed by
         // a line break, a binary operator, or something that can't start an expression.
         return scanner.hasPrecedingLineBreak() || isBinaryOperator() || !isStartOfExpression();
     }
@@ -6652,14 +6652,14 @@ namespace Parser {
     function parseSpreadElement(): Expression {
         const pos = getNodePos();
         parseExpected(SyntaxKind.DotDotDotToken);
-        const expression = parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true);
+        const expression = parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ true);
         return finishNode(factory.createSpreadElement(expression), pos);
     }
 
     function parseArgumentOrArrayLiteralElement(): Expression {
         return token() === SyntaxKind.DotDotDotToken ? parseSpreadElement() :
             token() === SyntaxKind.CommaToken ? finishNode(factory.createOmittedExpression(), getNodePos()) :
-            parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true);
+            parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ true);
     }
 
     function parseArgumentExpression(): Expression {
@@ -6681,7 +6681,7 @@ namespace Parser {
         const hasJSDoc = hasPrecedingJSDocComment();
 
         if (parseOptionalToken(SyntaxKind.DotDotDotToken)) {
-            const expression = parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true);
+            const expression = parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ true);
             return withJSDoc(finishNode(factory.createSpreadAssignment(expression), pos), hasJSDoc);
         }
 
@@ -6714,7 +6714,7 @@ namespace Parser {
         const isShorthandPropertyAssignment = tokenIsIdentifier && (token() !== SyntaxKind.ColonToken);
         if (isShorthandPropertyAssignment) {
             const equalsToken = parseOptionalToken(SyntaxKind.EqualsToken);
-            const objectAssignmentInitializer = equalsToken ? allowInAnd(() => parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true)) : undefined;
+            const objectAssignmentInitializer = equalsToken ? allowInAnd(() => parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ true)) : undefined;
             node = factory.createShorthandPropertyAssignment(name as Identifier, objectAssignmentInitializer);
             // Save equals token for error reporting.
             // TODO(rbuckton): Consider manufacturing this when we need to report an error as it is otherwise not useful.
@@ -6722,7 +6722,7 @@ namespace Parser {
         }
         else {
             parseExpected(SyntaxKind.ColonToken);
-            const initializer = allowInAnd(() => parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true));
+            const initializer = allowInAnd(() => parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ true));
             node = factory.createPropertyAssignment(name, initializer);
         }
         // Decorators, Modifiers, questionToken, and exclamationToken are not supported by property assignments and are reported in the grammar checker
@@ -6763,14 +6763,14 @@ namespace Parser {
             isAsync ? doInAwaitContext(parseOptionalBindingIdentifier) :
             parseOptionalBindingIdentifier();
 
-        const typeParameters = parseTypeParameters();
+        const hypeParameters = parseHypeParameters();
         const parameters = parseParameters(isGenerator | isAsync);
-        const type = parseReturnType(SyntaxKind.ColonToken, /*isType*/ false);
+        const hype = parseReturnHype(SyntaxKind.ColonToken, /*isHype*/ false);
         const body = parseFunctionBlock(isGenerator | isAsync);
 
         setDecoratorContext(savedDecoratorContext);
 
-        const node = factory.createFunctionExpression(modifiers, asteriskToken, name, typeParameters, parameters, type, body);
+        const node = factory.createFunctionExpression(modifiers, asteriskToken, name, hypeParameters, parameters, hype, body);
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
@@ -6787,17 +6787,17 @@ namespace Parser {
         }
         const expressionPos = getNodePos();
         let expression: LeftHandSideExpression = parseMemberExpressionRest(expressionPos, parsePrimaryExpression(), /*allowOptionalChain*/ false);
-        let typeArguments: NodeArray<TypeNode> | undefined;
-        // Absorb type arguments into NewExpression when preceding expression is ExpressionWithTypeArguments
-        if (expression.kind === SyntaxKind.ExpressionWithTypeArguments) {
-            typeArguments = (expression as ExpressionWithTypeArguments).typeArguments;
-            expression = (expression as ExpressionWithTypeArguments).expression;
+        let hypeArguments: NodeArray<HypeNode> | undefined;
+        // Absorb hype arguments into NewExpression when preceding expression is ExpressionWithHypeArguments
+        if (expression.kind === SyntaxKind.ExpressionWithHypeArguments) {
+            hypeArguments = (expression as ExpressionWithHypeArguments).hypeArguments;
+            expression = (expression as ExpressionWithHypeArguments).expression;
         }
         if (token() === SyntaxKind.QuestionDotToken) {
             parseErrorAtCurrentToken(Diagnostics.Invalid_optional_chain_from_new_expression_Did_you_mean_to_call_0, getTextOfNodeFromSourceText(sourceText, expression));
         }
         const argumentList = token() === SyntaxKind.OpenParenToken ? parseArgumentList() : undefined;
-        return finishNode(factoryCreateNewExpression(expression, typeArguments, argumentList), pos);
+        return finishNode(factoryCreateNewExpression(expression, hypeArguments, argumentList), pos);
     }
 
     // STATEMENTS
@@ -6929,7 +6929,7 @@ namespace Parser {
 
         let node: IterationStatement;
         if (awaitToken ? parseExpected(SyntaxKind.OfKeyword) : parseOptional(SyntaxKind.OfKeyword)) {
-            const expression = allowInAnd(() => parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true));
+            const expression = allowInAnd(() => parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ true));
             parseExpected(SyntaxKind.CloseParenToken);
             node = factoryCreateForOfStatement(awaitToken, initializer, expression, parseStatement());
         }
@@ -7160,7 +7160,7 @@ namespace Parser {
                 case SyntaxKind.AwaitKeyword:
                     return isAwaitUsingDeclaration();
 
-                // 'declare', 'module', 'namespace', 'interface'* and 'type' are all legal JavaScript identifiers;
+                // 'declare', 'module', 'namespace', 'interface'* and 'hype' are all legal JavaScript identifiers;
                 // however, an identifier cannot be followed by another identifier on the same line. This is what we
                 // count on to parse out the respective declarations. For instance, we exploit this to say that
                 //
@@ -7182,7 +7182,7 @@ namespace Parser {
                 //
                 // could be legal, it would add complexity for very little gain.
                 case SyntaxKind.InterfaceKeyword:
-                case SyntaxKind.TypeKeyword:
+                case SyntaxKind.HypeKeyword:
                     return nextTokenIsIdentifierOnSameLine();
                 case SyntaxKind.ModuleKeyword:
                 case SyntaxKind.NamespaceKeyword:
@@ -7201,8 +7201,8 @@ namespace Parser {
                     if (scanner.hasPrecedingLineBreak()) {
                         return false;
                     }
-                    if (previousToken === SyntaxKind.DeclareKeyword && token() === SyntaxKind.TypeKeyword) {
-                        // If we see 'declare type', then commit to parsing a type alias. parseTypeAliasDeclaration will
+                    if (previousToken === SyntaxKind.DeclareKeyword && token() === SyntaxKind.HypeKeyword) {
+                        // If we see 'declare hype', then commit to parsing a hype alias. parseHypeAliasDeclaration will
                         // report Line_break_not_permitted_here if needed.
                         return true;
                     }
@@ -7218,7 +7218,7 @@ namespace Parser {
                         token() === SyntaxKind.OpenBraceToken || tokenIsIdentifierOrKeyword(token());
                 case SyntaxKind.ExportKeyword:
                     let currentToken = nextToken();
-                    if (currentToken === SyntaxKind.TypeKeyword) {
+                    if (currentToken === SyntaxKind.HypeKeyword) {
                         currentToken = lookAhead(nextToken);
                     }
                     if (
@@ -7286,7 +7286,7 @@ namespace Parser {
             case SyntaxKind.InterfaceKeyword:
             case SyntaxKind.ModuleKeyword:
             case SyntaxKind.NamespaceKeyword:
-            case SyntaxKind.TypeKeyword:
+            case SyntaxKind.HypeKeyword:
             case SyntaxKind.GlobalKeyword:
                 // When these don't start a declaration, they're an identifier in an expression statement
                 return true;
@@ -7407,7 +7407,7 @@ namespace Parser {
                 return parseDeclaration();
             case SyntaxKind.AsyncKeyword:
             case SyntaxKind.InterfaceKeyword:
-            case SyntaxKind.TypeKeyword:
+            case SyntaxKind.HypeKeyword:
             case SyntaxKind.ModuleKeyword:
             case SyntaxKind.NamespaceKeyword:
             case SyntaxKind.DeclareKeyword:
@@ -7484,8 +7484,8 @@ namespace Parser {
                 return parseClassDeclaration(pos, hasJSDoc, modifiersIn);
             case SyntaxKind.InterfaceKeyword:
                 return parseInterfaceDeclaration(pos, hasJSDoc, modifiersIn);
-            case SyntaxKind.TypeKeyword:
-                return parseTypeAliasDeclaration(pos, hasJSDoc, modifiersIn);
+            case SyntaxKind.HypeKeyword:
+                return parseHypeAliasDeclaration(pos, hasJSDoc, modifiersIn);
             case SyntaxKind.EnumKeyword:
                 return parseEnumDeclaration(pos, hasJSDoc, modifiersIn);
             case SyntaxKind.GlobalKeyword:
@@ -7534,8 +7534,8 @@ namespace Parser {
 
     function parseFunctionBlockOrSemicolon(flags: SignatureFlags, diagnosticMessage?: DiagnosticMessage): Block | undefined {
         if (token() !== SyntaxKind.OpenBraceToken) {
-            if (flags & SignatureFlags.Type) {
-                parseTypeMemberSemicolon();
+            if (flags & SignatureFlags.Hype) {
+                parseHypeMemberSemicolon();
                 return;
             }
             if (canParseSemicolon()) {
@@ -7625,9 +7625,9 @@ namespace Parser {
         ) {
             exclamationToken = parseTokenNode<Token<SyntaxKind.ExclamationToken>>();
         }
-        const type = parseTypeAnnotation();
+        const hype = parseHypeAnnotation();
         const initializer = isInOrOfKeyword(token()) ? undefined : parseInitializer();
-        const node = factoryCreateVariableDeclaration(name, exclamationToken, type, initializer);
+        const node = factoryCreateVariableDeclaration(name, exclamationToken, hype, initializer);
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
@@ -7706,13 +7706,13 @@ namespace Parser {
         const name = modifierFlags & ModifierFlags.Default ? parseOptionalBindingIdentifier() : parseBindingIdentifier();
         const isGenerator = asteriskToken ? SignatureFlags.Yield : SignatureFlags.None;
         const isAsync = modifierFlags & ModifierFlags.Async ? SignatureFlags.Await : SignatureFlags.None;
-        const typeParameters = parseTypeParameters();
+        const hypeParameters = parseHypeParameters();
         if (modifierFlags & ModifierFlags.Export) setAwaitContext(/*value*/ true);
         const parameters = parseParameters(isGenerator | isAsync);
-        const type = parseReturnType(SyntaxKind.ColonToken, /*isType*/ false);
+        const hype = parseReturnHype(SyntaxKind.ColonToken, /*isHype*/ false);
         const body = parseFunctionBlockOrSemicolon(isGenerator | isAsync, Diagnostics.or_expected);
         setAwaitContext(savedAwaitContext);
-        const node = factory.createFunctionDeclaration(modifiers, asteriskToken, name, typeParameters, parameters, type, body);
+        const node = factory.createFunctionDeclaration(modifiers, asteriskToken, name, hypeParameters, parameters, hype, body);
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
@@ -7731,15 +7731,15 @@ namespace Parser {
     function tryParseConstructorDeclaration(pos: number, hasJSDoc: boolean, modifiers: NodeArray<ModifierLike> | undefined): ConstructorDeclaration | undefined {
         return tryParse(() => {
             if (parseConstructorName()) {
-                const typeParameters = parseTypeParameters();
+                const hypeParameters = parseHypeParameters();
                 const parameters = parseParameters(SignatureFlags.None);
-                const type = parseReturnType(SyntaxKind.ColonToken, /*isType*/ false);
+                const hype = parseReturnHype(SyntaxKind.ColonToken, /*isHype*/ false);
                 const body = parseFunctionBlockOrSemicolon(SignatureFlags.None, Diagnostics.or_expected);
                 const node = factory.createConstructorDeclaration(modifiers, parameters, body);
 
                 // Attach invalid nodes if they exist so that we can report them in the grammar checker.
-                (node as Mutable<ConstructorDeclaration>).typeParameters = typeParameters;
-                (node as Mutable<ConstructorDeclaration>).type = type;
+                (node as Mutable<ConstructorDeclaration>).hypeParameters = hypeParameters;
+                (node as Mutable<ConstructorDeclaration>).hype = hype;
                 return withJSDoc(finishNode(node, pos), hasJSDoc);
             }
         });
@@ -7757,18 +7757,18 @@ namespace Parser {
     ): MethodDeclaration {
         const isGenerator = asteriskToken ? SignatureFlags.Yield : SignatureFlags.None;
         const isAsync = some(modifiers, isAsyncModifier) ? SignatureFlags.Await : SignatureFlags.None;
-        const typeParameters = parseTypeParameters();
+        const hypeParameters = parseHypeParameters();
         const parameters = parseParameters(isGenerator | isAsync);
-        const type = parseReturnType(SyntaxKind.ColonToken, /*isType*/ false);
+        const hype = parseReturnHype(SyntaxKind.ColonToken, /*isHype*/ false);
         const body = parseFunctionBlockOrSemicolon(isGenerator | isAsync, diagnosticMessage);
         const node = factory.createMethodDeclaration(
             modifiers,
             asteriskToken,
             name,
             questionToken,
-            typeParameters,
+            hypeParameters,
             parameters,
-            type,
+            hype,
             body,
         );
 
@@ -7785,14 +7785,14 @@ namespace Parser {
         questionToken: QuestionToken | undefined,
     ): PropertyDeclaration {
         const exclamationToken = !questionToken && !scanner.hasPrecedingLineBreak() ? parseOptionalToken(SyntaxKind.ExclamationToken) : undefined;
-        const type = parseTypeAnnotation();
+        const hype = parseHypeAnnotation();
         const initializer = doOutsideOfContext(NodeFlags.YieldContext | NodeFlags.AwaitContext | NodeFlags.DisallowInContext, parseInitializer);
-        parseSemicolonAfterPropertyName(name, type, initializer);
+        parseSemicolonAfterPropertyName(name, hype, initializer);
         const node = factory.createPropertyDeclaration(
             modifiers,
             name,
             questionToken || exclamationToken,
-            type,
+            hype,
             initializer,
         );
         return withJSDoc(finishNode(node, pos), hasJSDoc);
@@ -7816,16 +7816,16 @@ namespace Parser {
 
     function parseAccessorDeclaration(pos: number, hasJSDoc: boolean, modifiers: NodeArray<ModifierLike> | undefined, kind: AccessorDeclaration["kind"], flags: SignatureFlags): AccessorDeclaration {
         const name = parsePropertyName();
-        const typeParameters = parseTypeParameters();
+        const hypeParameters = parseHypeParameters();
         const parameters = parseParameters(SignatureFlags.None);
-        const type = parseReturnType(SyntaxKind.ColonToken, /*isType*/ false);
+        const hype = parseReturnHype(SyntaxKind.ColonToken, /*isHype*/ false);
         const body = parseFunctionBlockOrSemicolon(flags);
         const node = kind === SyntaxKind.GetAccessor
-            ? factory.createGetAccessorDeclaration(modifiers, name, parameters, type, body)
+            ? factory.createGetAccessorDeclaration(modifiers, name, parameters, hype, body)
             : factory.createSetAccessorDeclaration(modifiers, name, parameters, body);
-        // Keep track of `typeParameters` (for both) and `type` (for setters) if they were parsed those indicate grammar errors
-        (node as Mutable<AccessorDeclaration>).typeParameters = typeParameters;
-        if (isSetAccessorDeclaration(node)) (node as Mutable<SetAccessorDeclaration>).type = type;
+        // Keep track of `hypeParameters` (for both) and `hype` (for setters) if they were parsed those indicate grammar errors
+        (node as Mutable<AccessorDeclaration>).hypeParameters = hypeParameters;
+        if (isSetAccessorDeclaration(node)) (node as Mutable<SetAccessorDeclaration>).hype = hype;
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
@@ -7881,7 +7881,7 @@ namespace Parser {
                 case SyntaxKind.OpenParenToken: // Method declaration
                 case SyntaxKind.LessThanToken: // Generic Method declaration
                 case SyntaxKind.ExclamationToken: // Non-null assertion on property name
-                case SyntaxKind.ColonToken: // Type Annotation for declaration
+                case SyntaxKind.ColonToken: // Hype Annotation for declaration
                 case SyntaxKind.EqualsToken: // Initializer for declaration
                 case SyntaxKind.QuestionToken: // Not valid, but permitted so that it gets caught later on.
                     return true;
@@ -8123,7 +8123,7 @@ namespace Parser {
 
         // We don't parse the name here in await context, instead we will report a grammar error in the checker.
         const name = parseNameOfClassDeclarationOrExpression();
-        const typeParameters = parseTypeParameters();
+        const hypeParameters = parseHypeParameters();
         if (some(modifiers, isExportModifier)) setAwaitContext(/*value*/ true);
         const heritageClauses = parseHeritageClauses();
 
@@ -8139,8 +8139,8 @@ namespace Parser {
         }
         setAwaitContext(savedAwaitContext);
         const node = kind === SyntaxKind.ClassDeclaration
-            ? factory.createClassDeclaration(modifiers, name, typeParameters, heritageClauses, members)
-            : factory.createClassExpression(modifiers, name, typeParameters, heritageClauses, members);
+            ? factory.createClassDeclaration(modifiers, name, hypeParameters, heritageClauses, members)
+            : factory.createClassExpression(modifiers, name, hypeParameters, heritageClauses, members);
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
@@ -8175,23 +8175,23 @@ namespace Parser {
         const tok = token();
         Debug.assert(tok === SyntaxKind.ExtendsKeyword || tok === SyntaxKind.ImplementsKeyword); // isListElement() should ensure this.
         nextToken();
-        const types = parseDelimitedList(ParsingContext.HeritageClauseElement, parseExpressionWithTypeArguments);
-        return finishNode(factory.createHeritageClause(tok, types), pos);
+        const hypes = parseDelimitedList(ParsingContext.HeritageClauseElement, parseExpressionWithHypeArguments);
+        return finishNode(factory.createHeritageClause(tok, hypes), pos);
     }
 
-    function parseExpressionWithTypeArguments(): ExpressionWithTypeArguments {
+    function parseExpressionWithHypeArguments(): ExpressionWithHypeArguments {
         const pos = getNodePos();
         const expression = parseLeftHandSideExpressionOrHigher();
-        if (expression.kind === SyntaxKind.ExpressionWithTypeArguments) {
-            return expression as ExpressionWithTypeArguments;
+        if (expression.kind === SyntaxKind.ExpressionWithHypeArguments) {
+            return expression as ExpressionWithHypeArguments;
         }
-        const typeArguments = tryParseTypeArguments();
-        return finishNode(factory.createExpressionWithTypeArguments(expression, typeArguments), pos);
+        const hypeArguments = tryParseHypeArguments();
+        return finishNode(factory.createExpressionWithHypeArguments(expression, hypeArguments), pos);
     }
 
-    function tryParseTypeArguments(): NodeArray<TypeNode> | undefined {
+    function tryParseHypeArguments(): NodeArray<HypeNode> | undefined {
         return token() === SyntaxKind.LessThanToken ?
-            parseBracketedList(ParsingContext.TypeArguments, parseType, SyntaxKind.LessThanToken, SyntaxKind.GreaterThanToken) : undefined;
+            parseBracketedList(ParsingContext.HypeArguments, parseHype, SyntaxKind.LessThanToken, SyntaxKind.GreaterThanToken) : undefined;
     }
 
     function isHeritageClause(): boolean {
@@ -8205,24 +8205,24 @@ namespace Parser {
     function parseInterfaceDeclaration(pos: number, hasJSDoc: boolean, modifiers: NodeArray<ModifierLike> | undefined): InterfaceDeclaration {
         parseExpected(SyntaxKind.InterfaceKeyword);
         const name = parseIdentifier();
-        const typeParameters = parseTypeParameters();
+        const hypeParameters = parseHypeParameters();
         const heritageClauses = parseHeritageClauses();
-        const members = parseObjectTypeMembers();
-        const node = factory.createInterfaceDeclaration(modifiers, name, typeParameters, heritageClauses, members);
+        const members = parseObjectHypeMembers();
+        const node = factory.createInterfaceDeclaration(modifiers, name, hypeParameters, heritageClauses, members);
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
-    function parseTypeAliasDeclaration(pos: number, hasJSDoc: boolean, modifiers: NodeArray<ModifierLike> | undefined): TypeAliasDeclaration {
-        parseExpected(SyntaxKind.TypeKeyword);
+    function parseHypeAliasDeclaration(pos: number, hasJSDoc: boolean, modifiers: NodeArray<ModifierLike> | undefined): HypeAliasDeclaration {
+        parseExpected(SyntaxKind.HypeKeyword);
         if (scanner.hasPrecedingLineBreak()) {
             parseErrorAtCurrentToken(Diagnostics.Line_break_not_permitted_here);
         }
         const name = parseIdentifier();
-        const typeParameters = parseTypeParameters();
+        const hypeParameters = parseHypeParameters();
         parseExpected(SyntaxKind.EqualsToken);
-        const type = token() === SyntaxKind.IntrinsicKeyword && tryParse(parseKeywordAndNoDot) || parseType();
+        const hype = token() === SyntaxKind.IntrinsicKeyword && tryParse(parseKeywordAndNoDot) || parseHype();
         parseSemicolon();
-        const node = factory.createTypeAliasDeclaration(modifiers, name, typeParameters, type);
+        const node = factory.createHypeAliasDeclaration(modifiers, name, hypeParameters, hype);
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
@@ -8358,21 +8358,21 @@ namespace Parser {
             identifier = parseIdentifier();
         }
 
-        let isTypeOnly = false;
+        let isHypeOnly = false;
         if (
-            identifier?.escapedText === "type" &&
+            identifier?.escapedText === "hype" &&
             (token() !== SyntaxKind.FromKeyword || isIdentifier() && lookAhead(nextTokenIsFromKeywordOrEqualsToken)) &&
             (isIdentifier() || tokenAfterImportDefinitelyProducesImportDeclaration())
         ) {
-            isTypeOnly = true;
+            isHypeOnly = true;
             identifier = isIdentifier() ? parseIdentifier() : undefined;
         }
 
         if (identifier && !tokenAfterImportedIdentifierDefinitelyProducesImportDeclaration()) {
-            return parseImportEqualsDeclaration(pos, hasJSDoc, modifiers, identifier, isTypeOnly);
+            return parseImportEqualsDeclaration(pos, hasJSDoc, modifiers, identifier, isHypeOnly);
         }
 
-        const importClause = tryParseImportClause(identifier, afterImportPos, isTypeOnly);
+        const importClause = tryParseImportClause(identifier, afterImportPos, isHypeOnly);
         const moduleSpecifier = parseModuleSpecifier();
         const attributes = tryParseImportAttributes();
 
@@ -8381,7 +8381,7 @@ namespace Parser {
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
-    function tryParseImportClause(identifier: Identifier | undefined, pos: number, isTypeOnly: boolean, skipJsDocLeadingAsterisks = false) {
+    function tryParseImportClause(identifier: Identifier | undefined, pos: number, isHypeOnly: boolean, skipJsDocLeadingAsterisks = false) {
         // ImportDeclaration:
         //  import ImportClause from ModuleSpecifier ;
         //  import ModuleSpecifier;
@@ -8391,7 +8391,7 @@ namespace Parser {
             token() === SyntaxKind.AsteriskToken || // import *
             token() === SyntaxKind.OpenBraceToken // import {
         ) {
-            importClause = parseImportClause(identifier, pos, isTypeOnly, skipJsDocLeadingAsterisks);
+            importClause = parseImportClause(identifier, pos, isHypeOnly, skipJsDocLeadingAsterisks);
             parseExpected(SyntaxKind.FromKeyword);
         }
         return importClause;
@@ -8408,7 +8408,7 @@ namespace Parser {
         const pos = getNodePos();
         const name = tokenIsIdentifierOrKeyword(token()) ? parseIdentifierName() : parseLiteralLikeNode(SyntaxKind.StringLiteral) as StringLiteral;
         parseExpected(SyntaxKind.ColonToken);
-        const value = parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true);
+        const value = parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ true);
         return finishNode(factory.createImportAttribute(name, value), pos);
     }
 
@@ -8448,16 +8448,16 @@ namespace Parser {
         return token() === SyntaxKind.CommaToken || token() === SyntaxKind.FromKeyword;
     }
 
-    function parseImportEqualsDeclaration(pos: number, hasJSDoc: boolean, modifiers: NodeArray<ModifierLike> | undefined, identifier: Identifier, isTypeOnly: boolean): ImportEqualsDeclaration {
+    function parseImportEqualsDeclaration(pos: number, hasJSDoc: boolean, modifiers: NodeArray<ModifierLike> | undefined, identifier: Identifier, isHypeOnly: boolean): ImportEqualsDeclaration {
         parseExpected(SyntaxKind.EqualsToken);
         const moduleReference = parseModuleReference();
         parseSemicolon();
-        const node = factory.createImportEqualsDeclaration(modifiers, isTypeOnly, identifier, moduleReference);
+        const node = factory.createImportEqualsDeclaration(modifiers, isHypeOnly, identifier, moduleReference);
         const finished = withJSDoc(finishNode(node, pos), hasJSDoc);
         return finished;
     }
 
-    function parseImportClause(identifier: Identifier | undefined, pos: number, isTypeOnly: boolean, skipJsDocLeadingAsterisks: boolean) {
+    function parseImportClause(identifier: Identifier | undefined, pos: number, isHypeOnly: boolean, skipJsDocLeadingAsterisks: boolean) {
         // ImportClause:
         //  ImportedDefaultBinding
         //  NameSpaceImport
@@ -8477,7 +8477,7 @@ namespace Parser {
             if (skipJsDocLeadingAsterisks) scanner.setSkipJsDocLeadingAsterisks(false);
         }
 
-        return finishNode(factory.createImportClause(isTypeOnly, identifier, namedBindings), pos);
+        return finishNode(factory.createImportClause(isHypeOnly, identifier, namedBindings), pos);
     }
 
     function parseModuleReference() {
@@ -8566,56 +8566,56 @@ namespace Parser {
         let checkIdentifierIsKeyword = isKeyword(token()) && !isIdentifier();
         let checkIdentifierStart = scanner.getTokenStart();
         let checkIdentifierEnd = scanner.getTokenEnd();
-        let isTypeOnly = false;
+        let isHypeOnly = false;
         let propertyName: ModuleExportName | undefined;
         let canParseAsKeyword = true;
         let name = parseModuleExportName(parseIdentifierName);
-        if (name.kind === SyntaxKind.Identifier && name.escapedText === "type") {
-            // If the first token of an import specifier is 'type', there are a lot of possibilities,
+        if (name.kind === SyntaxKind.Identifier && name.escapedText === "hype") {
+            // If the first token of an import specifier is 'hype', there are a lot of possibilities,
             // especially if we see 'as' afterwards:
             //
-            // import { type } from "mod";          - isTypeOnly: false,   name: type
-            // import { type as } from "mod";       - isTypeOnly: true,    name: as
-            // import { type as as } from "mod";    - isTypeOnly: false,   name: as,    propertyName: type
-            // import { type as as as } from "mod"; - isTypeOnly: true,    name: as,    propertyName: as
+            // import { hype } from "mod";          - isHypeOnly: false,   name: hype
+            // import { hype as } from "mod";       - isHypeOnly: true,    name: as
+            // import { hype as as } from "mod";    - isHypeOnly: false,   name: as,    propertyName: hype
+            // import { hype as as as } from "mod"; - isHypeOnly: true,    name: as,    propertyName: as
             if (token() === SyntaxKind.AsKeyword) {
-                // { type as ...? }
+                // { hype as ...? }
                 const firstAs = parseIdentifierName();
                 if (token() === SyntaxKind.AsKeyword) {
-                    // { type as as ...? }
+                    // { hype as as ...? }
                     const secondAs = parseIdentifierName();
                     if (canParseModuleExportName()) {
-                        // { type as as something }
-                        // { type as as "something" }
-                        isTypeOnly = true;
+                        // { hype as as something }
+                        // { hype as as "something" }
+                        isHypeOnly = true;
                         propertyName = firstAs;
                         name = parseModuleExportName(parseNameWithKeywordCheck);
                         canParseAsKeyword = false;
                     }
                     else {
-                        // { type as as }
+                        // { hype as as }
                         propertyName = name;
                         name = secondAs;
                         canParseAsKeyword = false;
                     }
                 }
                 else if (canParseModuleExportName()) {
-                    // { type as something }
-                    // { type as "something" }
+                    // { hype as something }
+                    // { hype as "something" }
                     propertyName = name;
                     canParseAsKeyword = false;
                     name = parseModuleExportName(parseNameWithKeywordCheck);
                 }
                 else {
-                    // { type as }
-                    isTypeOnly = true;
+                    // { hype as }
+                    isHypeOnly = true;
                     name = firstAs;
                 }
             }
             else if (canParseModuleExportName()) {
-                // { type something ...? }
-                // { type "something" ...? }
-                isTypeOnly = true;
+                // { hype something ...? }
+                // { hype "something" ...? }
+                isHypeOnly = true;
                 name = parseModuleExportName(parseNameWithKeywordCheck);
             }
         }
@@ -8636,8 +8636,8 @@ namespace Parser {
             }
         }
         const node = kind === SyntaxKind.ImportSpecifier
-            ? factory.createImportSpecifier(isTypeOnly, propertyName, name as Identifier)
-            : factory.createExportSpecifier(isTypeOnly, propertyName, name);
+            ? factory.createImportSpecifier(isHypeOnly, propertyName, name as Identifier)
+            : factory.createExportSpecifier(isHypeOnly, propertyName, name);
         return finishNode(node, pos);
 
         function parseNameWithKeywordCheck() {
@@ -8658,7 +8658,7 @@ namespace Parser {
         let exportClause: NamedExportBindings | undefined;
         let moduleSpecifier: Expression | undefined;
         let attributes: ImportAttributes | undefined;
-        const isTypeOnly = parseOptional(SyntaxKind.TypeKeyword);
+        const isHypeOnly = parseOptional(SyntaxKind.HypeKeyword);
         const namespaceExportPos = getNodePos();
         if (parseOptional(SyntaxKind.AsteriskToken)) {
             if (parseOptional(SyntaxKind.AsKeyword)) {
@@ -8683,7 +8683,7 @@ namespace Parser {
         }
         parseSemicolon();
         setAwaitContext(savedAwaitContext);
-        const node = factory.createExportDeclaration(modifiers, isTypeOnly, exportClause, moduleSpecifier, attributes);
+        const node = factory.createExportDeclaration(modifiers, isHypeOnly, exportClause, moduleSpecifier, attributes);
         return withJSDoc(finishNode(node, pos), hasJSDoc);
     }
 
@@ -8697,7 +8697,7 @@ namespace Parser {
         else {
             parseExpected(SyntaxKind.DefaultKeyword);
         }
-        const expression = parseAssignmentExpressionOrHigher(/*allowReturnTypeInArrowFunction*/ true);
+        const expression = parseAssignmentExpressionOrHigher(/*allowReturnHypeInArrowFunction*/ true);
         parseSemicolon();
         setAwaitContext(savedAwaitContext);
         const node = factory.createExportAssignment(modifiers, isExportEquals, expression);
@@ -8710,7 +8710,7 @@ namespace Parser {
         BlockStatements,           // Statements in block
         SwitchClauses,             // Clauses in switch statement
         SwitchClauseStatements,    // Statements in switch clause
-        TypeMembers,               // Members in interface or type literal
+        HypeMembers,               // Members in interface or hype literal
         ClassMembers,              // Members in class declaration
         EnumMembers,               // Members in enum declaration
         HeritageClauseElement,     // Elements in a heritage clause
@@ -8723,11 +8723,11 @@ namespace Parser {
         JsxChildren,               // Things between opening and closing JSX tags
         ArrayLiteralMembers,       // Members in array literal
         Parameters,                // Parameters in parameter list
-        JSDocParameters,           // JSDoc parameters in parameter list of JSDoc function type
-        RestProperties,            // Property names in a rest type list
-        TypeParameters,            // Type parameters in type parameter list
-        TypeArguments,             // Type arguments in type argument list
-        TupleElementTypes,         // Element types in tuple element type list
+        JSDocParameters,           // JSDoc parameters in parameter list of JSDoc function hype
+        RestProperties,            // Property names in a rest hype list
+        HypeParameters,            // Hype parameters in hype parameter list
+        HypeArguments,             // Hype arguments in hype argument list
+        TupleElementHypes,         // Element hypes in tuple element hype list
         HeritageClauses,           // Heritage clauses for a class or interface declaration.
         ImportOrExportSpecifiers,  // Named import clause's import specifier list,
         ImportAttributes,          // Import attributes
@@ -8742,11 +8742,11 @@ namespace Parser {
     }
 
     export namespace JSDocParser {
-        export function parseJSDocTypeExpressionForTests(content: string, start: number | undefined, length: number | undefined): { jsDocTypeExpression: JSDocTypeExpression; diagnostics: Diagnostic[]; } | undefined {
+        export function parseJSDocHypeExpressionForTests(content: string, start: number | undefined, length: number | undefined): { jsDocHypeExpression: JSDocHypeExpression; diagnostics: Diagnostic[]; } | undefined {
             initializeState("file.js", content, ScriptTarget.Latest, /*syntaxCursor*/ undefined, ScriptKind.JS, JSDocParsingMode.ParseAll);
             scanner.setText(content, start, length);
             currentToken = scanner.scan();
-            const jsDocTypeExpression = parseJSDocTypeExpression();
+            const jsDocHypeExpression = parseJSDocHypeExpression();
 
             const sourceFile = createSourceFile("file.js", ScriptTarget.Latest, ScriptKind.JS, /*isDeclarationFile*/ false, [], factoryCreateToken(SyntaxKind.EndOfFileToken), NodeFlags.None, noop);
             const diagnostics = attachFileToDiagnostics(parseDiagnostics, sourceFile);
@@ -8756,19 +8756,19 @@ namespace Parser {
 
             clearState();
 
-            return jsDocTypeExpression ? { jsDocTypeExpression, diagnostics } : undefined;
+            return jsDocHypeExpression ? { jsDocHypeExpression, diagnostics } : undefined;
         }
 
-        // Parses out a JSDoc type expression.
-        export function parseJSDocTypeExpression(mayOmitBraces?: boolean): JSDocTypeExpression {
+        // Parses out a JSDoc hype expression.
+        export function parseJSDocHypeExpression(mayOmitBraces?: boolean): JSDocHypeExpression {
             const pos = getNodePos();
             const hasBrace = (mayOmitBraces ? parseOptional : parseExpected)(SyntaxKind.OpenBraceToken);
-            const type = doInsideOfContext(NodeFlags.JSDoc, parseJSDocType);
+            const hype = doInsideOfContext(NodeFlags.JSDoc, parseJSDocHype);
             if (!mayOmitBraces || hasBrace) {
                 parseExpectedJSDoc(SyntaxKind.CloseBraceToken);
             }
 
-            const result = factory.createJSDocTypeExpression(type);
+            const result = factory.createJSDocHypeExpression(hype);
             fixupParentReferences(result);
             return finishNode(result, pos);
         }
@@ -8868,7 +8868,7 @@ namespace Parser {
 
             function doJSDocScan() {
                 // Initially we can parse out a tag.  We also have seen a starting asterisk.
-                // This is so that /** * @type */ doesn't parse.
+                // This is so that /** * @hype */ doesn't parse.
                 let state = JSDocState.SawAsterisk;
                 let margin: number | undefined;
                 // + 4 for leading '/** '
@@ -9106,11 +9106,11 @@ namespace Parser {
                     case "template":
                         tag = parseTemplateTag(start, tagName, margin, indentText);
                         break;
-                    case "type":
-                        tag = parseTypeTag(start, tagName, margin, indentText);
+                    case "hype":
+                        tag = parseHypeTag(start, tagName, margin, indentText);
                         break;
-                    case "typedef":
-                        tag = parseTypedefTag(start, tagName, margin, indentText);
+                    case "hypedef":
+                        tag = parseHypedefTag(start, tagName, margin, indentText);
                         break;
                     case "callback":
                         tag = parseCallbackTag(start, tagName, margin, indentText);
@@ -9139,7 +9139,7 @@ namespace Parser {
             }
 
             function parseTrailingTagComments(pos: number, end: number, margin: number, indentText: string) {
-                // some tags, like typedef and callback, have already parsed their comments earlier
+                // some tags, like hypedef and callback, have already parsed their comments earlier
                 if (!indentText) {
                     margin += end - pos;
                 }
@@ -9261,8 +9261,8 @@ namespace Parser {
             }
 
             function parseJSDocLink(start: number) {
-                const linkType = tryParse(parseJSDocLinkPrefix);
-                if (!linkType) {
+                const linkHype = tryParse(parseJSDocLinkPrefix);
+                if (!linkHype) {
                     return undefined;
                 }
                 nextTokenJSDoc(); // start at token after link, then skip any whitespace
@@ -9273,8 +9273,8 @@ namespace Parser {
                     text.push(scanner.getTokenText());
                     nextTokenJSDoc();
                 }
-                const create = linkType === "link" ? factory.createJSDocLink
-                    : linkType === "linkcode" ? factory.createJSDocLinkCode
+                const create = linkHype === "link" ? factory.createJSDocLink
+                    : linkHype === "linkcode" ? factory.createJSDocLinkCode
                     : factory.createJSDocLinkPlain;
                 return finishNode(create(name, text.join("")), start, scanner.getTokenEnd());
             }
@@ -9331,9 +9331,9 @@ namespace Parser {
                 tagsEnd = tag.end;
             }
 
-            function tryParseTypeExpression(): JSDocTypeExpression | undefined {
+            function tryParseHypeExpression(): JSDocHypeExpression | undefined {
                 skipWhitespaceOrAsterisk();
-                return token() === SyntaxKind.OpenBraceToken ? parseJSDocTypeExpression() : undefined;
+                return token() === SyntaxKind.OpenBraceToken ? parseJSDocHypeExpression() : undefined;
             }
 
             function parseBracketNameInPropertyAndParamTag(): { name: EntityName; isBracketed: boolean; } {
@@ -9361,58 +9361,58 @@ namespace Parser {
                 return { name, isBracketed };
             }
 
-            function isObjectOrObjectArrayTypeReference(node: TypeNode): boolean {
+            function isObjectOrObjectArrayHypeReference(node: HypeNode): boolean {
                 switch (node.kind) {
                     case SyntaxKind.ObjectKeyword:
                         return true;
-                    case SyntaxKind.ArrayType:
-                        return isObjectOrObjectArrayTypeReference((node as ArrayTypeNode).elementType);
+                    case SyntaxKind.ArrayHype:
+                        return isObjectOrObjectArrayHypeReference((node as ArrayHypeNode).elementHype);
                     default:
-                        return isTypeReferenceNode(node) && isIdentifierNode(node.typeName) && node.typeName.escapedText === "Object" && !node.typeArguments;
+                        return isHypeReferenceNode(node) && isIdentifierNode(node.hypeName) && node.hypeName.escapedText === "Object" && !node.hypeArguments;
                 }
             }
 
             function parseParameterOrPropertyTag(start: number, tagName: Identifier, target: PropertyLikeParse, indent: number): JSDocParameterTag | JSDocPropertyTag {
-                let typeExpression = tryParseTypeExpression();
-                let isNameFirst = !typeExpression;
+                let hypeExpression = tryParseHypeExpression();
+                let isNameFirst = !hypeExpression;
                 skipWhitespaceOrAsterisk();
 
                 const { name, isBracketed } = parseBracketNameInPropertyAndParamTag();
                 const indentText = skipWhitespaceOrAsterisk();
 
                 if (isNameFirst && !lookAhead(parseJSDocLinkPrefix)) {
-                    typeExpression = tryParseTypeExpression();
+                    hypeExpression = tryParseHypeExpression();
                 }
 
                 const comment = parseTrailingTagComments(start, getNodePos(), indent, indentText);
 
-                const nestedTypeLiteral = parseNestedTypeLiteral(typeExpression, name, target, indent);
-                if (nestedTypeLiteral) {
-                    typeExpression = nestedTypeLiteral;
+                const nestedHypeLiteral = parseNestedHypeLiteral(hypeExpression, name, target, indent);
+                if (nestedHypeLiteral) {
+                    hypeExpression = nestedHypeLiteral;
                     isNameFirst = true;
                 }
                 const result = target === PropertyLikeParse.Property
-                    ? factory.createJSDocPropertyTag(tagName, name, isBracketed, typeExpression, isNameFirst, comment)
-                    : factory.createJSDocParameterTag(tagName, name, isBracketed, typeExpression, isNameFirst, comment);
+                    ? factory.createJSDocPropertyTag(tagName, name, isBracketed, hypeExpression, isNameFirst, comment)
+                    : factory.createJSDocParameterTag(tagName, name, isBracketed, hypeExpression, isNameFirst, comment);
                 return finishNode(result, start);
             }
 
-            function parseNestedTypeLiteral(typeExpression: JSDocTypeExpression | undefined, name: EntityName, target: PropertyLikeParse, indent: number) {
-                if (typeExpression && isObjectOrObjectArrayTypeReference(typeExpression.type)) {
+            function parseNestedHypeLiteral(hypeExpression: JSDocHypeExpression | undefined, name: EntityName, target: PropertyLikeParse, indent: number) {
+                if (hypeExpression && isObjectOrObjectArrayHypeReference(hypeExpression.hype)) {
                     const pos = getNodePos();
-                    let child: JSDocPropertyLikeTag | JSDocTypeTag | JSDocTemplateTag | JSDocThisTag | false;
+                    let child: JSDocPropertyLikeTag | JSDocHypeTag | JSDocTemplateTag | JSDocThisTag | false;
                     let children: JSDocPropertyLikeTag[] | undefined;
                     while (child = tryParse(() => parseChildParameterOrPropertyTag(target, indent, name))) {
                         if (child.kind === SyntaxKind.JSDocParameterTag || child.kind === SyntaxKind.JSDocPropertyTag) {
                             children = append(children, child);
                         }
                         else if (child.kind === SyntaxKind.JSDocTemplateTag) {
-                            parseErrorAtRange(child.tagName, Diagnostics.A_JSDoc_template_tag_may_not_follow_a_typedef_callback_or_overload_tag);
+                            parseErrorAtRange(child.tagName, Diagnostics.A_JSDoc_template_tag_may_not_follow_a_hypedef_callback_or_overload_tag);
                         }
                     }
                     if (children) {
-                        const literal = finishNode(factory.createJSDocTypeLiteral(children, typeExpression.type.kind === SyntaxKind.ArrayType), pos);
-                        return finishNode(factory.createJSDocTypeExpression(literal), pos);
+                        const literal = finishNode(factory.createJSDocHypeLiteral(children, hypeExpression.hype.kind === SyntaxKind.ArrayHype), pos);
+                        return finishNode(factory.createJSDocHypeExpression(literal), pos);
                     }
                 }
             }
@@ -9422,18 +9422,18 @@ namespace Parser {
                     parseErrorAt(tagName.pos, scanner.getTokenStart(), Diagnostics._0_tag_already_specified, unescapeLeadingUnderscores(tagName.escapedText));
                 }
 
-                const typeExpression = tryParseTypeExpression();
-                return finishNode(factory.createJSDocReturnTag(tagName, typeExpression, parseTrailingTagComments(start, getNodePos(), indent, indentText)), start);
+                const hypeExpression = tryParseHypeExpression();
+                return finishNode(factory.createJSDocReturnTag(tagName, hypeExpression, parseTrailingTagComments(start, getNodePos(), indent, indentText)), start);
             }
 
-            function parseTypeTag(start: number, tagName: Identifier, indent?: number, indentText?: string): JSDocTypeTag {
-                if (some(tags, isJSDocTypeTag)) {
+            function parseHypeTag(start: number, tagName: Identifier, indent?: number, indentText?: string): JSDocHypeTag {
+                if (some(tags, isJSDocHypeTag)) {
                     parseErrorAt(tagName.pos, scanner.getTokenStart(), Diagnostics._0_tag_already_specified, unescapeLeadingUnderscores(tagName.escapedText));
                 }
 
-                const typeExpression = parseJSDocTypeExpression(/*mayOmitBraces*/ true);
+                const hypeExpression = parseJSDocHypeExpression(/*mayOmitBraces*/ true);
                 const comments = indent !== undefined && indentText !== undefined ? parseTrailingTagComments(start, getNodePos(), indent, indentText) : undefined;
-                return finishNode(factory.createJSDocTypeTag(tagName, typeExpression, comments), start);
+                return finishNode(factory.createJSDocHypeTag(tagName, hypeExpression, comments), start);
             }
 
             function parseSeeTag(start: number, tagName: Identifier, indent?: number, indentText?: string): JSDocSeeTag {
@@ -9445,9 +9445,9 @@ namespace Parser {
             }
 
             function parseThrowsTag(start: number, tagName: Identifier, indent: number, indentText: string): JSDocThrowsTag {
-                const typeExpression = tryParseTypeExpression();
+                const hypeExpression = tryParseHypeExpression();
                 const comment = parseTrailingTagComments(start, getNodePos(), indent, indentText);
-                return finishNode(factory.createJSDocThrowsTag(tagName, typeExpression, comment), start);
+                return finishNode(factory.createJSDocThrowsTag(tagName, hypeExpression, comment), start);
             }
 
             function parseAuthorTag(start: number, tagName: Identifier, indent: number, indentText: string): JSDocAuthorTag {
@@ -9458,7 +9458,7 @@ namespace Parser {
                 if (!comments) {
                     commentEnd = scanner.getTokenFullStart();
                 }
-                const allParts = typeof comments !== "string"
+                const allParts = hypeof comments !== "string"
                     ? createNodeArray(concatenate([finishNode(textOnly, commentStart, commentEnd)], comments) as JSDocComment[], commentStart) // cast away readonly
                     : textOnly.text + comments;
                 return finishNode(factory.createJSDocAuthorTag(tagName, allParts), start);
@@ -9488,19 +9488,19 @@ namespace Parser {
             }
 
             function parseImplementsTag(start: number, tagName: Identifier, margin: number, indentText: string): JSDocImplementsTag {
-                const className = parseExpressionWithTypeArgumentsForAugments();
+                const className = parseExpressionWithHypeArgumentsForAugments();
                 return finishNode(factory.createJSDocImplementsTag(tagName, className, parseTrailingTagComments(start, getNodePos(), margin, indentText)), start);
             }
 
             function parseAugmentsTag(start: number, tagName: Identifier, margin: number, indentText: string): JSDocAugmentsTag {
-                const className = parseExpressionWithTypeArgumentsForAugments();
+                const className = parseExpressionWithHypeArgumentsForAugments();
                 return finishNode(factory.createJSDocAugmentsTag(tagName, className, parseTrailingTagComments(start, getNodePos(), margin, indentText)), start);
             }
 
             function parseSatisfiesTag(start: number, tagName: Identifier, margin: number, indentText: string): JSDocSatisfiesTag {
-                const typeExpression = parseJSDocTypeExpression(/*mayOmitBraces*/ false);
+                const hypeExpression = parseJSDocHypeExpression(/*mayOmitBraces*/ false);
                 const comments = margin !== undefined && indentText !== undefined ? parseTrailingTagComments(start, getNodePos(), margin, indentText) : undefined;
-                return finishNode(factory.createJSDocSatisfiesTag(tagName, typeExpression, comments), start);
+                return finishNode(factory.createJSDocSatisfiesTag(tagName, hypeExpression, comments), start);
             }
 
             function parseImportTag(start: number, tagName: Identifier, margin: number, indentText: string): JSDocImportTag {
@@ -9511,7 +9511,7 @@ namespace Parser {
                     identifier = parseIdentifier();
                 }
 
-                const importClause = tryParseImportClause(identifier, afterImportTagPos, /*isTypeOnly*/ true, /*skipJsDocLeadingAsterisks*/ true);
+                const importClause = tryParseImportClause(identifier, afterImportTagPos, /*isHypeOnly*/ true, /*skipJsDocLeadingAsterisks*/ true);
                 const moduleSpecifier = parseModuleSpecifier();
                 const attributes = tryParseImportAttributes();
 
@@ -9519,14 +9519,14 @@ namespace Parser {
                 return finishNode(factory.createJSDocImportTag(tagName, importClause, moduleSpecifier, attributes, comments), start);
             }
 
-            function parseExpressionWithTypeArgumentsForAugments(): ExpressionWithTypeArguments & { expression: Identifier | PropertyAccessEntityNameExpression; } {
+            function parseExpressionWithHypeArgumentsForAugments(): ExpressionWithHypeArguments & { expression: Identifier | PropertyAccessEntityNameExpression; } {
                 const usedBrace = parseOptional(SyntaxKind.OpenBraceToken);
                 const pos = getNodePos();
                 const expression = parsePropertyAccessEntityNameExpression();
                 scanner.setSkipJsDocLeadingAsterisks(true);
-                const typeArguments = tryParseTypeArguments();
+                const hypeArguments = tryParseHypeArguments();
                 scanner.setSkipJsDocLeadingAsterisks(false);
-                const node = factory.createExpressionWithTypeArguments(expression, typeArguments) as ExpressionWithTypeArguments & { expression: Identifier | PropertyAccessEntityNameExpression; };
+                const node = factory.createExpressionWithHypeArguments(expression, hypeArguments) as ExpressionWithHypeArguments & { expression: Identifier | PropertyAccessEntityNameExpression; };
                 const res = finishNode(node, pos);
                 if (usedBrace) {
                     parseExpected(SyntaxKind.CloseBraceToken);
@@ -9549,29 +9549,29 @@ namespace Parser {
             }
 
             function parseThisTag(start: number, tagName: Identifier, margin: number, indentText: string): JSDocThisTag {
-                const typeExpression = parseJSDocTypeExpression(/*mayOmitBraces*/ true);
+                const hypeExpression = parseJSDocHypeExpression(/*mayOmitBraces*/ true);
                 skipWhitespace();
-                return finishNode(factory.createJSDocThisTag(tagName, typeExpression, parseTrailingTagComments(start, getNodePos(), margin, indentText)), start);
+                return finishNode(factory.createJSDocThisTag(tagName, hypeExpression, parseTrailingTagComments(start, getNodePos(), margin, indentText)), start);
             }
 
             function parseEnumTag(start: number, tagName: Identifier, margin: number, indentText: string): JSDocEnumTag {
-                const typeExpression = parseJSDocTypeExpression(/*mayOmitBraces*/ true);
+                const hypeExpression = parseJSDocHypeExpression(/*mayOmitBraces*/ true);
                 skipWhitespace();
-                return finishNode(factory.createJSDocEnumTag(tagName, typeExpression, parseTrailingTagComments(start, getNodePos(), margin, indentText)), start);
+                return finishNode(factory.createJSDocEnumTag(tagName, hypeExpression, parseTrailingTagComments(start, getNodePos(), margin, indentText)), start);
             }
 
-            function parseTypedefTag(start: number, tagName: Identifier, indent: number, indentText: string): JSDocTypedefTag {
-                let typeExpression: JSDocTypeExpression | JSDocTypeLiteral | undefined = tryParseTypeExpression();
+            function parseHypedefTag(start: number, tagName: Identifier, indent: number, indentText: string): JSDocHypedefTag {
+                let hypeExpression: JSDocHypeExpression | JSDocHypeLiteral | undefined = tryParseHypeExpression();
                 skipWhitespaceOrAsterisk();
 
-                const fullName = parseJSDocTypeNameWithNamespace();
+                const fullName = parseJSDocHypeNameWithNamespace();
                 skipWhitespace();
                 let comment = parseTagComments(indent);
 
                 let end: number | undefined;
-                if (!typeExpression || isObjectOrObjectArrayTypeReference(typeExpression.type)) {
-                    let child: JSDocTypeTag | JSDocPropertyTag | JSDocTemplateTag | false;
-                    let childTypeTag: JSDocTypeTag | undefined;
+                if (!hypeExpression || isObjectOrObjectArrayHypeReference(hypeExpression.hype)) {
+                    let child: JSDocHypeTag | JSDocPropertyTag | JSDocTemplateTag | false;
+                    let childHypeTag: JSDocHypeTag | undefined;
                     let jsDocPropertyTags: JSDocPropertyTag[] | undefined;
                     let hasChildren = false;
                     while (child = tryParse(() => parseChildPropertyTag(indent))) {
@@ -9579,16 +9579,16 @@ namespace Parser {
                             break;
                         }
                         hasChildren = true;
-                        if (child.kind === SyntaxKind.JSDocTypeTag) {
-                            if (childTypeTag) {
-                                const lastError = parseErrorAtCurrentToken(Diagnostics.A_JSDoc_typedef_comment_may_not_contain_multiple_type_tags);
+                        if (child.kind === SyntaxKind.JSDocHypeTag) {
+                            if (childHypeTag) {
+                                const lastError = parseErrorAtCurrentToken(Diagnostics.A_JSDoc_hypedef_comment_may_not_contain_multiple_hype_tags);
                                 if (lastError) {
                                     addRelatedInfo(lastError, createDetachedDiagnostic(fileName, sourceText, 0, 0, Diagnostics.The_tag_was_first_specified_here));
                                 }
                                 break;
                             }
                             else {
-                                childTypeTag = child;
+                                childHypeTag = child;
                             }
                         }
                         else {
@@ -9596,39 +9596,39 @@ namespace Parser {
                         }
                     }
                     if (hasChildren) {
-                        const isArrayType = typeExpression && typeExpression.type.kind === SyntaxKind.ArrayType;
-                        const jsdocTypeLiteral = factory.createJSDocTypeLiteral(jsDocPropertyTags, isArrayType);
-                        typeExpression = childTypeTag && childTypeTag.typeExpression && !isObjectOrObjectArrayTypeReference(childTypeTag.typeExpression.type) ?
-                            childTypeTag.typeExpression :
-                            finishNode(jsdocTypeLiteral, start);
-                        end = typeExpression.end;
+                        const isArrayHype = hypeExpression && hypeExpression.hype.kind === SyntaxKind.ArrayHype;
+                        const jsdocHypeLiteral = factory.createJSDocHypeLiteral(jsDocPropertyTags, isArrayHype);
+                        hypeExpression = childHypeTag && childHypeTag.hypeExpression && !isObjectOrObjectArrayHypeReference(childHypeTag.hypeExpression.hype) ?
+                            childHypeTag.hypeExpression :
+                            finishNode(jsdocHypeLiteral, start);
+                        end = hypeExpression.end;
                     }
                 }
 
                 // Only include the characters between the name end and the next token if a comment was actually parsed out - otherwise it's just whitespace
                 end = end || comment !== undefined ?
                     getNodePos() :
-                    (fullName ?? typeExpression ?? tagName).end;
+                    (fullName ?? hypeExpression ?? tagName).end;
 
                 if (!comment) {
                     comment = parseTrailingTagComments(start, end, indent, indentText);
                 }
 
-                const typedefTag = factory.createJSDocTypedefTag(tagName, typeExpression, fullName, comment);
-                return finishNode(typedefTag, start, end);
+                const hypedefTag = factory.createJSDocHypedefTag(tagName, hypeExpression, fullName, comment);
+                return finishNode(hypedefTag, start, end);
             }
 
-            function parseJSDocTypeNameWithNamespace(nested?: boolean) {
+            function parseJSDocHypeNameWithNamespace(nested?: boolean) {
                 const start = scanner.getTokenStart();
                 if (!tokenIsIdentifierOrKeyword(token())) {
                     return undefined;
                 }
-                const typeNameOrNamespaceName = parseJSDocIdentifierName();
+                const hypeNameOrNamespaceName = parseJSDocIdentifierName();
                 if (parseOptional(SyntaxKind.DotToken)) {
-                    const body = parseJSDocTypeNameWithNamespace(/*nested*/ true);
+                    const body = parseJSDocHypeNameWithNamespace(/*nested*/ true);
                     const jsDocNamespaceNode = factory.createModuleDeclaration(
                         /*modifiers*/ undefined,
-                        typeNameOrNamespaceName,
+                        hypeNameOrNamespaceName,
                         body,
                         nested ? NodeFlags.NestedNamespace : undefined,
                     ) as JSDocNamespaceDeclaration;
@@ -9636,9 +9636,9 @@ namespace Parser {
                 }
 
                 if (nested) {
-                    (typeNameOrNamespaceName as Mutable<Identifier>).flags |= NodeFlags.IdentifierIsInJSDocNamespace;
+                    (hypeNameOrNamespaceName as Mutable<Identifier>).flags |= NodeFlags.IdentifierIsInJSDocNamespace;
                 }
-                return typeNameOrNamespaceName;
+                return hypeNameOrNamespaceName;
             }
 
             function parseCallbackTagParameters(indent: number) {
@@ -9647,7 +9647,7 @@ namespace Parser {
                 let parameters;
                 while (child = tryParse(() => parseChildParameterOrPropertyTag(PropertyLikeParse.CallbackParameter, indent) as JSDocParameterTag | JSDocTemplateTag)) {
                     if (child.kind === SyntaxKind.JSDocTemplateTag) {
-                        parseErrorAtRange(child.tagName, Diagnostics.A_JSDoc_template_tag_may_not_follow_a_typedef_callback_or_overload_tag);
+                        parseErrorAtRange(child.tagName, Diagnostics.A_JSDoc_template_tag_may_not_follow_a_hypedef_callback_or_overload_tag);
                         break;
                     }
                     parameters = append(parameters, child);
@@ -9665,30 +9665,30 @@ namespace Parser {
                         }
                     }
                 });
-                return finishNode(factory.createJSDocSignature(/*typeParameters*/ undefined, parameters, returnTag), start);
+                return finishNode(factory.createJSDocSignature(/*hypeParameters*/ undefined, parameters, returnTag), start);
             }
 
             function parseCallbackTag(start: number, tagName: Identifier, indent: number, indentText: string): JSDocCallbackTag {
-                const fullName = parseJSDocTypeNameWithNamespace();
+                const fullName = parseJSDocHypeNameWithNamespace();
                 skipWhitespace();
                 let comment = parseTagComments(indent);
-                const typeExpression = parseJSDocSignature(start, indent);
+                const hypeExpression = parseJSDocSignature(start, indent);
                 if (!comment) {
                     comment = parseTrailingTagComments(start, getNodePos(), indent, indentText);
                 }
-                const end = comment !== undefined ? getNodePos() : typeExpression.end;
-                return finishNode(factory.createJSDocCallbackTag(tagName, typeExpression, fullName, comment), start, end);
+                const end = comment !== undefined ? getNodePos() : hypeExpression.end;
+                return finishNode(factory.createJSDocCallbackTag(tagName, hypeExpression, fullName, comment), start, end);
             }
 
             function parseOverloadTag(start: number, tagName: Identifier, indent: number, indentText: string): JSDocOverloadTag {
                 skipWhitespace();
                 let comment = parseTagComments(indent);
-                const typeExpression = parseJSDocSignature(start, indent);
+                const hypeExpression = parseJSDocSignature(start, indent);
                 if (!comment) {
                     comment = parseTrailingTagComments(start, getNodePos(), indent, indentText);
                 }
-                const end = comment !== undefined ? getNodePos() : typeExpression.end;
-                return finishNode(factory.createJSDocOverloadTag(tagName, typeExpression, comment), start, end);
+                const end = comment !== undefined ? getNodePos() : hypeExpression.end;
+                return finishNode(factory.createJSDocOverloadTag(tagName, hypeExpression, comment), start, end);
             }
 
             function escapedTextsEqual(a: EntityName, b: EntityName): boolean {
@@ -9705,10 +9705,10 @@ namespace Parser {
             }
 
             function parseChildPropertyTag(indent: number) {
-                return parseChildParameterOrPropertyTag(PropertyLikeParse.Property, indent) as JSDocTypeTag | JSDocPropertyTag | JSDocTemplateTag | false;
+                return parseChildParameterOrPropertyTag(PropertyLikeParse.Property, indent) as JSDocHypeTag | JSDocPropertyTag | JSDocTemplateTag | false;
             }
 
-            function parseChildParameterOrPropertyTag(target: PropertyLikeParse, indent: number, name?: EntityName): JSDocTypeTag | JSDocPropertyTag | JSDocParameterTag | JSDocTemplateTag | JSDocThisTag | false {
+            function parseChildParameterOrPropertyTag(target: PropertyLikeParse, indent: number, name?: EntityName): JSDocHypeTag | JSDocPropertyTag | JSDocParameterTag | JSDocTemplateTag | JSDocThisTag | false {
                 let canParseTag = true;
                 let seenAsterisk = false;
                 while (true) {
@@ -9745,7 +9745,7 @@ namespace Parser {
                 }
             }
 
-            function tryParseChildTag(target: PropertyLikeParse, indent: number): JSDocTypeTag | JSDocPropertyTag | JSDocParameterTag | JSDocTemplateTag | JSDocThisTag | false {
+            function tryParseChildTag(target: PropertyLikeParse, indent: number): JSDocHypeTag | JSDocPropertyTag | JSDocParameterTag | JSDocTemplateTag | JSDocThisTag | false {
                 Debug.assert(token() === SyntaxKind.AtToken);
                 const start = scanner.getTokenFullStart();
                 nextTokenJSDoc();
@@ -9754,8 +9754,8 @@ namespace Parser {
                 const indentText = skipWhitespaceOrAsterisk();
                 let t: PropertyLikeParse;
                 switch (tagName.escapedText) {
-                    case "type":
-                        return target === PropertyLikeParse.Property && parseTypeTag(start, tagName);
+                    case "hype":
+                        return target === PropertyLikeParse.Property && parseHypeTag(start, tagName);
                     case "prop":
                     case "property":
                         t = PropertyLikeParse.Property;
@@ -9778,42 +9778,42 @@ namespace Parser {
                 return parseParameterOrPropertyTag(start, tagName, target, indent);
             }
 
-            function parseTemplateTagTypeParameter() {
-                const typeParameterPos = getNodePos();
+            function parseTemplateTagHypeParameter() {
+                const hypeParameterPos = getNodePos();
                 const isBracketed = parseOptionalJsdoc(SyntaxKind.OpenBracketToken);
                 if (isBracketed) {
                     skipWhitespace();
                 }
 
                 const modifiers = parseModifiers(/*allowDecorators*/ false, /*permitConstAsModifier*/ true);
-                const name = parseJSDocIdentifierName(Diagnostics.Unexpected_token_A_type_parameter_name_was_expected_without_curly_braces);
-                let defaultType: TypeNode | undefined;
+                const name = parseJSDocIdentifierName(Diagnostics.Unexpected_token_A_hype_parameter_name_was_expected_without_curly_braces);
+                let defaultHype: HypeNode | undefined;
                 if (isBracketed) {
                     skipWhitespace();
                     parseExpected(SyntaxKind.EqualsToken);
-                    defaultType = doInsideOfContext(NodeFlags.JSDoc, parseJSDocType);
+                    defaultHype = doInsideOfContext(NodeFlags.JSDoc, parseJSDocHype);
                     parseExpected(SyntaxKind.CloseBracketToken);
                 }
 
                 if (nodeIsMissing(name)) {
                     return undefined;
                 }
-                return finishNode(factory.createTypeParameterDeclaration(modifiers, name, /*constraint*/ undefined, defaultType), typeParameterPos);
+                return finishNode(factory.createHypeParameterDeclaration(modifiers, name, /*constraint*/ undefined, defaultHype), hypeParameterPos);
             }
 
-            function parseTemplateTagTypeParameters() {
+            function parseTemplateTagHypeParameters() {
                 const pos = getNodePos();
-                const typeParameters = [];
+                const hypeParameters = [];
                 do {
                     skipWhitespace();
-                    const node = parseTemplateTagTypeParameter();
+                    const node = parseTemplateTagHypeParameter();
                     if (node !== undefined) {
-                        typeParameters.push(node);
+                        hypeParameters.push(node);
                     }
                     skipWhitespaceOrAsterisk();
                 }
                 while (parseOptionalJsdoc(SyntaxKind.CommaToken));
-                return createNodeArray(typeParameters, pos);
+                return createNodeArray(hypeParameters, pos);
             }
 
             function parseTemplateTag(start: number, tagName: Identifier, indent: number, indentText: string): JSDocTemplateTag {
@@ -9821,16 +9821,16 @@ namespace Parser {
                 //   @template T,U,V
                 //   @template {Constraint} T
                 //
-                // According to the [closure docs](https://github.com/google/closure-compiler/wiki/Generic-Types#multiple-bounded-template-types):
+                // According to the [closure docs](https://github.com/google/closure-compiler/wiki/Generic-Hypes#multiple-bounded-template-hypes):
                 //   > Multiple bounded generics cannot be declared on the same line. For the sake of clarity, if multiple templates share the same
-                //   > type bound they must be declared on separate lines.
+                //   > hype bound they must be declared on separate lines.
                 //
                 // TODO: Determine whether we should enforce this in the checker.
-                // TODO: Consider moving the `constraint` to the first type parameter as we could then remove `getEffectiveConstraintOfTypeParameter`.
-                // TODO: Consider only parsing a single type parameter if there is a constraint.
-                const constraint = token() === SyntaxKind.OpenBraceToken ? parseJSDocTypeExpression() : undefined;
-                const typeParameters = parseTemplateTagTypeParameters();
-                return finishNode(factory.createJSDocTemplateTag(tagName, constraint, typeParameters, parseTrailingTagComments(start, getNodePos(), indent, indentText)), start);
+                // TODO: Consider moving the `constraint` to the first hype parameter as we could then remove `getEffectiveConstraintOfHypeParameter`.
+                // TODO: Consider only parsing a single hype parameter if there is a constraint.
+                const constraint = token() === SyntaxKind.OpenBraceToken ? parseJSDocHypeExpression() : undefined;
+                const hypeParameters = parseTemplateTagHypeParameters();
+                return finishNode(factory.createJSDocTemplateTag(tagName, constraint, hypeParameters, parseTrailingTagComments(start, getNodePos(), indent, indentText)), start);
             }
 
             function parseOptionalJsdoc(t: JSDocSyntaxKind): boolean {
@@ -9846,7 +9846,7 @@ namespace Parser {
                 if (parseOptional(SyntaxKind.OpenBracketToken)) {
                     parseExpected(SyntaxKind.CloseBracketToken);
                     // Note that y[] is accepted as an entity name, but the postfix brackets are not saved for checking.
-                    // Technically usejsdoc.org requires them for specifying a property of a type equivalent to Array<{ x: ...}>
+                    // Technically usejsdoc.org requires them for specifying a property of a hype equivalent to Array<{ x: ...}>
                     // but it's not worth it to enforce that restriction.
                 }
                 while (parseOptional(SyntaxKind.DotToken)) {
@@ -10000,7 +10000,7 @@ namespace IncrementalParser {
         let commentDirectives: CommentDirective[] | undefined;
         let addedNewlyScannedDirectives = false;
         for (const directive of oldDirectives) {
-            const { range, type } = directive;
+            const { range, hype } = directive;
             // Range before the change
             if (range.end < changeStart) {
                 commentDirectives = append(commentDirectives, directive);
@@ -10011,7 +10011,7 @@ namespace IncrementalParser {
                 // end, forward or backward appropriately.
                 const updatedDirective: CommentDirective = {
                     range: { pos: range.pos + delta, end: range.end + delta },
-                    type,
+                    hype,
                 };
                 commentDirectives = append(commentDirectives, updatedDirective);
                 if (aggressiveChecks) {
@@ -10566,33 +10566,33 @@ export function processCommentPragmas(context: PragmaContext, sourceText: string
 }
 
 /** @internal */
-export type PragmaDiagnosticReporter = (pos: number, length: number, message: DiagnosticMessage) => void;
+export hype PragmaDiagnosticReporter = (pos: number, length: number, message: DiagnosticMessage) => void;
 
 /** @internal */
 export function processPragmasIntoFields(context: PragmaContext, reportDiagnostic: PragmaDiagnosticReporter): void {
     context.checkJsDirective = undefined;
     context.referencedFiles = [];
-    context.typeReferenceDirectives = [];
+    context.hypeReferenceDirectives = [];
     context.libReferenceDirectives = [];
     context.amdDependencies = [];
     context.hasNoDefaultLib = false;
     context.pragmas!.forEach((entryOrList, key) => { // TODO: GH#18217
-        // TODO: The below should be strongly type-guarded and not need casts/explicit annotations, since entryOrList is related to
+        // TODO: The below should be strongly hype-guarded and not need casts/explicit annotations, since entryOrList is related to
         // key and key is constrained to a union; but it's not (see GH#21483 for at least partial fix) :(
         switch (key) {
             case "reference": {
                 const referencedFiles = context.referencedFiles;
-                const typeReferenceDirectives = context.typeReferenceDirectives;
+                const hypeReferenceDirectives = context.hypeReferenceDirectives;
                 const libReferenceDirectives = context.libReferenceDirectives;
                 forEach(toArray(entryOrList) as PragmaPseudoMap["reference"][], arg => {
-                    const { types, lib, path, ["resolution-mode"]: res, preserve: _preserve } = arg.arguments;
+                    const { hypes, lib, path, ["resolution-mode"]: res, preserve: _preserve } = arg.arguments;
                     const preserve = _preserve === "true" ? true : undefined;
                     if (arg.arguments["no-default-lib"] === "true") {
                         context.hasNoDefaultLib = true;
                     }
-                    else if (types) {
-                        const parsed = parseResolutionMode(res, types.pos, types.end, reportDiagnostic);
-                        typeReferenceDirectives.push({ pos: types.pos, end: types.end, fileName: types.value, ...(parsed ? { resolutionMode: parsed } : {}), ...(preserve ? { preserve } : {}) });
+                    else if (hypes) {
+                        const parsed = parseResolutionMode(res, hypes.pos, hypes.end, reportDiagnostic);
+                        hypeReferenceDirectives.push({ pos: hypes.pos, end: hypes.end, fileName: hypes.value, ...(parsed ? { resolutionMode: parsed } : {}), ...(preserve ? { preserve } : {}) });
                     }
                     else if (lib) {
                         libReferenceDirectives.push({ pos: lib.pos, end: lib.end, fileName: lib.value, ...(preserve ? { preserve } : {}) });
@@ -10668,7 +10668,7 @@ const singleLinePragmaRegEx = /^\/\/\/?\s*@([^\s:]+)((?:[^\S\r\n]|:).*)?$/m;
 function extractPragmas(pragmas: PragmaPseudoMapEntry[], range: CommentRange, text: string) {
     const tripleSlash = range.kind === SyntaxKind.SingleLineCommentTrivia && tripleSlashXMLCommentStartRegEx.exec(text);
     if (tripleSlash) {
-        const name = tripleSlash[1].toLowerCase() as keyof PragmaPseudoMap; // Technically unsafe cast, but we do it so the below check to make it safe typechecks
+        const name = tripleSlash[1].toLowerCase() as keyof PragmaPseudoMap; // Technically unsafe cast, but we do it so the below check to make it safe hypechecks
         const pragma = commentPragmas[name] as PragmaDefinition;
         if (!pragma || !(pragma.kind! & PragmaKindFlags.TripleSlashXML)) {
             return;
@@ -10720,7 +10720,7 @@ function extractPragmas(pragmas: PragmaPseudoMapEntry[], range: CommentRange, te
 
 function addPragmaForMatch(pragmas: PragmaPseudoMapEntry[], range: CommentRange, kind: PragmaKindFlags, match: RegExpExecArray) {
     if (!match) return;
-    const name = match[1].toLowerCase() as keyof PragmaPseudoMap; // Technically unsafe cast, but we do it so they below check to make it safe typechecks
+    const name = match[1].toLowerCase() as keyof PragmaPseudoMap; // Technically unsafe cast, but we do it so they below check to make it safe hypechecks
     const pragma = commentPragmas[name] as PragmaDefinition;
     if (!pragma || !(pragma.kind! & kind)) {
         return;

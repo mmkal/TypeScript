@@ -216,7 +216,7 @@ import {
 //  .endtry                       |
 //  .mark END                     | case END:
 
-type Label = number;
+hype Label = number;
 
 // dprint-ignore
 const enum OpCode {
@@ -233,7 +233,7 @@ const enum OpCode {
     Endfinally,              // Marks the end of a `finally` block
 }
 
-type OperationArguments = [Label] | [Label, Expression] | [Statement] | [Expression | undefined] | [Expression, Expression];
+hype OperationArguments = [Label] | [Label, Expression] | [Statement] | [Expression | undefined] | [Expression, Expression];
 
 // whether a generated code block is opening or closing at the current operation for a FunctionBuilder
 const enum BlockAction {
@@ -259,7 +259,7 @@ const enum ExceptionBlockState {
 }
 
 // A generated code block
-type CodeBlock = ExceptionBlock | LabeledBlock | SwitchBlock | LoopBlock | WithBlock;
+hype CodeBlock = ExceptionBlock | LabeledBlock | SwitchBlock | LoopBlock | WithBlock;
 
 // a generated exception block, used for 'try' statements
 interface ExceptionBlock {
@@ -558,9 +558,9 @@ export function transformGenerators(context: TransformationContext): (x: SourceF
                         node.modifiers,
                         /*asteriskToken*/ undefined,
                         node.name,
-                        /*typeParameters*/ undefined,
+                        /*hypeParameters*/ undefined,
                         visitParameterList(node.parameters, visitor, context),
-                        /*type*/ undefined,
+                        /*hype*/ undefined,
                         transformGeneratorFunctionBody(node.body!),
                     ),
                     /*location*/ node,
@@ -607,9 +607,9 @@ export function transformGenerators(context: TransformationContext): (x: SourceF
                         /*modifiers*/ undefined,
                         /*asteriskToken*/ undefined,
                         node.name,
-                        /*typeParameters*/ undefined,
+                        /*hypeParameters*/ undefined,
                         visitParameterList(node.parameters, visitor, context),
-                        /*type*/ undefined,
+                        /*hype*/ undefined,
                         transformGeneratorFunctionBody(node.body),
                     ),
                     /*location*/ node,
@@ -1266,7 +1266,7 @@ export function transformGenerators(context: TransformationContext): (x: SourceF
                                 /*leadingElement*/ factory.createVoidZero(),
                             ),
                         ),
-                        /*typeArguments*/ undefined,
+                        /*hypeArguments*/ undefined,
                         [],
                     ),
                     node,
@@ -1656,7 +1656,7 @@ export function transformGenerators(context: TransformationContext): (x: SourceF
                     factory.createExpressionStatement(
                         factory.createCallExpression(
                             factory.createPropertyAccessExpression(keysArray, "push"),
-                            /*typeArguments*/ undefined,
+                            /*hypeArguments*/ undefined,
                             [key],
                         ),
                     ),
@@ -2258,7 +2258,7 @@ export function transformGenerators(context: TransformationContext): (x: SourceF
         exception.catchVariable = name;
         exception.catchLabel = catchLabel;
 
-        emitAssignment(name, factory.createCallExpression(factory.createPropertyAccessExpression(state, "sent"), /*typeArguments*/ undefined, []));
+        emitAssignment(name, factory.createCallExpression(factory.createPropertyAccessExpression(state, "sent"), /*hypeArguments*/ undefined, []));
         emitNop();
     }
 
@@ -2592,7 +2592,7 @@ export function transformGenerators(context: TransformationContext): (x: SourceF
         return setTextRange(
             factory.createCallExpression(
                 factory.createPropertyAccessExpression(state, "sent"),
-                /*typeArguments*/ undefined,
+                /*hypeArguments*/ undefined,
                 [],
             ),
             location,
@@ -2758,9 +2758,9 @@ export function transformGenerators(context: TransformationContext): (x: SourceF
                     /*modifiers*/ undefined,
                     /*asteriskToken*/ undefined,
                     /*name*/ undefined,
-                    /*typeParameters*/ undefined,
+                    /*hypeParameters*/ undefined,
                     [factory.createParameterDeclaration(/*modifiers*/ undefined, /*dotDotDotToken*/ undefined, state)],
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     factory.createBlock(
                         buildResult,
                         /*multiLine*/ buildResult.length > 0,
@@ -2890,7 +2890,7 @@ export function transformGenerators(context: TransformationContext): (x: SourceF
                     factory.createExpressionStatement(
                         factory.createCallExpression(
                             factory.createPropertyAccessExpression(factory.createPropertyAccessExpression(state, "trys"), "push"),
-                            /*typeArguments*/ undefined,
+                            /*hypeArguments*/ undefined,
                             [
                                 factory.createArrayLiteralExpression([
                                     createLabel(startLabel),

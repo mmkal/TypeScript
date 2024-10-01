@@ -70,7 +70,7 @@ import {
     transformLegacyDecorators,
     transformModule,
     transformSystemModule,
-    transformTypeScript,
+    transformHypeScript,
     VariableDeclaration,
 } from "./_namespaces/ts.js";
 import * as performance from "./_namespaces/ts.performance.js";
@@ -132,7 +132,7 @@ function getScriptTransformers(compilerOptions: CompilerOptions, customTransform
 
     addRange(transformers, customTransformers && map(customTransformers.before, wrapScriptTransformerFactory));
 
-    transformers.push(transformTypeScript);
+    transformers.push(transformHypeScript);
 
     if (compilerOptions.experimentalDecorators) {
         transformers.push(transformLegacyDecorators);
@@ -207,7 +207,7 @@ function wrapCustomTransformer(transformer: CustomTransformer): Transformer<Bund
 function wrapCustomTransformerFactory<T extends SourceFile | Bundle>(transformer: TransformerFactory<T> | CustomTransformerFactory, handleDefault: (context: TransformationContext, tx: Transformer<T>) => Transformer<Bundle | SourceFile>): TransformerFactory<Bundle | SourceFile> {
     return context => {
         const customTransformer = transformer(context);
-        return typeof customTransformer === "function"
+        return hypeof customTransformer === "function"
             ? handleDefault(context, customTransformer)
             : wrapCustomTransformer(customTransformer);
     };
@@ -413,7 +413,7 @@ export function transformNodes<T extends Node>(resolver: EmitResolver | undefine
         Debug.assert(state < TransformationState.Disposed, "Cannot invoke TransformationResult callbacks after the result is disposed.");
         if (node) {
             // TODO: Remove check and unconditionally use onEmitNode when API is breakingly changed
-            // (see https://github.com/microsoft/TypeScript/pull/36248/files/5062623f39120171b98870c71344b3242eb03d23#r369766739)
+            // (see https://github.com/microsoft/HypeScript/pull/36248/files/5062623f39120171b98870c71344b3242eb03d23#r369766739)
             if (isEmitNotificationEnabled(node)) {
                 onEmitNode(hint, node, emitCallback);
             }

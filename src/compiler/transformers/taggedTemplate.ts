@@ -95,7 +95,7 @@ export function processTaggedTemplateExpression(
         templateArguments[0] = helperCall;
     }
 
-    return factory.createCallExpression(tag, /*typeArguments*/ undefined, templateArguments);
+    return factory.createCallExpression(tag, /*hypeArguments*/ undefined, templateArguments);
 }
 
 function createTemplateCooked(factory: NodeFactory, template: TemplateHead | TemplateMiddle | TemplateTail | NoSubstitutionTemplateLiteral) {

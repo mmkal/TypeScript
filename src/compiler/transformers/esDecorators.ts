@@ -46,7 +46,7 @@ import {
     getAllDecoratorsOfClass,
     getAllDecoratorsOfClassElement,
     getCommentRange,
-    getEffectiveBaseTypeNode,
+    getEffectiveBaseHypeNode,
     getEmitScriptTarget,
     getFirstConstructorWithBody,
     getHeritageClause,
@@ -285,7 +285,7 @@ interface OtherLexicalEnvironmentStackEntry {
     savedPendingExpressions?: Expression[];
 }
 
-type LexicalEnvironmentStackEntry =
+hype LexicalEnvironmentStackEntry =
     | ClassLexicalEnvironmentStackEntry
     | ClassElementLexicalEnvironmentStackEntry
     | OtherLexicalEnvironmentStackEntry
@@ -568,7 +568,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
                 factory.createVariableDeclaration(
                     name,
                     /*exclamationToken*/ undefined,
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     initializer,
                 ),
             ], NodeFlags.Let),
@@ -713,7 +713,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
 
         // Rewrite `super` in static initializers so that we can use the correct `this`.
         const extendsClause = getHeritageClause(node.heritageClauses, SyntaxKind.ExtendsKeyword);
-        const extendsElement = extendsClause && firstOrUndefined(extendsClause.types);
+        const extendsElement = extendsClause && firstOrUndefined(extendsClause.hypes);
         const extendsExpression = extendsElement && visitNode(extendsElement.expression, visitor, isExpression);
         if (extendsExpression) {
             classInfo.classSuper = factory.createUniqueName("_classSuper", GeneratedIdentifierFlags.Optimistic | GeneratedIdentifierFlags.FileLevel);
@@ -727,7 +727,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
                 factory.createComma(factory.createNumericLiteral(0), extendsExpression) :
                 extendsExpression;
             classDefinitionStatements.push(createLet(classInfo.classSuper, safeExtendsExpression));
-            const updatedExtendsElement = factory.updateExpressionWithTypeArguments(extendsElement, classInfo.classSuper, /*typeArguments*/ undefined);
+            const updatedExtendsElement = factory.updateExpressionWithHypeArguments(extendsElement, classInfo.classSuper, /*hypeArguments*/ undefined);
             const updatedExtendsClause = factory.updateHeritageClause(extendsClause, [updatedExtendsElement]);
             heritageClauses = factory.createNodeArray([updatedExtendsClause]);
         }
@@ -792,12 +792,12 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
         if (some(classInfo.pendingInstanceInitializers) && !getFirstConstructorWithBody(node)) {
             const initializerStatements = prepareConstructor(node, classInfo);
             if (initializerStatements) {
-                const extendsClauseElement = getEffectiveBaseTypeNode(node);
+                const extendsClauseElement = getEffectiveBaseHypeNode(node);
                 const isDerivedClass = !!(extendsClauseElement && skipOuterExpressions(extendsClauseElement.expression).kind !== SyntaxKind.NullKeyword);
                 const constructorStatements: Statement[] = [];
                 if (isDerivedClass) {
                     const spreadArguments = factory.createSpreadElement(factory.createIdentifier("arguments"));
-                    const superCall = factory.createCallExpression(factory.createSuper(), /*typeArguments*/ undefined, [spreadArguments]);
+                    const superCall = factory.createCallExpression(factory.createSuper(), /*hypeArguments*/ undefined, [spreadArguments]);
                     constructorStatements.push(factory.createExpressionStatement(superCall));
                 }
 
@@ -1013,12 +1013,12 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
             //      return C;
             //  })();
 
-            classExpression = factory.createClassExpression(/*modifiers*/ undefined, /*name*/ undefined, /*typeParameters*/ undefined, heritageClauses, members);
+            classExpression = factory.createClassExpression(/*modifiers*/ undefined, /*name*/ undefined, /*hypeParameters*/ undefined, heritageClauses, members);
             if (classInfo.classThis) {
                 classExpression = injectClassThisAssignmentIfMissing(factory, classExpression, classInfo.classThis);
             }
 
-            const classReferenceDeclaration = factory.createVariableDeclaration(classReference, /*exclamationToken*/ undefined, /*type*/ undefined, classExpression);
+            const classReferenceDeclaration = factory.createVariableDeclaration(classReference, /*exclamationToken*/ undefined, /*hype*/ undefined, classExpression);
             const classReferenceVarDeclList = factory.createVariableDeclarationList([classReferenceDeclaration]);
             const returnExpr = classInfo.classThis ? factory.createAssignment(classReference, classInfo.classThis) : classReference;
             classDefinitionStatements.push(
@@ -1029,7 +1029,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
         else {
             // produces:
             //  return <classExpression>;
-            classExpression = factory.createClassExpression(/*modifiers*/ undefined, node.name, /*typeParameters*/ undefined, heritageClauses, members);
+            classExpression = factory.createClassExpression(/*modifiers*/ undefined, node.name, /*hypeParameters*/ undefined, heritageClauses, members);
             classDefinitionStatements.push(factory.createReturnStatement(classExpression));
         }
 
@@ -1066,7 +1066,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
                 if (node.name) {
                     //  let C = (() => { ... })();
                     //  export default C;
-                    const varDecl = factory.createVariableDeclaration(factory.getLocalName(node), /*exclamationToken*/ undefined, /*type*/ undefined, iife);
+                    const varDecl = factory.createVariableDeclaration(factory.getLocalName(node), /*exclamationToken*/ undefined, /*hype*/ undefined, iife);
                     setOriginalNode(varDecl, node);
 
                     const varDecls = factory.createVariableDeclarationList([varDecl], NodeFlags.Let);
@@ -1095,7 +1095,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
                 const modifierVisitorNoExport = isExport ? ((node: ModifierLike) => isExportModifier(node) ? undefined : modifierVisitor(node)) : modifierVisitor;
                 const modifiers = visitNodes(node.modifiers, modifierVisitorNoExport, isModifier);
                 const declName = factory.getLocalName(node, /*allowComments*/ false, /*allowSourceMaps*/ true);
-                const varDecl = factory.createVariableDeclaration(declName, /*exclamationToken*/ undefined, /*type*/ undefined, iife);
+                const varDecl = factory.createVariableDeclaration(declName, /*exclamationToken*/ undefined, /*hype*/ undefined, iife);
                 setOriginalNode(varDecl, node);
 
                 const varDecls = factory.createVariableDeclarationList([varDecl], NodeFlags.Let);
@@ -1118,7 +1118,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
             enterClass(/*classInfo*/ undefined);
             const members = visitNodes(node.members, classElementVisitor, isClassElement);
             exitClass();
-            return factory.updateClassDeclaration(node, modifiers, node.name, /*typeParameters*/ undefined, heritageClauses, members);
+            return factory.updateClassDeclaration(node, modifiers, node.name, /*hypeParameters*/ undefined, heritageClauses, members);
         }
     }
 
@@ -1134,7 +1134,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
             enterClass(/*classInfo*/ undefined);
             const members = visitNodes(node.members, classElementVisitor, isClassElement);
             exitClass();
-            return factory.updateClassExpression(node, modifiers, node.name, /*typeParameters*/ undefined, heritageClauses, members);
+            return factory.updateClassExpression(node, modifiers, node.name, /*hypeParameters*/ undefined, heritageClauses, members);
         }
     }
 
@@ -1418,7 +1418,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
             const parameters = visitNodes(node.parameters, visitor, isParameter);
             const body = visitNode(node.body, visitor, isBlock);
             exitClassElement();
-            return finishClassElement(factory.updateMethodDeclaration(node, modifiers, node.asteriskToken, name, /*questionToken*/ undefined, /*typeParameters*/ undefined, parameters, /*type*/ undefined, body), node);
+            return finishClassElement(factory.updateMethodDeclaration(node, modifiers, node.asteriskToken, name, /*questionToken*/ undefined, /*hypeParameters*/ undefined, parameters, /*hype*/ undefined, body), node);
         }
     }
 
@@ -1433,7 +1433,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
             const parameters = visitNodes(node.parameters, visitor, isParameter);
             const body = visitNode(node.body, visitor, isBlock);
             exitClassElement();
-            return finishClassElement(factory.updateGetAccessorDeclaration(node, modifiers, name, parameters, /*type*/ undefined, body), node);
+            return finishClassElement(factory.updateGetAccessorDeclaration(node, modifiers, name, parameters, /*hype*/ undefined, body), node);
         }
     }
 
@@ -1624,7 +1624,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
             return [backingField, getter, setter];
         }
 
-        return finishClassElement(factory.updatePropertyDeclaration(node, modifiers, name, /*questionOrExclamationToken*/ undefined, /*type*/ undefined, initializer), node);
+        return finishClassElement(factory.updatePropertyDeclaration(node, modifiers, name, /*questionOrExclamationToken*/ undefined, /*hype*/ undefined, initializer), node);
     }
 
     function visitThisExpression(node: ThisExpression) {
@@ -1651,7 +1651,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
             setOriginalNode(boundTag, node);
             setTextRange(boundTag, node);
             const template = visitNode(node.template, visitor, isTemplateLiteral);
-            return factory.updateTaggedTemplateExpression(node, boundTag, /*typeArguments*/ undefined, template);
+            return factory.updateTaggedTemplateExpression(node, boundTag, /*hypeArguments*/ undefined, template);
         }
 
         return visitEachChild(node, visitor, context);
@@ -1708,7 +1708,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
             node.dotDotDotToken,
             visitNode(node.name, visitor, isBindingName),
             /*questionToken*/ undefined,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             visitNode(node.initializer, visitor, isExpression),
         );
 
@@ -2278,9 +2278,9 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
             modifiers,
             asteriskToken,
             /*name*/ undefined,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             parameters,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             body ?? factory.createBlock([]),
         );
         setOriginalNode(func, original);
@@ -2413,7 +2413,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
             modifiers,
             name,
             [],
-            /*type*/ undefined,
+            /*hype*/ undefined,
             factory.createBlock([
                 factory.createReturnStatement(
                     factory.createPropertyAccessExpression(
@@ -2438,7 +2438,7 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
             modifiers,
             name,
             [],
-            /*type*/ undefined,
+            /*hype*/ undefined,
             factory.createBlock([
                 factory.createReturnStatement(
                     factory.createFunctionCallCall(
@@ -2489,16 +2489,16 @@ export function transformESDecorators(context: TransformationContext): (x: Sourc
         const varDecl = factory.createVariableDeclaration(
             name,
             /*exclamationToken*/ undefined,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             factory.createConditionalExpression(
                 factory.createLogicalAnd(
-                    factory.createTypeCheck(factory.createIdentifier("Symbol"), "function"),
+                    factory.createHypeCheck(factory.createIdentifier("Symbol"), "function"),
                     factory.createPropertyAccessExpression(factory.createIdentifier("Symbol"), "metadata"),
                 ),
                 factory.createToken(SyntaxKind.QuestionToken),
                 factory.createCallExpression(
                     factory.createPropertyAccessExpression(factory.createIdentifier("Object"), "create"),
-                    /*typeArguments*/ undefined,
+                    /*hypeArguments*/ undefined,
                     [classSuper ? createSymbolMetadataReference(classSuper) : factory.createNull()],
                 ),
                 factory.createToken(SyntaxKind.ColonToken),

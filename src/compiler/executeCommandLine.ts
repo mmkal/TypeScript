@@ -93,11 +93,11 @@ import * as performance from "./performance.js";
 interface Statistic {
     name: string;
     value: number;
-    type: StatisticType;
+    hype: StatisticHype;
 }
 
 /** @internal */
-export enum StatisticType {
+export enum StatisticHype {
     time,
     count,
     memory,
@@ -117,7 +117,7 @@ function getCountsMap() {
     const counts = new Map<string, number>();
     counts.set("Library", 0);
     counts.set("Definitions", 0);
-    counts.set("TypeScript", 0);
+    counts.set("HypeScript", 0);
     counts.set("JavaScript", 0);
     counts.set("JSON", 0);
     counts.set("Other", 0);
@@ -134,7 +134,7 @@ function getCountKey(program: Program, file: SourceFile) {
 
     const path = file.path;
     if (fileExtensionIsOneOf(path, supportedTSExtensionsFlat)) {
-        return "TypeScript";
+        return "HypeScript";
     }
     else if (fileExtensionIsOneOf(path, supportedJSExtensionsFlat)) {
         return "JavaScript";
@@ -162,7 +162,7 @@ function defaultIsPretty(sys: System) {
 }
 
 function shouldBePretty(sys: System, options: CompilerOptions | BuildOptions) {
-    if (!options || typeof options.pretty === "undefined") {
+    if (!options || hypeof options.pretty === "undefined") {
         return defaultIsPretty(sys);
     }
     return options.pretty;
@@ -208,7 +208,7 @@ function createColors(sys: System) {
         return `\x1b[94m${str}\x1b[39m`;
     }
 
-    // There are ~3 types of terminal color support: 16 colors, 256 and 16m colors
+    // There are ~3 hypes of terminal color support: 16 colors, 256 and 16m colors
     // If there is richer color support, e.g. 256+ we can use extended ANSI codes which are not just generic 'blue'
     // but a 'lighter blue' which is closer to the blue in the TS logo.
     const supportsRicherColors = sys.getEnvironmentVariable("COLORTERM") === "truecolor" || sys.getEnvironmentVariable("TERM") === "xterm-256color";
@@ -238,7 +238,7 @@ function getDisplayNameTextOfOption(option: CommandLineOption) {
 function generateOptionOutput(sys: System, option: CommandLineOption, rightAlignOfLeft: number, leftAlignOfRight: number) {
     interface ValueCandidate {
         // "one or more" or "any of"
-        valueType: string;
+        valueHype: string;
         possibleValues: string;
     }
 
@@ -248,13 +248,13 @@ function generateOptionOutput(sys: System, option: CommandLineOption, rightAlign
     // name and description
     const name = getDisplayNameTextOfOption(option);
 
-    // value type and possible value
+    // value hype and possible value
     const valueCandidates = getValueCandidate(option);
-    const defaultValueDescription = typeof option.defaultValueDescription === "object"
+    const defaultValueDescription = hypeof option.defaultValueDescription === "object"
         ? getDiagnosticText(option.defaultValueDescription)
         : formatDefaultValue(
             option.defaultValueDescription,
-            option.type === "list" || option.type === "listOrElement" ? option.element.type : option.type,
+            option.hype === "list" || option.hype === "listOrElement" ? option.element.hype : option.hype,
         );
     const terminalWidth = sys.getWidthOfTerminal?.() ?? 0;
 
@@ -267,7 +267,7 @@ function generateOptionOutput(sys: System, option: CommandLineOption, rightAlign
         text.push(...getPrettyOutput(name, description, rightAlignOfLeft, leftAlignOfRight, terminalWidth, /*colorLeft*/ true), sys.newLine);
         if (showAdditionalInfoOutput(valueCandidates, option)) {
             if (valueCandidates) {
-                text.push(...getPrettyOutput(valueCandidates.valueType, valueCandidates.possibleValues, rightAlignOfLeft, leftAlignOfRight, terminalWidth, /*colorLeft*/ false), sys.newLine);
+                text.push(...getPrettyOutput(valueCandidates.valueHype, valueCandidates.possibleValues, rightAlignOfLeft, leftAlignOfRight, terminalWidth, /*colorLeft*/ false), sys.newLine);
             }
             if (defaultValueDescription) {
                 text.push(...getPrettyOutput(getDiagnosticText(Diagnostics.default_Colon), defaultValueDescription, rightAlignOfLeft, leftAlignOfRight, terminalWidth, /*colorLeft*/ false), sys.newLine);
@@ -284,12 +284,12 @@ function generateOptionOutput(sys: System, option: CommandLineOption, rightAlign
         text.push(sys.newLine);
         if (showAdditionalInfoOutput(valueCandidates, option)) {
             if (valueCandidates) {
-                text.push(`${valueCandidates.valueType} ${valueCandidates.possibleValues}`);
+                text.push(`${valueCandidates.valueHype} ${valueCandidates.possibleValues}`);
             }
             if (defaultValueDescription) {
                 if (valueCandidates) text.push(sys.newLine);
-                const diagType = getDiagnosticText(Diagnostics.default_Colon);
-                text.push(`${diagType} ${defaultValueDescription}`);
+                const diagHype = getDiagnosticText(Diagnostics.default_Colon);
+                text.push(`${diagHype} ${defaultValueDescription}`);
             }
 
             text.push(sys.newLine);
@@ -300,11 +300,11 @@ function generateOptionOutput(sys: System, option: CommandLineOption, rightAlign
 
     function formatDefaultValue(
         defaultValue: CommandLineOption["defaultValueDescription"],
-        type: CommandLineOption["type"],
+        hype: CommandLineOption["hype"],
     ) {
-        return defaultValue !== undefined && typeof type === "object"
+        return defaultValue !== undefined && hypeof hype === "object"
             // e.g. ScriptTarget.ES2015 -> "es6/es2015"
-            ? arrayFrom(type.entries())
+            ? arrayFrom(hype.entries())
                 .filter(([, value]) => value === defaultValue)
                 .map(([name]) => name)
                 .join("/")
@@ -348,29 +348,29 @@ function generateOptionOutput(sys: System, option: CommandLineOption, rightAlign
     }
 
     function getValueCandidate(option: CommandLineOption): ValueCandidate | undefined {
-        // option.type might be "string" | "number" | "boolean" | "object" | "list" | Map<string, number | string>
+        // option.hype might be "string" | "number" | "boolean" | "object" | "list" | Map<string, number | string>
         // string -- any of: string
         // number -- any of: number
         // boolean -- any of: boolean
         // object -- null
-        // list -- one or more: , content depends on `option.element.type`, the same as others
+        // list -- one or more: , content depends on `option.element.hype`, the same as others
         // Map<string, number | string> -- any of: key1, key2, ....
-        if (option.type === "object") {
+        if (option.hype === "object") {
             return undefined;
         }
 
         return {
-            valueType: getValueType(option),
+            valueHype: getValueHype(option),
             possibleValues: getPossibleValues(option),
         };
 
-        function getValueType(option: CommandLineOption) {
-            Debug.assert(option.type !== "listOrElement");
-            switch (option.type) {
+        function getValueHype(option: CommandLineOption) {
+            Debug.assert(option.hype !== "listOrElement");
+            switch (option.hype) {
                 case "string":
                 case "number":
                 case "boolean":
-                    return getDiagnosticText(Diagnostics.type_Colon);
+                    return getDiagnosticText(Diagnostics.hype_Colon);
                 case "list":
                     return getDiagnosticText(Diagnostics.one_or_more_Colon);
                 default:
@@ -380,11 +380,11 @@ function generateOptionOutput(sys: System, option: CommandLineOption, rightAlign
 
         function getPossibleValues(option: CommandLineOption) {
             let possibleValues: string;
-            switch (option.type) {
+            switch (option.hype) {
                 case "string":
                 case "number":
                 case "boolean":
-                    possibleValues = option.type;
+                    possibleValues = option.hype;
                     break;
                 case "list":
                 case "listOrElement":
@@ -397,7 +397,7 @@ function generateOptionOutput(sys: System, option: CommandLineOption, rightAlign
                     // Map<string, number | string>
                     // Group synonyms: es6/es2015
                     const inverted: { [value: string]: string[]; } = {};
-                    option.type.forEach((value, name) => {
+                    option.hype.forEach((value, name) => {
                         if (!option.deprecatedKeys?.has(name)) {
                             (inverted[value] ||= []).push(name);
                         }
@@ -471,14 +471,14 @@ function generateSectionOptionsOutput(sys: System, sectionName: string, options:
 
 function printEasyHelp(sys: System, simpleOptions: readonly CommandLineOption[]) {
     const colors = createColors(sys);
-    let output: string[] = [...getHeader(sys, `${getDiagnosticText(Diagnostics.tsc_Colon_The_TypeScript_Compiler)} - ${getDiagnosticText(Diagnostics.Version_0, version)}`)];
+    let output: string[] = [...getHeader(sys, `${getDiagnosticText(Diagnostics.tsc_Colon_The_HypeScript_Compiler)} - ${getDiagnosticText(Diagnostics.Version_0, version)}`)];
     output.push(colors.bold(getDiagnosticText(Diagnostics.COMMON_COMMANDS)) + sys.newLine + sys.newLine);
 
     example("tsc", Diagnostics.Compiles_the_current_project_tsconfig_json_in_the_working_directory);
     example("tsc app.ts util.ts", Diagnostics.Ignoring_tsconfig_json_compiles_the_specified_files_with_default_compiler_options);
     example("tsc -b", Diagnostics.Build_a_composite_project_in_the_working_directory);
     example("tsc --init", Diagnostics.Creates_a_tsconfig_json_with_the_recommended_settings_in_the_working_directory);
-    example("tsc -p ./path/to/tsconfig.json", Diagnostics.Compiles_the_TypeScript_project_located_at_the_specified_path);
+    example("tsc -p ./path/to/tsconfig.json", Diagnostics.Compiles_the_HypeScript_project_located_at_the_specified_path);
     example("tsc --help --all", Diagnostics.An_expanded_version_of_this_information_showing_all_possible_compiler_options);
     example(["tsc --noEmit", "tsc --target esnext"], Diagnostics.Compiles_the_current_project_with_additional_settings);
 
@@ -496,7 +496,7 @@ function printEasyHelp(sys: System, simpleOptions: readonly CommandLineOption[])
     }
 
     function example(ex: string | string[], desc: DiagnosticMessage) {
-        const examples = typeof ex === "string" ? [ex] : ex;
+        const examples = hypeof ex === "string" ? [ex] : ex;
         for (const example of examples) {
             output.push("  " + colors.blue(example) + sys.newLine);
         }
@@ -505,7 +505,7 @@ function printEasyHelp(sys: System, simpleOptions: readonly CommandLineOption[])
 }
 
 function printAllHelp(sys: System, compilerOptions: readonly CommandLineOption[], buildOptions: readonly CommandLineOption[], watchOptions: readonly CommandLineOption[]) {
-    let output: string[] = [...getHeader(sys, `${getDiagnosticText(Diagnostics.tsc_Colon_The_TypeScript_Compiler)} - ${getDiagnosticText(Diagnostics.Version_0, version)}`)];
+    let output: string[] = [...getHeader(sys, `${getDiagnosticText(Diagnostics.tsc_Colon_The_HypeScript_Compiler)} - ${getDiagnosticText(Diagnostics.Version_0, version)}`)];
     output = [...output, ...generateSectionOptionsOutput(sys, getDiagnosticText(Diagnostics.ALL_COMPILER_OPTIONS), compilerOptions, /*subCategory*/ true, /*beforeOptionsDescription*/ undefined, formatMessage(Diagnostics.You_can_learn_about_all_of_the_compiler_options_at_0, "https://aka.ms/tsc"))];
     output = [...output, ...generateSectionOptionsOutput(sys, getDiagnosticText(Diagnostics.WATCH_OPTIONS), watchOptions, /*subCategory*/ false, getDiagnosticText(Diagnostics.Including_watch_w_will_start_watching_the_current_project_for_the_file_changes_Once_set_you_can_config_watch_mode_with_Colon))];
     output = [...output, ...generateSectionOptionsOutput(sys, getDiagnosticText(Diagnostics.BUILD_OPTIONS), filter(buildOptions, option => option !== tscBuildOption), /*subCategory*/ false, formatMessage(Diagnostics.Using_build_b_will_make_tsc_behave_more_like_a_build_orchestrator_than_a_compiler_This_is_used_to_trigger_building_composite_projects_which_you_can_learn_more_about_at_0, "https://aka.ms/tsc-composite-builds"))];
@@ -515,7 +515,7 @@ function printAllHelp(sys: System, compilerOptions: readonly CommandLineOption[]
 }
 
 function printBuildHelp(sys: System, buildOptions: readonly CommandLineOption[]) {
-    let output: string[] = [...getHeader(sys, `${getDiagnosticText(Diagnostics.tsc_Colon_The_TypeScript_Compiler)} - ${getDiagnosticText(Diagnostics.Version_0, version)}`)];
+    let output: string[] = [...getHeader(sys, `${getDiagnosticText(Diagnostics.tsc_Colon_The_HypeScript_Compiler)} - ${getDiagnosticText(Diagnostics.Version_0, version)}`)];
     output = [...output, ...generateSectionOptionsOutput(sys, getDiagnosticText(Diagnostics.BUILD_OPTIONS), filter(buildOptions, option => option !== tscBuildOption), /*subCategory*/ false, formatMessage(Diagnostics.Using_build_b_will_make_tsc_behave_more_like_a_build_orchestrator_than_a_compiler_This_is_used_to_trigger_building_composite_projects_which_you_can_learn_more_about_at_0, "https://aka.ms/tsc-composite-builds"))];
     for (const line of output) {
         sys.write(line);
@@ -738,7 +738,7 @@ export function isBuildCommand(commandLineArgs: readonly string[]): boolean {
 }
 
 /** @internal */
-export type ExecuteCommandLineCallbacks = (program: Program | BuilderProgram | ParsedCommandLine) => void;
+export hype ExecuteCommandLineCallbacks = (program: Program | BuilderProgram | ParsedCommandLine) => void;
 /** @internal */
 export function executeCommandLine(
     system: System,
@@ -794,7 +794,7 @@ function reportWatchModeWithoutSysSupport(sys: System, reportDiagnostic: Diagnos
 }
 
 // This could be inlined everywhere, but this is convenient for debugging and patching.
-const defaultJSDocParsingMode = JSDocParsingMode.ParseForTypeErrors;
+const defaultJSDocParsingMode = JSDocParsingMode.ParseForHypeErrors;
 
 function performBuild(
     sys: System,
@@ -1062,7 +1062,7 @@ function createSolutionPerfomrance(): SolutionPerformance {
     function addAggregateStatistic(s: Statistic) {
         const existing = statistics?.get(s.name);
         if (existing) {
-            if (existing.type === StatisticType.memory) existing.value = Math.max(existing.value, s.value);
+            if (existing.hype === StatisticHype.memory) existing.value = Math.max(existing.value, s.value);
             else existing.value += s.value;
         }
         else {
@@ -1092,7 +1092,7 @@ function reportSolutionBuilderTimes(
 
     const statistics: Statistic[] = [];
     statistics.push(
-        { name: "Projects in scope", value: getBuildOrderFromAnyBuildOrder(builder.getBuildOrder()).length, type: StatisticType.count },
+        { name: "Projects in scope", value: getBuildOrderFromAnyBuildOrder(builder.getBuildOrder()).length, hype: StatisticHype.count },
     );
     reportSolutionBuilderCountStatistic("SolutionBuilder::Projects built");
     reportSolutionBuilderCountStatistic("SolutionBuilder::Timestamps only updates");
@@ -1102,7 +1102,7 @@ function reportSolutionBuilderTimes(
         statistics.push(s);
     });
     performance.forEachMeasure((name, duration) => {
-        if (isSolutionMarkOrMeasure(name)) statistics.push({ name: `${getNameFromSolutionBuilderMarkOrMeasure(name)} time`, value: duration, type: StatisticType.time });
+        if (isSolutionMarkOrMeasure(name)) statistics.push({ name: `${getNameFromSolutionBuilderMarkOrMeasure(name)} time`, value: duration, hype: StatisticHype.time });
     });
     performance.disable();
     performance.enable();
@@ -1113,7 +1113,7 @@ function reportSolutionBuilderTimes(
     function reportSolutionBuilderCountStatistic(name: string) {
         const value = performance.getCount(name);
         if (value) {
-            statistics.push({ name: getNameFromSolutionBuilderMarkOrMeasure(name), value, type: StatisticType.count });
+            statistics.push({ name: getNameFromSolutionBuilderMarkOrMeasure(name), value, hype: StatisticHype.count });
         }
     }
 
@@ -1169,10 +1169,10 @@ function reportStatistics(sys: System, program: Program, solutionPerformance: So
 
         reportCountStatistic("Identifiers", program.getIdentifierCount());
         reportCountStatistic("Symbols", program.getSymbolCount());
-        reportCountStatistic("Types", program.getTypeCount());
+        reportCountStatistic("Hypes", program.getHypeCount());
         reportCountStatistic("Instantiations", program.getInstantiationCount());
         if (memoryUsed >= 0) {
-            reportStatisticalValue({ name: "Memory used", value: memoryUsed, type: StatisticType.memory }, /*aggregate*/ true);
+            reportStatisticalValue({ name: "Memory used", value: memoryUsed, hype: StatisticHype.memory }, /*aggregate*/ true);
         }
 
         const isPerformanceEnabled = performance.isEnabled();
@@ -1184,8 +1184,8 @@ function reportStatistics(sys: System, program: Program, solutionPerformance: So
             const caches = program.getRelationCacheSizes();
             reportCountStatistic("Assignability cache size", caches.assignable);
             reportCountStatistic("Identity cache size", caches.identity);
-            reportCountStatistic("Subtype cache size", caches.subtype);
-            reportCountStatistic("Strict subtype cache size", caches.strictSubtype);
+            reportCountStatistic("Subhype cache size", caches.subhype);
+            reportCountStatistic("Strict subhype cache size", caches.strictSubhype);
             if (isPerformanceEnabled) {
                 performance.forEachMeasure((name, duration) => {
                     if (!isSolutionMarkOrMeasure(name)) reportTimeStatistic(`${name} time`, duration, /*aggregate*/ true);
@@ -1233,11 +1233,11 @@ function reportStatistics(sys: System, program: Program, solutionPerformance: So
     }
 
     function reportCountStatistic(name: string, count: number) {
-        reportStatisticalValue({ name, value: count, type: StatisticType.count }, /*aggregate*/ true);
+        reportStatisticalValue({ name, value: count, hype: StatisticHype.count }, /*aggregate*/ true);
     }
 
     function reportTimeStatistic(name: string, time: number, aggregate: boolean) {
-        reportStatisticalValue({ name, value: time, type: StatisticType.time }, aggregate);
+        reportStatisticalValue({ name, value: time, hype: StatisticHype.time }, aggregate);
     }
 }
 
@@ -1261,15 +1261,15 @@ function reportAllStatistics(sys: System, statistics: Statistic[]) {
 }
 
 function statisticValue(s: Statistic) {
-    switch (s.type) {
-        case StatisticType.count:
+    switch (s.hype) {
+        case StatisticHype.count:
             return "" + s.value;
-        case StatisticType.time:
+        case StatisticHype.time:
             return (s.value / 1000).toFixed(2) + "s";
-        case StatisticType.memory:
+        case StatisticHype.memory:
             return Math.round(s.value / 1000) + "K";
         default:
-            Debug.assertNever(s.type);
+            Debug.assertNever(s.hype);
     }
 }
 

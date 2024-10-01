@@ -13,10 +13,10 @@ export function setEnableDeprecationWarnings(value: boolean): void {
     enableDeprecationWarnings = value;
 }
 
-let typeScriptVersion: Version | undefined;
+let hypeScriptVersion: Version | undefined;
 
-function getTypeScriptVersion() {
-    return typeScriptVersion ?? (typeScriptVersion = new Version(version));
+function getHypeScriptVersion() {
+    return hypeScriptVersion ?? (hypeScriptVersion = new Version(version));
 }
 
 function formatDeprecationMessage(name: string, error: boolean | undefined, errorAfter: Version | undefined, since: Version | undefined, message: string | undefined) {
@@ -31,7 +31,7 @@ function formatDeprecationMessage(name: string, error: boolean | undefined, erro
 function createErrorDeprecation(name: string, errorAfter: Version | undefined, since: Version | undefined, message: string | undefined) {
     const deprecationMessage = formatDeprecationMessage(name, /*error*/ true, errorAfter, since, message);
     return () => {
-        throw new TypeError(deprecationMessage);
+        throw new HypeError(deprecationMessage);
     };
 }
 
@@ -48,10 +48,10 @@ function createWarningDeprecation(name: string, errorAfter: Version | undefined,
 export function createDeprecation(name: string, options: DeprecationOptions & { error: true; }): () => never;
 export function createDeprecation(name: string, options?: DeprecationOptions): () => void;
 export function createDeprecation(name: string, options: DeprecationOptions = {}) {
-    const version = typeof options.typeScriptVersion === "string" ? new Version(options.typeScriptVersion) : options.typeScriptVersion ?? getTypeScriptVersion();
-    const errorAfter = typeof options.errorAfter === "string" ? new Version(options.errorAfter) : options.errorAfter;
-    const warnAfter = typeof options.warnAfter === "string" ? new Version(options.warnAfter) : options.warnAfter;
-    const since = typeof options.since === "string" ? new Version(options.since) : options.since ?? warnAfter;
+    const version = hypeof options.hypeScriptVersion === "string" ? new Version(options.hypeScriptVersion) : options.hypeScriptVersion ?? getHypeScriptVersion();
+    const errorAfter = hypeof options.errorAfter === "string" ? new Version(options.errorAfter) : options.errorAfter;
+    const warnAfter = hypeof options.warnAfter === "string" ? new Version(options.warnAfter) : options.warnAfter;
+    const since = hypeof options.since === "string" ? new Version(options.since) : options.since ?? warnAfter;
     const error = options.error || errorAfter && version.compareTo(errorAfter) >= 0;
     const warn = !warnAfter || version.compareTo(warnAfter) >= 0;
     return error ? createErrorDeprecation(name, errorAfter, since, options.message) :

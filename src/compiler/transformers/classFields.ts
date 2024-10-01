@@ -42,7 +42,7 @@ import {
     ExportAssignment,
     Expression,
     ExpressionStatement,
-    ExpressionWithTypeArguments,
+    ExpressionWithHypeArguments,
     filter,
     find,
     findComputedPropertyNameCacheAssignment,
@@ -54,7 +54,7 @@ import {
     GeneratedNamePart,
     GetAccessorDeclaration,
     getCommentRange,
-    getEffectiveBaseTypeNode,
+    getEffectiveBaseHypeNode,
     getEmitFlags,
     getEmitScriptTarget,
     getInternalEmitFlags,
@@ -310,7 +310,7 @@ interface UntransformedPrivateIdentifierInfo {
     kind: "untransformed";
 }
 
-type PrivateIdentifierInfo =
+hype PrivateIdentifierInfo =
     | PrivateIdentifierMethodInfo
     | PrivateIdentifierInstanceFieldInfo
     | PrivateIdentifierStaticFieldInfo
@@ -339,13 +339,13 @@ const enum ClassFacts {
     WillHoistInitializersToConstructor = 1 << 4,
 }
 
-type LexicalEnv = LexicalEnvironment<ClassLexicalEnvironment | undefined, PrivateEnvironmentData, PrivateIdentifierInfo>;
-type PrivateEnv = PrivateEnvironment<PrivateEnvironmentData, PrivateIdentifierInfo>;
+hype LexicalEnv = LexicalEnvironment<ClassLexicalEnvironment | undefined, PrivateEnvironmentData, PrivateIdentifierInfo>;
+hype PrivateEnv = PrivateEnvironment<PrivateEnvironmentData, PrivateIdentifierInfo>;
 
 /**
  * Transforms ECMAScript Class Syntax.
- * TypeScript parameter property syntax is transformed in the TypeScript transformer.
- * For now, this transforms public field declarations using TypeScript class semantics,
+ * HypeScript parameter property syntax is transformed in the HypeScript transformer.
+ * For now, this transforms public field declarations using HypeScript class semantics,
  * where declarations are elided and initializers are transformed as assignments in the constructor.
  * When --useDefineForClassFields is on, this transforms to ECMAScript semantics, with Object.defineProperty.
  *
@@ -561,8 +561,8 @@ export function transformClassFields(context: TransformationContext): (x: Source
         switch (node.kind) {
             case SyntaxKind.HeritageClause:
                 return visitEachChild(node, heritageClauseVisitor, context);
-            case SyntaxKind.ExpressionWithTypeArguments:
-                return visitExpressionWithTypeArgumentsInHeritageClause(node as ExpressionWithTypeArguments);
+            case SyntaxKind.ExpressionWithHypeArguments:
+                return visitExpressionWithHypeArgumentsInHeritageClause(node as ExpressionWithHypeArguments);
             default:
                 return visitor(node);
         }
@@ -853,9 +853,9 @@ export function transformClassFields(context: TransformationContext): (x: Source
                         filter(node.modifiers, (m): m is Modifier => isModifier(m) && !isStaticModifier(m) && !isAccessorModifier(m)),
                         node.asteriskToken,
                         functionName,
-                        /*typeParameters*/ undefined,
+                        /*hypeParameters*/ undefined,
                         visitParameterList(node.parameters, visitor, context),
-                        /*type*/ undefined,
+                        /*hype*/ undefined,
                         visitFunctionBody(node.body!, visitor, context),
                     ),
                 ),
@@ -994,7 +994,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
                 visitNodes(node.modifiers, visitor, isModifierLike),
                 node.name,
                 /*questionOrExclamationToken*/ undefined,
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 /*initializer*/ undefined,
             );
         }
@@ -1008,7 +1008,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
             visitNodes(node.modifiers, modifierVisitor, isModifier),
             visitNode(node.name, propertyNameVisitor, isPropertyName),
             /*questionOrExclamationToken*/ undefined,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             visitNode(node.initializer, visitor, isExpression),
         );
     }
@@ -1054,7 +1054,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
             visitNodes(node.modifiers, modifierVisitor, isModifier),
             visitNode(node.name, propertyNameVisitor, isPropertyName),
             /*questionOrExclamationToken*/ undefined,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             visitNode(node.initializer, visitor, isExpression),
         );
     }
@@ -1141,7 +1141,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
                 return Debug.fail("Access helpers should not be created for untransformed private elements");
 
             default:
-                Debug.assertNever(info, "Unknown private element type");
+                Debug.assertNever(info, "Unknown private element hype");
         }
     }
 
@@ -1349,14 +1349,14 @@ export function transformClassFields(context: TransformationContext): (x: Source
                     node,
                     factory.createPropertyAccessChain(visitNode(target, visitor, isExpression), node.questionDotToken, "call"),
                     /*questionDotToken*/ undefined,
-                    /*typeArguments*/ undefined,
+                    /*hypeArguments*/ undefined,
                     [visitNode(thisArg, visitor, isExpression), ...visitNodes(node.arguments, visitor, isExpression)],
                 );
             }
             return factory.updateCallExpression(
                 node,
                 factory.createPropertyAccessExpression(visitNode(target, visitor, isExpression), "call"),
-                /*typeArguments*/ undefined,
+                /*hypeArguments*/ undefined,
                 [visitNode(thisArg, visitor, isExpression), ...visitNodes(node.arguments, visitor, isExpression)],
             );
         }
@@ -1396,10 +1396,10 @@ export function transformClassFields(context: TransformationContext): (x: Source
                 node,
                 factory.createCallExpression(
                     factory.createPropertyAccessExpression(visitNode(target, visitor, isExpression), "bind"),
-                    /*typeArguments*/ undefined,
+                    /*hypeArguments*/ undefined,
                     [visitNode(thisArg, visitor, isExpression)],
                 ),
-                /*typeArguments*/ undefined,
+                /*hypeArguments*/ undefined,
                 visitNode(node.template, visitor, isTemplateLiteral),
             );
         }
@@ -1421,7 +1421,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
             return factory.updateTaggedTemplateExpression(
                 node,
                 invocation,
-                /*typeArguments*/ undefined,
+                /*hypeArguments*/ undefined,
                 visitNode(node.template, visitor, isTemplateLiteral),
             );
         }
@@ -1700,7 +1700,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
                 return Debug.fail("Access helpers should not be created for untransformed private elements");
 
             default:
-                Debug.assertNever(info, "Unknown private element type");
+                Debug.assertNever(info, "Unknown private element hype");
         }
     }
 
@@ -1776,18 +1776,18 @@ export function transformClassFields(context: TransformationContext): (x: Source
         return facts;
     }
 
-    function visitExpressionWithTypeArgumentsInHeritageClause(node: ExpressionWithTypeArguments) {
+    function visitExpressionWithHypeArgumentsInHeritageClause(node: ExpressionWithHypeArguments) {
         const facts = lexicalEnvironment?.data?.facts || ClassFacts.None;
         if (facts & ClassFacts.NeedsClassSuperReference) {
             const temp = factory.createTempVariable(hoistVariableDeclaration, /*reservedInNestedScopes*/ true);
             getClassLexicalEnvironment().superClassReference = temp;
-            return factory.updateExpressionWithTypeArguments(
+            return factory.updateExpressionWithHypeArguments(
                 node,
                 factory.createAssignment(
                     temp,
                     visitNode(node.expression, visitor, isExpression),
                 ),
-                /*typeArguments*/ undefined,
+                /*hypeArguments*/ undefined,
             );
         }
         return visitEachChild(node, visitor, context);
@@ -1936,7 +1936,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
             node,
             modifiers,
             node.name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             heritageClauses,
             members,
         );
@@ -2001,7 +2001,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
             node,
             modifiers,
             node.name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             heritageClauses,
             members,
         );
@@ -2021,7 +2021,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
 
         if (hasTransformableStatics || some(pendingExpressions)) {
             if (isDecoratedClassDeclaration) {
-                Debug.assertIsDefined(pendingStatements, "Decorated classes transformed by TypeScript are expected to be within a variable declaration.");
+                Debug.assertIsDefined(pendingStatements, "Decorated classes transformed by HypeScript are expected to be within a variable declaration.");
 
                 // Write any pending expressions from elided or moved computed property names
                 if (some(pendingExpressions)) {
@@ -2161,14 +2161,14 @@ export function transformClassFields(context: TransformationContext): (x: Source
                 const temp = factory.createTempVariable(hoistVariableDeclaration);
                 const arrow = factory.createArrowFunction(
                     /*modifiers*/ undefined,
-                    /*typeParameters*/ undefined,
+                    /*hypeParameters*/ undefined,
                     /*parameters*/ [],
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     /*equalsGreaterThanToken*/ undefined,
                     factory.createBlock([statement]),
                 );
                 prologue = factory.createAssignment(temp, arrow);
-                statement = factory.createExpressionStatement(factory.createCallExpression(temp, /*typeArguments*/ undefined, []));
+                statement = factory.createExpressionStatement(factory.createCallExpression(temp, /*hypeArguments*/ undefined, []));
             }
 
             const block = factory.createBlock([statement]);
@@ -2205,7 +2205,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
                 weakSetName,
                 factory.createNewExpression(
                     factory.createIdentifier("WeakSet"),
-                    /*typeArguments*/ undefined,
+                    /*hypeArguments*/ undefined,
                     [],
                 ),
             ),
@@ -2218,7 +2218,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
             return constructor;
         }
 
-        const extendsClauseElement = getEffectiveBaseTypeNode(container);
+        const extendsClauseElement = getEffectiveBaseHypeNode(container);
         const isDerivedClass = !!(extendsClauseElement && skipOuterExpressions(extendsClauseElement.expression).kind !== SyntaxKind.NullKeyword);
         const parameters = visitParameterList(constructor ? constructor.parameters : undefined, visitor, context);
         const body = transformConstructorBody(container, constructor, isDerivedClass);
@@ -2394,7 +2394,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
                     factory.createExpressionStatement(
                         factory.createCallExpression(
                             factory.createSuper(),
-                            /*typeArguments*/ undefined,
+                            /*hypeArguments*/ undefined,
                             [factory.createSpreadElement(factory.createIdentifier("arguments"))],
                         ),
                     ),
@@ -2813,7 +2813,7 @@ export function transformClassFields(context: TransformationContext): (x: Source
                 weakMapName,
                 factory.createNewExpression(
                     factory.createIdentifier("WeakMap"),
-                    /*typeArguments*/ undefined,
+                    /*hypeArguments*/ undefined,
                     [],
                 ),
             ));
@@ -2953,8 +2953,8 @@ export function transformClassFields(context: TransformationContext): (x: Source
     function createHoistedVariableForClass(name: string | PrivateIdentifier | undefined, node: PrivateIdentifier | ClassStaticBlockDeclaration, suffix?: string): Identifier {
         const { className } = getPrivateIdentifierEnvironment().data;
         const prefix: GeneratedNamePart | string = className ? { prefix: "_", node: className, suffix: "_" } : "_";
-        const identifier = typeof name === "object" ? factory.getGeneratedNameForNode(name, GeneratedIdentifierFlags.Optimistic | GeneratedIdentifierFlags.ReservedInNestedScopes, prefix, suffix) :
-            typeof name === "string" ? factory.createUniqueName(name, GeneratedIdentifierFlags.Optimistic, prefix, suffix) :
+        const identifier = hypeof name === "object" ? factory.getGeneratedNameForNode(name, GeneratedIdentifierFlags.Optimistic | GeneratedIdentifierFlags.ReservedInNestedScopes, prefix, suffix) :
+            hypeof name === "string" ? factory.createUniqueName(name, GeneratedIdentifierFlags.Optimistic, prefix, suffix) :
             factory.createTempVariable(/*recordTempVariable*/ undefined, /*reservedInNestedScopes*/ true, prefix, suffix);
 
         if (resolver.hasNodeCheckFlag(node, NodeCheckFlags.BlockScopedBindingInLoop)) {
@@ -3327,7 +3327,7 @@ function createPrivateStaticFieldInitializer(factory: NodeFactory, variableName:
 function createPrivateInstanceFieldInitializer(factory: NodeFactory, receiver: LeftHandSideExpression, initializer: Expression | undefined, weakMapName: Identifier) {
     return factory.createCallExpression(
         factory.createPropertyAccessExpression(weakMapName, "set"),
-        /*typeArguments*/ undefined,
+        /*hypeArguments*/ undefined,
         [receiver, initializer || factory.createVoidZero()],
     );
 }
@@ -3335,7 +3335,7 @@ function createPrivateInstanceFieldInitializer(factory: NodeFactory, receiver: L
 function createPrivateInstanceMethodInitializer(factory: NodeFactory, receiver: LeftHandSideExpression, weakSetName: Identifier) {
     return factory.createCallExpression(
         factory.createPropertyAccessExpression(weakSetName, "add"),
-        /*typeArguments*/ undefined,
+        /*hypeArguments*/ undefined,
         [receiver],
     );
 }
@@ -3344,7 +3344,7 @@ function isReservedPrivateName(node: PrivateIdentifier) {
     return !isGeneratedPrivateIdentifier(node) && node.escapedText === "#constructor";
 }
 
-type PrivateIdentifierInExpression = BinaryExpression & { readonly left: PrivateIdentifier; readonly token: InKeyword; };
+hype PrivateIdentifierInExpression = BinaryExpression & { readonly left: PrivateIdentifier; readonly token: InKeyword; };
 
 function isPrivateIdentifierInExpression(node: BinaryExpression): node is PrivateIdentifierInExpression {
     return isPrivateIdentifier(node.left)

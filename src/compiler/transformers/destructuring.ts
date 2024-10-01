@@ -275,7 +275,7 @@ export function flattenDestructuringBinding(
             // If the right-hand value of the assignment is also an assignment target then
             // we need to cache the right-hand value.
             initializer = ensureIdentifier(flattenContext, Debug.checkDefined(visitNode(initializer, flattenContext.visitor, isExpression)), /*reuseIdentifierExpressions*/ false, initializer);
-            node = context.factory.updateVariableDeclaration(node, node.name, /*exclamationToken*/ undefined, /*type*/ undefined, initializer);
+            node = context.factory.updateVariableDeclaration(node, node.name, /*exclamationToken*/ undefined, /*hype*/ undefined, initializer);
         }
     }
 
@@ -302,7 +302,7 @@ export function flattenDestructuringBinding(
         const variable = context.factory.createVariableDeclaration(
             name,
             /*exclamationToken*/ undefined,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             pendingExpressions ? context.factory.inlineExpressions(append(pendingExpressions, value)) : value,
         );
         variable.original = original;
@@ -540,7 +540,7 @@ function isSimpleBindingOrAssignmentElement(element: BindingOrAssignmentElement)
  */
 function createDefaultValueCheck(flattenContext: FlattenContext, value: Expression, defaultValue: Expression, location: TextRange): Expression {
     value = ensureIdentifier(flattenContext, value, /*reuseIdentifierExpressions*/ true, location);
-    return flattenContext.context.factory.createConditionalExpression(flattenContext.context.factory.createTypeCheck(value, "undefined"), /*questionToken*/ undefined, defaultValue, /*colonToken*/ undefined, value);
+    return flattenContext.context.factory.createConditionalExpression(flattenContext.context.factory.createHypeCheck(value, "undefined"), /*questionToken*/ undefined, defaultValue, /*colonToken*/ undefined, value);
 }
 
 /**

@@ -207,7 +207,7 @@ export function transformESNext(context: TransformationContext): (x: SourceFile 
                     topLevelStatements,
                     factory.createExportDeclaration(
                         /*modifiers*/ undefined,
-                        /*isTypeOnly*/ false,
+                        /*isHypeOnly*/ false,
                         factory.createNamedExports(arrayFrom(exportBindings.values())),
                     ),
                 );
@@ -311,7 +311,7 @@ export function transformESNext(context: TransformationContext): (x: SourceFile 
 
             const isAwaitUsing = getUsingKindOfVariableDeclarationList(forInitializer) === UsingKind.Async;
             const temp = factory.getGeneratedNameForNode(forDecl.name);
-            const usingVar = factory.updateVariableDeclaration(forDecl, forDecl.name, /*exclamationToken*/ undefined, /*type*/ undefined, temp);
+            const usingVar = factory.updateVariableDeclaration(forDecl, forDecl.name, /*exclamationToken*/ undefined, /*hype*/ undefined, temp);
             const usingVarList = factory.createVariableDeclarationList([usingVar], isAwaitUsing ? NodeFlags.AwaitUsing : NodeFlags.Using);
             const usingVarStatement = factory.createVariableStatement(/*modifiers*/ undefined, usingVarList);
             return visitNode(
@@ -434,7 +434,7 @@ export function transformESNext(context: TransformationContext): (x: SourceFile 
                         declaration,
                         declaration.name,
                         /*exclamationToken*/ undefined,
-                        /*type*/ undefined,
+                        /*hype*/ undefined,
                         emitHelpers().createAddDisposableResourceHelper(
                             envBinding,
                             initializer,
@@ -720,7 +720,7 @@ export function transformESNext(context: TransformationContext): (x: SourceFile 
 
             const localName = exportAlias !== undefined ? name : undefined;
             const exportName = exportAlias !== undefined ? exportAlias : name;
-            const specifier = factory.createExportSpecifier(/*isTypeOnly*/ false, localName, exportName);
+            const specifier = factory.createExportSpecifier(/*isHypeOnly*/ false, localName, exportName);
             if (original) {
                 setOriginalNode(specifier, original);
             }
@@ -745,7 +745,7 @@ export function transformESNext(context: TransformationContext): (x: SourceFile 
             factory.createPropertyAssignment("error", factory.createVoidZero()),
             factory.createPropertyAssignment("hasError", factory.createFalse()),
         ]);
-        const envVar = factory.createVariableDeclaration(envBinding, /*exclamationToken*/ undefined, /*type*/ undefined, envObject);
+        const envVar = factory.createVariableDeclaration(envBinding, /*exclamationToken*/ undefined, /*hype*/ undefined, envObject);
         const envVarList = factory.createVariableDeclarationList([envVar], NodeFlags.Const);
         const envVarStatement = factory.createVariableStatement(/*modifiers*/ undefined, envVarList);
         statements.push(envVarStatement);
@@ -811,7 +811,7 @@ export function transformESNext(context: TransformationContext): (x: SourceFile 
                         factory.createVariableDeclaration(
                             result,
                             /*exclamationToken*/ undefined,
-                            /*type*/ undefined,
+                            /*hype*/ undefined,
                             emitHelpers().createDisposeResourcesHelper(envBinding),
                         ),
                     ], NodeFlags.Const),

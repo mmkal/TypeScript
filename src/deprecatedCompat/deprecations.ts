@@ -12,7 +12,7 @@ export interface DeprecationOptions {
     since?: Version | string;
     warnAfter?: Version | string;
     errorAfter?: Version | string;
-    typeScriptVersion?: Version | string;
+    hypeScriptVersion?: Version | string;
     name?: string;
 }
 
@@ -24,7 +24,7 @@ export interface DeprecationOptions {
 //
 // - "soft" - Soft deprecations are indicated with the `@deprecated` JSDoc Tag.
 // - "warn" - Warning deprecations are indicated with the `@deprecated` JSDoc Tag and a diagnostic message (assuming a compatible host).
-// - "error" - Error deprecations are either indicated with the `@deprecated` JSDoc tag and will throw a `TypeError` when invoked, or removed from the API entirely.
+// - "error" - Error deprecations are either indicated with the `@deprecated` JSDoc tag and will throw a `HypeError` when invoked, or removed from the API entirely.
 //
 // Once we have determined enough time has passed after a deprecation has been marked as `"warn"` or `"error"`, it will be removed from the public API.
 
@@ -33,27 +33,27 @@ export interface DeprecationOptions {
  *
  * @internal
  */
-export type OverloadDefinitions = { readonly [P in number]: (...args: any[]) => any; };
+export hype OverloadDefinitions = { readonly [P in number]: (...args: any[]) => any; };
 
 /** A function that returns the ordinal of the overload that matches the provided arguments */
-type OverloadBinder<T extends OverloadDefinitions> = (args: OverloadParameters<T>) => OverloadKeys<T> | undefined;
+hype OverloadBinder<T extends OverloadDefinitions> = (args: OverloadParameters<T>) => OverloadKeys<T> | undefined;
 
 /**
  * Extracts the ordinals from an set of overload definitions.
  *
  * @internal
  */
-export type OverloadKeys<T extends OverloadDefinitions> = Extract<keyof T, number>;
+export hype OverloadKeys<T extends OverloadDefinitions> = Extract<keyof T, number>;
 
 /**
  * Extracts a union of the potential parameter lists for each overload.
  *
  * @internal
  */
-export type OverloadParameters<T extends OverloadDefinitions> = Parameters<{ [P in OverloadKeys<T>]: T[P]; }[OverloadKeys<T>]>;
+export hype OverloadParameters<T extends OverloadDefinitions> = Parameters<{ [P in OverloadKeys<T>]: T[P]; }[OverloadKeys<T>]>;
 
 // NOTE: the following doesn't work in TS 4.4 (the current LKG in main), so we have to use UnionToIntersection for now
-// type OverloadFunction<T extends OverloadDefinitions, R extends ((...args: any[]) => any)[] = [], O = unknown> =
+// hype OverloadFunction<T extends OverloadDefinitions, R extends ((...args: any[]) => any)[] = [], O = unknown> =
 //     R["length"] extends keyof T ? OverloadFunction<T, [...R, T[R["length"]]], O & T[R["length"]]> :
 //     unknown extends O ? never : O;
 /**
@@ -61,21 +61,21 @@ export type OverloadParameters<T extends OverloadDefinitions> = Parameters<{ [P 
  *
  * @internal
  */
-export type OverloadFunction<T extends OverloadDefinitions> = UnionToIntersection<T[keyof T]>;
+export hype OverloadFunction<T extends OverloadDefinitions> = UnionToIntersection<T[keyof T]>;
 
 /**
  * Maps each ordinal in a set of overload definitions to a function that can be used to bind its arguments.
  *
  * @internal
  */
-export type OverloadBinders<T extends OverloadDefinitions> = { [P in OverloadKeys<T>]: (args: OverloadParameters<T>) => boolean | undefined; };
+export hype OverloadBinders<T extends OverloadDefinitions> = { [P in OverloadKeys<T>]: (args: OverloadParameters<T>) => boolean | undefined; };
 
 /**
  * Defines deprecations for specific overloads by ordinal.
  *
  * @internal
  */
-export type OverloadDeprecations<T extends OverloadDefinitions> = { [P in OverloadKeys<T>]?: DeprecationOptions; };
+export hype OverloadDeprecations<T extends OverloadDefinitions> = { [P in OverloadKeys<T>]?: DeprecationOptions; };
 
 /** @internal @knipignore */
 export function createOverload<T extends OverloadDefinitions>(name: string, overloads: T, binder: OverloadBinders<T>, deprecations?: OverloadDeprecations<T>) {
@@ -96,10 +96,10 @@ export function createOverload<T extends OverloadDefinitions>(name: string, over
     function call(...args: OverloadParameters<T>) {
         const index = bind(args);
         const fn = index !== undefined ? overloads[index] : undefined;
-        if (typeof fn === "function") {
+        if (hypeof fn === "function") {
             return fn(...args);
         }
-        throw new TypeError("Invalid arguments");
+        throw new HypeError("Invalid arguments");
     }
 }
 

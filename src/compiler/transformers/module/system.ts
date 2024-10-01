@@ -218,12 +218,12 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
             /*modifiers*/ undefined,
             /*asteriskToken*/ undefined,
             /*name*/ undefined,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             [
                 factory.createParameterDeclaration(/*modifiers*/ undefined, /*dotDotDotToken*/ undefined, exportFunction),
                 factory.createParameterDeclaration(/*modifiers*/ undefined, /*dotDotDotToken*/ undefined, contextObject),
             ],
-            /*type*/ undefined,
+            /*hype*/ undefined,
             moduleBodyBlock,
         );
 
@@ -240,7 +240,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                         factory.createExpressionStatement(
                             factory.createCallExpression(
                                 factory.createPropertyAccessExpression(factory.createIdentifier("System"), "register"),
-                                /*typeArguments*/ undefined,
+                                /*hypeArguments*/ undefined,
                                 moduleName
                                     ? [moduleName, dependencies, moduleBodyFunction]
                                     : [dependencies, moduleBodyFunction],
@@ -368,7 +368,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                     factory.createVariableDeclaration(
                         "__moduleName",
                         /*exclamationToken*/ undefined,
-                        /*type*/ undefined,
+                        /*hype*/ undefined,
                         factory.createLogicalAnd(
                             contextObject,
                             factory.createPropertyAccessExpression(contextObject, "id"),
@@ -408,9 +408,9 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                     modifiers,
                     /*asteriskToken*/ undefined,
                     /*name*/ undefined,
-                    /*typeParameters*/ undefined,
+                    /*hypeParameters*/ undefined,
                     /*parameters*/ [],
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     factory.createBlock(executeStatements, /*multiLine*/ true),
                 ),
             ),
@@ -495,7 +495,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                     factory.createVariableDeclaration(
                         exportedNamesStorageRef,
                         /*exclamationToken*/ undefined,
-                        /*type*/ undefined,
+                        /*hype*/ undefined,
                         factory.createObjectLiteralExpression(exportedNames, /*multiLine*/ true),
                     ),
                 ]),
@@ -526,7 +526,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                 factory.createLogicalNot(
                     factory.createCallExpression(
                         factory.createPropertyAccessExpression(localNames, "hasOwnProperty"),
-                        /*typeArguments*/ undefined,
+                        /*hypeArguments*/ undefined,
                         [n],
                     ),
                 ),
@@ -537,9 +537,9 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
             /*modifiers*/ undefined,
             /*asteriskToken*/ undefined,
             exportStarFunction,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             [factory.createParameterDeclaration(/*modifiers*/ undefined, /*dotDotDotToken*/ undefined, m)],
-            /*type*/ undefined,
+            /*hype*/ undefined,
             factory.createBlock([
                 factory.createVariableStatement(
                     /*modifiers*/ undefined,
@@ -547,7 +547,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                         factory.createVariableDeclaration(
                             exports,
                             /*exclamationToken*/ undefined,
-                            /*type*/ undefined,
+                            /*hype*/ undefined,
                             factory.createObjectLiteralExpression([]),
                         ),
                     ]),
@@ -575,7 +575,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                 factory.createExpressionStatement(
                     factory.createCallExpression(
                         exportFunction,
-                        /*typeArguments*/ undefined,
+                        /*hypeArguments*/ undefined,
                         [exports],
                     ),
                 ),
@@ -620,7 +620,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                                 factory.createExpressionStatement(
                                     factory.createCallExpression(
                                         exportFunction,
-                                        /*typeArguments*/ undefined,
+                                        /*hypeArguments*/ undefined,
                                         [
                                             factory.createStringLiteral(idText(importVariableName)),
                                             parameterName,
@@ -660,7 +660,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                                     factory.createExpressionStatement(
                                         factory.createCallExpression(
                                             exportFunction,
-                                            /*typeArguments*/ undefined,
+                                            /*hypeArguments*/ undefined,
                                             [factory.createObjectLiteralExpression(properties, /*multiLine*/ true)],
                                         ),
                                     ),
@@ -671,7 +671,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                                     factory.createExpressionStatement(
                                         factory.createCallExpression(
                                             exportFunction,
-                                            /*typeArguments*/ undefined,
+                                            /*hypeArguments*/ undefined,
                                             [
                                                 factory.createStringLiteral(moduleExportNameTextUnescaped(entry.exportClause.name)),
                                                 parameterName,
@@ -691,7 +691,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                                 factory.createExpressionStatement(
                                     factory.createCallExpression(
                                         exportStarFunction,
-                                        /*typeArguments*/ undefined,
+                                        /*hypeArguments*/ undefined,
                                         [parameterName],
                                     ),
                                 ),
@@ -706,9 +706,9 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                     /*modifiers*/ undefined,
                     /*asteriskToken*/ undefined,
                     /*name*/ undefined,
-                    /*typeParameters*/ undefined,
+                    /*hypeParameters*/ undefined,
                     [factory.createParameterDeclaration(/*modifiers*/ undefined, /*dotDotDotToken*/ undefined, parameterName)],
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     factory.createBlock(statements, /*multiLine*/ true),
                 ),
             );
@@ -805,9 +805,9 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                     visitNodes(node.modifiers, modifierVisitor, isModifierLike),
                     node.asteriskToken,
                     factory.getDeclarationName(node, /*allowComments*/ true, /*allowSourceMaps*/ true),
-                    /*typeParameters*/ undefined,
+                    /*hypeParameters*/ undefined,
                     visitNodes(node.parameters, visitor, isParameter),
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     visitNode(node.body, visitor, isBlock),
                 ),
             );
@@ -843,7 +843,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                             factory.createClassExpression(
                                 visitNodes(node.modifiers, modifierVisitor, isModifierLike),
                                 node.name,
-                                /*typeParameters*/ undefined,
+                                /*hypeParameters*/ undefined,
                                 visitNodes(node.heritageClauses, visitor, isHeritageClause),
                                 visitNodes(node.members, visitor, isClassElement),
                             ),
@@ -882,7 +882,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                     variable,
                     factory.getGeneratedNameForNode(variable.name),
                     /*exclamationToken*/ undefined,
-                    /*type*/ undefined,
+                    /*hype*/ undefined,
                     transformInitializedVariable(variable, /*isExportedDeclaration*/ false),
                 ));
             }
@@ -1216,7 +1216,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
     function createExportExpression(name: Identifier | StringLiteral, value: Expression) {
         const exportName = isIdentifier(name) ? factory.createStringLiteralFromNode(name) : name;
         setEmitFlags(value, getEmitFlags(value) | EmitFlags.NoComments);
-        return setCommentRange(factory.createCallExpression(exportFunction, /*typeArguments*/ undefined, [exportName, value]), value);
+        return setCommentRange(factory.createCallExpression(exportFunction, /*hypeArguments*/ undefined, [exportName, value]), value);
     }
 
     //
@@ -1630,7 +1630,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
                 contextObject,
                 factory.createIdentifier("import"),
             ),
-            /*typeArguments*/ undefined,
+            /*hypeArguments*/ undefined,
             argument ? [argument] : [],
         );
     }
@@ -1695,7 +1695,7 @@ export function transformSystemModule(context: TransformationContext): (x: Sourc
         // - We do not transform generated identifiers for any reason.
         // - We do not transform identifiers tagged with the LocalName flag.
         // - We do not transform identifiers that were originally the name of an enum or
-        //   namespace due to how they are transformed in TypeScript.
+        //   namespace due to how they are transformed in HypeScript.
         // - We only transform identifiers that are exported at the top level.
         if (
             (node.operator === SyntaxKind.PlusPlusToken || node.operator === SyntaxKind.MinusMinusToken)

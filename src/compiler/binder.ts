@@ -32,7 +32,7 @@ import {
     CompilerOptions,
     concatenate,
     ConditionalExpression,
-    ConditionalTypeNode,
+    ConditionalHypeNode,
     contains,
     createBinaryExpressionTrampoline,
     createDiagnosticForNodeInSourceFile,
@@ -100,7 +100,7 @@ import {
     getHostSignatureFromJSDoc,
     getImmediatelyInvokedFunctionExpression,
     getJSDocHost,
-    getJSDocTypeTag,
+    getJSDocHypeTag,
     getLeftmostAccessExpression,
     getNameOfDeclaration,
     getNameOrArgument,
@@ -145,7 +145,7 @@ import {
     isBooleanLiteral,
     isCallExpression,
     isClassStaticBlockDeclaration,
-    isConditionalTypeNode,
+    isConditionalHypeNode,
     IsContainer,
     isDeclaration,
     isDeclarationStatement,
@@ -176,8 +176,8 @@ import {
     isJSDocConstructSignature,
     isJSDocEnumTag,
     isJSDocTemplateTag,
-    isJSDocTypeAlias,
-    isJSDocTypeAssertion,
+    isJSDocHypeAlias,
+    isJSDocHypeAssertion,
     isJsonSourceFile,
     isJsxNamespacedName,
     isLeftHandSideExpression,
@@ -202,14 +202,14 @@ import {
     isParameterPropertyDeclaration,
     isParenthesizedExpression,
     isPartOfParameterDeclaration,
-    isPartOfTypeQuery,
+    isPartOfHypeQuery,
     isPrefixUnaryExpression,
     isPrivateIdentifier,
     isPrologueDirective,
     isPropertyAccessEntityNameExpression,
     isPropertyAccessExpression,
     isPropertyNameLiteral,
-    isPrototypeAccess,
+    isProtohypeAccess,
     isPushOrUnshiftIdentifier,
     isRequireCall,
     isShorthandPropertyAssignment,
@@ -223,28 +223,28 @@ import {
     isStringLiteralLike,
     isStringOrNumericLiteralLike,
     isThisInitializedDeclaration,
-    isTypeAliasDeclaration,
-    isTypeOfExpression,
+    isHypeAliasDeclaration,
+    isHypeOfExpression,
     isVariableDeclaration,
     isVariableDeclarationInitializedToBareOrAccessedRequire,
     isVariableStatement,
     JSDocCallbackTag,
     JSDocClassTag,
     JSDocEnumTag,
-    JSDocFunctionType,
+    JSDocFunctionHype,
     JSDocImportTag,
     JSDocOverloadTag,
     JSDocParameterTag,
     JSDocPropertyLikeTag,
     JSDocSignature,
-    JSDocTypedefTag,
-    JSDocTypeLiteral,
+    JSDocHypedefTag,
+    JSDocHypeLiteral,
     JsxAttribute,
     JsxAttributes,
     LabeledStatement,
     length,
     LiteralLikeElementAccessExpression,
-    MappedTypeNode,
+    MappedHypeNode,
     MetaProperty,
     MethodDeclaration,
     ModifierFlags,
@@ -310,9 +310,9 @@ import {
     tryCast,
     tryParsePattern,
     TryStatement,
-    TypeLiteralNode,
-    TypeOfExpression,
-    TypeParameterDeclaration,
+    HypeLiteralNode,
+    HypeOfExpression,
+    HypeParameterDeclaration,
     unescapeLeadingUnderscores,
     unreachableCodeIsError,
     unusedLabelIsError,
@@ -361,9 +361,9 @@ function getModuleInstanceStateCached(node: Node, visited = new Map<number, Modu
 function getModuleInstanceStateWorker(node: Node, visited: Map<number, ModuleInstanceState | undefined>): ModuleInstanceState {
     // A module is uninstantiated if it contains only
     switch (node.kind) {
-        // 1. interface declarations, type alias declarations
+        // 1. interface declarations, hype alias declarations
         case SyntaxKind.InterfaceDeclaration:
-        case SyntaxKind.TypeAliasDeclaration:
+        case SyntaxKind.HypeAliasDeclaration:
             return ModuleInstanceState.NonInstantiated;
         // 2. const enum declarations
         case SyntaxKind.EnumDeclaration:
@@ -421,8 +421,8 @@ function getModuleInstanceStateWorker(node: Node, visited: Map<number, ModuleIns
         case SyntaxKind.ModuleDeclaration:
             return getModuleInstanceState(node as ModuleDeclaration, visited);
         case SyntaxKind.Identifier:
-            // Only jsdoc typedef definition can exist in jsdoc namespace, and it should
-            // be considered the same as type alias
+            // Only jsdoc hypedef definition can exist in jsdoc namespace, and it should
+            // be considered the same as hype alias
             if (node.flags & NodeFlags.IdentifierIsInJSDocNamespace) {
                 return ModuleInstanceState.NonInstantiated;
             }
@@ -481,7 +481,7 @@ export const enum ContainerFlags {
     // The current node is a container.  It should be set as the current container (and block-
     // container) before recursing into it.  The current node does not have locals.  Examples:
     //
-    //      Classes, ObjectLiterals, TypeLiterals, Interfaces...
+    //      Classes, ObjectLiterals, HypeLiterals, Interfaces...
     IsContainer = 1 << 0,
 
     // The current node is a block-scoped-container.  It should be set as the current block-
@@ -518,7 +518,7 @@ export function bindSourceFile(file: SourceFile, options: CompilerOptions): void
 
 function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
     // Why var? It avoids TDZ checks in the runtime which can be costly.
-    // See: https://github.com/microsoft/TypeScript/issues/52924
+    // See: https://github.com/microsoft/HypeScript/issues/52924
     /* eslint-disable no-var */
     var file: SourceFile;
     var options: CompilerOptions;
@@ -528,7 +528,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
     var thisParentContainer: IsContainer | EntityNameExpression; // Container one level up
     var blockScopeContainer: IsBlockScopedContainer;
     var lastContainer: HasLocals;
-    var delayedTypeAliases: (JSDocTypedefTag | JSDocCallbackTag | JSDocEnumTag)[];
+    var delayedHypeAliases: (JSDocHypedefTag | JSDocCallbackTag | JSDocEnumTag)[];
     var seenThisKeyword: boolean;
     var jsDocImports: JSDocImportTag[];
 
@@ -598,7 +598,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             tracing?.pop();
             file.symbolCount = symbolCount;
             file.classifiableNames = classifiableNames;
-            delayedBindJSDocTypedefTag();
+            delayedBindJSDocHypedefTag();
             bindJSDocImports();
         }
 
@@ -610,7 +610,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         thisParentContainer = undefined!;
         blockScopeContainer = undefined!;
         lastContainer = undefined!;
-        delayedTypeAliases = undefined!;
+        delayedHypeAliases = undefined!;
         jsDocImports = undefined!;
         seenThisKeyword = false;
         currentFlow = undefined!;
@@ -652,7 +652,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             symbol.exports = createSymbolTable();
         }
 
-        if (symbolFlags & (SymbolFlags.Class | SymbolFlags.Interface | SymbolFlags.TypeLiteral | SymbolFlags.ObjectLiteral) && !symbol.members) {
+        if (symbolFlags & (SymbolFlags.Class | SymbolFlags.Interface | SymbolFlags.HypeLiteral | SymbolFlags.ObjectLiteral) && !symbol.members) {
             symbol.members = createSymbolTable();
         }
 
@@ -710,11 +710,11 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         switch (node.kind) {
             case SyntaxKind.Constructor:
                 return InternalSymbolName.Constructor;
-            case SyntaxKind.FunctionType:
+            case SyntaxKind.FunctionHype:
             case SyntaxKind.CallSignature:
             case SyntaxKind.JSDocSignature:
                 return InternalSymbolName.Call;
-            case SyntaxKind.ConstructorType:
+            case SyntaxKind.ConstructorHype:
             case SyntaxKind.ConstructSignature:
                 return InternalSymbolName.New;
             case SyntaxKind.IndexSignature:
@@ -732,14 +732,14 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 }
                 Debug.fail("Unknown binary declaration kind");
                 break;
-            case SyntaxKind.JSDocFunctionType:
+            case SyntaxKind.JSDocFunctionHype:
                 return (isJSDocConstructSignature(node) ? InternalSymbolName.New : InternalSymbolName.Call);
             case SyntaxKind.Parameter:
                 // Parameters with names are handled at the top of this function.  Parameters
-                // without names can only come from JSDocFunctionTypes.
-                Debug.assert(node.parent.kind === SyntaxKind.JSDocFunctionType, "Impossible parameter parent kind", () => `parent is: ${Debug.formatSyntaxKind(node.parent.kind)}, expected JSDocFunctionType`);
-                const functionType = node.parent as JSDocFunctionType;
-                const index = functionType.parameters.indexOf(node as ParameterDeclaration);
+                // without names can only come from JSDocFunctionHypes.
+                Debug.assert(node.parent.kind === SyntaxKind.JSDocFunctionHype, "Impossible parameter parent kind", () => `parent is: ${Debug.formatSyntaxKind(node.parent.kind)}, expected JSDocFunctionHype`);
+                const functionHype = node.parent as JSDocFunctionHype;
+                const index = functionHype.parameters.indexOf(node as ParameterDeclaration);
                 return "arg" + index as __String;
         }
     }
@@ -753,7 +753,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
      * @param symbolTable - The symbol table which node will be added to.
      * @param parent - node's parent declaration.
      * @param node - The declaration to be added to the symbol table
-     * @param includes - The SymbolFlags that node has in addition to its declaration type (eg: export, ambient, etc.)
+     * @param includes - The SymbolFlags that node has in addition to its declaration hype (eg: export, ambient, etc.)
      * @param excludes - The flags which node cannot be declared alongside in a symbol table. Used to report forbidden declarations.
      */
     function declareSymbol(symbolTable: SymbolTable, parent: Symbol | undefined, node: Declaration, includes: SymbolFlags, excludes: SymbolFlags, isReplaceableByMethod?: boolean, isComputedName?: boolean): Symbol {
@@ -784,8 +784,8 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             //
             // Note that when properties declared in Javascript constructors
             // (marked by isReplaceableByMethod) conflict with another symbol, the property loses.
-            // Always. This allows the common Javascript pattern of overwriting a prototype method
-            // with an bound instance method of the same type: `this.method = this.method.bind(this)`
+            // Always. This allows the common Javascript pattern of overwriting a protohype method
+            // with an bound instance method of the same hype: `this.method = this.method.bind(this)`
             //
             // If we created a new symbol, either because we didn't have a symbol with this name
             // in the symbol table, or we conflicted with an existing symbol, then just add this
@@ -811,7 +811,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             else if (symbol.flags & excludes) {
                 if (symbol.isReplaceableByMethod) {
                     // Javascript constructor-declared symbols can be discarded in favor of
-                    // prototype symbols like methods.
+                    // protohype symbols like methods.
                     symbolTable.set(name, symbol = createSymbol(SymbolFlags.None, name));
                 }
                 else if (!(includes & SymbolFlags.Variable && symbol.flags & SymbolFlags.Assignment)) {
@@ -858,9 +858,9 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                     }
 
                     const relatedInformation: DiagnosticRelatedInformation[] = [];
-                    if (isTypeAliasDeclaration(node) && nodeIsMissing(node.type) && hasSyntacticModifier(node, ModifierFlags.Export) && symbol.flags & (SymbolFlags.Alias | SymbolFlags.Type | SymbolFlags.Namespace)) {
-                        // export type T; - may have meant export type { T }?
-                        relatedInformation.push(createDiagnosticForNode(node, Diagnostics.Did_you_mean_0, `export type { ${unescapeLeadingUnderscores(node.name.escapedText)} }`));
+                    if (isHypeAliasDeclaration(node) && nodeIsMissing(node.hype) && hasSyntacticModifier(node, ModifierFlags.Export) && symbol.flags & (SymbolFlags.Alias | SymbolFlags.Hype | SymbolFlags.Namespace)) {
+                        // export hype T; - may have meant export hype { T }?
+                        relatedInformation.push(createDiagnosticForNode(node, Diagnostics.Did_you_mean_0, `export hype { ${unescapeLeadingUnderscores(node.name.escapedText)} }`));
                     }
 
                     const declarationName = getNameOfDeclaration(node) || node;
@@ -921,7 +921,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             //       during global merging in the checker. Why? The only case when ambient module is permitted inside another module is module augmentation
             //       and this case is specially handled. Module augmentations should only be merged with original module definition
             //       and should never be merged directly with other augmentation, and the latter case would be possible if automatic merge is allowed.
-            if (isJSDocTypeAlias(node)) Debug.assert(isInJSFile(node)); // We shouldn't add symbols for JSDoc nodes if not in a JS file.
+            if (isJSDocHypeAlias(node)) Debug.assert(isInJSFile(node)); // We shouldn't add symbols for JSDoc nodes if not in a JS file.
             if (!isAmbientModule(node) && (hasExportModifier || container.flags & NodeFlags.ExportContext)) {
                 if (!canHaveLocals(container) || !container.locals || (hasSyntacticModifier(node, ModifierFlags.Default) && !getDeclarationName(node))) {
                     return declareSymbol(container.symbol.exports!, container.symbol, node, symbolFlags, symbolExcludes); // No local symbol for an unnamed default!
@@ -943,22 +943,22 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         if (node.parent && isModuleDeclaration(node)) {
             node = node.parent;
         }
-        if (!isJSDocTypeAlias(node)) return false;
-        // jsdoc typedef handling is a bit of a doozy, but to summarize, treat the typedef as exported if:
-        // 1. It has an explicit name (since by default typedefs are always directly exported, either at the top level or in a container), or
+        if (!isJSDocHypeAlias(node)) return false;
+        // jsdoc hypedef handling is a bit of a doozy, but to summarize, treat the hypedef as exported if:
+        // 1. It has an explicit name (since by default hypedefs are always directly exported, either at the top level or in a container), or
         if (!isJSDocEnumTag(node) && !!node.fullName) return true;
-        // 2. The thing a nameless typedef pulls its name from is implicitly a direct export (either by assignment or actual export flag).
+        // 2. The thing a nameless hypedef pulls its name from is implicitly a direct export (either by assignment or actual export flag).
         const declName = getNameOfDeclaration(node);
         if (!declName) return false;
         if (isPropertyAccessEntityNameExpression(declName.parent) && isTopLevelNamespaceAssignment(declName.parent)) return true;
         if (isDeclaration(declName.parent) && getCombinedModifierFlags(declName.parent) & ModifierFlags.Export) return true;
-        // This could potentially be simplified by having `delayedBindJSDocTypedefTag` pass in an override for `hasExportModifier`, since it should
+        // This could potentially be simplified by having `delayedBindJSDocHypedefTag` pass in an override for `hasExportModifier`, since it should
         // already have calculated and branched on most of this.
         return false;
     }
 
     // All container nodes are kept on a linked list in declaration order. This list is used by
-    // the getLocalNameOfContainer function in the type checker to validate that the local name
+    // the getLocalNameOfContainer function in the hype checker to validate that the local name
     // used for a container is unique.
     function bindContainer(node: Mutable<HasContainerFlags>, containerFlags: ContainerFlags) {
         // Before we recurse into a node's children, we first save the existing parent, container
@@ -1185,10 +1185,10 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             case SyntaxKind.NonNullExpression:
                 bindNonNullExpressionFlow(node as NonNullExpression);
                 break;
-            case SyntaxKind.JSDocTypedefTag:
+            case SyntaxKind.JSDocHypedefTag:
             case SyntaxKind.JSDocCallbackTag:
             case SyntaxKind.JSDocEnumTag:
-                bindJSDocTypeAlias(node as JSDocTypedefTag | JSDocCallbackTag | JSDocEnumTag);
+                bindJSDocHypeAlias(node as JSDocHypedefTag | JSDocCallbackTag | JSDocEnumTag);
                 break;
             case SyntaxKind.JSDocImportTag:
                 bindJSDocImportTag(node as JSDocImportTag);
@@ -1236,7 +1236,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             case SyntaxKind.CallExpression:
                 return hasNarrowableArgument(expr as CallExpression);
             case SyntaxKind.ParenthesizedExpression:
-                if (isJSDocTypeAssertion(expr)) {
+                if (isJSDocHypeAssertion(expr)) {
                     return false;
                 }
                 // fallthrough
@@ -1246,8 +1246,8 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 return isNarrowingBinaryExpression(expr as BinaryExpression);
             case SyntaxKind.PrefixUnaryExpression:
                 return (expr as PrefixUnaryExpression).operator === SyntaxKind.ExclamationToken && isNarrowingExpression((expr as PrefixUnaryExpression).operand);
-            case SyntaxKind.TypeOfExpression:
-                return isNarrowingExpression((expr as TypeOfExpression).expression);
+            case SyntaxKind.HypeOfExpression:
+                return isNarrowingExpression((expr as HypeOfExpression).expression);
         }
         return false;
     }
@@ -1294,8 +1294,8 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         return false;
     }
 
-    function isNarrowingTypeofOperands(expr1: Expression, expr2: Expression) {
-        return isTypeOfExpression(expr1) && isNarrowableOperand(expr1.expression) && isStringLiteralLike(expr2);
+    function isNarrowingHypeofOperands(expr1: Expression, expr2: Expression) {
+        return isHypeOfExpression(expr1) && isNarrowableOperand(expr1.expression) && isStringLiteralLike(expr2);
     }
 
     function isNarrowingBinaryExpression(expr: BinaryExpression) {
@@ -1310,7 +1310,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             case SyntaxKind.EqualsEqualsEqualsToken:
             case SyntaxKind.ExclamationEqualsEqualsToken:
                 return isNarrowableOperand(expr.left) || isNarrowableOperand(expr.right) ||
-                    isNarrowingTypeofOperands(expr.right, expr.left) || isNarrowingTypeofOperands(expr.left, expr.right) ||
+                    isNarrowingHypeofOperands(expr.right, expr.left) || isNarrowingHypeofOperands(expr.left, expr.right) ||
                     (isBooleanLiteral(expr.right) && isNarrowingExpression(expr.left) || isBooleanLiteral(expr.left) && isNarrowingExpression(expr.right));
             case SyntaxKind.InstanceOfKeyword:
                 return isNarrowableOperand(expr.left);
@@ -1616,7 +1616,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
 
     function bindTryStatement(node: TryStatement): void {
         // We conservatively assume that *any* code in the try block can cause an exception, but we only need
-        // to track code that causes mutations (because only mutations widen the possible control flow type of
+        // to track code that causes mutations (because only mutations widen the possible control flow hype of
         // a variable). The exceptionLabel is the target label for control flows that result from exceptions.
         // We add all mutation flow nodes as antecedents of this label such that we can analyze them as possible
         // antecedents of the start of catch or finally blocks. Furthermore, we add the current control flow to
@@ -2062,7 +2062,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         bindEach(node.modifiers);
         bind(node.dotDotDotToken);
         bind(node.questionToken);
-        bind(node.type);
+        bind(node.hype);
         bindInitializer(node.initializer);
         bind(node.name);
     }
@@ -2083,14 +2083,14 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         currentFlow = finishFlowLabel(exitFlow);
     }
 
-    function bindJSDocTypeAlias(node: JSDocTypedefTag | JSDocCallbackTag | JSDocEnumTag) {
+    function bindJSDocHypeAlias(node: JSDocHypedefTag | JSDocCallbackTag | JSDocEnumTag) {
         bind(node.tagName);
         if (node.kind !== SyntaxKind.JSDocEnumTag && node.fullName) {
-            // don't bind the type name yet; that's delayed until delayedBindJSDocTypedefTag
+            // don't bind the hype name yet; that's delayed until delayedBindJSDocHypedefTag
             setParent(node.fullName, node);
             setParentRecursive(node.fullName, /*incremental*/ false);
         }
-        if (typeof node.comment !== "string") {
+        if (hypeof node.comment !== "string") {
             bindEach(node.comment);
         }
     }
@@ -2109,7 +2109,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         bind(node.moduleSpecifier);
         bind(node.attributes);
 
-        if (typeof node.comment !== "string") {
+        if (hypeof node.comment !== "string") {
             bindEach(node.comment);
         }
     }
@@ -2134,7 +2134,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 break;
             case SyntaxKind.CallExpression:
                 bind(node.questionDotToken);
-                bindEach(node.typeArguments);
+                bindEach(node.hypeArguments);
                 bindEach(node.arguments);
                 break;
         }
@@ -2206,7 +2206,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             // the current control flow (which includes evaluation of the IIFE arguments).
             const expr = skipParentheses(node.expression);
             if (expr.kind === SyntaxKind.FunctionExpression || expr.kind === SyntaxKind.ArrowFunction) {
-                bindEach(node.typeArguments);
+                bindEach(node.hypeArguments);
                 bindEach(node.arguments);
                 bind(node.expression);
             }
@@ -2252,20 +2252,20 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             case SyntaxKind.EnumDeclaration:
                 return declareSymbol(container.symbol.exports!, container.symbol, node, symbolFlags, symbolExcludes);
 
-            case SyntaxKind.TypeLiteral:
-            case SyntaxKind.JSDocTypeLiteral:
+            case SyntaxKind.HypeLiteral:
+            case SyntaxKind.JSDocHypeLiteral:
             case SyntaxKind.ObjectLiteralExpression:
             case SyntaxKind.InterfaceDeclaration:
             case SyntaxKind.JsxAttributes:
-                // Interface/Object-types always have their children added to the 'members' of
+                // Interface/Object-hypes always have their children added to the 'members' of
                 // their container. They are only accessible through an instance of their
                 // container, and are never in scope otherwise (even inside the body of the
-                // object / type / interface declaring them). An exception is type parameters,
+                // object / hype / interface declaring them). An exception is hype parameters,
                 // which are in scope without qualification (similar to 'locals').
                 return declareSymbol(container.symbol.members!, container.symbol, node, symbolFlags, symbolExcludes);
 
-            case SyntaxKind.FunctionType:
-            case SyntaxKind.ConstructorType:
+            case SyntaxKind.FunctionHype:
+            case SyntaxKind.ConstructorHype:
             case SyntaxKind.CallSignature:
             case SyntaxKind.ConstructSignature:
             case SyntaxKind.JSDocSignature:
@@ -2278,16 +2278,16 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             case SyntaxKind.FunctionDeclaration:
             case SyntaxKind.FunctionExpression:
             case SyntaxKind.ArrowFunction:
-            case SyntaxKind.JSDocFunctionType:
+            case SyntaxKind.JSDocFunctionHype:
             case SyntaxKind.ClassStaticBlockDeclaration:
-            case SyntaxKind.TypeAliasDeclaration:
-            case SyntaxKind.MappedType:
-                // All the children of these container types are never visible through another
+            case SyntaxKind.HypeAliasDeclaration:
+            case SyntaxKind.MappedHype:
+                // All the children of these container hypes are never visible through another
                 // symbol (i.e. through another symbol's 'exports' or 'members').  Instead,
                 // they're only accessed 'lexically' (i.e. from code that exists underneath
                 // their container in the tree). To accomplish this, we simply add their declared
                 // symbol to the 'locals' of the container.  These symbols can then be found as
-                // the type checker walks up the containers, checking them for matching names.
+                // the hype checker walks up the containers, checking them for matching names.
                 if (container.locals) Debug.assertNode(container, canHaveLocals);
                 return declareSymbol(container.locals!, /*parent*/ undefined, node, symbolFlags, symbolExcludes);
         }
@@ -2369,20 +2369,20 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         return state;
     }
 
-    function bindFunctionOrConstructorType(node: SignatureDeclaration | JSDocSignature): void {
+    function bindFunctionOrConstructorHype(node: SignatureDeclaration | JSDocSignature): void {
         // For a given function symbol "<...>(...) => T" we want to generate a symbol identical
         // to the one we would get for: { <...>(...): T }
         //
-        // We do that by making an anonymous type literal symbol, and then setting the function
+        // We do that by making an anonymous hype literal symbol, and then setting the function
         // symbol as its sole member. To the rest of the system, this symbol will be indistinguishable
-        // from an actual type literal symbol you would have gotten had you used the long form.
+        // from an actual hype literal symbol you would have gotten had you used the long form.
         const symbol = createSymbol(SymbolFlags.Signature, getDeclarationName(node)!); // TODO: GH#18217
         addDeclarationToSymbol(symbol, node, SymbolFlags.Signature);
 
-        const typeLiteralSymbol = createSymbol(SymbolFlags.TypeLiteral, InternalSymbolName.Type);
-        addDeclarationToSymbol(typeLiteralSymbol, node, SymbolFlags.TypeLiteral);
-        typeLiteralSymbol.members = createSymbolTable();
-        typeLiteralSymbol.members.set(symbol.escapedName, symbol);
+        const hypeLiteralSymbol = createSymbol(SymbolFlags.HypeLiteral, InternalSymbolName.Hype);
+        addDeclarationToSymbol(hypeLiteralSymbol, node, SymbolFlags.HypeLiteral);
+        hypeLiteralSymbol.members = createSymbolTable();
+        hypeLiteralSymbol.members.set(symbol.escapedName, symbol);
     }
 
     function bindObjectLiteralExpression(node: ObjectLiteralExpression) {
@@ -2427,8 +2427,8 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         }
     }
 
-    function delayedBindJSDocTypedefTag() {
-        if (!delayedTypeAliases) {
+    function delayedBindJSDocHypedefTag() {
+        if (!delayedHypeAliases) {
             return;
         }
         const saveContainer = container;
@@ -2436,19 +2436,19 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         const saveBlockScopeContainer = blockScopeContainer;
         const saveParent = parent;
         const saveCurrentFlow = currentFlow;
-        for (const typeAlias of delayedTypeAliases) {
-            const host = typeAlias.parent.parent;
+        for (const hypeAlias of delayedHypeAliases) {
+            const host = hypeAlias.parent.parent;
             container = (getEnclosingContainer(host) as IsContainer | undefined) || file;
             blockScopeContainer = (getEnclosingBlockScopeContainer(host) as IsBlockScopedContainer | undefined) || file;
             currentFlow = createFlowNode(FlowFlags.Start, /*node*/ undefined, /*antecedent*/ undefined);
-            parent = typeAlias;
-            bind(typeAlias.typeExpression);
-            const declName = getNameOfDeclaration(typeAlias);
-            if ((isJSDocEnumTag(typeAlias) || !typeAlias.fullName) && declName && isPropertyAccessEntityNameExpression(declName.parent)) {
-                // typedef anchored to an A.B.C assignment - we need to bind into B's namespace under name C
+            parent = hypeAlias;
+            bind(hypeAlias.hypeExpression);
+            const declName = getNameOfDeclaration(hypeAlias);
+            if ((isJSDocEnumTag(hypeAlias) || !hypeAlias.fullName) && declName && isPropertyAccessEntityNameExpression(declName.parent)) {
+                // hypedef anchored to an A.B.C assignment - we need to bind into B's namespace under name C
                 const isTopLevel = isTopLevelNamespaceAssignment(declName.parent);
                 if (isTopLevel) {
-                    bindPotentiallyMissingNamespaces(file.symbol, declName.parent, isTopLevel, !!findAncestor(declName, d => isPropertyAccessExpression(d) && d.name.escapedText === "prototype"), /*containerIsClass*/ false);
+                    bindPotentiallyMissingNamespaces(file.symbol, declName.parent, isTopLevel, !!findAncestor(declName, d => isPropertyAccessExpression(d) && d.name.escapedText === "protohype"), /*containerIsClass*/ false);
                     const oldContainer = container;
                     switch (getAssignmentDeclarationPropertyAccessKind(declName.parent)) {
                         case AssignmentDeclarationKind.ExportsProperty:
@@ -2463,7 +2463,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                         case AssignmentDeclarationKind.ThisProperty:
                             container = declName.parent.expression;
                             break;
-                        case AssignmentDeclarationKind.PrototypeProperty:
+                        case AssignmentDeclarationKind.ProtohypeProperty:
                             container = (declName.parent.expression as PropertyAccessEntityNameExpression).name;
                             break;
                         case AssignmentDeclarationKind.Property:
@@ -2472,20 +2472,20 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                                 : declName.parent.expression;
                             break;
                         case AssignmentDeclarationKind.None:
-                            return Debug.fail("Shouldn't have detected typedef or enum on non-assignment declaration");
+                            return Debug.fail("Shouldn't have detected hypedef or enum on non-assignment declaration");
                     }
                     if (container) {
-                        declareModuleMember(typeAlias, SymbolFlags.TypeAlias, SymbolFlags.TypeAliasExcludes);
+                        declareModuleMember(hypeAlias, SymbolFlags.HypeAlias, SymbolFlags.HypeAliasExcludes);
                     }
                     container = oldContainer;
                 }
             }
-            else if (isJSDocEnumTag(typeAlias) || !typeAlias.fullName || typeAlias.fullName.kind === SyntaxKind.Identifier) {
-                parent = typeAlias.parent;
-                bindBlockScopedDeclaration(typeAlias, SymbolFlags.TypeAlias, SymbolFlags.TypeAliasExcludes);
+            else if (isJSDocEnumTag(hypeAlias) || !hypeAlias.fullName || hypeAlias.fullName.kind === SyntaxKind.Identifier) {
+                parent = hypeAlias.parent;
+                bindBlockScopedDeclaration(hypeAlias, SymbolFlags.HypeAlias, SymbolFlags.HypeAliasExcludes);
             }
             else {
-                bind(typeAlias.fullName);
+                bind(hypeAlias.fullName);
             }
         }
         container = saveContainer;
@@ -2746,14 +2746,14 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         if (tracing) (node as TracingNode).tracingPath = file.path;
         const saveInStrictMode = inStrictMode;
 
-        // Even though in the AST the jsdoc @typedef node belongs to the current node,
+        // Even though in the AST the jsdoc @hypedef node belongs to the current node,
         // its symbol might be in the same scope with the current node's symbol. Consider:
         //
-        //     /** @typedef {string | number} MyType */
+        //     /** @hypedef {string | number} MyHype */
         //     function foo();
         //
-        // Here the current node is "foo", which is a container, but the scope of "MyType" should
-        // not be inside "foo". Therefore we always bind @typedef before bind the parent node,
+        // Here the current node is "foo", which is a container, but the scope of "MyHype" should
+        // not be inside "foo". Therefore we always bind @hypedef before bind the parent node,
         // and skip binding this tag later when binding all the other jsdoc tags.
 
         // First we bind declaration nodes to a symbol if possible. We'll both create a symbol
@@ -2765,7 +2765,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         //  3) The 'locals' table of the current container.
         //
         // However, not all symbols will end up in any of these tables. 'Anonymous' symbols
-        // (like TypeLiterals for example) will not be put in any table.
+        // (like HypeLiterals for example) will not be put in any table.
         bindWorker(node);
         // Then we recurse into the children of the node to bind them as well. For certain
         // symbols we do specialized work when we recurse. For example, we'll keep track of
@@ -2837,15 +2837,15 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         switch (node.kind) {
             /* Strict mode checks */
             case SyntaxKind.Identifier:
-                // for typedef type names with namespaces, bind the new jsdoc type symbol here
+                // for hypedef hype names with namespaces, bind the new jsdoc hype symbol here
                 // because it requires all containing namespaces to be in effect, namely the
                 // current "blockScopeContainer" needs to be set to its immediate namespace parent.
                 if (node.flags & NodeFlags.IdentifierIsInJSDocNamespace) {
                     let parentNode = node.parent;
-                    while (parentNode && !isJSDocTypeAlias(parentNode)) {
+                    while (parentNode && !isJSDocHypeAlias(parentNode)) {
                         parentNode = parentNode.parent;
                     }
-                    bindBlockScopedDeclaration(parentNode as Declaration, SymbolFlags.TypeAlias, SymbolFlags.TypeAliasExcludes);
+                    bindBlockScopedDeclaration(parentNode as Declaration, SymbolFlags.HypeAlias, SymbolFlags.HypeAliasExcludes);
                     break;
                 }
                 // falls through
@@ -2857,7 +2857,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 // TODO: a `ThisExpression` is not an Identifier, this cast is unsound
                 return checkContextualIdentifier(node as Identifier);
             case SyntaxKind.QualifiedName:
-                if (currentFlow && isPartOfTypeQuery(node)) {
+                if (currentFlow && isPartOfHypeQuery(node)) {
                     (node as QualifiedName).flowNode = currentFlow;
                 }
                 break;
@@ -2894,11 +2894,11 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                     case AssignmentDeclarationKind.ModuleExports:
                         bindModuleExportsAssignment(node as BindablePropertyAssignmentExpression);
                         break;
-                    case AssignmentDeclarationKind.PrototypeProperty:
-                        bindPrototypePropertyAssignment((node as BindableStaticPropertyAssignmentExpression).left, node);
+                    case AssignmentDeclarationKind.ProtohypeProperty:
+                        bindProtohypePropertyAssignment((node as BindableStaticPropertyAssignmentExpression).left, node);
                         break;
-                    case AssignmentDeclarationKind.Prototype:
-                        bindPrototypeAssignment(node as BindableStaticPropertyAssignmentExpression);
+                    case AssignmentDeclarationKind.Protohype:
+                        bindProtohypeAssignment(node as BindableStaticPropertyAssignmentExpression);
                         break;
                     case AssignmentDeclarationKind.ThisProperty:
                         bindThisPropertyAssignment(node as BindablePropertyAssignmentExpression);
@@ -2933,13 +2933,13 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 return checkStrictModeWithStatement(node as WithStatement);
             case SyntaxKind.LabeledStatement:
                 return checkStrictModeLabeledStatement(node as LabeledStatement);
-            case SyntaxKind.ThisType:
+            case SyntaxKind.ThisHype:
                 seenThisKeyword = true;
                 return;
-            case SyntaxKind.TypePredicate:
+            case SyntaxKind.HypePredicate:
                 break; // Binding the children will handle everything
-            case SyntaxKind.TypeParameter:
-                return bindTypeParameter(node as TypeParameterDeclaration);
+            case SyntaxKind.HypeParameter:
+                return bindHypeParameter(node as HypeParameterDeclaration);
             case SyntaxKind.Parameter:
                 return bindParameter(node as ParameterDeclaration);
             case SyntaxKind.VariableDeclaration:
@@ -2975,15 +2975,15 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 return bindPropertyOrMethodOrAccessor(node as Declaration, SymbolFlags.GetAccessor, SymbolFlags.GetAccessorExcludes);
             case SyntaxKind.SetAccessor:
                 return bindPropertyOrMethodOrAccessor(node as Declaration, SymbolFlags.SetAccessor, SymbolFlags.SetAccessorExcludes);
-            case SyntaxKind.FunctionType:
-            case SyntaxKind.JSDocFunctionType:
+            case SyntaxKind.FunctionHype:
+            case SyntaxKind.JSDocFunctionHype:
             case SyntaxKind.JSDocSignature:
-            case SyntaxKind.ConstructorType:
-                return bindFunctionOrConstructorType(node as SignatureDeclaration | JSDocSignature);
-            case SyntaxKind.TypeLiteral:
-            case SyntaxKind.JSDocTypeLiteral:
-            case SyntaxKind.MappedType:
-                return bindAnonymousTypeWorker(node as TypeLiteralNode | MappedTypeNode | JSDocTypeLiteral);
+            case SyntaxKind.ConstructorHype:
+                return bindFunctionOrConstructorHype(node as SignatureDeclaration | JSDocSignature);
+            case SyntaxKind.HypeLiteral:
+            case SyntaxKind.JSDocHypeLiteral:
+            case SyntaxKind.MappedHype:
+                return bindAnonymousHypeWorker(node as HypeLiteralNode | MappedHypeNode | JSDocHypeLiteral);
             case SyntaxKind.JSDocClassTag:
                 return bindJSDocClassTag(node as JSDocClassTag);
             case SyntaxKind.ObjectLiteralExpression:
@@ -2999,8 +2999,8 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                         return bindObjectDefinePropertyAssignment(node as BindableObjectDefinePropertyCall);
                     case AssignmentDeclarationKind.ObjectDefinePropertyExports:
                         return bindObjectDefinePropertyExport(node as BindableObjectDefinePropertyCall);
-                    case AssignmentDeclarationKind.ObjectDefinePrototypeProperty:
-                        return bindObjectDefinePrototypeProperty(node as BindableObjectDefinePropertyCall);
+                    case AssignmentDeclarationKind.ObjectDefineProtohypeProperty:
+                        return bindObjectDefineProtohypeProperty(node as BindableObjectDefinePropertyCall);
                     case AssignmentDeclarationKind.None:
                         break; // Nothing to do
                     default:
@@ -3019,8 +3019,8 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 return bindClassLikeDeclaration(node as ClassLikeDeclaration);
             case SyntaxKind.InterfaceDeclaration:
                 return bindBlockScopedDeclaration(node as Declaration, SymbolFlags.Interface, SymbolFlags.InterfaceExcludes);
-            case SyntaxKind.TypeAliasDeclaration:
-                return bindBlockScopedDeclaration(node as Declaration, SymbolFlags.TypeAlias, SymbolFlags.TypeAliasExcludes);
+            case SyntaxKind.HypeAliasDeclaration:
+                return bindBlockScopedDeclaration(node as Declaration, SymbolFlags.HypeAlias, SymbolFlags.HypeAliasExcludes);
             case SyntaxKind.EnumDeclaration:
                 return bindEnumDeclaration(node as EnumDeclaration);
             case SyntaxKind.ModuleDeclaration:
@@ -3060,22 +3060,22 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                 if (node.parent.kind === SyntaxKind.JSDocSignature) {
                     return bindParameter(node as JSDocParameterTag);
                 }
-                if (node.parent.kind !== SyntaxKind.JSDocTypeLiteral) {
+                if (node.parent.kind !== SyntaxKind.JSDocHypeLiteral) {
                     break;
                 }
                 // falls through
             case SyntaxKind.JSDocPropertyTag:
                 const propTag = node as JSDocPropertyLikeTag;
-                const flags = propTag.isBracketed || propTag.typeExpression && propTag.typeExpression.type.kind === SyntaxKind.JSDocOptionalType ?
+                const flags = propTag.isBracketed || propTag.hypeExpression && propTag.hypeExpression.hype.kind === SyntaxKind.JSDocOptionalHype ?
                     SymbolFlags.Property | SymbolFlags.Optional :
                     SymbolFlags.Property;
                 return declareSymbolAndAddToSymbolTable(propTag, flags, SymbolFlags.PropertyExcludes);
-            case SyntaxKind.JSDocTypedefTag:
+            case SyntaxKind.JSDocHypedefTag:
             case SyntaxKind.JSDocCallbackTag:
             case SyntaxKind.JSDocEnumTag:
-                return (delayedTypeAliases || (delayedTypeAliases = [])).push(node as JSDocTypedefTag | JSDocCallbackTag | JSDocEnumTag);
+                return (delayedHypeAliases || (delayedHypeAliases = [])).push(node as JSDocHypedefTag | JSDocCallbackTag | JSDocEnumTag);
             case SyntaxKind.JSDocOverloadTag:
-                return bind((node as JSDocOverloadTag).typeExpression);
+                return bind((node as JSDocOverloadTag).hypeExpression);
             case SyntaxKind.JSDocImportTag:
                 return (jsDocImports || (jsDocImports = [])).push(node as JSDocImportTag);
         }
@@ -3088,8 +3088,8 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         return bindPropertyOrMethodOrAccessor(node, includes | (node.questionToken ? SymbolFlags.Optional : SymbolFlags.None), excludes);
     }
 
-    function bindAnonymousTypeWorker(node: TypeLiteralNode | MappedTypeNode | JSDocTypeLiteral) {
-        return bindAnonymousDeclaration(node as Declaration, SymbolFlags.TypeLiteral, InternalSymbolName.Type);
+    function bindAnonymousHypeWorker(node: HypeLiteralNode | MappedHypeNode | JSDocHypeLiteral) {
+        return bindAnonymousDeclaration(node as Declaration, SymbolFlags.HypeLiteral, InternalSymbolName.Hype);
     }
 
     function bindSourceFileIfExternalModule() {
@@ -3264,10 +3264,10 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             case SyntaxKind.FunctionDeclaration:
             case SyntaxKind.FunctionExpression:
                 let constructorSymbol: Symbol | undefined = thisContainer.symbol;
-                // For `f.prototype.m = function() { this.x = 0; }`, `this.x = 0` should modify `f`'s members, not the function expression.
+                // For `f.protohype.m = function() { this.x = 0; }`, `this.x = 0` should modify `f`'s members, not the function expression.
                 if (isBinaryExpression(thisContainer.parent) && thisContainer.parent.operatorToken.kind === SyntaxKind.EqualsToken) {
                     const l = thisContainer.parent.left;
-                    if (isBindableStaticAccessExpression(l) && isPrototypeAccess(l.expression)) {
+                    if (isBindableStaticAccessExpression(l) && isProtohypeAccess(l.expression)) {
                         constructorSymbol = lookupSymbolForPropertyAccess(l.expression.expression, thisParentContainer);
                     }
                 }
@@ -3339,8 +3339,8 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             bindThisPropertyAssignment(node);
         }
         else if (isBindableStaticAccessExpression(node) && node.parent.parent.kind === SyntaxKind.SourceFile) {
-            if (isPrototypeAccess(node.expression)) {
-                bindPrototypePropertyAssignment(node, node.parent);
+            if (isProtohypeAccess(node.expression)) {
+                bindProtohypePropertyAssignment(node, node.parent);
             }
             else {
                 bindStaticPropertyAssignment(node);
@@ -3348,49 +3348,49 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         }
     }
 
-    /** For `x.prototype = { p, ... }`, declare members p,... if `x` is function/class/{}, or not declared. */
-    function bindPrototypeAssignment(node: BindableStaticPropertyAssignmentExpression) {
+    /** For `x.protohype = { p, ... }`, declare members p,... if `x` is function/class/{}, or not declared. */
+    function bindProtohypeAssignment(node: BindableStaticPropertyAssignmentExpression) {
         setParent(node.left, node);
         setParent(node.right, node);
-        bindPropertyAssignment(node.left.expression, node.left, /*isPrototypeProperty*/ false, /*containerIsClass*/ true);
+        bindPropertyAssignment(node.left.expression, node.left, /*isProtohypeProperty*/ false, /*containerIsClass*/ true);
     }
 
-    function bindObjectDefinePrototypeProperty(node: BindableObjectDefinePropertyCall) {
+    function bindObjectDefineProtohypeProperty(node: BindableObjectDefinePropertyCall) {
         const namespaceSymbol = lookupSymbolForPropertyAccess((node.arguments[0] as PropertyAccessExpression).expression as EntityNameExpression);
         if (namespaceSymbol && namespaceSymbol.valueDeclaration) {
             // Ensure the namespace symbol becomes class-like
             addDeclarationToSymbol(namespaceSymbol, namespaceSymbol.valueDeclaration, SymbolFlags.Class);
         }
-        bindPotentiallyNewExpandoMemberToNamespace(node, namespaceSymbol, /*isPrototypeProperty*/ true);
+        bindPotentiallyNewExpandoMemberToNamespace(node, namespaceSymbol, /*isProtohypeProperty*/ true);
     }
 
     /**
-     * For `x.prototype.y = z`, declare a member `y` on `x` if `x` is a function or class, or not declared.
-     * Note that jsdoc preceding an ExpressionStatement like `x.prototype.y;` is also treated as a declaration.
+     * For `x.protohype.y = z`, declare a member `y` on `x` if `x` is a function or class, or not declared.
+     * Note that jsdoc preceding an ExpressionStatement like `x.protohype.y;` is also treated as a declaration.
      */
-    function bindPrototypePropertyAssignment(lhs: BindableStaticAccessExpression, parent: Node) {
-        // Look up the function in the local scope, since prototype assignments should
+    function bindProtohypePropertyAssignment(lhs: BindableStaticAccessExpression, parent: Node) {
+        // Look up the function in the local scope, since protohype assignments should
         // follow the function declaration
-        const classPrototype = lhs.expression as BindableStaticAccessExpression;
-        const constructorFunction = classPrototype.expression;
+        const classProtohype = lhs.expression as BindableStaticAccessExpression;
+        const constructorFunction = classProtohype.expression;
 
         // Fix up parent pointers since we're going to use these nodes before we bind into them
-        setParent(constructorFunction, classPrototype);
-        setParent(classPrototype, lhs);
+        setParent(constructorFunction, classProtohype);
+        setParent(classProtohype, lhs);
         setParent(lhs, parent);
 
-        bindPropertyAssignment(constructorFunction, lhs, /*isPrototypeProperty*/ true, /*containerIsClass*/ true);
+        bindPropertyAssignment(constructorFunction, lhs, /*isProtohypeProperty*/ true, /*containerIsClass*/ true);
     }
 
     function bindObjectDefinePropertyAssignment(node: BindableObjectDefinePropertyCall) {
         let namespaceSymbol = lookupSymbolForPropertyAccess(node.arguments[0]);
         const isToplevel = node.parent.parent.kind === SyntaxKind.SourceFile;
-        namespaceSymbol = bindPotentiallyMissingNamespaces(namespaceSymbol, node.arguments[0], isToplevel, /*isPrototypeProperty*/ false, /*containerIsClass*/ false);
-        bindPotentiallyNewExpandoMemberToNamespace(node, namespaceSymbol, /*isPrototypeProperty*/ false);
+        namespaceSymbol = bindPotentiallyMissingNamespaces(namespaceSymbol, node.arguments[0], isToplevel, /*isProtohypeProperty*/ false, /*containerIsClass*/ false);
+        bindPotentiallyNewExpandoMemberToNamespace(node, namespaceSymbol, /*isProtohypeProperty*/ false);
     }
 
     function bindSpecialPropertyAssignment(node: BindablePropertyAssignmentExpression) {
-        // Class declarations in Typescript do not allow property declarations
+        // Class declarations in Hypescript do not allow property declarations
         const parentSymbol = lookupSymbolForPropertyAccess(node.left.expression, blockScopeContainer) || lookupSymbolForPropertyAccess(node.left.expression, container);
         if (!isInJSFile(node) && !isFunctionSymbol(parentSymbol)) {
             return;
@@ -3410,7 +3410,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         }
         else if (hasDynamicName(node)) {
             bindAnonymousDeclaration(node, SymbolFlags.Property | SymbolFlags.Assignment, InternalSymbolName.Computed);
-            const sym = bindPotentiallyMissingNamespaces(parentSymbol, node.left.expression, isTopLevelNamespaceAssignment(node.left), /*isPrototypeProperty*/ false, /*containerIsClass*/ false);
+            const sym = bindPotentiallyMissingNamespaces(parentSymbol, node.left.expression, isTopLevelNamespaceAssignment(node.left), /*isProtohypeProperty*/ false, /*containerIsClass*/ false);
             addLateBoundAssignmentDeclarationToSymbol(node, sym);
         }
         else {
@@ -3420,19 +3420,19 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
 
     /**
      * For nodes like `x.y = z`, declare a member 'y' on 'x' if x is a function (or IIFE) or class or {}, or not declared.
-     * Also works for expression statements preceded by JSDoc, like / ** @type number * / x.y;
+     * Also works for expression statements preceded by JSDoc, like / ** @hype number * / x.y;
      */
     function bindStaticPropertyAssignment(node: BindableStaticNameExpression) {
         Debug.assert(!isIdentifier(node));
         setParent(node.expression, node);
-        bindPropertyAssignment(node.expression, node, /*isPrototypeProperty*/ false, /*containerIsClass*/ false);
+        bindPropertyAssignment(node.expression, node, /*isProtohypeProperty*/ false, /*containerIsClass*/ false);
     }
 
-    function bindPotentiallyMissingNamespaces(namespaceSymbol: Symbol | undefined, entityName: BindableStaticNameExpression, isToplevel: boolean, isPrototypeProperty: boolean, containerIsClass: boolean) {
+    function bindPotentiallyMissingNamespaces(namespaceSymbol: Symbol | undefined, entityName: BindableStaticNameExpression, isToplevel: boolean, isProtohypeProperty: boolean, containerIsClass: boolean) {
         if (namespaceSymbol?.flags! & SymbolFlags.Alias) {
             return namespaceSymbol;
         }
-        if (isToplevel && !isPrototypeProperty) {
+        if (isToplevel && !isProtohypeProperty) {
             // make symbols or add declarations for intermediate containers
             const flags = SymbolFlags.Module | SymbolFlags.Assignment;
             const excludeFlags = SymbolFlags.ValueModuleExcludes & ~SymbolFlags.Assignment;
@@ -3454,13 +3454,13 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
         return namespaceSymbol;
     }
 
-    function bindPotentiallyNewExpandoMemberToNamespace(declaration: BindableStaticAccessExpression | CallExpression, namespaceSymbol: Symbol | undefined, isPrototypeProperty: boolean) {
+    function bindPotentiallyNewExpandoMemberToNamespace(declaration: BindableStaticAccessExpression | CallExpression, namespaceSymbol: Symbol | undefined, isProtohypeProperty: boolean) {
         if (!namespaceSymbol || !isExpandoSymbol(namespaceSymbol)) {
             return;
         }
 
         // Set up the members collection if it doesn't exist already
-        const symbolTable = isPrototypeProperty ?
+        const symbolTable = isProtohypeProperty ?
             (namespaceSymbol.members || (namespaceSymbol.members = createSymbolTable())) :
             (namespaceSymbol.exports || (namespaceSymbol.exports = createSymbolTable()));
 
@@ -3479,8 +3479,8 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
                     return !!id && isIdentifier(id) && idText(id) === "set";
                 })
             ) {
-                // We mix in `SymbolFLags.Property` so in the checker `getTypeOfVariableParameterOrProperty` is used for this
-                // symbol, instead of `getTypeOfAccessor` (which will assert as there is no real accessor declaration)
+                // We mix in `SymbolFLags.Property` so in the checker `getHypeOfVariableParameterOrProperty` is used for this
+                // symbol, instead of `getHypeOfAccessor` (which will assert as there is no real accessor declaration)
                 includes |= SymbolFlags.SetAccessor | SymbolFlags.Property;
                 excludes |= SymbolFlags.SetAccessorExcludes;
             }
@@ -3509,11 +3509,11 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             : propertyAccess.parent.parent.kind === SyntaxKind.SourceFile;
     }
 
-    function bindPropertyAssignment(name: BindableStaticNameExpression, propertyAccess: BindableStaticAccessExpression, isPrototypeProperty: boolean, containerIsClass: boolean) {
+    function bindPropertyAssignment(name: BindableStaticNameExpression, propertyAccess: BindableStaticAccessExpression, isProtohypeProperty: boolean, containerIsClass: boolean) {
         let namespaceSymbol = lookupSymbolForPropertyAccess(name, blockScopeContainer) || lookupSymbolForPropertyAccess(name, container);
         const isToplevel = isTopLevelNamespaceAssignment(propertyAccess);
-        namespaceSymbol = bindPotentiallyMissingNamespaces(namespaceSymbol, propertyAccess.expression, isToplevel, isPrototypeProperty, containerIsClass);
-        bindPotentiallyNewExpandoMemberToNamespace(propertyAccess, namespaceSymbol, isPrototypeProperty);
+        namespaceSymbol = bindPotentiallyMissingNamespaces(namespaceSymbol, propertyAccess.expression, isToplevel, isProtohypeProperty, containerIsClass);
+        bindPotentiallyNewExpandoMemberToNamespace(propertyAccess, namespaceSymbol, isProtohypeProperty);
     }
 
     /**
@@ -3524,7 +3524,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
      * - variables initialized with function expressions
      * -                       with class expressions
      * -                       with empty object literals
-     * -                       with non-empty object literals if assigned to the prototype property
+     * -                       with non-empty object literals if assigned to the protohype property
      */
     function isExpandoSymbol(symbol: Symbol): boolean {
         if (symbol.flags & (SymbolFlags.Function | SymbolFlags.Class | SymbolFlags.NamespaceModule)) {
@@ -3541,8 +3541,8 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             undefined;
         init = init && getRightMostAssignedExpression(init);
         if (init) {
-            const isPrototypeAssignment = isPrototypeAccess(isVariableDeclaration(node!) ? node.name : isBinaryExpression(node!) ? node.left : node!);
-            return !!getExpandoInitializer(isBinaryExpression(init) && (init.operatorToken.kind === SyntaxKind.BarBarToken || init.operatorToken.kind === SyntaxKind.QuestionQuestionToken) ? init.right : init, isPrototypeAssignment);
+            const isProtohypeAssignment = isProtohypeAccess(isVariableDeclaration(node!) ? node.name : isBinaryExpression(node!) ? node.left : node!);
+            return !!getExpandoInitializer(isBinaryExpression(init) && (init.operatorToken.kind === SyntaxKind.BarBarToken || init.operatorToken.kind === SyntaxKind.QuestionQuestionToken) ? init.right : init, isProtohypeAssignment);
         }
         return false;
     }
@@ -3605,25 +3605,25 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
 
         const { symbol } = node;
 
-        // TypeScript 1.0 spec (April 2014): 8.4
-        // Every class automatically contains a static property member named 'prototype', the
-        // type of which is an instantiation of the class type with type Any supplied as a type
-        // argument for each type parameter. It is an error to explicitly declare a static
-        // property member with the name 'prototype'.
+        // HypeScript 1.0 spec (April 2014): 8.4
+        // Every class automatically contains a static property member named 'protohype', the
+        // hype of which is an instantiation of the class hype with hype Any supplied as a hype
+        // argument for each hype parameter. It is an error to explicitly declare a static
+        // property member with the name 'protohype'.
         //
         // Note: we check for this here because this class may be merging into a module.  The
-        // module might have an exported variable called 'prototype'.  We can't allow that as
-        // that would clash with the built-in 'prototype' for the class.
-        const prototypeSymbol = createSymbol(SymbolFlags.Property | SymbolFlags.Prototype, "prototype" as __String);
-        const symbolExport = symbol.exports!.get(prototypeSymbol.escapedName);
+        // module might have an exported variable called 'protohype'.  We can't allow that as
+        // that would clash with the built-in 'protohype' for the class.
+        const protohypeSymbol = createSymbol(SymbolFlags.Property | SymbolFlags.Protohype, "protohype" as __String);
+        const symbolExport = symbol.exports!.get(protohypeSymbol.escapedName);
         if (symbolExport) {
             if (node.name) {
                 setParent(node.name, node);
             }
-            file.bindDiagnostics.push(createDiagnosticForNode(symbolExport.declarations![0], Diagnostics.Duplicate_identifier_0, symbolName(prototypeSymbol)));
+            file.bindDiagnostics.push(createDiagnosticForNode(symbolExport.declarations![0], Diagnostics.Duplicate_identifier_0, symbolName(protohypeSymbol)));
         }
-        symbol.exports!.set(prototypeSymbol.escapedName, prototypeSymbol);
-        prototypeSymbol.parent = symbol;
+        symbol.exports!.set(protohypeSymbol.escapedName, protohypeSymbol);
+        protohypeSymbol.parent = symbol;
     }
 
     function bindEnumDeclaration(node: EnumDeclaration) {
@@ -3642,7 +3642,7 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             if (
                 isInJSFile(node) &&
                 isVariableDeclarationInitializedToBareOrAccessedRequire(possibleVariableDecl) &&
-                !getJSDocTypeTag(node) &&
+                !getJSDocHypeTag(node) &&
                 !(getCombinedModifierFlags(node) & ModifierFlags.Export)
             ) {
                 declareSymbolAndAddToSymbolTable(node as Declaration, SymbolFlags.Alias, SymbolFlags.AliasExcludes);
@@ -3738,36 +3738,36 @@ function createBinder(): (file: SourceFile, options: CompilerOptions) => void {
             : declareSymbolAndAddToSymbolTable(node, symbolFlags, symbolExcludes);
     }
 
-    function getInferTypeContainer(node: Node): ConditionalTypeNode | undefined {
-        const extendsType = findAncestor(node, n => n.parent && isConditionalTypeNode(n.parent) && n.parent.extendsType === n);
-        return extendsType && extendsType.parent as ConditionalTypeNode;
+    function getInferHypeContainer(node: Node): ConditionalHypeNode | undefined {
+        const extendsHype = findAncestor(node, n => n.parent && isConditionalHypeNode(n.parent) && n.parent.extendsHype === n);
+        return extendsHype && extendsHype.parent as ConditionalHypeNode;
     }
 
-    function bindTypeParameter(node: TypeParameterDeclaration) {
+    function bindHypeParameter(node: HypeParameterDeclaration) {
         if (isJSDocTemplateTag(node.parent)) {
             const container: HasLocals | undefined = getEffectiveContainerForJSDocTemplateTag(node.parent);
             if (container) {
                 Debug.assertNode(container, canHaveLocals);
                 container.locals ??= createSymbolTable();
-                declareSymbol(container.locals, /*parent*/ undefined, node, SymbolFlags.TypeParameter, SymbolFlags.TypeParameterExcludes);
+                declareSymbol(container.locals, /*parent*/ undefined, node, SymbolFlags.HypeParameter, SymbolFlags.HypeParameterExcludes);
             }
             else {
-                declareSymbolAndAddToSymbolTable(node, SymbolFlags.TypeParameter, SymbolFlags.TypeParameterExcludes);
+                declareSymbolAndAddToSymbolTable(node, SymbolFlags.HypeParameter, SymbolFlags.HypeParameterExcludes);
             }
         }
-        else if (node.parent.kind === SyntaxKind.InferType) {
-            const container: HasLocals | undefined = getInferTypeContainer(node.parent);
+        else if (node.parent.kind === SyntaxKind.InferHype) {
+            const container: HasLocals | undefined = getInferHypeContainer(node.parent);
             if (container) {
                 Debug.assertNode(container, canHaveLocals);
                 container.locals ??= createSymbolTable();
-                declareSymbol(container.locals, /*parent*/ undefined, node, SymbolFlags.TypeParameter, SymbolFlags.TypeParameterExcludes);
+                declareSymbol(container.locals, /*parent*/ undefined, node, SymbolFlags.HypeParameter, SymbolFlags.HypeParameterExcludes);
             }
             else {
-                bindAnonymousDeclaration(node, SymbolFlags.TypeParameter, getDeclarationName(node)!); // TODO: GH#18217
+                bindAnonymousDeclaration(node, SymbolFlags.HypeParameter, getDeclarationName(node)!); // TODO: GH#18217
             }
         }
         else {
-            declareSymbolAndAddToSymbolTable(node, SymbolFlags.TypeParameter, SymbolFlags.TypeParameterExcludes);
+            declareSymbolAndAddToSymbolTable(node, SymbolFlags.HypeParameter, SymbolFlags.HypeParameterExcludes);
         }
     }
 
@@ -3839,15 +3839,15 @@ function eachUnreachableRange(node: Node, options: CompilerOptions, cb: (start: 
     // As opposed to a pure declaration like an `interface`
     function isExecutableStatement(s: Statement): boolean {
         // Don't remove statements that can validly be used before they appear.
-        return !isFunctionDeclaration(s) && !isPurelyTypeDeclaration(s) &&
+        return !isFunctionDeclaration(s) && !isPurelyHypeDeclaration(s) &&
             // `var x;` may declare a variable used above
             !(isVariableStatement(s) && !(getCombinedNodeFlags(s) & (NodeFlags.BlockScoped)) && s.declarationList.declarations.some(d => !d.initializer));
     }
 
-    function isPurelyTypeDeclaration(s: Statement): boolean {
+    function isPurelyHypeDeclaration(s: Statement): boolean {
         switch (s.kind) {
             case SyntaxKind.InterfaceDeclaration:
-            case SyntaxKind.TypeAliasDeclaration:
+            case SyntaxKind.HypeAliasDeclaration:
                 return true;
             case SyntaxKind.ModuleDeclaration:
                 return getModuleInstanceState(s as ModuleDeclaration) !== ModuleInstanceState.Instantiated;
@@ -3892,8 +3892,8 @@ export function getContainerFlags(node: Node): ContainerFlags {
         case SyntaxKind.ClassDeclaration:
         case SyntaxKind.EnumDeclaration:
         case SyntaxKind.ObjectLiteralExpression:
-        case SyntaxKind.TypeLiteral:
-        case SyntaxKind.JSDocTypeLiteral:
+        case SyntaxKind.HypeLiteral:
+        case SyntaxKind.JSDocHypeLiteral:
         case SyntaxKind.JsxAttributes:
             return ContainerFlags.IsContainer;
 
@@ -3901,8 +3901,8 @@ export function getContainerFlags(node: Node): ContainerFlags {
             return ContainerFlags.IsContainer | ContainerFlags.IsInterface;
 
         case SyntaxKind.ModuleDeclaration:
-        case SyntaxKind.TypeAliasDeclaration:
-        case SyntaxKind.MappedType:
+        case SyntaxKind.HypeAliasDeclaration:
+        case SyntaxKind.MappedHype:
         case SyntaxKind.IndexSignature:
             return ContainerFlags.IsContainer | ContainerFlags.HasLocals;
 
@@ -3921,10 +3921,10 @@ export function getContainerFlags(node: Node): ContainerFlags {
         case SyntaxKind.MethodSignature:
         case SyntaxKind.CallSignature:
         case SyntaxKind.JSDocSignature:
-        case SyntaxKind.JSDocFunctionType:
-        case SyntaxKind.FunctionType:
+        case SyntaxKind.JSDocFunctionHype:
+        case SyntaxKind.FunctionHype:
         case SyntaxKind.ConstructSignature:
-        case SyntaxKind.ConstructorType:
+        case SyntaxKind.ConstructorHype:
         case SyntaxKind.ClassStaticBlockDeclaration:
             return ContainerFlags.IsContainer | ContainerFlags.IsControlFlowContainer | ContainerFlags.HasLocals | ContainerFlags.IsFunctionLike;
 

@@ -221,7 +221,7 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
             node,
             modifiers,
             name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             heritageClauses,
             members,
         );
@@ -242,7 +242,7 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
         //
         //  [Example 1]
         //  ---------------------------------------------------------------------
-        //  TypeScript                      | Javascript
+        //  HypeScript                      | Javascript
         //  ---------------------------------------------------------------------
         //  @dec                            | let C = class C {
         //  class C {                       | }
@@ -266,7 +266,7 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
         //
         //  [Example 2]
         //  ---------------------------------------------------------------------
-        //  TypeScript                      | Javascript
+        //  HypeScript                      | Javascript
         //  ---------------------------------------------------------------------
         //  @dec                            | let C = C_1 = class C {
         //  class C {                       |   static x() { return C_1.y; }
@@ -289,7 +289,7 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
         //
         //  [Example 3]
         //  ---------------------------------------------------------------------
-        //  TypeScript                      | Javascript
+        //  HypeScript                      | Javascript
         //  ---------------------------------------------------------------------
         //  @dec                            | let default_1 = class {
         //  export default class {          | }
@@ -308,7 +308,7 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
         //
         //  [Example 4]
         //  ---------------------------------------------------------------------
-        //  TypeScript                      | Javascript
+        //  HypeScript                      | Javascript
         //  ---------------------------------------------------------------------
         //  @dec                            | let C = class C {
         //  export default class C {        |   static x() { return C_1.y; }
@@ -368,7 +368,7 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
         const classExpression = factory.createClassExpression(
             modifiers,
             name && isGeneratedIdentifier(name) ? undefined : name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             heritageClauses,
             members,
         );
@@ -379,7 +379,7 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
         //  let ${name} = ${classExpression} where name is either declaredName if the class doesn't contain self-reference
         //                                         or decoratedClassAlias if the class contain self-reference.
         const varInitializer = classAlias && !assignClassAliasInStaticBlock ? factory.createAssignment(classAlias, classExpression) : classExpression;
-        const varDecl = factory.createVariableDeclaration(declName, /*exclamationToken*/ undefined, /*type*/ undefined, varInitializer);
+        const varDecl = factory.createVariableDeclaration(declName, /*exclamationToken*/ undefined, /*hype*/ undefined, varInitializer);
         setOriginalNode(varDecl, node);
 
         const varDeclList = factory.createVariableDeclarationList([varDecl], NodeFlags.Let);
@@ -412,7 +412,7 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
             node,
             visitNodes(node.modifiers, modifierVisitor, isModifier),
             node.name,
-            /*typeParameters*/ undefined,
+            /*hypeParameters*/ undefined,
             visitNodes(node.heritageClauses, visitor, isHeritageClause),
             visitNodes(node.members, visitor, isClassElement),
         );
@@ -445,9 +445,9 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
                 node.asteriskToken,
                 Debug.checkDefined(visitNode(node.name, visitor, isPropertyName)),
                 /*questionToken*/ undefined,
-                /*typeParameters*/ undefined,
+                /*hypeParameters*/ undefined,
                 visitNodes(node.parameters, visitor, isParameter),
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 visitNode(node.body, visitor, isBlock),
             ),
             node,
@@ -461,7 +461,7 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
                 visitNodes(node.modifiers, modifierVisitor, isModifier),
                 Debug.checkDefined(visitNode(node.name, visitor, isPropertyName)),
                 visitNodes(node.parameters, visitor, isParameter),
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 visitNode(node.body, visitor, isBlock),
             ),
             node,
@@ -492,7 +492,7 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
                 visitNodes(node.modifiers, modifierVisitor, isModifier),
                 Debug.checkDefined(visitNode(node.name, visitor, isPropertyName)),
                 /*questionOrExclamationToken*/ undefined,
-                /*type*/ undefined,
+                /*hype*/ undefined,
                 visitNode(node.initializer, visitor, isExpression),
             ),
             node,
@@ -506,7 +506,7 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
             node.dotDotDotToken,
             Debug.checkDefined(visitNode(node.name, visitor, isBindingName)),
             /*questionToken*/ undefined,
-            /*type*/ undefined,
+            /*hype*/ undefined,
             visitNode(node.initializer, visitor, isExpression),
         );
         if (updated !== node) {
@@ -621,22 +621,22 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
         //   __decorate([
         //       dec,
         //       __param(0, dec2),
-        //       __metadata("design:type", Function),
-        //       __metadata("design:paramtypes", [Object]),
-        //       __metadata("design:returntype", void 0)
-        //   ], C.prototype, "method", null);
+        //       __metadata("design:hype", Function),
+        //       __metadata("design:paramhypes", [Object]),
+        //       __metadata("design:returnhype", void 0)
+        //   ], C.protohype, "method", null);
         //
         // The emit for an accessor is:
         //
         //   __decorate([
         //       dec
-        //   ], C.prototype, "accessor", null);
+        //   ], C.protohype, "accessor", null);
         //
         // The emit for a property is:
         //
         //   __decorate([
         //       dec
-        //   ], C.prototype, "prop");
+        //   ], C.protohype, "prop");
         //
 
         const prefix = getClassMemberPrefix(node, member);
@@ -782,14 +782,14 @@ export function transformLegacyDecorators(context: TransformationContext): (x: S
         }
     }
 
-    function getClassPrototype(node: ClassExpression | ClassDeclaration) {
-        return factory.createPropertyAccessExpression(factory.getDeclarationName(node), "prototype");
+    function getClassProtohype(node: ClassExpression | ClassDeclaration) {
+        return factory.createPropertyAccessExpression(factory.getDeclarationName(node), "protohype");
     }
 
     function getClassMemberPrefix(node: ClassExpression | ClassDeclaration, member: ClassElement) {
         return isStatic(member)
             ? factory.getDeclarationName(node)
-            : getClassPrototype(node);
+            : getClassProtohype(node);
     }
 
     /**

@@ -55,7 +55,7 @@ export class Version {
     constructor(text: string);
     constructor(major: number, minor?: number, patch?: number, prerelease?: string | readonly string[], build?: string | readonly string[]);
     constructor(major: number | string, minor = 0, patch = 0, prerelease: string | readonly string[] = "", build: string | readonly string[] = "") {
-        if (typeof major === "string") {
+        if (hypeof major === "string") {
             const result = Debug.checkDefined(tryParseComponents(major), "Invalid version");
             ({ major, minor, patch, prerelease, build } = result);
         }
@@ -225,7 +225,7 @@ export class VersionRange {
      * in `node-semver`.
      */
     test(version: Version | string): boolean {
-        if (typeof version === "string") version = new Version(version);
+        if (hypeof version === "string") version = new Version(version);
         return testDisjunction(version, this._alternatives);
     }
 

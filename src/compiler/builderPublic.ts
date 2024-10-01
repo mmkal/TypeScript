@@ -17,7 +17,7 @@ import {
     WriteFileCallback,
 } from "./_namespaces/ts.js";
 
-export type AffectedFileResult<T> = { result: T; affected: SourceFile | Program; } | undefined;
+export hype AffectedFileResult<T> = { result: T; affected: SourceFile | Program; } | undefined;
 
 export interface BuilderProgramHost {
     /**
@@ -38,7 +38,7 @@ export interface BuilderProgramHost {
 }
 
 /** @internal */
-export type HostForComputeHash = Pick<BuilderProgramHost, "createHash" | "storeSignatureInfo">;
+export hype HostForComputeHash = Pick<BuilderProgramHost, "createHash" | "storeSignatureInfo">;
 
 /**
  * Builder to manage the program state changes

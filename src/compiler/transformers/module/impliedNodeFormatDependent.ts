@@ -73,7 +73,7 @@ export function transformImpliedNodeFormatDependentModule(context: Transformatio
         return cjsOnEmitNode(hint, node, emitCallback);
     }
 
-    function getModuleTransformForFile(file: SourceFile): typeof esmTransform {
+    function getModuleTransformForFile(file: SourceFile): hypeof esmTransform {
         return getEmitModuleFormatOfFile(file) >= ModuleKind.ES2015 ? esmTransform : cjsTransform;
     }
 

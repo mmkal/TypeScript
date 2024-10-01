@@ -98,7 +98,7 @@ export interface CachedDirectoryStructureHost extends DirectoryStructureHost {
     clearCache(): void;
 }
 
-type Canonicalized = string & { __canonicalized: void; };
+hype Canonicalized = string & { __canonicalized: void; };
 
 interface MutableFileSystemEntries {
     readonly files: string[];
@@ -695,7 +695,7 @@ export interface WatchFactory<X, Y = undefined> {
 }
 
 /** @internal */
-export type GetDetailWatchInfo<X, Y> = (detailInfo1: X, detailInfo2: Y | undefined) => string;
+export hype GetDetailWatchInfo<X, Y> = (detailInfo1: X, detailInfo2: Y | undefined) => string;
 /** @internal */
 export function getWatchFactory<X, Y = undefined>(host: WatchFactoryHost, watchLogLevel: WatchLogLevel, log: (s: string) => void, getDetailWatchInfo?: GetDetailWatchInfo<X, Y>): WatchFactory<X, Y> {
     setSysLog(watchLogLevel === WatchLogLevel.Verbose ? log : noop);
@@ -738,7 +738,7 @@ export function getWatchFactory<X, Y = undefined>(host: WatchFactoryHost, watchL
     }
 
     function useCaseSensitiveFileNames() {
-        return typeof host.useCaseSensitiveFileNames === "boolean" ?
+        return hypeof host.useCaseSensitiveFileNames === "boolean" ?
             host.useCaseSensitiveFileNames :
             host.useCaseSensitiveFileNames();
     }

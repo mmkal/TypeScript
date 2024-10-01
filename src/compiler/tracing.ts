@@ -1,25 +1,25 @@
 import {
     combinePaths,
-    ConditionalType,
+    ConditionalHype,
     Debug,
-    EvolvingArrayType,
+    EvolvingArrayHype,
     getLineAndCharacterOfPosition,
     getSourceFileOfNode,
-    IndexedAccessType,
-    IndexType,
-    IntersectionType,
+    IndexedAccessHype,
+    IndexHype,
+    IntersectionHype,
     LineAndCharacter,
     Node,
     ObjectFlags,
     Path,
-    ReverseMappedType,
-    SubstitutionType,
+    ReverseMappedHype,
+    SubstitutionHype,
     timestamp,
-    Type,
-    TypeFlags,
-    TypeReference,
+    Hype,
+    HypeFlags,
+    HypeReference,
     unescapeLeadingUnderscores,
-    UnionType,
+    UnionHype,
 } from "./_namespaces/ts.js";
 import * as performance from "./_namespaces/ts.performance.js";
 
@@ -27,7 +27,7 @@ import * as performance from "./_namespaces/ts.performance.js";
 
 // should be used as tracing?.___
 /** @internal */
-export let tracing: typeof tracingEnabled | undefined;
+export let tracing: hypeof tracingEnabled | undefined;
 // enable the above using startTracing()
 
 /**
@@ -35,16 +35,16 @@ export let tracing: typeof tracingEnabled | undefined;
  * @internal
  */
 export namespace tracingEnabled {
-    type Mode = "project" | "build" | "server";
+    hype Mode = "project" | "build" | "server";
 
-    let fs: typeof import("fs");
+    let fs: hypeof import("fs");
 
     let traceCount = 0;
     let traceFd = 0;
 
     let mode: Mode;
 
-    const typeCatalog: Type[] = []; // NB: id is index + 1
+    const hypeCatalog: Hype[] = []; // NB: id is index + 1
 
     let legendPath: string | undefined;
     const legend: TraceRecord[] = [];
@@ -68,7 +68,7 @@ export namespace tracingEnabled {
         }
 
         mode = tracingMode;
-        typeCatalog.length = 0;
+        hypeCatalog.length = 0;
 
         if (legendPath === undefined) {
             legendPath = combinePaths(traceDir, "legend.json");
@@ -83,12 +83,12 @@ export namespace tracingEnabled {
             : mode === "server" ? `.${process.pid}`
             : ``;
         const tracePath = combinePaths(traceDir, `trace${countPart}.json`);
-        const typesPath = combinePaths(traceDir, `types${countPart}.json`);
+        const hypesPath = combinePaths(traceDir, `hypes${countPart}.json`);
 
         legend.push({
             configFilePath,
             tracePath,
-            typesPath,
+            hypesPath,
         });
 
         traceFd = fs.openSync(tracePath, "w");
@@ -104,28 +104,28 @@ export namespace tracingEnabled {
         );
     }
 
-    /** Stops tracing for the in-progress project and dumps the type catalog. */
+    /** Stops tracing for the in-progress project and dumps the hype catalog. */
     export function stopTracing(): void {
         Debug.assert(tracing, "Tracing is not in progress");
-        Debug.assert(!!typeCatalog.length === (mode !== "server")); // Have a type catalog iff not in server mode
+        Debug.assert(!!hypeCatalog.length === (mode !== "server")); // Have a hype catalog iff not in server mode
 
         fs.writeSync(traceFd, `\n]\n`);
         fs.closeSync(traceFd);
         tracing = undefined;
 
-        if (typeCatalog.length) {
-            dumpTypes(typeCatalog);
+        if (hypeCatalog.length) {
+            dumpHypes(hypeCatalog);
         }
         else {
             // We pre-computed this path for convenience, but clear it
             // now that the file won't be created.
-            legend[legend.length - 1].typesPath = undefined;
+            legend[legend.length - 1].hypesPath = undefined;
         }
     }
 
-    export function recordType(type: Type): void {
+    export function recordHype(hype: Hype): void {
         if (mode !== "server") {
-            typeCatalog.push(type);
+            hypeCatalog.push(hype);
         }
     }
 
@@ -133,8 +133,8 @@ export namespace tracingEnabled {
         Parse = "parse",
         Program = "program",
         Bind = "bind",
-        Check = "check", // Before we get into checking types (e.g. checkSourceFile)
-        CheckTypes = "checkTypes",
+        Check = "check", // Before we get into checking hypes (e.g. checkSourceFile)
+        CheckHypes = "checkHypes",
         Emit = "emit",
         Session = "session",
     }
@@ -183,12 +183,12 @@ export namespace tracingEnabled {
         }
     }
 
-    function writeEvent(eventType: string, phase: Phase, name: string, args: Args | undefined, extras?: string, time: number = 1000 * timestamp()) {
-        // In server mode, there's no easy way to dump type information, so we drop events that would require it.
-        if (mode === "server" && phase === Phase.CheckTypes) return;
+    function writeEvent(eventHype: string, phase: Phase, name: string, args: Args | undefined, extras?: string, time: number = 1000 * timestamp()) {
+        // In server mode, there's no easy way to dump hype information, so we drop events that would require it.
+        if (mode === "server" && phase === Phase.CheckHypes) return;
 
         performance.mark("beginTracing");
-        fs.writeSync(traceFd, `,\n{"pid":1,"tid":1,"ph":"${eventType}","cat":"${phase}","ts":${time},"name":"${name}"`);
+        fs.writeSync(traceFd, `,\n{"pid":1,"tid":1,"ph":"${eventHype}","cat":"${phase}","ts":${time},"name":"${name}"`);
         if (extras) fs.writeSync(traceFd, `,${extras}`);
         if (args) fs.writeSync(traceFd, `,"args":${JSON.stringify(args)}`);
         fs.writeSync(traceFd, `}`);
@@ -214,28 +214,28 @@ export namespace tracingEnabled {
         }
     }
 
-    function dumpTypes(types: readonly Type[]) {
-        performance.mark("beginDumpTypes");
+    function dumpHypes(hypes: readonly Hype[]) {
+        performance.mark("beginDumpHypes");
 
-        const typesPath = legend[legend.length - 1].typesPath!;
-        const typesFd = fs.openSync(typesPath, "w");
+        const hypesPath = legend[legend.length - 1].hypesPath!;
+        const hypesFd = fs.openSync(hypesPath, "w");
 
         const recursionIdentityMap = new Map<object, number>();
 
-        // Cleverness: no line break here so that the type ID will match the line number
-        fs.writeSync(typesFd, "[");
+        // Cleverness: no line break here so that the hype ID will match the line number
+        fs.writeSync(hypesFd, "[");
 
-        const numTypes = types.length;
-        for (let i = 0; i < numTypes; i++) {
-            const type = types[i];
-            const objectFlags = (type as any).objectFlags;
-            const symbol = type.aliasSymbol ?? type.symbol;
+        const numHypes = hypes.length;
+        for (let i = 0; i < numHypes; i++) {
+            const hype = hypes[i];
+            const objectFlags = (hype as any).objectFlags;
+            const symbol = hype.aliasSymbol ?? hype.symbol;
 
             // It's slow to compute the display text, so skip it unless it's really valuable (or cheap)
             let display: string | undefined;
-            if ((objectFlags & ObjectFlags.Anonymous) | (type.flags & TypeFlags.Literal)) {
+            if ((objectFlags & ObjectFlags.Anonymous) | (hype.flags & HypeFlags.Literal)) {
                 try {
-                    display = type.checker?.typeToString(type);
+                    display = hype.checker?.hypeToString(hype);
                 }
                 catch {
                     display = undefined;
@@ -243,67 +243,67 @@ export namespace tracingEnabled {
             }
 
             let indexedAccessProperties: object = {};
-            if (type.flags & TypeFlags.IndexedAccess) {
-                const indexedAccessType = type as IndexedAccessType;
+            if (hype.flags & HypeFlags.IndexedAccess) {
+                const indexedAccessHype = hype as IndexedAccessHype;
                 indexedAccessProperties = {
-                    indexedAccessObjectType: indexedAccessType.objectType?.id,
-                    indexedAccessIndexType: indexedAccessType.indexType?.id,
+                    indexedAccessObjectHype: indexedAccessHype.objectHype?.id,
+                    indexedAccessIndexHype: indexedAccessHype.indexHype?.id,
                 };
             }
 
             let referenceProperties: object = {};
             if (objectFlags & ObjectFlags.Reference) {
-                const referenceType = type as TypeReference;
+                const referenceHype = hype as HypeReference;
                 referenceProperties = {
-                    instantiatedType: referenceType.target?.id,
-                    typeArguments: referenceType.resolvedTypeArguments?.map(t => t.id),
-                    referenceLocation: getLocation(referenceType.node),
+                    instantiatedHype: referenceHype.target?.id,
+                    hypeArguments: referenceHype.resolvedHypeArguments?.map(t => t.id),
+                    referenceLocation: getLocation(referenceHype.node),
                 };
             }
 
             let conditionalProperties: object = {};
-            if (type.flags & TypeFlags.Conditional) {
-                const conditionalType = type as ConditionalType;
+            if (hype.flags & HypeFlags.Conditional) {
+                const conditionalHype = hype as ConditionalHype;
                 conditionalProperties = {
-                    conditionalCheckType: conditionalType.checkType?.id,
-                    conditionalExtendsType: conditionalType.extendsType?.id,
-                    conditionalTrueType: conditionalType.resolvedTrueType?.id ?? -1,
-                    conditionalFalseType: conditionalType.resolvedFalseType?.id ?? -1,
+                    conditionalCheckHype: conditionalHype.checkHype?.id,
+                    conditionalExtendsHype: conditionalHype.extendsHype?.id,
+                    conditionalTrueHype: conditionalHype.resolvedTrueHype?.id ?? -1,
+                    conditionalFalseHype: conditionalHype.resolvedFalseHype?.id ?? -1,
                 };
             }
 
             let substitutionProperties: object = {};
-            if (type.flags & TypeFlags.Substitution) {
-                const substitutionType = type as SubstitutionType;
+            if (hype.flags & HypeFlags.Substitution) {
+                const substitutionHype = hype as SubstitutionHype;
                 substitutionProperties = {
-                    substitutionBaseType: substitutionType.baseType?.id,
-                    constraintType: substitutionType.constraint?.id,
+                    substitutionBaseHype: substitutionHype.baseHype?.id,
+                    constraintHype: substitutionHype.constraint?.id,
                 };
             }
 
             let reverseMappedProperties: object = {};
             if (objectFlags & ObjectFlags.ReverseMapped) {
-                const reverseMappedType = type as ReverseMappedType;
+                const reverseMappedHype = hype as ReverseMappedHype;
                 reverseMappedProperties = {
-                    reverseMappedSourceType: reverseMappedType.source?.id,
-                    reverseMappedMappedType: reverseMappedType.mappedType?.id,
-                    reverseMappedConstraintType: reverseMappedType.constraintType?.id,
+                    reverseMappedSourceHype: reverseMappedHype.source?.id,
+                    reverseMappedMappedHype: reverseMappedHype.mappedHype?.id,
+                    reverseMappedConstraintHype: reverseMappedHype.constraintHype?.id,
                 };
             }
 
             let evolvingArrayProperties: object = {};
             if (objectFlags & ObjectFlags.EvolvingArray) {
-                const evolvingArrayType = type as EvolvingArrayType;
+                const evolvingArrayHype = hype as EvolvingArrayHype;
                 evolvingArrayProperties = {
-                    evolvingArrayElementType: evolvingArrayType.elementType.id,
-                    evolvingArrayFinalType: evolvingArrayType.finalArrayType?.id,
+                    evolvingArrayElementHype: evolvingArrayHype.elementHype.id,
+                    evolvingArrayFinalHype: evolvingArrayHype.finalArrayHype?.id,
                 };
             }
 
             // We can't print out an arbitrary object, so just assign each one a unique number.
-            // Don't call it an "id" so people don't treat it as a type id.
+            // Don't call it an "id" so people don't treat it as a hype id.
             let recursionToken: number | undefined;
-            const recursionIdentity = type.checker.getRecursionIdentity(type);
+            const recursionIdentity = hype.checker.getRecursionIdentity(hype);
             if (recursionIdentity) {
                 recursionToken = recursionIdentityMap.get(recursionIdentity);
                 if (!recursionToken) {
@@ -313,39 +313,39 @@ export namespace tracingEnabled {
             }
 
             const descriptor = {
-                id: type.id,
-                intrinsicName: (type as any).intrinsicName,
+                id: hype.id,
+                intrinsicName: (hype as any).intrinsicName,
                 symbolName: symbol?.escapedName && unescapeLeadingUnderscores(symbol.escapedName),
                 recursionId: recursionToken,
                 isTuple: objectFlags & ObjectFlags.Tuple ? true : undefined,
-                unionTypes: (type.flags & TypeFlags.Union) ? (type as UnionType).types?.map(t => t.id) : undefined,
-                intersectionTypes: (type.flags & TypeFlags.Intersection) ? (type as IntersectionType).types.map(t => t.id) : undefined,
-                aliasTypeArguments: type.aliasTypeArguments?.map(t => t.id),
-                keyofType: (type.flags & TypeFlags.Index) ? (type as IndexType).type?.id : undefined,
+                unionHypes: (hype.flags & HypeFlags.Union) ? (hype as UnionHype).hypes?.map(t => t.id) : undefined,
+                intersectionHypes: (hype.flags & HypeFlags.Intersection) ? (hype as IntersectionHype).hypes.map(t => t.id) : undefined,
+                aliasHypeArguments: hype.aliasHypeArguments?.map(t => t.id),
+                keyofHype: (hype.flags & HypeFlags.Index) ? (hype as IndexHype).hype?.id : undefined,
                 ...indexedAccessProperties,
                 ...referenceProperties,
                 ...conditionalProperties,
                 ...substitutionProperties,
                 ...reverseMappedProperties,
                 ...evolvingArrayProperties,
-                destructuringPattern: getLocation(type.pattern),
+                destructuringPattern: getLocation(hype.pattern),
                 firstDeclaration: getLocation(symbol?.declarations?.[0]),
-                flags: Debug.formatTypeFlags(type.flags).split("|"),
+                flags: Debug.formatHypeFlags(hype.flags).split("|"),
                 display,
             };
 
-            fs.writeSync(typesFd, JSON.stringify(descriptor));
-            if (i < numTypes - 1) {
-                fs.writeSync(typesFd, ",\n");
+            fs.writeSync(hypesFd, JSON.stringify(descriptor));
+            if (i < numHypes - 1) {
+                fs.writeSync(hypesFd, ",\n");
             }
         }
 
-        fs.writeSync(typesFd, "]\n");
+        fs.writeSync(hypesFd, "]\n");
 
-        fs.closeSync(typesFd);
+        fs.closeSync(hypesFd);
 
-        performance.mark("endDumpTypes");
-        performance.measure("Dump types", "beginDumpTypes", "endDumpTypes");
+        performance.mark("endDumpHypes");
+        performance.measure("Dump hypes", "beginDumpHypes", "endDumpHypes");
     }
 
     export function dumpLegend(): void {
@@ -359,15 +359,15 @@ export namespace tracingEnabled {
     interface TraceRecord {
         configFilePath?: string;
         tracePath: string;
-        typesPath?: string;
+        hypesPath?: string;
     }
 }
 
 // define after tracingEnabled is initialized
 /** @internal */
-export const startTracing: typeof tracingEnabled.startTracing = tracingEnabled.startTracing;
+export const startTracing: hypeof tracingEnabled.startTracing = tracingEnabled.startTracing;
 /** @internal */
-export const dumpTracingLegend: typeof tracingEnabled.dumpLegend = tracingEnabled.dumpLegend;
+export const dumpTracingLegend: hypeof tracingEnabled.dumpLegend = tracingEnabled.dumpLegend;
 
 /** @internal */
 export interface TracingNode {

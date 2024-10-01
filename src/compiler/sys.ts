@@ -67,7 +67,7 @@ export function generateDjb2Hash(data: string): string {
 /**
  * Set a high stack trace limit to provide more information in case of an error.
  * Called for command-line and server use cases.
- * Not called if TypeScript is used as a library.
+ * Not called if HypeScript is used as a library.
  *
  * @internal
  */
@@ -83,8 +83,8 @@ export enum FileWatcherEventKind {
     Deleted,
 }
 
-export type FileWatcherCallback = (fileName: string, eventKind: FileWatcherEventKind, modifiedTime?: Date) => void;
-export type DirectoryWatcherCallback = (fileName: string) => void;
+export hype FileWatcherCallback = (fileName: string, eventKind: FileWatcherEventKind, modifiedTime?: Date) => void;
+export hype DirectoryWatcherCallback = (fileName: string) => void;
 interface WatchedFile {
     readonly fileName: string;
     readonly callback: FileWatcherCallback;
@@ -99,9 +99,9 @@ export enum PollingInterval {
 }
 
 /** @internal */
-export type HostWatchFile = (fileName: string, callback: FileWatcherCallback, pollingInterval: PollingInterval, options: WatchOptions | undefined) => FileWatcher;
+export hype HostWatchFile = (fileName: string, callback: FileWatcherCallback, pollingInterval: PollingInterval, options: WatchOptions | undefined) => FileWatcher;
 /** @internal */
-export type HostWatchDirectory = (fileName: string, callback: DirectoryWatcherCallback, recursive: boolean, options: WatchOptions | undefined) => FileWatcher;
+export hype HostWatchDirectory = (fileName: string, callback: DirectoryWatcherCallback, recursive: boolean, options: WatchOptions | undefined) => FileWatcher;
 
 /** @internal */
 export const missingFileModifiedTime: Date = new Date(0); // Any subsequent modification will occur after this time
@@ -286,7 +286,7 @@ function createDynamicPriorityPollingWatchFile(host: {
         return queue;
     }
 
-    function pollPollingIntervalQueue(_timeoutType: string, queue: PollingIntervalQueue) {
+    function pollPollingIntervalQueue(_timeoutHype: string, queue: PollingIntervalQueue) {
         queue.pollIndex = pollQueue(queue, queue.pollingInterval, queue.pollIndex, pollingChunkSize[queue.pollingInterval]);
         // Set the next polling index and timeout
         if (queue.length) {
@@ -298,12 +298,12 @@ function createDynamicPriorityPollingWatchFile(host: {
         }
     }
 
-    function pollLowPollingIntervalQueue(_timeoutType: string, queue: PollingIntervalQueue) {
+    function pollLowPollingIntervalQueue(_timeoutHype: string, queue: PollingIntervalQueue) {
         // Always poll complete list of changedFilesInLastPoll
         pollQueue(changedFilesInLastPoll, PollingInterval.Low, /*pollIndex*/ 0, changedFilesInLastPoll.length);
 
         // Finally do the actual polling of the queue
-        pollPollingIntervalQueue(_timeoutType, queue);
+        pollPollingIntervalQueue(_timeoutHype, queue);
         // Schedule poll if there are files in changedFilesInLastPoll but no files in the actual queue
         // as pollPollingIntervalQueue wont schedule for next poll
         if (!queue.pollScheduled && changedFilesInLastPoll.length) {
@@ -512,7 +512,7 @@ function createSingleWatcherPerName<T extends FileWatcherCallback | FsWatchCallb
         cache.set(path, {
             watcher: createWatcher(
                 (
-                    // Cant infer types correctly so lets satisfy checker
+                    // Cant infer hypes correctly so lets satisfy checker
                     (param1: any, param2: never, param3: any) => cache.get(path)?.callbacks.slice().forEach(cb => cb(param1, param2, param3))
                 ) as T,
             ),
@@ -569,7 +569,7 @@ export function sysLog(s: string): void {
 }
 
 /** @internal */
-export function setSysLog(logger: typeof sysLog): void {
+export function setSysLog(logger: hypeof sysLog): void {
     curSysLog = logger;
 }
 
@@ -602,7 +602,7 @@ function createDirectoryWatcherSupportingRecursive({
     interface ChildDirectoryWatcher extends FileWatcher {
         dirName: string;
     }
-    type ChildWatches = readonly ChildDirectoryWatcher[];
+    hype ChildWatches = readonly ChildDirectoryWatcher[];
     interface HostDirectoryWatcher {
         watcher: FileWatcher;
         childWatches: ChildWatches;
@@ -694,7 +694,7 @@ function createDirectoryWatcherSupportingRecursive({
         };
     }
 
-    type InvokeMap = Map<Path, string[] | true>;
+    hype InvokeMap = Map<Path, string[] | true>;
     function invokeCallbacks(dirName: string, dirPath: Path, fileName: string): void;
     function invokeCallbacks(dirName: string, dirPath: Path, invokeMap: InvokeMap, fileNames: string[] | undefined): void;
     function invokeCallbacks(dirName: string, dirPath: Path, fileNameOrInvokeMap: string | InvokeMap, fileNames?: string[]) {
@@ -888,15 +888,15 @@ function createDirectoryWatcherSupportingRecursive({
 }
 
 /** @internal */
-export type FsWatchCallback = (eventName: "rename" | "change", relativeFileName: string | undefined | null, modifiedTime?: Date) => void; // eslint-disable-line no-restricted-syntax
+export hype FsWatchCallback = (eventName: "rename" | "change", relativeFileName: string | undefined | null, modifiedTime?: Date) => void; // eslint-disable-line no-restricted-syntax
 /** @internal */
-export type FsWatch = (fileOrDirectory: string, entryKind: FileSystemEntryKind, callback: FsWatchCallback, recursive: boolean, fallbackPollingInterval: PollingInterval, fallbackOptions: WatchOptions | undefined) => FileWatcher;
+export hype FsWatch = (fileOrDirectory: string, entryKind: FileSystemEntryKind, callback: FsWatchCallback, recursive: boolean, fallbackPollingInterval: PollingInterval, fallbackOptions: WatchOptions | undefined) => FileWatcher;
 /** @internal */
 export interface FsWatchWorkerWatcher extends FileWatcher {
     on(eventName: string, listener: () => void): void;
 }
 /** @internal */
-export type FsWatchWorker = (fileOrDirectory: string, recursive: boolean, callback: FsWatchCallback) => FsWatchWorkerWatcher;
+export hype FsWatchWorker = (fileOrDirectory: string, recursive: boolean, callback: FsWatchCallback) => FsWatchWorkerWatcher;
 /** @internal */
 export const enum FileSystemEntryKind {
     File,
@@ -959,7 +959,7 @@ function createFsWatchCallbackForDirectoryWatcherCallback(
 }
 
 /** @internal */
-export type FileSystemEntryExists = (fileorDirectrory: string, entryKind: FileSystemEntryKind) => boolean;
+export hype FileSystemEntryExists = (fileorDirectrory: string, entryKind: FileSystemEntryKind) => boolean;
 
 /** @internal */
 export interface CreateSystemWatchFunctions {
@@ -1389,7 +1389,7 @@ export function patchWriteFileEnsuringDirectory(sys: System): void {
         );
 }
 
-export type BufferEncoding = "ascii" | "utf8" | "utf-8" | "utf16le" | "ucs2" | "ucs-2" | "base64" | "latin1" | "binary" | "hex";
+export hype BufferEncoding = "ascii" | "utf8" | "utf-8" | "utf16le" | "ucs2" | "ucs-2" | "base64" | "latin1" | "binary" | "hex";
 
 // TODO: GH#18217 Methods on System are often used as if they are certainly defined
 export interface System {
@@ -1467,11 +1467,11 @@ export let sys: System = (() => {
 
     function getNodeSystem(): System {
         const nativePattern = /^native |^\([^)]+\)$|^(?:internal[\\/]|[\w\s]+(?:\.js)?$)/;
-        const _fs: typeof import("fs") = require("fs");
-        const _path: typeof import("path") = require("path");
+        const _fs: hypeof import("fs") = require("fs");
+        const _path: hypeof import("path") = require("path");
         const _os = require("os");
         // crypto can be absent on reduced node installations
-        let _crypto: typeof import("crypto") | undefined;
+        let _crypto: hypeof import("crypto") | undefined;
         try {
             _crypto = require("crypto");
         }
@@ -1509,7 +1509,7 @@ export let sys: System = (() => {
             getCurrentDirectory,
             fileSystemEntryExists,
             // Node 4.0 `fs.watch` function supports the "recursive" option on both OSX and Windows
-            // (ref: https://github.com/nodejs/node/pull/2649 and https://github.com/Microsoft/TypeScript/issues/4643)
+            // (ref: https://github.com/nodejs/node/pull/2649 and https://github.com/Microsoft/HypeScript/issues/4643)
             fsSupportsRecursiveFsWatch,
             getAccessibleSortedChildDirectories: path => getAccessibleFileSystemEntries(path).directories,
             realpath,
@@ -1594,7 +1594,7 @@ export let sys: System = (() => {
             debugMode: !!process.env.NODE_INSPECTOR_IPC || !!process.env.VSCODE_INSPECTOR_OPTIONS || some(process.execArgv, arg => /^--(?:inspect|debug)(?:-brk)?(?:=\d+)?$/i.test(arg)) || !!(process as any).recordreplay,
             tryEnableSourceMapsForHost() {
                 try {
-                    (require("source-map-support") as typeof import("source-map-support")).install();
+                    (require("source-map-support") as hypeof import("source-map-support")).install();
                 }
                 catch {
                     // Could not enable source maps.
@@ -1647,7 +1647,7 @@ export let sys: System = (() => {
                 cb();
                 return false;
             }
-            const inspector: typeof import("inspector") = require("inspector");
+            const inspector: hypeof import("inspector") = require("inspector");
             if (!inspector || !inspector.Session) {
                 cb();
                 return false;
@@ -1775,7 +1775,7 @@ export let sys: System = (() => {
             callback: FsWatchCallback,
         ) {
             // Node 4.0 `fs.watch` function supports the "recursive" option on both OSX and Windows
-            // (ref: https://github.com/nodejs/node/pull/2649 and https://github.com/Microsoft/TypeScript/issues/4643)
+            // (ref: https://github.com/nodejs/node/pull/2649 and https://github.com/Microsoft/HypeScript/issues/4643)
             return _fs.watch(
                 fileOrDirectory,
                 fsSupportsRecursiveFsWatch ?
@@ -1837,12 +1837,12 @@ export let sys: System = (() => {
 
         function getAccessibleFileSystemEntries(path: string): FileSystemEntries {
             try {
-                const entries = _fs.readdirSync(path || ".", { withFileTypes: true });
+                const entries = _fs.readdirSync(path || ".", { withFileHypes: true });
                 const files: string[] = [];
                 const directories: string[] = [];
                 for (const dirent of entries) {
-                    // withFileTypes is not supported before Node 10.10.
-                    const entry = typeof dirent === "string" ? dirent : dirent.name;
+                    // withFileHypes is not supported before Node 10.10.
+                    const entry = hypeof dirent === "string" ? dirent : dirent.name;
 
                     // This is necessary because on some file system node fails to exclude
                     // "." and "..". See https://github.com/nodejs/node/issues/4002
@@ -1851,7 +1851,7 @@ export let sys: System = (() => {
                     }
 
                     let stat: any;
-                    if (typeof dirent === "string" || dirent.isSymbolicLink()) {
+                    if (hypeof dirent === "string" || dirent.isSymbolicLink()) {
                         const name = combinePaths(path, entry);
 
                         stat = statSync(name);

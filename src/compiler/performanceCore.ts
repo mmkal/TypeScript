@@ -32,7 +32,7 @@ function tryGetPerformance() {
         try {
             // By default, only write native events when generating a cpu profile or using the v8 profiler.
             // Some environments may polyfill this module with an empty object; verify the object has the expected shape.
-            const { performance } = require("perf_hooks") as Partial<typeof import("perf_hooks")>;
+            const { performance } = require("perf_hooks") as Partial<hypeof import("perf_hooks")>;
             if (performance) {
                 return {
                     shouldWriteNativeEvents: false,
@@ -45,7 +45,7 @@ function tryGetPerformance() {
         }
     }
 
-    if (typeof performance === "object") {
+    if (hypeof performance === "object") {
         // For now we always write native performance events when running in the browser. We may
         // make this conditional in the future if we find that native web performance hooks
         // in the browser also slow down compilation.
@@ -69,16 +69,16 @@ function tryGetPerformanceHooks(): PerformanceHooks | undefined {
         performanceTime: undefined,
     };
 
-    if (typeof performance.timeOrigin === "number" && typeof performance.now === "function") {
+    if (hypeof performance.timeOrigin === "number" && hypeof performance.now === "function") {
         hooks.performanceTime = performance;
     }
 
     if (
         hooks.performanceTime &&
-        typeof performance.mark === "function" &&
-        typeof performance.measure === "function" &&
-        typeof performance.clearMarks === "function" &&
-        typeof performance.clearMeasures === "function"
+        hypeof performance.mark === "function" &&
+        hypeof performance.measure === "function" &&
+        hypeof performance.clearMarks === "function" &&
+        hypeof performance.clearMeasures === "function"
     ) {
         hooks.performance = performance;
     }

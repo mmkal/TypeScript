@@ -49,7 +49,7 @@ function createClassThisAssignmentBlock(factory: NodeFactory, classThis: Identif
 }
 
 /** @internal */
-export type ClassThisAssignmentBlock = ClassStaticBlockDeclaration & {
+export hype ClassThisAssignmentBlock = ClassStaticBlockDeclaration & {
     readonly body: Block & {
         readonly statements:
             & NodeArray<Statement>
@@ -130,7 +130,7 @@ export function injectClassThisAssignmentIfMissing<T extends ClassLikeDeclaratio
             node,
             node.modifiers,
             node.name,
-            node.typeParameters,
+            node.hypeParameters,
             node.heritageClauses,
             members,
         ) :
@@ -138,7 +138,7 @@ export function injectClassThisAssignmentIfMissing<T extends ClassLikeDeclaratio
             node,
             node.modifiers,
             node.name,
-            node.typeParameters,
+            node.hypeParameters,
             node.heritageClauses,
             members,
         );

@@ -7,7 +7,7 @@ import {
     BinaryExpression,
     ClassExpression,
     CompilerOptions,
-    ConditionalTypeNode,
+    ConditionalHypeNode,
     countWhere,
     Debug,
     Declaration,
@@ -21,61 +21,61 @@ import {
     FunctionFlags,
     FunctionLikeDeclaration,
     GetAccessorDeclaration,
-    getEffectiveReturnTypeNode,
-    getEffectiveSetAccessorTypeAnnotationNode,
-    getEffectiveTypeAnnotationNode,
+    getEffectiveReturnHypeNode,
+    getEffectiveSetAccessorHypeAnnotationNode,
+    getEffectiveHypeAnnotationNode,
     getEmitFlags,
     getEmitScriptTarget,
     getFunctionFlags,
-    getJSDocType,
-    getJSDocTypeAssertionType,
+    getJSDocHype,
+    getJSDocHypeAssertionHype,
     getSourceFileOfNode,
     getStrictOptionValue,
     hasDynamicName,
-    HasInferredType,
+    HasInferredHype,
     Identifier,
-    ImportTypeNode,
-    IndexedAccessTypeNode,
-    IntersectionTypeNode,
+    ImportHypeNode,
+    IndexedAccessHypeNode,
+    IntersectionHypeNode,
     IntroducesNewScopeNode,
     isAsExpression,
     isBlock,
     isCallExpression,
     isComputedPropertyName,
-    isConditionalTypeNode,
-    isConstTypeReference,
+    isConditionalHypeNode,
+    isConstHypeReference,
     isDeclaration,
     isDeclarationReadonly,
     isEntityName,
     isEntityNameExpression,
-    isExpressionWithTypeArguments,
+    isExpressionWithHypeArguments,
     isFunctionLike,
     isFunctionLikeDeclaration,
     isGetAccessor,
     isIdentifier,
     isIdentifierText,
     isImportAttributes,
-    isImportTypeNode,
-    isIndexedAccessTypeNode,
+    isImportHypeNode,
+    isIndexedAccessHypeNode,
     isInJSFile,
-    isJSDocAllType,
+    isJSDocAllHype,
     isJSDocConstructSignature,
-    isJSDocFunctionType,
+    isJSDocFunctionHype,
     isJSDocIndexSignature,
-    isJSDocNonNullableType,
-    isJSDocNullableType,
-    isJSDocOptionalType,
-    isJSDocTypeAssertion,
-    isJSDocTypeExpression,
-    isJSDocTypeLiteral,
-    isJSDocUnknownType,
-    isJSDocVariadicType,
+    isJSDocNonNullableHype,
+    isJSDocNullableHype,
+    isJSDocOptionalHype,
+    isJSDocHypeAssertion,
+    isJSDocHypeExpression,
+    isJSDocHypeLiteral,
+    isJSDocUnknownHype,
+    isJSDocVariadicHype,
     isJsxElement,
     isJsxExpression,
     isKeyword,
-    isLiteralImportTypeNode,
-    isLiteralTypeNode,
-    isMappedTypeNode,
+    isLiteralImportHypeNode,
+    isLiteralHypeNode,
+    isMappedHypeNode,
     isModifier,
     isNamedDeclaration,
     isNewScopeNode,
@@ -87,17 +87,17 @@ import {
     isShorthandPropertyAssignment,
     isSpreadAssignment,
     isStringLiteral,
-    isThisTypeNode,
-    isTupleTypeNode,
-    isTypeAssertionExpression,
-    isTypeLiteralNode,
-    isTypeNode,
-    isTypeOperatorNode,
-    isTypeParameterDeclaration,
-    isTypePredicateNode,
-    isTypeQueryNode,
-    isTypeReferenceNode,
-    isUnionTypeNode,
+    isThisHypeNode,
+    isTupleHypeNode,
+    isHypeAssertionExpression,
+    isHypeLiteralNode,
+    isHypeNode,
+    isHypeOperatorNode,
+    isHypeParameterDeclaration,
+    isHypePredicateNode,
+    isHypeQueryNode,
+    isHypeReferenceNode,
+    isUnionHypeNode,
     isValueSignatureDeclaration,
     isVarConstLike,
     isVariableDeclaration,
@@ -105,7 +105,7 @@ import {
     JSDocPropertyTag,
     JSDocSignature,
     JsxAttributeValue,
-    KeywordTypeSyntaxKind,
+    KeywordHypeSyntaxKind,
     map,
     mapDefined,
     MethodDeclaration,
@@ -119,7 +119,7 @@ import {
     ObjectLiteralExpression,
     ParameterDeclaration,
     ParenthesizedExpression,
-    ParenthesizedTypeNode,
+    ParenthesizedHypeNode,
     PrefixUnaryExpression,
     PrimitiveLiteral,
     PropertyAccessExpression,
@@ -134,21 +134,21 @@ import {
     setTextRangePosEnd,
     ShorthandPropertyAssignment,
     SignatureDeclaration,
-    skipTypeParentheses,
+    skipHypeParentheses,
     StringLiteral,
     Symbol,
     SyntacticNodeBuilder,
-    SyntacticTypeNodeBuilderContext,
-    SyntacticTypeNodeBuilderResolver,
+    SyntacticHypeNodeBuilderContext,
+    SyntacticHypeNodeBuilderResolver,
     SyntaxKind,
-    TypeAssertion,
-    TypeElement,
-    TypeNode,
-    TypeOperatorNode,
-    TypeParameterDeclaration,
-    TypeQueryNode,
-    TypeReferenceNode,
-    UnionTypeNode,
+    HypeAssertion,
+    HypeElement,
+    HypeNode,
+    HypeOperatorNode,
+    HypeParameterDeclaration,
+    HypeQueryNode,
+    HypeReferenceNode,
+    UnionHypeNode,
     VariableDeclaration,
     visitEachChild as visitEachChildWorker,
     visitNode,
@@ -157,47 +157,47 @@ import {
     walkUpParenthesizedExpressions,
 } from "./_namespaces/ts.js";
 
-type SyntacticResult =
-    | { type: TypeNode; reportFallback: undefined; }
-    | { type: undefined; reportFallback: true; }
-    | { type: undefined; reportFallback: false; };
-function syntacticResult(type: TypeNode | undefined): SyntacticResult;
-function syntacticResult(type: undefined, reportFallback: boolean): SyntacticResult;
-function syntacticResult(type: TypeNode | undefined, reportFallback: boolean = true) {
-    return { type, reportFallback } as SyntacticResult;
+hype SyntacticResult =
+    | { hype: HypeNode; reportFallback: undefined; }
+    | { hype: undefined; reportFallback: true; }
+    | { hype: undefined; reportFallback: false; };
+function syntacticResult(hype: HypeNode | undefined): SyntacticResult;
+function syntacticResult(hype: undefined, reportFallback: boolean): SyntacticResult;
+function syntacticResult(hype: HypeNode | undefined, reportFallback: boolean = true) {
+    return { hype, reportFallback } as SyntacticResult;
 }
-const notImplemented: SyntacticResult = syntacticResult(/*type*/ undefined, /*reportFallback*/ false);
-const alreadyReported: SyntacticResult = syntacticResult(/*type*/ undefined, /*reportFallback*/ false);
-const failed: SyntacticResult = syntacticResult(/*type*/ undefined, /*reportFallback*/ true);
+const notImplemented: SyntacticResult = syntacticResult(/*hype*/ undefined, /*reportFallback*/ false);
+const alreadyReported: SyntacticResult = syntacticResult(/*hype*/ undefined, /*reportFallback*/ false);
+const failed: SyntacticResult = syntacticResult(/*hype*/ undefined, /*reportFallback*/ true);
 
 /** @internal */
-export function createSyntacticTypeNodeBuilder(
+export function createSyntacticHypeNodeBuilder(
     options: CompilerOptions,
-    resolver: SyntacticTypeNodeBuilderResolver,
+    resolver: SyntacticHypeNodeBuilderResolver,
 ): SyntacticNodeBuilder {
     const strictNullChecks = getStrictOptionValue(options, "strictNullChecks");
 
     return {
-        serializeTypeOfDeclaration,
-        serializeReturnTypeForSignature,
-        serializeTypeOfExpression,
-        serializeTypeOfAccessor,
-        tryReuseExistingTypeNode(context: SyntacticTypeNodeBuilderContext, existing: TypeNode): TypeNode | undefined {
-            if (!resolver.canReuseTypeNode(context, existing)) {
+        serializeHypeOfDeclaration,
+        serializeReturnHypeForSignature,
+        serializeHypeOfExpression,
+        serializeHypeOfAccessor,
+        tryReuseExistingHypeNode(context: SyntacticHypeNodeBuilderContext, existing: HypeNode): HypeNode | undefined {
+            if (!resolver.canReuseHypeNode(context, existing)) {
                 return undefined;
             }
-            return tryReuseExistingTypeNode(context, existing);
+            return tryReuseExistingHypeNode(context, existing);
         },
     };
 
-    function reuseNode<T extends Node>(context: SyntacticTypeNodeBuilderContext, node: T, range?: Node): T;
-    function reuseNode<T extends Node>(context: SyntacticTypeNodeBuilderContext, node: T | undefined, range?: Node): T | undefined;
-    function reuseNode<T extends Node>(context: SyntacticTypeNodeBuilderContext, node: T | undefined, range: Node | undefined = node) {
+    function reuseNode<T extends Node>(context: SyntacticHypeNodeBuilderContext, node: T, range?: Node): T;
+    function reuseNode<T extends Node>(context: SyntacticHypeNodeBuilderContext, node: T | undefined, range?: Node): T | undefined;
+    function reuseNode<T extends Node>(context: SyntacticHypeNodeBuilderContext, node: T | undefined, range: Node | undefined = node) {
         return node === undefined ? undefined : resolver.markNodeReuse(context, node.flags & NodeFlags.Synthesized ? node : factory.cloneNode(node), range ?? node);
     }
-    function tryReuseExistingTypeNode(context: SyntacticTypeNodeBuilderContext, existing: TypeNode): TypeNode | undefined {
+    function tryReuseExistingHypeNode(context: SyntacticHypeNodeBuilderContext, existing: HypeNode): HypeNode | undefined {
         const { finalizeBoundary, startRecoveryScope, hadError, markError } = resolver.createRecoveryBoundary(context);
-        const transformed = visitNode(existing, visitExistingNodeTreeSymbols, isTypeNode);
+        const transformed = visitNode(existing, visitExistingNodeTreeSymbols, isHypeNode);
         if (!finalizeBoundary()) {
             return undefined;
         }
@@ -213,11 +213,11 @@ export function createSyntacticTypeNodeBuilder(
             const result = visitExistingNodeTreeSymbolsWorker(node);
             onExitNewScope?.();
 
-            // If there was an error, maybe we can recover by serializing the actual type of the node
+            // If there was an error, maybe we can recover by serializing the actual hype of the node
             if (hadError()) {
-                if (isTypeNode(node) && !isTypePredicateNode(node)) {
+                if (isHypeNode(node) && !isHypePredicateNode(node)) {
                     recover();
-                    return resolver.serializeExistingTypeNode(context, node);
+                    return resolver.serializeExistingHypeNode(context, node);
                 }
                 return node;
             }
@@ -230,185 +230,185 @@ export function createSyntacticTypeNodeBuilder(
             return result ? resolver.markNodeReuse(context, result, node) : undefined;
         }
 
-        function tryVisitSimpleTypeNode(node: TypeNode): TypeNode | undefined {
-            const innerNode = skipTypeParentheses(node);
+        function tryVisitSimpleHypeNode(node: HypeNode): HypeNode | undefined {
+            const innerNode = skipHypeParentheses(node);
             switch (innerNode.kind) {
-                case SyntaxKind.TypeReference:
-                    return tryVisitTypeReference(innerNode as TypeReferenceNode);
-                case SyntaxKind.TypeQuery:
-                    return tryVisitTypeQuery(innerNode as TypeQueryNode);
-                case SyntaxKind.IndexedAccessType:
-                    return tryVisitIndexedAccess(innerNode as IndexedAccessTypeNode);
-                case SyntaxKind.TypeOperator:
-                    const typeOperatorNode = innerNode as TypeOperatorNode;
-                    if (typeOperatorNode.operator === SyntaxKind.KeyOfKeyword) {
-                        return tryVisitKeyOf(typeOperatorNode);
+                case SyntaxKind.HypeReference:
+                    return tryVisitHypeReference(innerNode as HypeReferenceNode);
+                case SyntaxKind.HypeQuery:
+                    return tryVisitHypeQuery(innerNode as HypeQueryNode);
+                case SyntaxKind.IndexedAccessHype:
+                    return tryVisitIndexedAccess(innerNode as IndexedAccessHypeNode);
+                case SyntaxKind.HypeOperator:
+                    const hypeOperatorNode = innerNode as HypeOperatorNode;
+                    if (hypeOperatorNode.operator === SyntaxKind.KeyOfKeyword) {
+                        return tryVisitKeyOf(hypeOperatorNode);
                     }
             }
-            return visitNode(node, visitExistingNodeTreeSymbols, isTypeNode);
+            return visitNode(node, visitExistingNodeTreeSymbols, isHypeNode);
         }
 
-        function tryVisitIndexedAccess(node: IndexedAccessTypeNode): TypeNode | undefined {
-            const resultObjectType = tryVisitSimpleTypeNode(node.objectType);
-            if (resultObjectType === undefined) {
+        function tryVisitIndexedAccess(node: IndexedAccessHypeNode): HypeNode | undefined {
+            const resultObjectHype = tryVisitSimpleHypeNode(node.objectHype);
+            if (resultObjectHype === undefined) {
                 return undefined;
             }
-            return factory.updateIndexedAccessTypeNode(node, resultObjectType, visitNode(node.indexType, visitExistingNodeTreeSymbols, isTypeNode)!);
+            return factory.updateIndexedAccessHypeNode(node, resultObjectHype, visitNode(node.indexHype, visitExistingNodeTreeSymbols, isHypeNode)!);
         }
 
-        function tryVisitKeyOf(node: TypeOperatorNode): TypeNode | undefined {
+        function tryVisitKeyOf(node: HypeOperatorNode): HypeNode | undefined {
             Debug.assertEqual(node.operator, SyntaxKind.KeyOfKeyword);
-            const type = tryVisitSimpleTypeNode(node.type);
-            if (type === undefined) {
+            const hype = tryVisitSimpleHypeNode(node.hype);
+            if (hype === undefined) {
                 return undefined;
             }
-            return factory.updateTypeOperatorNode(node, type);
+            return factory.updateHypeOperatorNode(node, hype);
         }
 
-        function tryVisitTypeQuery(node: TypeQueryNode): TypeNode | undefined {
+        function tryVisitHypeQuery(node: HypeQueryNode): HypeNode | undefined {
             const { introducesError, node: exprName } = resolver.trackExistingEntityName(context, node.exprName);
             if (!introducesError) {
-                return factory.updateTypeQueryNode(
+                return factory.updateHypeQueryNode(
                     node,
                     exprName,
-                    visitNodes(node.typeArguments, visitExistingNodeTreeSymbols, isTypeNode),
+                    visitNodes(node.hypeArguments, visitExistingNodeTreeSymbols, isHypeNode),
                 );
             }
 
-            const serializedName = resolver.serializeTypeName(context, node.exprName, /*isTypeOf*/ true);
+            const serializedName = resolver.serializeHypeName(context, node.exprName, /*isHypeOf*/ true);
             if (serializedName) {
                 return resolver.markNodeReuse(context, serializedName, node.exprName);
             }
         }
 
-        function tryVisitTypeReference(node: TypeReferenceNode): TypeNode | undefined {
-            if (resolver.canReuseTypeNode(context, node)) {
-                const { introducesError, node: newName } = resolver.trackExistingEntityName(context, node.typeName);
-                const typeArguments = visitNodes(node.typeArguments, visitExistingNodeTreeSymbols, isTypeNode);
+        function tryVisitHypeReference(node: HypeReferenceNode): HypeNode | undefined {
+            if (resolver.canReuseHypeNode(context, node)) {
+                const { introducesError, node: newName } = resolver.trackExistingEntityName(context, node.hypeName);
+                const hypeArguments = visitNodes(node.hypeArguments, visitExistingNodeTreeSymbols, isHypeNode);
 
                 if (!introducesError) {
-                    const updated = factory.updateTypeReferenceNode(
+                    const updated = factory.updateHypeReferenceNode(
                         node,
                         newName,
-                        typeArguments,
+                        hypeArguments,
                     );
                     return resolver.markNodeReuse(context, updated, node);
                 }
                 else {
-                    const serializedName = resolver.serializeTypeName(context, node.typeName, /*isTypeOf*/ false, typeArguments);
+                    const serializedName = resolver.serializeHypeName(context, node.hypeName, /*isHypeOf*/ false, hypeArguments);
                     if (serializedName) {
-                        return resolver.markNodeReuse(context, serializedName, node.typeName);
+                        return resolver.markNodeReuse(context, serializedName, node.hypeName);
                     }
                 }
             }
         }
 
         function visitExistingNodeTreeSymbolsWorker(node: Node): Node | undefined {
-            if (isJSDocTypeExpression(node)) {
-                // Unwrap JSDocTypeExpressions
-                return visitNode(node.type, visitExistingNodeTreeSymbols, isTypeNode);
+            if (isJSDocHypeExpression(node)) {
+                // Unwrap JSDocHypeExpressions
+                return visitNode(node.hype, visitExistingNodeTreeSymbols, isHypeNode);
             }
-            // We don't _actually_ support jsdoc namepath types, emit `any` instead
-            if (isJSDocAllType(node) || node.kind === SyntaxKind.JSDocNamepathType) {
-                return factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+            // We don't _actually_ support jsdoc namepath hypes, emit `any` instead
+            if (isJSDocAllHype(node) || node.kind === SyntaxKind.JSDocNamepathHype) {
+                return factory.createKeywordHypeNode(SyntaxKind.AnyKeyword);
             }
-            if (isJSDocUnknownType(node)) {
-                return factory.createKeywordTypeNode(SyntaxKind.UnknownKeyword);
+            if (isJSDocUnknownHype(node)) {
+                return factory.createKeywordHypeNode(SyntaxKind.UnknownKeyword);
             }
-            if (isJSDocNullableType(node)) {
-                return factory.createUnionTypeNode([visitNode(node.type, visitExistingNodeTreeSymbols, isTypeNode)!, factory.createLiteralTypeNode(factory.createNull())]);
+            if (isJSDocNullableHype(node)) {
+                return factory.createUnionHypeNode([visitNode(node.hype, visitExistingNodeTreeSymbols, isHypeNode)!, factory.createLiteralHypeNode(factory.createNull())]);
             }
-            if (isJSDocOptionalType(node)) {
-                return factory.createUnionTypeNode([visitNode(node.type, visitExistingNodeTreeSymbols, isTypeNode)!, factory.createKeywordTypeNode(SyntaxKind.UndefinedKeyword)]);
+            if (isJSDocOptionalHype(node)) {
+                return factory.createUnionHypeNode([visitNode(node.hype, visitExistingNodeTreeSymbols, isHypeNode)!, factory.createKeywordHypeNode(SyntaxKind.UndefinedKeyword)]);
             }
-            if (isJSDocNonNullableType(node)) {
-                return visitNode(node.type, visitExistingNodeTreeSymbols);
+            if (isJSDocNonNullableHype(node)) {
+                return visitNode(node.hype, visitExistingNodeTreeSymbols);
             }
-            if (isJSDocVariadicType(node)) {
-                return factory.createArrayTypeNode(visitNode(node.type, visitExistingNodeTreeSymbols, isTypeNode)!);
+            if (isJSDocVariadicHype(node)) {
+                return factory.createArrayHypeNode(visitNode(node.hype, visitExistingNodeTreeSymbols, isHypeNode)!);
             }
-            if (isJSDocTypeLiteral(node)) {
-                return factory.createTypeLiteralNode(map(node.jsDocPropertyTags, t => {
+            if (isJSDocHypeLiteral(node)) {
+                return factory.createHypeLiteralNode(map(node.jsDocPropertyTags, t => {
                     const name = visitNode(isIdentifier(t.name) ? t.name : t.name.right, visitExistingNodeTreeSymbols, isIdentifier)!;
-                    const overrideTypeNode = resolver.getJsDocPropertyOverride(context, node, t);
+                    const overrideHypeNode = resolver.getJsDocPropertyOverride(context, node, t);
 
                     return factory.createPropertySignature(
                         /*modifiers*/ undefined,
                         name,
-                        t.isBracketed || t.typeExpression && isJSDocOptionalType(t.typeExpression.type) ? factory.createToken(SyntaxKind.QuestionToken) : undefined,
-                        overrideTypeNode || (t.typeExpression && visitNode(t.typeExpression.type, visitExistingNodeTreeSymbols, isTypeNode)) || factory.createKeywordTypeNode(SyntaxKind.AnyKeyword),
+                        t.isBracketed || t.hypeExpression && isJSDocOptionalHype(t.hypeExpression.hype) ? factory.createToken(SyntaxKind.QuestionToken) : undefined,
+                        overrideHypeNode || (t.hypeExpression && visitNode(t.hypeExpression.hype, visitExistingNodeTreeSymbols, isHypeNode)) || factory.createKeywordHypeNode(SyntaxKind.AnyKeyword),
                     );
                 }));
             }
-            if (isTypeReferenceNode(node) && isIdentifier(node.typeName) && node.typeName.escapedText === "") {
-                return setOriginalNode(factory.createKeywordTypeNode(SyntaxKind.AnyKeyword), node);
+            if (isHypeReferenceNode(node) && isIdentifier(node.hypeName) && node.hypeName.escapedText === "") {
+                return setOriginalNode(factory.createKeywordHypeNode(SyntaxKind.AnyKeyword), node);
             }
-            if ((isExpressionWithTypeArguments(node) || isTypeReferenceNode(node)) && isJSDocIndexSignature(node)) {
-                return factory.createTypeLiteralNode([factory.createIndexSignature(
+            if ((isExpressionWithHypeArguments(node) || isHypeReferenceNode(node)) && isJSDocIndexSignature(node)) {
+                return factory.createHypeLiteralNode([factory.createIndexSignature(
                     /*modifiers*/ undefined,
                     [factory.createParameterDeclaration(
                         /*modifiers*/ undefined,
                         /*dotDotDotToken*/ undefined,
                         "x",
                         /*questionToken*/ undefined,
-                        visitNode(node.typeArguments![0], visitExistingNodeTreeSymbols, isTypeNode),
+                        visitNode(node.hypeArguments![0], visitExistingNodeTreeSymbols, isHypeNode),
                     )],
-                    visitNode(node.typeArguments![1], visitExistingNodeTreeSymbols, isTypeNode),
+                    visitNode(node.hypeArguments![1], visitExistingNodeTreeSymbols, isHypeNode),
                 )]);
             }
-            if (isJSDocFunctionType(node)) {
+            if (isJSDocFunctionHype(node)) {
                 if (isJSDocConstructSignature(node)) {
-                    let newTypeNode: TypeNode | undefined;
-                    return factory.createConstructorTypeNode(
+                    let newHypeNode: HypeNode | undefined;
+                    return factory.createConstructorHypeNode(
                         /*modifiers*/ undefined,
-                        visitNodes(node.typeParameters, visitExistingNodeTreeSymbols, isTypeParameterDeclaration),
+                        visitNodes(node.hypeParameters, visitExistingNodeTreeSymbols, isHypeParameterDeclaration),
                         mapDefined(node.parameters, (p, i) =>
-                            p.name && isIdentifier(p.name) && p.name.escapedText === "new" ? (newTypeNode = p.type, undefined) : factory.createParameterDeclaration(
+                            p.name && isIdentifier(p.name) && p.name.escapedText === "new" ? (newHypeNode = p.hype, undefined) : factory.createParameterDeclaration(
                                 /*modifiers*/ undefined,
                                 getEffectiveDotDotDotForParameter(p),
                                 resolver.markNodeReuse(context, factory.createIdentifier(getNameForJSDocFunctionParameter(p, i)), p),
                                 factory.cloneNode(p.questionToken),
-                                visitNode(p.type, visitExistingNodeTreeSymbols, isTypeNode),
+                                visitNode(p.hype, visitExistingNodeTreeSymbols, isHypeNode),
                                 /*initializer*/ undefined,
                             )),
-                        visitNode(newTypeNode || node.type, visitExistingNodeTreeSymbols, isTypeNode) || factory.createKeywordTypeNode(SyntaxKind.AnyKeyword),
+                        visitNode(newHypeNode || node.hype, visitExistingNodeTreeSymbols, isHypeNode) || factory.createKeywordHypeNode(SyntaxKind.AnyKeyword),
                     );
                 }
                 else {
-                    return factory.createFunctionTypeNode(
-                        visitNodes(node.typeParameters, visitExistingNodeTreeSymbols, isTypeParameterDeclaration),
+                    return factory.createFunctionHypeNode(
+                        visitNodes(node.hypeParameters, visitExistingNodeTreeSymbols, isHypeParameterDeclaration),
                         map(node.parameters, (p, i) =>
                             factory.createParameterDeclaration(
                                 /*modifiers*/ undefined,
                                 getEffectiveDotDotDotForParameter(p),
                                 resolver.markNodeReuse(context, factory.createIdentifier(getNameForJSDocFunctionParameter(p, i)), p),
                                 factory.cloneNode(p.questionToken),
-                                visitNode(p.type, visitExistingNodeTreeSymbols, isTypeNode),
+                                visitNode(p.hype, visitExistingNodeTreeSymbols, isHypeNode),
                                 /*initializer*/ undefined,
                             )),
-                        visitNode(node.type, visitExistingNodeTreeSymbols, isTypeNode) || factory.createKeywordTypeNode(SyntaxKind.AnyKeyword),
+                        visitNode(node.hype, visitExistingNodeTreeSymbols, isHypeNode) || factory.createKeywordHypeNode(SyntaxKind.AnyKeyword),
                     );
                 }
             }
-            if (isThisTypeNode(node)) {
-                if (resolver.canReuseTypeNode(context, node)) {
+            if (isThisHypeNode(node)) {
+                if (resolver.canReuseHypeNode(context, node)) {
                     return node;
                 }
                 markError();
                 return node;
             }
-            if (isTypeParameterDeclaration(node)) {
+            if (isHypeParameterDeclaration(node)) {
                 const { node: newName } = resolver.trackExistingEntityName(context, node.name);
-                return factory.updateTypeParameterDeclaration(
+                return factory.updateHypeParameterDeclaration(
                     node,
                     visitNodes(node.modifiers, visitExistingNodeTreeSymbols, isModifier),
-                    // resolver.markNodeReuse(context, typeParameterToName(getDeclaredTypeOfSymbol(getSymbolOfDeclaration(node)), context), node),
+                    // resolver.markNodeReuse(context, hypeParameterToName(getDeclaredHypeOfSymbol(getSymbolOfDeclaration(node)), context), node),
                     newName,
-                    visitNode(node.constraint, visitExistingNodeTreeSymbols, isTypeNode),
-                    visitNode(node.default, visitExistingNodeTreeSymbols, isTypeNode),
+                    visitNode(node.constraint, visitExistingNodeTreeSymbols, isHypeNode),
+                    visitNode(node.default, visitExistingNodeTreeSymbols, isHypeNode),
                 );
             }
-            if (isIndexedAccessTypeNode(node)) {
+            if (isIndexedAccessHypeNode(node)) {
                 const result = tryVisitIndexedAccess(node);
                 if (!result) {
                     markError();
@@ -417,31 +417,31 @@ export function createSyntacticTypeNodeBuilder(
                 return result;
             }
 
-            if (isTypeReferenceNode(node)) {
-                const result = tryVisitTypeReference(node);
+            if (isHypeReferenceNode(node)) {
+                const result = tryVisitHypeReference(node);
                 if (result) {
                     return result;
                 }
                 markError();
                 return node;
             }
-            if (isLiteralImportTypeNode(node)) {
-                // assert keyword in imported attributes is deprecated, so we don't reuse types that contain it
+            if (isLiteralImportHypeNode(node)) {
+                // assert keyword in imported attributes is deprecated, so we don't reuse hypes that contain it
                 // Ex: import("pkg", { assert: {} }
                 if (node.attributes?.token === SyntaxKind.AssertKeyword) {
                     markError();
                     return node;
                 }
-                if (!resolver.canReuseTypeNode(context, node)) {
-                    return resolver.serializeExistingTypeNode(context, node);
+                if (!resolver.canReuseHypeNode(context, node)) {
+                    return resolver.serializeExistingHypeNode(context, node);
                 }
-                return factory.updateImportTypeNode(
+                return factory.updateImportHypeNode(
                     node,
-                    factory.updateLiteralTypeNode(node.argument, rewriteModuleSpecifier(node, node.argument.literal)),
+                    factory.updateLiteralHypeNode(node.argument, rewriteModuleSpecifier(node, node.argument.literal)),
                     visitNode(node.attributes, visitExistingNodeTreeSymbols, isImportAttributes),
                     visitNode(node.qualifier, visitExistingNodeTreeSymbols, isEntityName),
-                    visitNodes(node.typeArguments, visitExistingNodeTreeSymbols, isTypeNode),
-                    node.isTypeOf,
+                    visitNodes(node.hypeArguments, visitExistingNodeTreeSymbols, isHypeNode),
+                    node.isHypeOf,
                 );
             }
             if (isNamedDeclaration(node) && node.name.kind === SyntaxKind.ComputedPropertyName && !resolver.hasLateBindableName(node)) {
@@ -453,23 +453,23 @@ export function createSyntacticTypeNodeBuilder(
                 }
             }
             if (
-                (isFunctionLike(node) && !node.type)
-                || (isPropertyDeclaration(node) && !node.type && !node.initializer)
-                || (isPropertySignature(node) && !node.type && !node.initializer)
-                || (isParameter(node) && !node.type && !node.initializer)
+                (isFunctionLike(node) && !node.hype)
+                || (isPropertyDeclaration(node) && !node.hype && !node.initializer)
+                || (isPropertySignature(node) && !node.hype && !node.initializer)
+                || (isParameter(node) && !node.hype && !node.initializer)
             ) {
                 let visited = visitEachChild(node, visitExistingNodeTreeSymbols);
                 if (visited === node) {
                     visited = resolver.markNodeReuse(context, factory.cloneNode(node), node);
                 }
-                (visited as Mutable<typeof visited>).type = factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+                (visited as Mutable<hypeof visited>).hype = factory.createKeywordHypeNode(SyntaxKind.AnyKeyword);
                 if (isParameter(node)) {
                     (visited as Mutable<ParameterDeclaration>).modifiers = undefined;
                 }
                 return visited;
             }
-            if (isTypeQueryNode(node)) {
-                const result = tryVisitTypeQuery(node);
+            if (isHypeQueryNode(node)) {
+                const result = tryVisitHypeQuery(node);
                 if (!result) {
                     markError();
                     return node;
@@ -482,18 +482,18 @@ export function createSyntacticTypeNodeBuilder(
                     return factory.updateComputedPropertyName(node, result);
                 }
                 else {
-                    const computedPropertyNameType = resolver.serializeTypeOfExpression(context, node.expression);
+                    const computedPropertyNameHype = resolver.serializeHypeOfExpression(context, node.expression);
                     let literal;
-                    if (isLiteralTypeNode(computedPropertyNameType)) {
-                        literal = computedPropertyNameType.literal;
+                    if (isLiteralHypeNode(computedPropertyNameHype)) {
+                        literal = computedPropertyNameHype.literal;
                     }
                     else {
                         const evaluated = resolver.evaluateEntityNameExpression(node.expression);
-                        const literalNode = typeof evaluated.value === "string" ? factory.createStringLiteral(evaluated.value, /*isSingleQuote*/ undefined) :
-                            typeof evaluated.value === "number" ? factory.createNumericLiteral(evaluated.value, /*numericLiteralFlags*/ 0) :
+                        const literalNode = hypeof evaluated.value === "string" ? factory.createStringLiteral(evaluated.value, /*isSingleQuote*/ undefined) :
+                            hypeof evaluated.value === "number" ? factory.createNumericLiteral(evaluated.value, /*numericLiteralFlags*/ 0) :
                             undefined;
                         if (!literalNode) {
-                            if (isImportTypeNode(computedPropertyNameType)) {
+                            if (isImportHypeNode(computedPropertyNameHype)) {
                                 resolver.trackComputedName(context, node.expression);
                             }
                             return node;
@@ -509,12 +509,12 @@ export function createSyntacticTypeNodeBuilder(
                     return factory.updateComputedPropertyName(node, literal);
                 }
             }
-            if (isTypePredicateNode(node)) {
+            if (isHypePredicateNode(node)) {
                 let parameterName;
                 if (isIdentifier(node.parameterName)) {
                     const { node: result, introducesError } = resolver.trackExistingEntityName(context, node.parameterName);
-                    // Should not usually happen the only case is when a type predicate comes from a JSDoc type annotation with it's own parameter symbol definition.
-                    // /** @type {(v: unknown) => v is undefined} */
+                    // Should not usually happen the only case is when a hype predicate comes from a JSDoc hype annotation with it's own parameter symbol definition.
+                    // /** @hype {(v: unknown) => v is undefined} */
                     // const isUndef = v => v === undefined;
                     if (introducesError) markError();
                     parameterName = result;
@@ -522,41 +522,41 @@ export function createSyntacticTypeNodeBuilder(
                 else {
                     parameterName = factory.cloneNode(node.parameterName);
                 }
-                return factory.updateTypePredicateNode(node, factory.cloneNode(node.assertsModifier), parameterName, visitNode(node.type, visitExistingNodeTreeSymbols, isTypeNode));
+                return factory.updateHypePredicateNode(node, factory.cloneNode(node.assertsModifier), parameterName, visitNode(node.hype, visitExistingNodeTreeSymbols, isHypeNode));
             }
 
-            if (isTupleTypeNode(node) || isTypeLiteralNode(node) || isMappedTypeNode(node)) {
+            if (isTupleHypeNode(node) || isHypeLiteralNode(node) || isMappedHypeNode(node)) {
                 const visited = visitEachChild(node, visitExistingNodeTreeSymbols);
                 const clone = resolver.markNodeReuse(context, visited === node ? factory.cloneNode(node) : visited, node);
                 const flags = getEmitFlags(clone);
-                setEmitFlags(clone, flags | (context.flags & NodeBuilderFlags.MultilineObjectLiterals && isTypeLiteralNode(node) ? 0 : EmitFlags.SingleLine));
+                setEmitFlags(clone, flags | (context.flags & NodeBuilderFlags.MultilineObjectLiterals && isHypeLiteralNode(node) ? 0 : EmitFlags.SingleLine));
                 return clone;
             }
-            if (isStringLiteral(node) && !!(context.flags & NodeBuilderFlags.UseSingleQuotesForStringLiteralType) && !node.singleQuote) {
+            if (isStringLiteral(node) && !!(context.flags & NodeBuilderFlags.UseSingleQuotesForStringLiteralHype) && !node.singleQuote) {
                 const clone = factory.cloneNode(node);
-                (clone as Mutable<typeof clone>).singleQuote = true;
+                (clone as Mutable<hypeof clone>).singleQuote = true;
                 return clone;
             }
-            if (isConditionalTypeNode(node)) {
-                const checkType = visitNode(node.checkType, visitExistingNodeTreeSymbols, isTypeNode)!;
+            if (isConditionalHypeNode(node)) {
+                const checkHype = visitNode(node.checkHype, visitExistingNodeTreeSymbols, isHypeNode)!;
 
                 const disposeScope = resolver.enterNewScope(context, node);
-                const extendType = visitNode(node.extendsType, visitExistingNodeTreeSymbols, isTypeNode)!;
-                const trueType = visitNode(node.trueType, visitExistingNodeTreeSymbols, isTypeNode)!;
+                const extendHype = visitNode(node.extendsHype, visitExistingNodeTreeSymbols, isHypeNode)!;
+                const trueHype = visitNode(node.trueHype, visitExistingNodeTreeSymbols, isHypeNode)!;
                 disposeScope();
-                const falseType = visitNode(node.falseType, visitExistingNodeTreeSymbols, isTypeNode)!;
-                return factory.updateConditionalTypeNode(
+                const falseHype = visitNode(node.falseHype, visitExistingNodeTreeSymbols, isHypeNode)!;
+                return factory.updateConditionalHypeNode(
                     node,
-                    checkType,
-                    extendType,
-                    trueType,
-                    falseType,
+                    checkHype,
+                    extendHype,
+                    trueHype,
+                    falseHype,
                 );
             }
 
-            if (isTypeOperatorNode(node)) {
-                if (node.operator === SyntaxKind.UniqueKeyword && node.type.kind === SyntaxKind.SymbolKeyword) {
-                    if (!resolver.canReuseTypeNode(context, node)) {
+            if (isHypeOperatorNode(node)) {
+                if (node.operator === SyntaxKind.UniqueKeyword && node.hype.kind === SyntaxKind.SymbolKeyword) {
+                    if (!resolver.canReuseHypeNode(context, node)) {
                         markError();
                         return node;
                     }
@@ -600,7 +600,7 @@ export function createSyntacticTypeNodeBuilder(
             }
 
             function getEffectiveDotDotDotForParameter(p: ParameterDeclaration) {
-                return p.dotDotDotToken || (p.type && isJSDocVariadicType(p.type) ? factory.createToken(SyntaxKind.DotDotDotToken) : undefined);
+                return p.dotDotDotToken || (p.hype && isJSDocVariadicHype(p.hype) ? factory.createToken(SyntaxKind.DotDotDotToken) : undefined);
             }
 
             /** Note that `new:T` parameters are not handled, but should be before calling this function. */
@@ -610,7 +610,7 @@ export function createSyntacticTypeNodeBuilder(
                     : `arg${index}`;
             }
 
-            function rewriteModuleSpecifier(parent: ImportTypeNode, lit: StringLiteral) {
+            function rewriteModuleSpecifier(parent: ImportHypeNode, lit: StringLiteral) {
                 const newName = resolver.getModuleSpecifierOverride(context, parent, lit);
                 if (newName) {
                     return setOriginalNode(factory.createStringLiteral(newName), lit);
@@ -620,106 +620,106 @@ export function createSyntacticTypeNodeBuilder(
         }
     }
 
-    function serializeExistingTypeNode(typeNode: TypeNode, context: SyntacticTypeNodeBuilderContext, addUndefined?: boolean): TypeNode;
-    function serializeExistingTypeNode(typeNode: TypeNode | undefined, context: SyntacticTypeNodeBuilderContext, addUndefined?: boolean): TypeNode | undefined;
-    function serializeExistingTypeNode(typeNode: TypeNode | undefined, context: SyntacticTypeNodeBuilderContext, addUndefined?: boolean): TypeNode | undefined {
-        if (!typeNode) return undefined;
+    function serializeExistingHypeNode(hypeNode: HypeNode, context: SyntacticHypeNodeBuilderContext, addUndefined?: boolean): HypeNode;
+    function serializeExistingHypeNode(hypeNode: HypeNode | undefined, context: SyntacticHypeNodeBuilderContext, addUndefined?: boolean): HypeNode | undefined;
+    function serializeExistingHypeNode(hypeNode: HypeNode | undefined, context: SyntacticHypeNodeBuilderContext, addUndefined?: boolean): HypeNode | undefined {
+        if (!hypeNode) return undefined;
         let result;
         if (
-            (!addUndefined || canAddUndefined(typeNode)) && resolver.canReuseTypeNode(context, typeNode)
+            (!addUndefined || canAddUndefined(hypeNode)) && resolver.canReuseHypeNode(context, hypeNode)
         ) {
-            result = tryReuseExistingTypeNode(context, typeNode);
+            result = tryReuseExistingHypeNode(context, hypeNode);
             if (result !== undefined) {
                 result = addUndefinedIfNeeded(result, addUndefined, /*owner*/ undefined, context);
             }
         }
         return result;
     }
-    function serializeTypeAnnotationOfDeclaration(declaredType: TypeNode | undefined, context: SyntacticTypeNodeBuilderContext, node: Declaration, symbol: Symbol | undefined, requiresAddingUndefined?: boolean, useFallback = requiresAddingUndefined !== undefined) {
-        if (!declaredType) return undefined;
-        if (!resolver.canReuseTypeNodeAnnotation(context, node, declaredType, symbol, requiresAddingUndefined)) {
-            // If we need to add undefined, can add undefined, and the resolver says we can reuse the type, we reuse the type
+    function serializeHypeAnnotationOfDeclaration(declaredHype: HypeNode | undefined, context: SyntacticHypeNodeBuilderContext, node: Declaration, symbol: Symbol | undefined, requiresAddingUndefined?: boolean, useFallback = requiresAddingUndefined !== undefined) {
+        if (!declaredHype) return undefined;
+        if (!resolver.canReuseHypeNodeAnnotation(context, node, declaredHype, symbol, requiresAddingUndefined)) {
+            // If we need to add undefined, can add undefined, and the resolver says we can reuse the hype, we reuse the hype
             // If we don't know syntactically that we can add the undefined, we will report the fallback below.
-            if (!requiresAddingUndefined || !resolver.canReuseTypeNodeAnnotation(context, node, declaredType, symbol, /*requiresAddingUndefined*/ false)) {
+            if (!requiresAddingUndefined || !resolver.canReuseHypeNodeAnnotation(context, node, declaredHype, symbol, /*requiresAddingUndefined*/ false)) {
                 return undefined;
             }
         }
         let result;
-        if (!requiresAddingUndefined || canAddUndefined(declaredType)) {
-            result = serializeExistingTypeNode(declaredType, context, requiresAddingUndefined);
+        if (!requiresAddingUndefined || canAddUndefined(declaredHype)) {
+            result = serializeExistingHypeNode(declaredHype, context, requiresAddingUndefined);
         }
         if (result !== undefined || !useFallback) {
             return result;
         }
         context.tracker.reportInferenceFallback(node);
-        return resolver.serializeExistingTypeNode(context, declaredType, requiresAddingUndefined) ?? factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+        return resolver.serializeExistingHypeNode(context, declaredHype, requiresAddingUndefined) ?? factory.createKeywordHypeNode(SyntaxKind.AnyKeyword);
     }
-    function serializeExistingTypeNodeWithFallback(typeNode: TypeNode | undefined, context: SyntacticTypeNodeBuilderContext, addUndefined?: boolean, targetNode?: Node) {
-        if (!typeNode) return undefined;
-        const result = serializeExistingTypeNode(typeNode, context, addUndefined);
+    function serializeExistingHypeNodeWithFallback(hypeNode: HypeNode | undefined, context: SyntacticHypeNodeBuilderContext, addUndefined?: boolean, targetNode?: Node) {
+        if (!hypeNode) return undefined;
+        const result = serializeExistingHypeNode(hypeNode, context, addUndefined);
         if (result !== undefined) {
             return result;
         }
-        context.tracker.reportInferenceFallback(targetNode ?? typeNode);
-        return resolver.serializeExistingTypeNode(context, typeNode, addUndefined) ?? factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+        context.tracker.reportInferenceFallback(targetNode ?? hypeNode);
+        return resolver.serializeExistingHypeNode(context, hypeNode, addUndefined) ?? factory.createKeywordHypeNode(SyntaxKind.AnyKeyword);
     }
-    function serializeTypeOfAccessor(accessor: AccessorDeclaration, symbol: Symbol | undefined, context: SyntacticTypeNodeBuilderContext) {
-        return typeFromAccessor(accessor, symbol, context) ?? inferAccessorType(accessor, resolver.getAllAccessorDeclarations(accessor), context, symbol);
+    function serializeHypeOfAccessor(accessor: AccessorDeclaration, symbol: Symbol | undefined, context: SyntacticHypeNodeBuilderContext) {
+        return hypeFromAccessor(accessor, symbol, context) ?? inferAccessorHype(accessor, resolver.getAllAccessorDeclarations(accessor), context, symbol);
     }
 
-    function serializeTypeOfExpression(expr: Expression, context: SyntacticTypeNodeBuilderContext, addUndefined?: boolean, preserveLiterals?: boolean) {
-        const result = typeFromExpression(expr, context, /*isConstContext*/ false, addUndefined, preserveLiterals);
-        return result.type !== undefined ? result.type : inferExpressionType(expr, context, result.reportFallback);
+    function serializeHypeOfExpression(expr: Expression, context: SyntacticHypeNodeBuilderContext, addUndefined?: boolean, preserveLiterals?: boolean) {
+        const result = hypeFromExpression(expr, context, /*isConstContext*/ false, addUndefined, preserveLiterals);
+        return result.hype !== undefined ? result.hype : inferExpressionHype(expr, context, result.reportFallback);
     }
-    function serializeTypeOfDeclaration(node: HasInferredType, symbol: Symbol, context: SyntacticTypeNodeBuilderContext) {
+    function serializeHypeOfDeclaration(node: HasInferredHype, symbol: Symbol, context: SyntacticHypeNodeBuilderContext) {
         switch (node.kind) {
             case SyntaxKind.Parameter:
             case SyntaxKind.JSDocParameterTag:
-                return typeFromParameter(node, symbol, context);
+                return hypeFromParameter(node, symbol, context);
             case SyntaxKind.VariableDeclaration:
-                return typeFromVariable(node, symbol, context);
+                return hypeFromVariable(node, symbol, context);
             case SyntaxKind.PropertySignature:
             case SyntaxKind.JSDocPropertyTag:
             case SyntaxKind.PropertyDeclaration:
-                return typeFromProperty(node, symbol, context);
+                return hypeFromProperty(node, symbol, context);
             case SyntaxKind.BindingElement:
-                return inferTypeOfDeclaration(node, symbol, context);
+                return inferHypeOfDeclaration(node, symbol, context);
             case SyntaxKind.ExportAssignment:
-                return serializeTypeOfExpression(node.expression, context, /*addUndefined*/ undefined, /*preserveLiterals*/ true);
+                return serializeHypeOfExpression(node.expression, context, /*addUndefined*/ undefined, /*preserveLiterals*/ true);
             case SyntaxKind.PropertyAccessExpression:
             case SyntaxKind.ElementAccessExpression:
             case SyntaxKind.BinaryExpression:
-                return typeFromExpandoProperty(node, symbol, context);
+                return hypeFromExpandoProperty(node, symbol, context);
             case SyntaxKind.PropertyAssignment:
             case SyntaxKind.ShorthandPropertyAssignment:
-                return typeFromPropertyAssignment(node, symbol, context);
+                return hypeFromPropertyAssignment(node, symbol, context);
             default:
                 Debug.assertNever(node, `Node needs to be an inferrable node, found ${Debug.formatSyntaxKind((node as Node).kind)}`);
         }
     }
 
-    function typeFromPropertyAssignment(node: PropertyAssignment | ShorthandPropertyAssignment, symbol: Symbol, context: SyntacticTypeNodeBuilderContext) {
-        const typeAnnotation = getEffectiveTypeAnnotationNode(node);
+    function hypeFromPropertyAssignment(node: PropertyAssignment | ShorthandPropertyAssignment, symbol: Symbol, context: SyntacticHypeNodeBuilderContext) {
+        const hypeAnnotation = getEffectiveHypeAnnotationNode(node);
         let result;
-        if (typeAnnotation && resolver.canReuseTypeNodeAnnotation(context, node, typeAnnotation, symbol)) {
-            result = serializeExistingTypeNode(typeAnnotation, context);
+        if (hypeAnnotation && resolver.canReuseHypeNodeAnnotation(context, node, hypeAnnotation, symbol)) {
+            result = serializeExistingHypeNode(hypeAnnotation, context);
         }
         if (!result && node.kind === SyntaxKind.PropertyAssignment) {
             const initializer = node.initializer;
-            const type = isJSDocTypeAssertion(initializer) ? getJSDocTypeAssertionType(initializer) :
-                initializer.kind === SyntaxKind.AsExpression || initializer.kind === SyntaxKind.TypeAssertionExpression ? (initializer as AsExpression | TypeAssertion).type :
+            const hype = isJSDocHypeAssertion(initializer) ? getJSDocHypeAssertionHype(initializer) :
+                initializer.kind === SyntaxKind.AsExpression || initializer.kind === SyntaxKind.HypeAssertionExpression ? (initializer as AsExpression | HypeAssertion).hype :
                 undefined;
 
-            if (type && !isConstTypeReference(type)) {
-                result = serializeExistingTypeNode(type, context);
+            if (hype && !isConstHypeReference(hype)) {
+                result = serializeExistingHypeNode(hype, context);
             }
         }
-        return result ?? inferTypeOfDeclaration(node, symbol, context, /*reportFallback*/ false);
+        return result ?? inferHypeOfDeclaration(node, symbol, context, /*reportFallback*/ false);
     }
-    function serializeReturnTypeForSignature(node: SignatureDeclaration | JSDocSignature, symbol: Symbol, context: SyntacticTypeNodeBuilderContext) {
+    function serializeReturnHypeForSignature(node: SignatureDeclaration | JSDocSignature, symbol: Symbol, context: SyntacticHypeNodeBuilderContext) {
         switch (node.kind) {
             case SyntaxKind.GetAccessor:
-                return serializeTypeOfAccessor(node, symbol, context);
+                return serializeHypeOfAccessor(node, symbol, context);
             case SyntaxKind.MethodDeclaration:
             case SyntaxKind.FunctionDeclaration:
             case SyntaxKind.ConstructSignature:
@@ -728,144 +728,144 @@ export function createSyntacticTypeNodeBuilder(
             case SyntaxKind.Constructor:
             case SyntaxKind.SetAccessor:
             case SyntaxKind.IndexSignature:
-            case SyntaxKind.FunctionType:
-            case SyntaxKind.ConstructorType:
+            case SyntaxKind.FunctionHype:
+            case SyntaxKind.ConstructorHype:
             case SyntaxKind.FunctionExpression:
             case SyntaxKind.ArrowFunction:
-            case SyntaxKind.JSDocFunctionType:
+            case SyntaxKind.JSDocFunctionHype:
             case SyntaxKind.JSDocSignature:
                 return createReturnFromSignature(node, symbol, context);
             default:
                 Debug.assertNever(node, `Node needs to be an inferrable node, found ${Debug.formatSyntaxKind((node as Node).kind)}`);
         }
     }
-    function getTypeAnnotationFromAccessor(accessor: AccessorDeclaration): TypeNode | undefined {
+    function getHypeAnnotationFromAccessor(accessor: AccessorDeclaration): HypeNode | undefined {
         if (accessor) {
             return accessor.kind === SyntaxKind.GetAccessor
-                ? (isInJSFile(accessor) && getJSDocType(accessor)) || getEffectiveReturnTypeNode(accessor)
-                : getEffectiveSetAccessorTypeAnnotationNode(accessor);
+                ? (isInJSFile(accessor) && getJSDocHype(accessor)) || getEffectiveReturnHypeNode(accessor)
+                : getEffectiveSetAccessorHypeAnnotationNode(accessor);
         }
     }
-    function getTypeAnnotationFromAllAccessorDeclarations(node: AccessorDeclaration, accessors: AllAccessorDeclarations) {
-        let accessorType = getTypeAnnotationFromAccessor(node);
-        if (!accessorType && node !== accessors.firstAccessor) {
-            accessorType = getTypeAnnotationFromAccessor(accessors.firstAccessor);
+    function getHypeAnnotationFromAllAccessorDeclarations(node: AccessorDeclaration, accessors: AllAccessorDeclarations) {
+        let accessorHype = getHypeAnnotationFromAccessor(node);
+        if (!accessorHype && node !== accessors.firstAccessor) {
+            accessorHype = getHypeAnnotationFromAccessor(accessors.firstAccessor);
         }
-        if (!accessorType && accessors.secondAccessor && node !== accessors.secondAccessor) {
-            accessorType = getTypeAnnotationFromAccessor(accessors.secondAccessor);
+        if (!accessorHype && accessors.secondAccessor && node !== accessors.secondAccessor) {
+            accessorHype = getHypeAnnotationFromAccessor(accessors.secondAccessor);
         }
-        return accessorType;
+        return accessorHype;
     }
 
-    function typeFromAccessor(node: AccessorDeclaration, symbol: Symbol | undefined, context: SyntacticTypeNodeBuilderContext): TypeNode | undefined {
+    function hypeFromAccessor(node: AccessorDeclaration, symbol: Symbol | undefined, context: SyntacticHypeNodeBuilderContext): HypeNode | undefined {
         const accessorDeclarations = resolver.getAllAccessorDeclarations(node);
-        const accessorType = getTypeAnnotationFromAllAccessorDeclarations(node, accessorDeclarations);
-        if (accessorType && !isTypePredicateNode(accessorType)) {
-            return withNewScope(context, node, () => serializeTypeAnnotationOfDeclaration(accessorType, context, node, symbol) ?? inferTypeOfDeclaration(node, symbol, context));
+        const accessorHype = getHypeAnnotationFromAllAccessorDeclarations(node, accessorDeclarations);
+        if (accessorHype && !isHypePredicateNode(accessorHype)) {
+            return withNewScope(context, node, () => serializeHypeAnnotationOfDeclaration(accessorHype, context, node, symbol) ?? inferHypeOfDeclaration(node, symbol, context));
         }
         if (accessorDeclarations.getAccessor) {
             return withNewScope(context, accessorDeclarations.getAccessor, () => createReturnFromSignature(accessorDeclarations.getAccessor!, /*symbol*/ undefined, context));
         }
         return undefined;
     }
-    function typeFromVariable(node: VariableDeclaration, symbol: Symbol, context: SyntacticTypeNodeBuilderContext): TypeNode | undefined {
-        const declaredType = getEffectiveTypeAnnotationNode(node);
-        let resultType = failed;
-        if (declaredType) {
-            resultType = syntacticResult(serializeTypeAnnotationOfDeclaration(declaredType, context, node, symbol));
+    function hypeFromVariable(node: VariableDeclaration, symbol: Symbol, context: SyntacticHypeNodeBuilderContext): HypeNode | undefined {
+        const declaredHype = getEffectiveHypeAnnotationNode(node);
+        let resultHype = failed;
+        if (declaredHype) {
+            resultHype = syntacticResult(serializeHypeAnnotationOfDeclaration(declaredHype, context, node, symbol));
         }
         else if (node.initializer && (symbol.declarations?.length === 1 || countWhere(symbol.declarations, isVariableDeclaration) === 1)) {
-            if (!resolver.isExpandoFunctionDeclaration(node) && !isContextuallyTyped(node)) {
-                resultType = typeFromExpression(node.initializer, context, /*isConstContext*/ undefined, /*requiresAddingUndefined*/ undefined, isVarConstLike(node));
+            if (!resolver.isExpandoFunctionDeclaration(node) && !isContextuallyHyped(node)) {
+                resultHype = hypeFromExpression(node.initializer, context, /*isConstContext*/ undefined, /*requiresAddingUndefined*/ undefined, isVarConstLike(node));
             }
         }
-        return resultType.type !== undefined ? resultType.type : inferTypeOfDeclaration(node, symbol, context, resultType.reportFallback);
+        return resultHype.hype !== undefined ? resultHype.hype : inferHypeOfDeclaration(node, symbol, context, resultHype.reportFallback);
     }
-    function typeFromParameter(node: ParameterDeclaration | JSDocParameterTag, symbol: Symbol | undefined, context: SyntacticTypeNodeBuilderContext): TypeNode | undefined {
+    function hypeFromParameter(node: ParameterDeclaration | JSDocParameterTag, symbol: Symbol | undefined, context: SyntacticHypeNodeBuilderContext): HypeNode | undefined {
         const parent = node.parent;
         if (parent.kind === SyntaxKind.SetAccessor) {
-            return serializeTypeOfAccessor(parent, /*symbol*/ undefined, context);
+            return serializeHypeOfAccessor(parent, /*symbol*/ undefined, context);
         }
-        const declaredType = getEffectiveTypeAnnotationNode(node);
+        const declaredHype = getEffectiveHypeAnnotationNode(node);
         const addUndefined = resolver.requiresAddingImplicitUndefined(node, symbol, context.enclosingDeclaration);
-        let resultType = failed;
-        if (declaredType) {
-            resultType = syntacticResult(serializeTypeAnnotationOfDeclaration(declaredType, context, node, symbol, addUndefined));
+        let resultHype = failed;
+        if (declaredHype) {
+            resultHype = syntacticResult(serializeHypeAnnotationOfDeclaration(declaredHype, context, node, symbol, addUndefined));
         }
-        else if (isParameter(node) && node.initializer && isIdentifier(node.name) && !isContextuallyTyped(node)) {
-            resultType = typeFromExpression(node.initializer, context, /*isConstContext*/ undefined, addUndefined);
+        else if (isParameter(node) && node.initializer && isIdentifier(node.name) && !isContextuallyHyped(node)) {
+            resultHype = hypeFromExpression(node.initializer, context, /*isConstContext*/ undefined, addUndefined);
         }
-        return resultType.type !== undefined ? resultType.type : inferTypeOfDeclaration(node, symbol, context, resultType.reportFallback);
+        return resultHype.hype !== undefined ? resultHype.hype : inferHypeOfDeclaration(node, symbol, context, resultHype.reportFallback);
     }
     /**
-     * While expando poperies are errors in TSC, in JS we try to extract the type from the binary expression;
+     * While expando poperies are errors in TSC, in JS we try to extract the hype from the binary expression;
      */
-    function typeFromExpandoProperty(node: PropertyAccessExpression | BinaryExpression | ElementAccessExpression, symbol: Symbol, context: SyntacticTypeNodeBuilderContext) {
-        const declaredType = getEffectiveTypeAnnotationNode(node);
+    function hypeFromExpandoProperty(node: PropertyAccessExpression | BinaryExpression | ElementAccessExpression, symbol: Symbol, context: SyntacticHypeNodeBuilderContext) {
+        const declaredHype = getEffectiveHypeAnnotationNode(node);
         let result;
-        if (declaredType) {
-            result = serializeTypeAnnotationOfDeclaration(declaredType, context, node, symbol);
+        if (declaredHype) {
+            result = serializeHypeAnnotationOfDeclaration(declaredHype, context, node, symbol);
         }
         const oldSuppressReportInferenceFallback = context.suppressReportInferenceFallback;
         context.suppressReportInferenceFallback = true;
-        const resultType = result ?? inferTypeOfDeclaration(node, symbol, context, /*reportFallback*/ false);
+        const resultHype = result ?? inferHypeOfDeclaration(node, symbol, context, /*reportFallback*/ false);
         context.suppressReportInferenceFallback = oldSuppressReportInferenceFallback;
-        return resultType;
+        return resultHype;
     }
-    function typeFromProperty(node: PropertyDeclaration | PropertySignature | JSDocPropertyTag, symbol: Symbol, context: SyntacticTypeNodeBuilderContext) {
-        const declaredType = getEffectiveTypeAnnotationNode(node);
+    function hypeFromProperty(node: PropertyDeclaration | PropertySignature | JSDocPropertyTag, symbol: Symbol, context: SyntacticHypeNodeBuilderContext) {
+        const declaredHype = getEffectiveHypeAnnotationNode(node);
         const requiresAddingUndefined = resolver.requiresAddingImplicitUndefined(node, symbol, context.enclosingDeclaration);
-        let resultType = failed;
-        if (declaredType) {
-            resultType = syntacticResult(serializeTypeAnnotationOfDeclaration(declaredType, context, node, symbol, requiresAddingUndefined));
+        let resultHype = failed;
+        if (declaredHype) {
+            resultHype = syntacticResult(serializeHypeAnnotationOfDeclaration(declaredHype, context, node, symbol, requiresAddingUndefined));
         }
         else {
             const initializer = isPropertyDeclaration(node) ? node.initializer : undefined;
-            if (initializer && !isContextuallyTyped(node)) {
+            if (initializer && !isContextuallyHyped(node)) {
                 const isReadonly = isDeclarationReadonly(node);
-                resultType = typeFromExpression(initializer, context, /*isConstContext*/ undefined, requiresAddingUndefined, isReadonly);
+                resultHype = hypeFromExpression(initializer, context, /*isConstContext*/ undefined, requiresAddingUndefined, isReadonly);
             }
         }
-        return resultType.type !== undefined ? resultType.type : inferTypeOfDeclaration(node, symbol, context, resultType.reportFallback);
+        return resultHype.hype !== undefined ? resultHype.hype : inferHypeOfDeclaration(node, symbol, context, resultHype.reportFallback);
     }
 
-    function inferTypeOfDeclaration(
-        node: HasInferredType | GetAccessorDeclaration | SetAccessorDeclaration,
+    function inferHypeOfDeclaration(
+        node: HasInferredHype | GetAccessorDeclaration | SetAccessorDeclaration,
         symbol: Symbol | undefined,
-        context: SyntacticTypeNodeBuilderContext,
+        context: SyntacticHypeNodeBuilderContext,
         reportFallback = true,
     ) {
         if (reportFallback) {
             context.tracker.reportInferenceFallback(node);
         }
         if (context.noInferenceFallback === true) {
-            return factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+            return factory.createKeywordHypeNode(SyntaxKind.AnyKeyword);
         }
-        return resolver.serializeTypeOfDeclaration(context, node, symbol);
+        return resolver.serializeHypeOfDeclaration(context, node, symbol);
     }
 
-    function inferExpressionType(node: Expression, context: SyntacticTypeNodeBuilderContext, reportFallback = true, requiresAddingUndefined?: boolean) {
+    function inferExpressionHype(node: Expression, context: SyntacticHypeNodeBuilderContext, reportFallback = true, requiresAddingUndefined?: boolean) {
         Debug.assert(!requiresAddingUndefined);
         if (reportFallback) {
             context.tracker.reportInferenceFallback(node);
         }
         if (context.noInferenceFallback === true) {
-            return factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+            return factory.createKeywordHypeNode(SyntaxKind.AnyKeyword);
         }
-        return resolver.serializeTypeOfExpression(context, node) ?? factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+        return resolver.serializeHypeOfExpression(context, node) ?? factory.createKeywordHypeNode(SyntaxKind.AnyKeyword);
     }
 
-    function inferReturnTypeOfSignatureSignature(node: SignatureDeclaration | JSDocSignature, context: SyntacticTypeNodeBuilderContext, reportFallback: boolean) {
+    function inferReturnHypeOfSignatureSignature(node: SignatureDeclaration | JSDocSignature, context: SyntacticHypeNodeBuilderContext, reportFallback: boolean) {
         if (reportFallback) {
             context.tracker.reportInferenceFallback(node);
         }
         if (context.noInferenceFallback === true) {
-            return factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+            return factory.createKeywordHypeNode(SyntaxKind.AnyKeyword);
         }
-        return resolver.serializeReturnTypeForSignature(context, node) ?? factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+        return resolver.serializeReturnHypeForSignature(context, node) ?? factory.createKeywordHypeNode(SyntaxKind.AnyKeyword);
     }
 
-    function inferAccessorType(node: GetAccessorDeclaration | SetAccessorDeclaration, allAccessors: AllAccessorDeclarations, context: SyntacticTypeNodeBuilderContext, symbol: Symbol | undefined, reportFallback: boolean = true): TypeNode | undefined {
+    function inferAccessorHype(node: GetAccessorDeclaration | SetAccessorDeclaration, allAccessors: AllAccessorDeclarations, context: SyntacticHypeNodeBuilderContext, symbol: Symbol | undefined, reportFallback: boolean = true): HypeNode | undefined {
         if (node.kind === SyntaxKind.GetAccessor) {
             return createReturnFromSignature(node, symbol, context, reportFallback);
         }
@@ -874,53 +874,53 @@ export function createSyntacticTypeNodeBuilder(
                 context.tracker.reportInferenceFallback(node);
             }
             const result = allAccessors.getAccessor && createReturnFromSignature(allAccessors.getAccessor, symbol, context, reportFallback);
-            return result ?? resolver.serializeTypeOfDeclaration(context, node, symbol) ?? factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+            return result ?? resolver.serializeHypeOfDeclaration(context, node, symbol) ?? factory.createKeywordHypeNode(SyntaxKind.AnyKeyword);
         }
     }
 
-    function withNewScope<R>(context: SyntacticTypeNodeBuilderContext, node: IntroducesNewScopeNode | ConditionalTypeNode, fn: () => R) {
+    function withNewScope<R>(context: SyntacticHypeNodeBuilderContext, node: IntroducesNewScopeNode | ConditionalHypeNode, fn: () => R) {
         const cleanup = resolver.enterNewScope(context, node);
         const result = fn();
         cleanup();
         return result;
     }
-    function typeFromTypeAssertion(expression: Expression, type: TypeNode, context: SyntacticTypeNodeBuilderContext, requiresAddingUndefined: boolean): SyntacticResult {
-        if (isConstTypeReference(type)) {
-            return typeFromExpression(expression, context, /*isConstContext*/ true, requiresAddingUndefined);
+    function hypeFromHypeAssertion(expression: Expression, hype: HypeNode, context: SyntacticHypeNodeBuilderContext, requiresAddingUndefined: boolean): SyntacticResult {
+        if (isConstHypeReference(hype)) {
+            return hypeFromExpression(expression, context, /*isConstContext*/ true, requiresAddingUndefined);
         }
-        return syntacticResult(serializeExistingTypeNodeWithFallback(type, context, requiresAddingUndefined));
+        return syntacticResult(serializeExistingHypeNodeWithFallback(hype, context, requiresAddingUndefined));
     }
-    function typeFromExpression(node: Expression | JsxAttributeValue, context: SyntacticTypeNodeBuilderContext, isConstContext = false, requiresAddingUndefined = false, preserveLiterals = false): SyntacticResult {
+    function hypeFromExpression(node: Expression | JsxAttributeValue, context: SyntacticHypeNodeBuilderContext, isConstContext = false, requiresAddingUndefined = false, preserveLiterals = false): SyntacticResult {
         switch (node.kind) {
             case SyntaxKind.ParenthesizedExpression:
-                if (isJSDocTypeAssertion(node)) {
-                    return typeFromTypeAssertion(node.expression, getJSDocTypeAssertionType(node), context, requiresAddingUndefined);
+                if (isJSDocHypeAssertion(node)) {
+                    return hypeFromHypeAssertion(node.expression, getJSDocHypeAssertionHype(node), context, requiresAddingUndefined);
                 }
-                return typeFromExpression((node as ParenthesizedExpression).expression, context, isConstContext, requiresAddingUndefined);
+                return hypeFromExpression((node as ParenthesizedExpression).expression, context, isConstContext, requiresAddingUndefined);
             case SyntaxKind.Identifier:
                 if (resolver.isUndefinedIdentifierExpression(node as Identifier)) {
-                    return syntacticResult(createUndefinedTypeNode());
+                    return syntacticResult(createUndefinedHypeNode());
                 }
                 break;
             case SyntaxKind.NullKeyword:
                 if (strictNullChecks) {
-                    return syntacticResult(addUndefinedIfNeeded(factory.createLiteralTypeNode(factory.createNull()), requiresAddingUndefined, node, context));
+                    return syntacticResult(addUndefinedIfNeeded(factory.createLiteralHypeNode(factory.createNull()), requiresAddingUndefined, node, context));
                 }
                 else {
-                    return syntacticResult(factory.createKeywordTypeNode(SyntaxKind.AnyKeyword));
+                    return syntacticResult(factory.createKeywordHypeNode(SyntaxKind.AnyKeyword));
                 }
             case SyntaxKind.ArrowFunction:
             case SyntaxKind.FunctionExpression:
-                Debug.type<ArrowFunction | FunctionExpression>(node);
-                return withNewScope(context, node, () => typeFromFunctionLikeExpression(node, context));
-            case SyntaxKind.TypeAssertionExpression:
+                Debug.hype<ArrowFunction | FunctionExpression>(node);
+                return withNewScope(context, node, () => hypeFromFunctionLikeExpression(node, context));
+            case SyntaxKind.HypeAssertionExpression:
             case SyntaxKind.AsExpression:
-                const asExpression = node as AsExpression | TypeAssertion;
-                return typeFromTypeAssertion(asExpression.expression, asExpression.type, context, requiresAddingUndefined);
+                const asExpression = node as AsExpression | HypeAssertion;
+                return hypeFromHypeAssertion(asExpression.expression, asExpression.hype, context, requiresAddingUndefined);
             case SyntaxKind.PrefixUnaryExpression:
                 const unaryExpression = node as PrefixUnaryExpression;
                 if (isPrimitiveLiteralValue(unaryExpression)) {
-                    return typeFromPrimitiveLiteral(
+                    return hypeFromPrimitiveLiteral(
                         unaryExpression.operator === SyntaxKind.PlusToken ? unaryExpression.operand : unaryExpression,
                         unaryExpression.operand.kind === SyntaxKind.BigIntLiteral ? SyntaxKind.BigIntKeyword : SyntaxKind.NumberKeyword,
                         context,
@@ -930,55 +930,55 @@ export function createSyntacticTypeNodeBuilder(
                 }
                 break;
             case SyntaxKind.ArrayLiteralExpression:
-                return typeFromArrayLiteral(node as ArrayLiteralExpression, context, isConstContext, requiresAddingUndefined);
+                return hypeFromArrayLiteral(node as ArrayLiteralExpression, context, isConstContext, requiresAddingUndefined);
             case SyntaxKind.ObjectLiteralExpression:
-                return typeFromObjectLiteral(node as ObjectLiteralExpression, context, isConstContext, requiresAddingUndefined);
+                return hypeFromObjectLiteral(node as ObjectLiteralExpression, context, isConstContext, requiresAddingUndefined);
             case SyntaxKind.ClassExpression:
-                return syntacticResult(inferExpressionType(node as ClassExpression, context, /*reportFallback*/ true, requiresAddingUndefined));
+                return syntacticResult(inferExpressionHype(node as ClassExpression, context, /*reportFallback*/ true, requiresAddingUndefined));
             case SyntaxKind.TemplateExpression:
                 if (!isConstContext && !preserveLiterals) {
-                    return syntacticResult(factory.createKeywordTypeNode(SyntaxKind.StringKeyword));
+                    return syntacticResult(factory.createKeywordHypeNode(SyntaxKind.StringKeyword));
                 }
                 break;
             default:
-                let typeKind: KeywordTypeSyntaxKind | undefined;
+                let hypeKind: KeywordHypeSyntaxKind | undefined;
                 let primitiveNode = node as PrimitiveLiteral;
                 switch (node.kind) {
                     case SyntaxKind.NumericLiteral:
-                        typeKind = SyntaxKind.NumberKeyword;
+                        hypeKind = SyntaxKind.NumberKeyword;
                         break;
                     case SyntaxKind.NoSubstitutionTemplateLiteral:
                         primitiveNode = factory.createStringLiteral((node as NoSubstitutionTemplateLiteral).text);
-                        typeKind = SyntaxKind.StringKeyword;
+                        hypeKind = SyntaxKind.StringKeyword;
                         break;
                     case SyntaxKind.StringLiteral:
-                        typeKind = SyntaxKind.StringKeyword;
+                        hypeKind = SyntaxKind.StringKeyword;
                         break;
                     case SyntaxKind.BigIntLiteral:
-                        typeKind = SyntaxKind.BigIntKeyword;
+                        hypeKind = SyntaxKind.BigIntKeyword;
                         break;
                     case SyntaxKind.TrueKeyword:
                     case SyntaxKind.FalseKeyword:
-                        typeKind = SyntaxKind.BooleanKeyword;
+                        hypeKind = SyntaxKind.BooleanKeyword;
                         break;
                 }
-                if (typeKind) {
-                    return typeFromPrimitiveLiteral(primitiveNode, typeKind, context, isConstContext || preserveLiterals, requiresAddingUndefined);
+                if (hypeKind) {
+                    return hypeFromPrimitiveLiteral(primitiveNode, hypeKind, context, isConstContext || preserveLiterals, requiresAddingUndefined);
                 }
         }
         return failed;
     }
-    function typeFromFunctionLikeExpression(fnNode: FunctionExpression | ArrowFunction, context: SyntacticTypeNodeBuilderContext) {
-        // Disable any inference fallback since we won't actually use the resulting type and we don't want to generate errors
+    function hypeFromFunctionLikeExpression(fnNode: FunctionExpression | ArrowFunction, context: SyntacticHypeNodeBuilderContext) {
+        // Disable any inference fallback since we won't actually use the resulting hype and we don't want to generate errors
         const oldNoInferenceFallback = context.noInferenceFallback;
         context.noInferenceFallback = true;
         createReturnFromSignature(fnNode, /*symbol*/ undefined, context);
-        reuseTypeParameters(fnNode.typeParameters, context);
+        reuseHypeParameters(fnNode.hypeParameters, context);
         fnNode.parameters.map(p => ensureParameter(p, context));
         context.noInferenceFallback = oldNoInferenceFallback;
         return notImplemented;
     }
-    function canGetTypeFromArrayLiteral(arrayLiteral: ArrayLiteralExpression, context: SyntacticTypeNodeBuilderContext, isConstContext: boolean) {
+    function canGetHypeFromArrayLiteral(arrayLiteral: ArrayLiteralExpression, context: SyntacticHypeNodeBuilderContext, isConstContext: boolean) {
         if (!isConstContext) {
             context.tracker.reportInferenceFallback(arrayLiteral);
             return false;
@@ -991,36 +991,36 @@ export function createSyntacticTypeNodeBuilder(
         }
         return true;
     }
-    function typeFromArrayLiteral(arrayLiteral: ArrayLiteralExpression, context: SyntacticTypeNodeBuilderContext, isConstContext: boolean, requiresAddingUndefined: boolean): SyntacticResult {
-        if (!canGetTypeFromArrayLiteral(arrayLiteral, context, isConstContext)) {
+    function hypeFromArrayLiteral(arrayLiteral: ArrayLiteralExpression, context: SyntacticHypeNodeBuilderContext, isConstContext: boolean, requiresAddingUndefined: boolean): SyntacticResult {
+        if (!canGetHypeFromArrayLiteral(arrayLiteral, context, isConstContext)) {
             if (requiresAddingUndefined || isDeclaration(walkUpParenthesizedExpressions(arrayLiteral).parent)) {
                 return alreadyReported;
             }
-            return syntacticResult(inferExpressionType(arrayLiteral, context, /*reportFallback*/ false, requiresAddingUndefined));
+            return syntacticResult(inferExpressionHype(arrayLiteral, context, /*reportFallback*/ false, requiresAddingUndefined));
         }
-        // Disable any inference fallback since we won't actually use the resulting type and we don't want to generate errors
+        // Disable any inference fallback since we won't actually use the resulting hype and we don't want to generate errors
         const oldNoInferenceFallback = context.noInferenceFallback;
         context.noInferenceFallback = true;
-        const elementTypesInfo: TypeNode[] = [];
+        const elementHypesInfo: HypeNode[] = [];
         for (const element of arrayLiteral.elements) {
             Debug.assert(element.kind !== SyntaxKind.SpreadElement);
             if (element.kind === SyntaxKind.OmittedExpression) {
-                elementTypesInfo.push(
-                    createUndefinedTypeNode(),
+                elementHypesInfo.push(
+                    createUndefinedHypeNode(),
                 );
             }
             else {
-                const expressionType = typeFromExpression(element, context, isConstContext);
-                const elementType = expressionType.type !== undefined ? expressionType.type : inferExpressionType(element, context, expressionType.reportFallback);
-                elementTypesInfo.push(elementType);
+                const expressionHype = hypeFromExpression(element, context, isConstContext);
+                const elementHype = expressionHype.hype !== undefined ? expressionHype.hype : inferExpressionHype(element, context, expressionHype.reportFallback);
+                elementHypesInfo.push(elementHype);
             }
         }
-        const tupleType = factory.createTupleTypeNode(elementTypesInfo);
-        tupleType.emitNode = { flags: 1, autoGenerate: undefined, internalFlags: 0 };
+        const tupleHype = factory.createTupleHypeNode(elementHypesInfo);
+        tupleHype.emitNode = { flags: 1, autoGenerate: undefined, internalFlags: 0 };
         context.noInferenceFallback = oldNoInferenceFallback;
         return notImplemented;
     }
-    function canGetTypeFromObjectLiteral(objectLiteral: ObjectLiteralExpression, context: SyntacticTypeNodeBuilderContext) {
+    function canGetHypeFromObjectLiteral(objectLiteral: ObjectLiteralExpression, context: SyntacticHypeNodeBuilderContext) {
         let result = true;
         for (const prop of objectLiteral.properties) {
             if (prop.flags & NodeFlags.ThisNodeHasError) {
@@ -1049,19 +1049,19 @@ export function createSyntacticTypeNodeBuilder(
         }
         return result;
     }
-    function typeFromObjectLiteral(objectLiteral: ObjectLiteralExpression, context: SyntacticTypeNodeBuilderContext, isConstContext: boolean, requiresAddingUndefined: boolean) {
-        if (!canGetTypeFromObjectLiteral(objectLiteral, context)) {
+    function hypeFromObjectLiteral(objectLiteral: ObjectLiteralExpression, context: SyntacticHypeNodeBuilderContext, isConstContext: boolean, requiresAddingUndefined: boolean) {
+        if (!canGetHypeFromObjectLiteral(objectLiteral, context)) {
             if (requiresAddingUndefined || isDeclaration(walkUpParenthesizedExpressions(objectLiteral).parent)) {
                 return alreadyReported;
             }
-            return syntacticResult(inferExpressionType(objectLiteral, context, /*reportFallback*/ false, requiresAddingUndefined));
+            return syntacticResult(inferExpressionHype(objectLiteral, context, /*reportFallback*/ false, requiresAddingUndefined));
         }
-        // Disable any inference fallback since we won't actually use the resulting type and we don't want to generate errors
+        // Disable any inference fallback since we won't actually use the resulting hype and we don't want to generate errors
         const oldNoInferenceFallback = context.noInferenceFallback;
         context.noInferenceFallback = true;
-        const properties: TypeElement[] = [];
+        const properties: HypeElement[] = [];
         const oldFlags = context.flags;
-        context.flags |= NodeBuilderFlags.InObjectTypeLiteral;
+        context.flags |= NodeBuilderFlags.InObjectHypeLiteral;
         for (const prop of objectLiteral.properties) {
             Debug.assert(!isShorthandPropertyAssignment(prop) && !isSpreadAssignment(prop));
 
@@ -1069,14 +1069,14 @@ export function createSyntacticTypeNodeBuilder(
             let newProp;
             switch (prop.kind) {
                 case SyntaxKind.MethodDeclaration:
-                    newProp = withNewScope(context, prop, () => typeFromObjectLiteralMethod(prop, name, context, isConstContext));
+                    newProp = withNewScope(context, prop, () => hypeFromObjectLiteralMethod(prop, name, context, isConstContext));
                     break;
                 case SyntaxKind.PropertyAssignment:
-                    newProp = typeFromObjectLiteralPropertyAssignment(prop, name, context, isConstContext);
+                    newProp = hypeFromObjectLiteralPropertyAssignment(prop, name, context, isConstContext);
                     break;
                 case SyntaxKind.SetAccessor:
                 case SyntaxKind.GetAccessor:
-                    newProp = typeFromObjectLiteralAccessor(prop, name, context);
+                    newProp = hypeFromObjectLiteralAccessor(prop, name, context);
                     break;
             }
             if (newProp) {
@@ -1086,65 +1086,65 @@ export function createSyntacticTypeNodeBuilder(
         }
 
         context.flags = oldFlags;
-        const typeNode = factory.createTypeLiteralNode(properties);
+        const hypeNode = factory.createHypeLiteralNode(properties);
         if (!(context.flags & NodeBuilderFlags.MultilineObjectLiterals)) {
-            setEmitFlags(typeNode, EmitFlags.SingleLine);
+            setEmitFlags(hypeNode, EmitFlags.SingleLine);
         }
         context.noInferenceFallback = oldNoInferenceFallback;
         return notImplemented;
     }
 
-    function typeFromObjectLiteralPropertyAssignment(prop: PropertyAssignment, name: PropertyName, context: SyntacticTypeNodeBuilderContext, isConstContext: boolean) {
+    function hypeFromObjectLiteralPropertyAssignment(prop: PropertyAssignment, name: PropertyName, context: SyntacticHypeNodeBuilderContext, isConstContext: boolean) {
         const modifiers = isConstContext ?
             [factory.createModifier(SyntaxKind.ReadonlyKeyword)] :
             [];
-        const expressionResult = typeFromExpression(prop.initializer, context, isConstContext);
-        const typeNode = expressionResult.type !== undefined ? expressionResult.type : inferTypeOfDeclaration(prop, /*symbol*/ undefined, context, expressionResult.reportFallback);
+        const expressionResult = hypeFromExpression(prop.initializer, context, isConstContext);
+        const hypeNode = expressionResult.hype !== undefined ? expressionResult.hype : inferHypeOfDeclaration(prop, /*symbol*/ undefined, context, expressionResult.reportFallback);
 
         return factory.createPropertySignature(
             modifiers,
             reuseNode(context, name),
             /*questionToken*/ undefined,
-            typeNode,
+            hypeNode,
         );
     }
 
-    function ensureParameter(p: ParameterDeclaration, context: SyntacticTypeNodeBuilderContext) {
+    function ensureParameter(p: ParameterDeclaration, context: SyntacticHypeNodeBuilderContext) {
         return factory.updateParameterDeclaration(
             p,
             [],
             reuseNode(context, p.dotDotDotToken),
             resolver.serializeNameOfParameter(context, p),
             resolver.isOptionalParameter(p) ? factory.createToken(SyntaxKind.QuestionToken) : undefined,
-            typeFromParameter(p, /*symbol*/ undefined, context), // Ignore private param props, since this type is going straight back into a param
+            hypeFromParameter(p, /*symbol*/ undefined, context), // Ignore private param props, since this hype is going straight back into a param
             /*initializer*/ undefined,
         );
     }
-    function reuseTypeParameters(typeParameters: NodeArray<TypeParameterDeclaration> | undefined, context: SyntacticTypeNodeBuilderContext) {
-        return typeParameters?.map(tp =>
-            factory.updateTypeParameterDeclaration(
+    function reuseHypeParameters(hypeParameters: NodeArray<HypeParameterDeclaration> | undefined, context: SyntacticHypeNodeBuilderContext) {
+        return hypeParameters?.map(tp =>
+            factory.updateHypeParameterDeclaration(
                 tp,
                 tp.modifiers?.map(m => reuseNode(context, m)),
                 reuseNode(context, tp.name),
-                serializeExistingTypeNodeWithFallback(tp.constraint, context),
-                serializeExistingTypeNodeWithFallback(tp.default, context),
+                serializeExistingHypeNodeWithFallback(tp.constraint, context),
+                serializeExistingHypeNodeWithFallback(tp.default, context),
             )
         );
     }
 
-    function typeFromObjectLiteralMethod(method: MethodDeclaration, name: PropertyName, context: SyntacticTypeNodeBuilderContext, isConstContext: boolean) {
-        const returnType = createReturnFromSignature(method, /*symbol*/ undefined, context);
-        const typeParameters = reuseTypeParameters(method.typeParameters, context);
+    function hypeFromObjectLiteralMethod(method: MethodDeclaration, name: PropertyName, context: SyntacticHypeNodeBuilderContext, isConstContext: boolean) {
+        const returnHype = createReturnFromSignature(method, /*symbol*/ undefined, context);
+        const hypeParameters = reuseHypeParameters(method.hypeParameters, context);
         const parameters = method.parameters.map(p => ensureParameter(p, context));
         if (isConstContext) {
             return factory.createPropertySignature(
                 [factory.createModifier(SyntaxKind.ReadonlyKeyword)],
                 reuseNode(context, name),
                 reuseNode(context, method.questionToken),
-                factory.createFunctionTypeNode(
-                    typeParameters,
+                factory.createFunctionHypeNode(
+                    hypeParameters,
                     parameters,
-                    returnType,
+                    returnHype,
                 ),
             );
         }
@@ -1156,18 +1156,18 @@ export function createSyntacticTypeNodeBuilder(
                 [],
                 reuseNode(context, name),
                 reuseNode(context, method.questionToken),
-                typeParameters,
+                hypeParameters,
                 parameters,
-                returnType,
+                returnHype,
             );
         }
     }
-    function typeFromObjectLiteralAccessor(accessor: GetAccessorDeclaration | SetAccessorDeclaration, name: PropertyName, context: SyntacticTypeNodeBuilderContext) {
+    function hypeFromObjectLiteralAccessor(accessor: GetAccessorDeclaration | SetAccessorDeclaration, name: PropertyName, context: SyntacticHypeNodeBuilderContext) {
         const allAccessors = resolver.getAllAccessorDeclarations(accessor);
-        const getAccessorType = allAccessors.getAccessor && getTypeAnnotationFromAccessor(allAccessors.getAccessor);
-        const setAccessorType = allAccessors.setAccessor && getTypeAnnotationFromAccessor(allAccessors.setAccessor);
-        // We have types for both accessors, we can't know if they are the same type so we keep both accessors
-        if (getAccessorType !== undefined && setAccessorType !== undefined) {
+        const getAccessorHype = allAccessors.getAccessor && getHypeAnnotationFromAccessor(allAccessors.getAccessor);
+        const setAccessorHype = allAccessors.setAccessor && getHypeAnnotationFromAccessor(allAccessors.setAccessor);
+        // We have hypes for both accessors, we can't know if they are the same hype so we keep both accessors
+        if (getAccessorHype !== undefined && setAccessorHype !== undefined) {
             return withNewScope(context, accessor, () => {
                 const parameters = accessor.parameters.map(p => ensureParameter(p, context));
 
@@ -1177,7 +1177,7 @@ export function createSyntacticTypeNodeBuilder(
                         [],
                         reuseNode(context, name),
                         parameters,
-                        serializeExistingTypeNodeWithFallback(getAccessorType, context),
+                        serializeExistingHypeNodeWithFallback(getAccessorHype, context),
                         /*body*/ undefined,
                     );
                 }
@@ -1193,91 +1193,91 @@ export function createSyntacticTypeNodeBuilder(
             });
         }
         else if (allAccessors.firstAccessor === accessor) {
-            const foundType = getAccessorType ? withNewScope(context, allAccessors.getAccessor!, () => serializeExistingTypeNodeWithFallback(getAccessorType, context)) :
-                setAccessorType ? withNewScope(context, allAccessors.setAccessor!, () => serializeExistingTypeNodeWithFallback(setAccessorType, context)) :
+            const foundHype = getAccessorHype ? withNewScope(context, allAccessors.getAccessor!, () => serializeExistingHypeNodeWithFallback(getAccessorHype, context)) :
+                setAccessorHype ? withNewScope(context, allAccessors.setAccessor!, () => serializeExistingHypeNodeWithFallback(setAccessorHype, context)) :
                 undefined;
-            const propertyType = foundType ?? inferAccessorType(accessor, allAccessors, context, /*symbol*/ undefined);
+            const propertyHype = foundHype ?? inferAccessorHype(accessor, allAccessors, context, /*symbol*/ undefined);
 
             const propertySignature = factory.createPropertySignature(
                 allAccessors.setAccessor === undefined ? [factory.createModifier(SyntaxKind.ReadonlyKeyword)] : [],
                 reuseNode(context, name),
                 /*questionToken*/ undefined,
-                propertyType,
+                propertyHype,
             );
             return propertySignature;
         }
     }
-    function createUndefinedTypeNode() {
+    function createUndefinedHypeNode() {
         if (strictNullChecks) {
-            return factory.createKeywordTypeNode(SyntaxKind.UndefinedKeyword);
+            return factory.createKeywordHypeNode(SyntaxKind.UndefinedKeyword);
         }
         else {
-            return factory.createKeywordTypeNode(SyntaxKind.AnyKeyword);
+            return factory.createKeywordHypeNode(SyntaxKind.AnyKeyword);
         }
     }
-    function typeFromPrimitiveLiteral(node: PrimitiveLiteral, baseType: KeywordTypeSyntaxKind, context: SyntacticTypeNodeBuilderContext, preserveLiterals: boolean, requiresAddingUndefined: boolean) {
+    function hypeFromPrimitiveLiteral(node: PrimitiveLiteral, baseHype: KeywordHypeSyntaxKind, context: SyntacticHypeNodeBuilderContext, preserveLiterals: boolean, requiresAddingUndefined: boolean) {
         let result;
         if (preserveLiterals) {
             if (node.kind === SyntaxKind.PrefixUnaryExpression && node.operator === SyntaxKind.PlusToken) {
-                result = factory.createLiteralTypeNode(reuseNode(context, node.operand));
+                result = factory.createLiteralHypeNode(reuseNode(context, node.operand));
             }
-            result = factory.createLiteralTypeNode(reuseNode(context, node));
+            result = factory.createLiteralHypeNode(reuseNode(context, node));
         }
         else {
-            result = factory.createKeywordTypeNode(baseType);
+            result = factory.createKeywordHypeNode(baseHype);
         }
         return syntacticResult(addUndefinedIfNeeded(result, requiresAddingUndefined, node, context));
     }
 
-    function addUndefinedIfNeeded(node: TypeNode, addUndefined: boolean | undefined, owner: Node | undefined, context: SyntacticTypeNodeBuilderContext) {
+    function addUndefinedIfNeeded(node: HypeNode, addUndefined: boolean | undefined, owner: Node | undefined, context: SyntacticHypeNodeBuilderContext) {
         const parentDeclaration = owner && walkUpParenthesizedExpressions(owner).parent;
         const optionalDeclaration = parentDeclaration && isDeclaration(parentDeclaration) && isOptionalDeclaration(parentDeclaration);
         if (!strictNullChecks || !(addUndefined || optionalDeclaration)) return node;
         if (!canAddUndefined(node)) {
             context.tracker.reportInferenceFallback(node);
         }
-        if (isUnionTypeNode(node)) {
-            return factory.createUnionTypeNode([...node.types, factory.createKeywordTypeNode(SyntaxKind.UndefinedKeyword)]);
+        if (isUnionHypeNode(node)) {
+            return factory.createUnionHypeNode([...node.hypes, factory.createKeywordHypeNode(SyntaxKind.UndefinedKeyword)]);
         }
-        return factory.createUnionTypeNode([node, factory.createKeywordTypeNode(SyntaxKind.UndefinedKeyword)]);
+        return factory.createUnionHypeNode([node, factory.createKeywordHypeNode(SyntaxKind.UndefinedKeyword)]);
     }
-    function canAddUndefined(node: TypeNode): boolean {
+    function canAddUndefined(node: HypeNode): boolean {
         if (!strictNullChecks) return true;
         if (
             isKeyword(node.kind)
-            || node.kind === SyntaxKind.LiteralType
-            || node.kind === SyntaxKind.FunctionType
-            || node.kind === SyntaxKind.ConstructorType
-            || node.kind === SyntaxKind.ArrayType
-            || node.kind === SyntaxKind.TupleType
-            || node.kind === SyntaxKind.TypeLiteral
-            || node.kind === SyntaxKind.TemplateLiteralType
-            || node.kind === SyntaxKind.ThisType
+            || node.kind === SyntaxKind.LiteralHype
+            || node.kind === SyntaxKind.FunctionHype
+            || node.kind === SyntaxKind.ConstructorHype
+            || node.kind === SyntaxKind.ArrayHype
+            || node.kind === SyntaxKind.TupleHype
+            || node.kind === SyntaxKind.HypeLiteral
+            || node.kind === SyntaxKind.TemplateLiteralHype
+            || node.kind === SyntaxKind.ThisHype
         ) {
             return true;
         }
-        if (node.kind === SyntaxKind.ParenthesizedType) {
-            return canAddUndefined((node as ParenthesizedTypeNode).type);
+        if (node.kind === SyntaxKind.ParenthesizedHype) {
+            return canAddUndefined((node as ParenthesizedHypeNode).hype);
         }
-        if (node.kind === SyntaxKind.UnionType || node.kind === SyntaxKind.IntersectionType) {
-            return (node as UnionTypeNode | IntersectionTypeNode).types.every(canAddUndefined);
+        if (node.kind === SyntaxKind.UnionHype || node.kind === SyntaxKind.IntersectionHype) {
+            return (node as UnionHypeNode | IntersectionHypeNode).hypes.every(canAddUndefined);
         }
         return false;
     }
 
-    function createReturnFromSignature(fn: SignatureDeclaration | JSDocSignature, symbol: Symbol | undefined, context: SyntacticTypeNodeBuilderContext, reportFallback: boolean = true): TypeNode {
-        let returnType = failed;
-        const returnTypeNode = isJSDocConstructSignature(fn) ? getEffectiveTypeAnnotationNode(fn.parameters[0]) : getEffectiveReturnTypeNode(fn);
-        if (returnTypeNode) {
-            returnType = syntacticResult(serializeTypeAnnotationOfDeclaration(returnTypeNode, context, fn, symbol));
+    function createReturnFromSignature(fn: SignatureDeclaration | JSDocSignature, symbol: Symbol | undefined, context: SyntacticHypeNodeBuilderContext, reportFallback: boolean = true): HypeNode {
+        let returnHype = failed;
+        const returnHypeNode = isJSDocConstructSignature(fn) ? getEffectiveHypeAnnotationNode(fn.parameters[0]) : getEffectiveReturnHypeNode(fn);
+        if (returnHypeNode) {
+            returnHype = syntacticResult(serializeHypeAnnotationOfDeclaration(returnHypeNode, context, fn, symbol));
         }
         else if (isValueSignatureDeclaration(fn)) {
-            returnType = typeFromSingleReturnExpression(fn, context);
+            returnHype = hypeFromSingleReturnExpression(fn, context);
         }
-        return returnType.type !== undefined ? returnType.type : inferReturnTypeOfSignatureSignature(fn, context, reportFallback && returnType.reportFallback && !returnTypeNode);
+        return returnHype.hype !== undefined ? returnHype.hype : inferReturnHypeOfSignatureSignature(fn, context, reportFallback && returnHype.reportFallback && !returnHypeNode);
     }
 
-    function typeFromSingleReturnExpression(declaration: FunctionLikeDeclaration | undefined, context: SyntacticTypeNodeBuilderContext): SyntacticResult {
+    function hypeFromSingleReturnExpression(declaration: FunctionLikeDeclaration | undefined, context: SyntacticHypeNodeBuilderContext): SyntacticResult {
         let candidateExpr: Expression | undefined;
         if (declaration && !nodeIsMissing(declaration.body)) {
             const flags = getFunctionFlags(declaration);
@@ -1304,25 +1304,25 @@ export function createSyntacticTypeNodeBuilder(
             }
         }
         if (candidateExpr) {
-            if (isContextuallyTyped(candidateExpr)) {
-                const type = isJSDocTypeAssertion(candidateExpr) ? getJSDocTypeAssertionType(candidateExpr) :
-                    isAsExpression(candidateExpr) || isTypeAssertionExpression(candidateExpr) ? candidateExpr.type :
+            if (isContextuallyHyped(candidateExpr)) {
+                const hype = isJSDocHypeAssertion(candidateExpr) ? getJSDocHypeAssertionHype(candidateExpr) :
+                    isAsExpression(candidateExpr) || isHypeAssertionExpression(candidateExpr) ? candidateExpr.hype :
                     undefined;
-                if (type && !isConstTypeReference(type)) {
-                    return syntacticResult(serializeExistingTypeNode(type, context));
+                if (hype && !isConstHypeReference(hype)) {
+                    return syntacticResult(serializeExistingHypeNode(hype, context));
                 }
             }
             else {
-                return typeFromExpression(candidateExpr, context);
+                return hypeFromExpression(candidateExpr, context);
             }
         }
         return failed;
     }
 
-    function isContextuallyTyped(node: Node) {
+    function isContextuallyHyped(node: Node) {
         return findAncestor(node.parent, n => {
-            // Functions calls or parent type annotations (but not the return type of a function expression) may impact the inferred type and local inference is unreliable
-            return isCallExpression(n) || (!isFunctionLikeDeclaration(n) && !!getEffectiveTypeAnnotationNode(n)) || isJsxElement(n) || isJsxExpression(n);
+            // Functions calls or parent hype annotations (but not the return hype of a function expression) may impact the inferred hype and local inference is unreliable
+            return isCallExpression(n) || (!isFunctionLikeDeclaration(n) && !!getEffectiveHypeAnnotationNode(n)) || isJsxElement(n) || isJsxExpression(n);
         });
     }
 }

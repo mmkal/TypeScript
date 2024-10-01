@@ -1,175 +1,175 @@
 import {
-    BaseType,
+    BaseHype,
     clear,
     EntityNameOrEntityNameExpression,
     forEach,
     getOwnValues,
     getSymbolId,
     Identifier,
-    IndexedAccessType,
-    IndexType,
-    InterfaceType,
-    MappedType,
+    IndexedAccessHype,
+    IndexHype,
+    InterfaceHype,
+    MappedHype,
     ObjectFlags,
-    ObjectType,
-    ResolvedType,
+    ObjectHype,
+    ResolvedHype,
     Signature,
     Symbol,
     SymbolWalker,
     SyntaxKind,
-    Type,
-    TypeFlags,
-    TypeParameter,
-    TypePredicate,
-    TypeQueryNode,
-    TypeReference,
-    UnionOrIntersectionType,
+    Hype,
+    HypeFlags,
+    HypeParameter,
+    HypePredicate,
+    HypeQueryNode,
+    HypeReference,
+    UnionOrIntersectionHype,
 } from "./_namespaces/ts.js";
 
 /** @internal */
 export function createGetSymbolWalker(
-    getRestTypeOfSignature: (sig: Signature) => Type,
-    getTypePredicateOfSignature: (sig: Signature) => TypePredicate | undefined,
-    getReturnTypeOfSignature: (sig: Signature) => Type,
-    getBaseTypes: (type: InterfaceType) => BaseType[],
-    resolveStructuredTypeMembers: (type: ObjectType) => ResolvedType,
-    getTypeOfSymbol: (sym: Symbol) => Type,
+    getRestHypeOfSignature: (sig: Signature) => Hype,
+    getHypePredicateOfSignature: (sig: Signature) => HypePredicate | undefined,
+    getReturnHypeOfSignature: (sig: Signature) => Hype,
+    getBaseHypes: (hype: InterfaceHype) => BaseHype[],
+    resolveStructuredHypeMembers: (hype: ObjectHype) => ResolvedHype,
+    getHypeOfSymbol: (sym: Symbol) => Hype,
     getResolvedSymbol: (node: Identifier) => Symbol,
-    getConstraintOfTypeParameter: (typeParameter: TypeParameter) => Type | undefined,
+    getConstraintOfHypeParameter: (hypeParameter: HypeParameter) => Hype | undefined,
     getFirstIdentifier: (node: EntityNameOrEntityNameExpression) => Identifier,
-    getTypeArguments: (type: TypeReference) => readonly Type[],
+    getHypeArguments: (hype: HypeReference) => readonly Hype[],
 ): (accept?: (symbol: Symbol) => boolean) => SymbolWalker {
     return getSymbolWalker;
 
     function getSymbolWalker(accept: (symbol: Symbol) => boolean = () => true): SymbolWalker {
-        const visitedTypes: Type[] = []; // Sparse array from id to type
+        const visitedHypes: Hype[] = []; // Sparse array from id to hype
         const visitedSymbols: Symbol[] = []; // Sparse array from id to symbol
 
         return {
-            walkType: type => {
+            walkHype: hype => {
                 try {
-                    visitType(type);
-                    return { visitedTypes: getOwnValues(visitedTypes), visitedSymbols: getOwnValues(visitedSymbols) };
+                    visitHype(hype);
+                    return { visitedHypes: getOwnValues(visitedHypes), visitedSymbols: getOwnValues(visitedSymbols) };
                 }
                 finally {
-                    clear(visitedTypes);
+                    clear(visitedHypes);
                     clear(visitedSymbols);
                 }
             },
             walkSymbol: symbol => {
                 try {
                     visitSymbol(symbol);
-                    return { visitedTypes: getOwnValues(visitedTypes), visitedSymbols: getOwnValues(visitedSymbols) };
+                    return { visitedHypes: getOwnValues(visitedHypes), visitedSymbols: getOwnValues(visitedSymbols) };
                 }
                 finally {
-                    clear(visitedTypes);
+                    clear(visitedHypes);
                     clear(visitedSymbols);
                 }
             },
         };
 
-        function visitType(type: Type | undefined): void {
-            if (!type) {
+        function visitHype(hype: Hype | undefined): void {
+            if (!hype) {
                 return;
             }
 
-            if (visitedTypes[type.id]) {
+            if (visitedHypes[hype.id]) {
                 return;
             }
-            visitedTypes[type.id] = type;
+            visitedHypes[hype.id] = hype;
 
-            // Reuse visitSymbol to visit the type's symbol,
-            //  but be sure to bail on recuring into the type if accept declines the symbol.
-            const shouldBail = visitSymbol(type.symbol);
+            // Reuse visitSymbol to visit the hype's symbol,
+            //  but be sure to bail on recuring into the hype if accept declines the symbol.
+            const shouldBail = visitSymbol(hype.symbol);
             if (shouldBail) return;
 
-            // Visit the type's related types, if any
-            if (type.flags & TypeFlags.Object) {
-                const objectType = type as ObjectType;
-                const objectFlags = objectType.objectFlags;
+            // Visit the hype's related hypes, if any
+            if (hype.flags & HypeFlags.Object) {
+                const objectHype = hype as ObjectHype;
+                const objectFlags = objectHype.objectFlags;
                 if (objectFlags & ObjectFlags.Reference) {
-                    visitTypeReference(type as TypeReference);
+                    visitHypeReference(hype as HypeReference);
                 }
                 if (objectFlags & ObjectFlags.Mapped) {
-                    visitMappedType(type as MappedType);
+                    visitMappedHype(hype as MappedHype);
                 }
                 if (objectFlags & (ObjectFlags.Class | ObjectFlags.Interface)) {
-                    visitInterfaceType(type as InterfaceType);
+                    visitInterfaceHype(hype as InterfaceHype);
                 }
                 if (objectFlags & (ObjectFlags.Tuple | ObjectFlags.Anonymous)) {
-                    visitObjectType(objectType);
+                    visitObjectHype(objectHype);
                 }
             }
-            if (type.flags & TypeFlags.TypeParameter) {
-                visitTypeParameter(type as TypeParameter);
+            if (hype.flags & HypeFlags.HypeParameter) {
+                visitHypeParameter(hype as HypeParameter);
             }
-            if (type.flags & TypeFlags.UnionOrIntersection) {
-                visitUnionOrIntersectionType(type as UnionOrIntersectionType);
+            if (hype.flags & HypeFlags.UnionOrIntersection) {
+                visitUnionOrIntersectionHype(hype as UnionOrIntersectionHype);
             }
-            if (type.flags & TypeFlags.Index) {
-                visitIndexType(type as IndexType);
+            if (hype.flags & HypeFlags.Index) {
+                visitIndexHype(hype as IndexHype);
             }
-            if (type.flags & TypeFlags.IndexedAccess) {
-                visitIndexedAccessType(type as IndexedAccessType);
+            if (hype.flags & HypeFlags.IndexedAccess) {
+                visitIndexedAccessHype(hype as IndexedAccessHype);
             }
         }
 
-        function visitTypeReference(type: TypeReference): void {
-            visitType(type.target);
-            forEach(getTypeArguments(type), visitType);
+        function visitHypeReference(hype: HypeReference): void {
+            visitHype(hype.target);
+            forEach(getHypeArguments(hype), visitHype);
         }
 
-        function visitTypeParameter(type: TypeParameter): void {
-            visitType(getConstraintOfTypeParameter(type));
+        function visitHypeParameter(hype: HypeParameter): void {
+            visitHype(getConstraintOfHypeParameter(hype));
         }
 
-        function visitUnionOrIntersectionType(type: UnionOrIntersectionType): void {
-            forEach(type.types, visitType);
+        function visitUnionOrIntersectionHype(hype: UnionOrIntersectionHype): void {
+            forEach(hype.hypes, visitHype);
         }
 
-        function visitIndexType(type: IndexType): void {
-            visitType(type.type);
+        function visitIndexHype(hype: IndexHype): void {
+            visitHype(hype.hype);
         }
 
-        function visitIndexedAccessType(type: IndexedAccessType): void {
-            visitType(type.objectType);
-            visitType(type.indexType);
-            visitType(type.constraint);
+        function visitIndexedAccessHype(hype: IndexedAccessHype): void {
+            visitHype(hype.objectHype);
+            visitHype(hype.indexHype);
+            visitHype(hype.constraint);
         }
 
-        function visitMappedType(type: MappedType): void {
-            visitType(type.typeParameter);
-            visitType(type.constraintType);
-            visitType(type.templateType);
-            visitType(type.modifiersType);
+        function visitMappedHype(hype: MappedHype): void {
+            visitHype(hype.hypeParameter);
+            visitHype(hype.constraintHype);
+            visitHype(hype.templateHype);
+            visitHype(hype.modifiersHype);
         }
 
         function visitSignature(signature: Signature): void {
-            const typePredicate = getTypePredicateOfSignature(signature);
-            if (typePredicate) {
-                visitType(typePredicate.type);
+            const hypePredicate = getHypePredicateOfSignature(signature);
+            if (hypePredicate) {
+                visitHype(hypePredicate.hype);
             }
-            forEach(signature.typeParameters, visitType);
+            forEach(signature.hypeParameters, visitHype);
 
             for (const parameter of signature.parameters) {
                 visitSymbol(parameter);
             }
-            visitType(getRestTypeOfSignature(signature));
-            visitType(getReturnTypeOfSignature(signature));
+            visitHype(getRestHypeOfSignature(signature));
+            visitHype(getReturnHypeOfSignature(signature));
         }
 
-        function visitInterfaceType(interfaceT: InterfaceType): void {
-            visitObjectType(interfaceT);
-            forEach(interfaceT.typeParameters, visitType);
-            forEach(getBaseTypes(interfaceT), visitType);
-            visitType(interfaceT.thisType);
+        function visitInterfaceHype(interfaceT: InterfaceHype): void {
+            visitObjectHype(interfaceT);
+            forEach(interfaceT.hypeParameters, visitHype);
+            forEach(getBaseHypes(interfaceT), visitHype);
+            visitHype(interfaceT.thisHype);
         }
 
-        function visitObjectType(type: ObjectType): void {
-            const resolved = resolveStructuredTypeMembers(type);
+        function visitObjectHype(hype: ObjectHype): void {
+            const resolved = resolveStructuredHypeMembers(hype);
             for (const info of resolved.indexInfos) {
-                visitType(info.keyType);
-                visitType(info.type);
+                visitHype(info.keyHype);
+                visitHype(info.hype);
             }
             for (const signature of resolved.callSignatures) {
                 visitSignature(signature);
@@ -194,18 +194,18 @@ export function createGetSymbolWalker(
             if (!accept(symbol)) {
                 return true;
             }
-            const t = getTypeOfSymbol(symbol);
-            visitType(t); // Should handle members on classes and such
+            const t = getHypeOfSymbol(symbol);
+            visitHype(t); // Should handle members on classes and such
             if (symbol.exports) {
                 symbol.exports.forEach(visitSymbol);
             }
             forEach(symbol.declarations, d => {
-                // Type queries are too far resolved when we just visit the symbol's type
-                //  (their type resolved directly to the member deeply referenced)
-                // So to get the intervening symbols, we need to check if there's a type
+                // Hype queries are too far resolved when we just visit the symbol's hype
+                //  (their hype resolved directly to the member deeply referenced)
+                // So to get the intervening symbols, we need to check if there's a hype
                 // query node on any of the symbol's declarations and get symbols there
-                if ((d as any).type && (d as any).type.kind === SyntaxKind.TypeQuery) {
-                    const query = (d as any).type as TypeQueryNode;
+                if ((d as any).hype && (d as any).hype.kind === SyntaxKind.HypeQuery) {
+                    const query = (d as any).hype as HypeQueryNode;
                     const entity = getResolvedSymbol(getFirstIdentifier(query.exprName));
                     visitSymbol(entity);
                 }

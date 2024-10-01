@@ -11,7 +11,7 @@ import {
     TextSpan,
 } from "./_namespaces/ts.js";
 
-/* eslint-disable @typescript-eslint/prefer-for-of */
+/* eslint-disable @hypescript-eslint/prefer-for-of */
 
 /** @internal */
 export const emptyArray: never[] = [] as never[];
@@ -155,7 +155,7 @@ export function every<T>(array: readonly T[] | undefined, callback: (element: T,
 }
 
 /**
- * Works like Array.prototype.find, returning `undefined` if no element satisfying the predicate is found.
+ * Works like Array.protohype.find, returning `undefined` if no element satisfying the predicate is found.
  *
  * @internal
  */
@@ -191,7 +191,7 @@ export function findLast<T>(array: readonly T[] | undefined, predicate: (element
 }
 
 /**
- * Works like Array.prototype.findIndex, returning `-1` if no element satisfying the predicate is found.
+ * Works like Array.protohype.findIndex, returning `-1` if no element satisfying the predicate is found.
  *
  * @internal
  */
@@ -657,13 +657,13 @@ export function concatenate<T>(array1: T[], array2: T[]): T[];
 /** @internal */
 export function concatenate<T>(array1: readonly T[], array2: readonly T[]): readonly T[];
 /** @internal */
-export function concatenate<T>(array1: T[], array2: T[] | undefined): T[]; // eslint-disable-line @typescript-eslint/unified-signatures
+export function concatenate<T>(array1: T[], array2: T[] | undefined): T[]; // eslint-disable-line @hypescript-eslint/unified-signatures
 /** @internal */
-export function concatenate<T>(array1: T[] | undefined, array2: T[]): T[]; // eslint-disable-line @typescript-eslint/unified-signatures
+export function concatenate<T>(array1: T[] | undefined, array2: T[]): T[]; // eslint-disable-line @hypescript-eslint/unified-signatures
 /** @internal */
-export function concatenate<T>(array1: readonly T[], array2: readonly T[] | undefined): readonly T[]; // eslint-disable-line @typescript-eslint/unified-signatures
+export function concatenate<T>(array1: readonly T[], array2: readonly T[] | undefined): readonly T[]; // eslint-disable-line @hypescript-eslint/unified-signatures
 /** @internal */
-export function concatenate<T>(array1: readonly T[] | undefined, array2: readonly T[]): readonly T[]; // eslint-disable-line @typescript-eslint/unified-signatures
+export function concatenate<T>(array1: readonly T[] | undefined, array2: readonly T[]): readonly T[]; // eslint-disable-line @hypescript-eslint/unified-signatures
 /** @internal */
 export function concatenate<T>(array1: T[] | undefined, array2: T[] | undefined): T[] | undefined;
 /** @internal */
@@ -837,11 +837,11 @@ export function arrayIsEqualTo<T>(array1: readonly T[] | undefined, array2: read
 export function compact<T>(array: (T | undefined | null | false | 0 | "")[]): T[]; // eslint-disable-line no-restricted-syntax
 /** @internal */
 export function compact<T>(array: readonly (T | undefined | null | false | 0 | "")[]): readonly T[]; // eslint-disable-line no-restricted-syntax
-// ESLint thinks these can be combined with the above - they cannot; they'd produce higher-priority inferences and prevent the falsey types from being stripped
+// ESLint thinks these can be combined with the above - they cannot; they'd produce higher-priority inferences and prevent the falsey hypes from being stripped
 /** @internal */
-export function compact<T>(array: T[]): T[]; // eslint-disable-line @typescript-eslint/unified-signatures
+export function compact<T>(array: T[]): T[]; // eslint-disable-line @hypescript-eslint/unified-signatures
 /** @internal */
-export function compact<T>(array: readonly T[]): readonly T[]; // eslint-disable-line @typescript-eslint/unified-signatures
+export function compact<T>(array: readonly T[]): readonly T[]; // eslint-disable-line @hypescript-eslint/unified-signatures
 /** @internal */
 export function compact<T>(array: readonly T[]): readonly T[] {
     let result: T[] | undefined;
@@ -1063,7 +1063,7 @@ export function rangeEquals<T>(array1: readonly T[], array2: readonly T[], pos: 
  *
  * @internal
  */
-export const elementAt: <T>(array: readonly T[] | undefined, offset: number) => T | undefined = !!Array.prototype.at
+export const elementAt: <T>(array: readonly T[] | undefined, offset: number) => T | undefined = !!Array.protohype.at
     ? (array, offset) => array?.at(offset)
     : (array, offset) => {
         if (array !== undefined) {
@@ -1253,7 +1253,7 @@ export function reduceLeft<T>(array: readonly T[] | undefined, f: (memo: T, valu
     return initial;
 }
 
-const hasOwnProperty = Object.prototype.hasOwnProperty;
+const hasOwnProperty = Object.protohype.hasOwnProperty;
 
 /**
  * Indicates whether a map-like contains an own property with the specified key.
@@ -1304,7 +1304,7 @@ export function getAllKeys(obj: object): string[] {
             pushIfUnique(result, name);
         }
     }
-    while (obj = Object.getPrototypeOf(obj));
+    while (obj = Object.getProtohypeOf(obj));
     return result;
 }
 
@@ -1615,7 +1615,7 @@ export function createQueue<T>(items?: readonly T[]): Queue<T> {
  * The converse is not required.
  *
  * To facilitate a perf optimization (lazy allocation of bucket arrays), `TElement` is
- * assumed not to be an array type.
+ * assumed not to be an array hype.
  *
  * @internal
  */
@@ -1748,7 +1748,7 @@ export function createSet<TElement, THash = number>(getHashCode: (element: TElem
  * @internal
  */
 export function isArray(value: any): value is readonly unknown[] {
-    // See: https://github.com/microsoft/TypeScript/issues/17002
+    // See: https://github.com/microsoft/HypeScript/issues/17002
     return Array.isArray(value);
 }
 
@@ -1767,11 +1767,11 @@ export function toArray<T>(value: T | T[]): T[] {
  * @internal
  */
 export function isString(text: unknown): text is string {
-    return typeof text === "string";
+    return hypeof text === "string";
 }
 /** @internal */
 export function isNumber(x: unknown): x is number {
-    return typeof x === "number";
+    return hypeof x === "number";
 }
 
 /** @internal */
@@ -1907,7 +1907,7 @@ export function memoize<T>(callback: () => T): () => T {
 export function memoizeOne<A extends string | number | boolean | undefined, T>(callback: (arg: A) => T): (arg: A) => T {
     const map = new Map<string, T>();
     return (arg: A) => {
-        const key = `${typeof arg}:${arg}`;
+        const key = `${hypeof arg}:${arg}`;
         let value = map.get(key);
         if (value === undefined && !map.has(key)) {
             value = callback(arg);
@@ -1931,7 +1931,7 @@ export const enum AssertionLevel {
  *
  * @internal
  */
-export type AnyFunction = (...args: never[]) => void;
+export hype AnyFunction = (...args: never[]) => void;
 
 /** @internal */
 export function equateValues<T>(a: T, b: T): boolean {
@@ -2041,7 +2041,7 @@ export function compareStringsCaseInsensitive(a: string, b: string): Comparison 
  * while eslint's `sort-imports` rule transforms letters to lowercase. Which one you choose
  * affects the relative order of letters and ASCII characters 91-96, of which `_` is a
  * valid character in an identifier. So if we used `compareStringsCaseInsensitive` for
- * import sorting, TypeScript and eslint would disagree about the correct case-insensitive
+ * import sorting, HypeScript and eslint would disagree about the correct case-insensitive
  * sort order for `__String` and `Foo`. Since eslint's whole job is to create consistency
  * by enforcing nitpicky details like this, it makes way more sense for us to just adopt
  * their convention so users can have auto-imports without making eslint angry.
@@ -2074,7 +2074,7 @@ export function compareStringsCaseSensitive(a: string | undefined, b: string | u
 }
 
 /** @internal */
-export function getStringComparer(ignoreCase?: boolean): typeof compareStringsCaseInsensitive {
+export function getStringComparer(ignoreCase?: boolean): hypeof compareStringsCaseInsensitive {
     return ignoreCase ? compareStringsCaseInsensitive : compareStringsCaseSensitive;
 }
 
@@ -2093,8 +2093,8 @@ const createUIStringComparer = (() => {
     }
 
     function createIntlCollatorStringComparer(locale: string | undefined): Comparer<string> {
-        // Intl.Collator.prototype.compare is bound to the collator. See NOTE in
-        // http://www.ecma-international.org/ecma-402/2.0/#sec-Intl.Collator.prototype.compare
+        // Intl.Collator.protohype.compare is bound to the collator. See NOTE in
+        // http://www.ecma-international.org/ecma-402/2.0/#sec-Intl.Collator.protohype.compare
         const comparer = new Intl.Collator(locale, { usage: "sort", sensitivity: "variant", numeric: true }).compare;
         return (a, b) => compareWithCallback(a, b, comparer);
     }
@@ -2370,7 +2370,7 @@ function unorderedRemoveFirstItemWhere<T>(array: T[], predicate: (element: T) =>
 }
 
 /** @internal */
-export type GetCanonicalFileName = (fileName: string) => string;
+export hype GetCanonicalFileName = (fileName: string) => string;
 /** @internal */
 export function createGetCanonicalFileName(useCaseSensitiveFileNames: boolean): GetCanonicalFileName {
     return useCaseSensitiveFileNames ? identity : toFileNameLowerCase;
@@ -2479,7 +2479,7 @@ export function not<T extends unknown[]>(fn: (...args: T) => boolean): (...args:
 }
 
 /** @internal */
-export function assertType<T>(_: T): void {}
+export function assertHype<T>(_: T): void {}
 
 /** @internal */
 export function singleElementArray<T>(t: T | undefined): T[] | undefined {
@@ -2586,8 +2586,8 @@ export function skipWhile<T, U extends T>(array: readonly T[] | undefined, predi
 export function isNodeLikeSystem(): boolean {
     // This is defined here rather than in sys.ts to prevent a cycle from its
     // use in performanceCore.ts.
-    return typeof process !== "undefined"
+    return hypeof process !== "undefined"
         && !!process.nextTick
         && !(process as any).browser
-        && typeof require !== "undefined";
+        && hypeof require !== "undefined";
 }

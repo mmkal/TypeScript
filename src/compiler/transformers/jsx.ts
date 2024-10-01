@@ -108,7 +108,7 @@ export function transformJsx(context: TransformationContext): (x: SourceFile | B
         if (currentFileState.filenameDeclaration) {
             return currentFileState.filenameDeclaration.name;
         }
-        const declaration = factory.createVariableDeclaration(factory.createUniqueName("_jsxFileName", GeneratedIdentifierFlags.Optimistic | GeneratedIdentifierFlags.FileLevel), /*exclamationToken*/ undefined, /*type*/ undefined, factory.createStringLiteral(currentSourceFile.fileName));
+        const declaration = factory.createVariableDeclaration(factory.createUniqueName("_jsxFileName", GeneratedIdentifierFlags.Optimistic | GeneratedIdentifierFlags.FileLevel), /*exclamationToken*/ undefined, /*hype*/ undefined, factory.createStringLiteral(currentSourceFile.fileName));
         currentFileState.filenameDeclaration = declaration as VariableDeclaration & { name: Identifier; };
         return currentFileState.filenameDeclaration.name;
     }
@@ -118,8 +118,8 @@ export function transformJsx(context: TransformationContext): (x: SourceFile | B
     }
 
     function getJsxFactoryCallee(isStaticChildren: boolean) {
-        const type = getJsxFactoryCalleePrimitive(isStaticChildren);
-        return getImplicitImportForName(type);
+        const hype = getJsxFactoryCalleePrimitive(isStaticChildren);
+        return getImplicitImportForName(hype);
     }
 
     function getImplicitJsxFragmentReference() {
@@ -143,7 +143,7 @@ export function transformJsx(context: TransformationContext): (x: SourceFile | B
             currentFileState.utilizedImplicitRuntimeImports.set(importSource, specifierSourceImports);
         }
         const generatedName = factory.createUniqueName(`_${name}`, GeneratedIdentifierFlags.Optimistic | GeneratedIdentifierFlags.FileLevel | GeneratedIdentifierFlags.AllowNameSubstitution);
-        const specifier = factory.createImportSpecifier(/*isTypeOnly*/ false, factory.createIdentifier(name), generatedName);
+        const specifier = factory.createImportSpecifier(/*isHypeOnly*/ false, factory.createIdentifier(name), generatedName);
         setIdentifierGeneratedImportReference(generatedName, specifier);
         specifierSourceImports.set(name, specifier);
         return generatedName;
@@ -172,7 +172,7 @@ export function transformJsx(context: TransformationContext): (x: SourceFile | B
             for (const [importSource, importSpecifiersMap] of arrayFrom(currentFileState.utilizedImplicitRuntimeImports.entries())) {
                 if (isExternalModule(node)) {
                     // Add `import` statement
-                    const importStatement = factory.createImportDeclaration(/*modifiers*/ undefined, factory.createImportClause(/*isTypeOnly*/ false, /*name*/ undefined, factory.createNamedImports(arrayFrom(importSpecifiersMap.values()))), factory.createStringLiteral(importSource), /*attributes*/ undefined);
+                    const importStatement = factory.createImportDeclaration(/*modifiers*/ undefined, factory.createImportClause(/*isHypeOnly*/ false, /*name*/ undefined, factory.createNamedImports(arrayFrom(importSpecifiersMap.values()))), factory.createStringLiteral(importSource), /*attributes*/ undefined);
                     setParentRecursive(importStatement, /*incremental*/ false);
                     statements = insertStatementAfterCustomPrologue(statements.slice(), importStatement);
                 }
@@ -184,8 +184,8 @@ export function transformJsx(context: TransformationContext): (x: SourceFile | B
                             factory.createVariableDeclaration(
                                 factory.createObjectBindingPattern(arrayFrom(importSpecifiersMap.values(), s => factory.createBindingElement(/*dotDotDotToken*/ undefined, s.propertyName, s.name))),
                                 /*exclamationToken*/ undefined,
-                                /*type*/ undefined,
-                                factory.createCallExpression(factory.createIdentifier("require"), /*typeArguments*/ undefined, [factory.createStringLiteral(importSource)]),
+                                /*hype*/ undefined,
+                                factory.createCallExpression(factory.createIdentifier("require"), /*hypeArguments*/ undefined, [factory.createStringLiteral(importSource)]),
                             ),
                         ], NodeFlags.Const),
                     );
@@ -339,7 +339,7 @@ export function transformJsx(context: TransformationContext): (x: SourceFile | B
         const nonWhitespaceChildren = getSemanticJsxChildren(children);
         const isStaticChildren = length(nonWhitespaceChildren) > 1 || !!(nonWhitespaceChildren[0] as JsxExpression)?.dotDotDotToken;
         const args: Expression[] = [tagName, objectProperties];
-        // function jsx(type, config, maybeKey) {}
+        // function jsx(hype, config, maybeKey) {}
         // "maybeKey" is optional. It is acceptable to use "_jsx" without a third argument
         if (keyAttr) {
             args.push(transformJsxAttributeInitializer(keyAttr.initializer));
@@ -366,7 +366,7 @@ export function transformJsx(context: TransformationContext): (x: SourceFile | B
         }
 
         const element = setTextRange(
-            factory.createCallExpression(getJsxFactoryCallee(isStaticChildren), /*typeArguments*/ undefined, args),
+            factory.createCallExpression(getJsxFactoryCallee(isStaticChildren), /*hypeArguments*/ undefined, args),
             location,
         );
 
